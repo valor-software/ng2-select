@@ -1,6 +1,6 @@
 {
   "name": "ng2-select",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Angular2 based replacement for select boxes",
   "main": "index.js",
   "scripts": {
