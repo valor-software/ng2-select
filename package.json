@@ -1,0 +1,26 @@
+{
+  "name": "ng2-select",
+  "version": "0.0.0",
+  "description": "Angular2 based replacement for select boxes",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valor-software/ng2-select.git"
+  },
+  "keywords": [
+    "angular2",
+    "ng2",
+    "select",
+    "angular2-select",
+    "ng2-select"
+  ],
+  "author": "Dmitriy Shekhovtsov <valorkin@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/valor-software/ng2-select/issues"
+  },
+  "homepage": "https://github.com/valor-software/ng2-select#readme"
+}
