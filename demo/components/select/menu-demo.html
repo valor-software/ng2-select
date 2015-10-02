@@ -1,0 +1,10 @@
+<div class="selectivity-input example-input" style="width: 300px; margin-bottom: 20px;">
+  <h3>Select a city by timezone</h3>
+  <ng2-selectivity [allow-clear]="true"
+                   [items]="items"
+                   (data)="refreshValue($event)"
+                   (selected)="selected($event)"
+                   (removed)="removed($event)"
+                   [placeholder]="'No city selected'"></ng2-selectivity>
+  <p><pre>{{value.text}}</pre></p>
+</div>

@@ -1,0 +1,34 @@
+{
+  "version": "1.5.3",
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "outDir": "dist",
+    "sourceMap": true,
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "listFiles": false,
+    "noLib": false,
+    "noEmitOnError": false,
+    "noImplicitAny": false
+  },
+  "filesGlob": [
+    "./**/*.ts",
+    "!./node_modules/**/*.ts"
+  ],
+  "files": [
+    "./components/select/select.ts",
+    "./components/select/select-item.ts",
+    "./components/index.ts",
+    "./components/module.ts",
+    "./demo/components/select-section.ts",
+    "./demo/components/select/single-demo.ts",
+    "./demo/components/select/multiple-demo.ts",
+    "./demo/components/select/children-demo.ts",
+    "./demo/index.ts",
+    "./tsd.d.ts",
+    "./typings/tsd.d.ts"
+  ]
+}
