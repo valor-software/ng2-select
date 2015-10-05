@@ -29,7 +29,6 @@ import {select} from 'ng2-select';
   - `allowClear` (`?boolean=false`) (*not yet supported*) - Set to `true` to allow the selection to be cleared. This option only applies to single-value inputs.
   - `placeholder` (`?string=''`) - Placeholder text to display when the element has no focus and selected items.
   - `multiple` - (`?boolean=false`) - Mode of this component. If set `true` user can select more than one option.
-  - `showSearchInputInDropdown` - (`?boolean=true`) - Set to `false` to remove the search input used in dropdowns.
   This option only applies to single-value inputs, as multiple-value inputs don't have the search input in the dropdown to begin with.
 
 ### Select events
