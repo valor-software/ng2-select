@@ -156,7 +156,7 @@ export class Select implements OnInit, OnDestroy {
 
   private f(e:any) {
     this.inputMode = !this.inputMode;
-    if (this.inputMode === true && e) {
+    if (this.inputMode === true && ((this.multiple === true && e) || this.multiple === false)) {
       this.focusToInput();
       this.open();
     }
@@ -167,7 +167,13 @@ export class Select implements OnInit, OnDestroy {
       return;
     }
 
-    if (e.keyCode === 46 || e.keyCode === 8) {
+    if (e.keyCode === 46) {
+      e.preventDefault();
+      this.inputEvent(e);
+      return;
+    }
+
+    if (e.keyCode === 8) {
       e.preventDefault();
       this.inputEvent(e, true);
       return;
