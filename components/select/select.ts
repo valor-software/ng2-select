@@ -15,9 +15,11 @@ import {SelectItem} from './select-item';
 let cssCommon = require('./common.css');
 
 function getIndex(a:Array<SelectItem>, v:SelectItem):number {
-  for (let i = 0; i < a.length; i++) {
-    if (a[i].id === v.id) {
-      return i;
+  if (v) {
+    for (let i = 0; i < a.length; i++) {
+      if (a[i].id === v.id) {
+        return i;
+      }
     }
   }
 
@@ -31,13 +33,15 @@ function getIndex(a:Array<SelectItem>, v:SelectItem):number {
     'placeholder',
     'initData:data',
     'items',
-    'multiple',
-    'showSearchInputInDropdown'],
+    'multiple'],
   events: ['selected', 'removed', 'data']
 })
 @View({
   template: `
-  <div tabindex="0" (keyup)="ff($event)" class="ui-select-container ui-select-bootstrap dropdown open">
+<div tabindex="0"
+     *ng-if="multiple === false"
+     (keyup)="ff($event)"
+     class="ui-select-container ui-select-bootstrap dropdown open">
     <div class="ui-select-match" *ng-if="!inputMode" class="btn-default-focus">
       <span tabindex="-1"
           class="btn btn-default form-control ui-select-toggle"
@@ -73,7 +77,51 @@ function getIndex(a:Array<SelectItem>, v:SelectItem):number {
         </div>
       </li>
     </ul>
-  </div>
+</div>
+
+<div tabindex="0"
+     *ng-if="multiple === true"
+     (keyup)="ff($event)"
+     (focus)="focusToInput('')"
+     class="ui-select-container ui-select-multiple ui-select-bootstrap dropdown form-control open">
+    <span class="ui-select-match">
+        <span *ng-for="#a of active">
+            <span class="ui-select-match-item btn btn-default btn-xs"
+                  tabindex="-1"
+                  type="button"
+                  [ng-class]="{'btn-default': true}">
+               <a class="close ui-select-match-close"
+                  (click)="remove(a)">&nbsp;&times;</a>
+               <span>{{a.text}}</span>
+           </span>
+        </span>
+    </span>
+    <input type="text"
+           (keydown)="inputEvent($event)"
+           (keyup)="inputEvent($event, true)"
+           (click)="f($event)"
+           autocomplete="false"
+           autocorrect="off"
+           autocapitalize="off"
+           spellcheck="false"
+           class="ui-select-search input-xs"
+           placeholder="{{active.length <= 0 ? placeholder : ''}}"
+           role="combobox">
+    <ul *ng-if="optionsOpened && options && options.length > 0"
+        class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
+        <li class="ui-select-choices-group">
+            <div *ng-for="#o of options"
+                 class="ui-select-choices-row"
+                 (mouseenter)="selectActive(o)"
+                 (click)="selectMatch(o, $event)"
+                 [ng-class]="{'active': isActive(o)}">
+                <a href="javascript:void(0)" class="ui-select-choices-row-inner">
+                    <div>{{o.text}}</div>
+                </a>
+            </div>
+        </li>
+    </ul>
+</div>
   `,
   styles: [cssCommon],
   directives: [CORE_DIRECTIVES, FORM_DIRECTIVES]
@@ -91,7 +139,6 @@ export class Select implements OnInit, OnDestroy {
   private itemObjects:Array<SelectItem> = [];
   private active:Array<SelectItem> = [];
   private activeOption:SelectItem;
-  private showSearchInputInDropdown:boolean = true;
   private offSideClickHandler:any;
   private inputMode:boolean = false;
   private optionsOpened:boolean = false;
@@ -107,9 +154,9 @@ export class Select implements OnInit, OnDestroy {
     }, 0);
   }
 
-  private f() {
+  private f(e:any) {
     this.inputMode = !this.inputMode;
-    if (this.inputMode === true) {
+    if (this.inputMode === true && e) {
       this.focusToInput();
       this.open();
     }
@@ -120,13 +167,13 @@ export class Select implements OnInit, OnDestroy {
       return;
     }
 
-    if (e.keyCode === 46) {
+    if (e.keyCode === 46 || e.keyCode === 8) {
       e.preventDefault();
-      this.inputEvent(e);
+      this.inputEvent(e, true);
       return;
     }
 
-    if (e.keyCode === 9 || e.keyCode === 8 || e.keyCode === 13 ||
+    if (e.keyCode === 9 || e.keyCode === 13 ||
       e.keyCode === 27 || (e.keyCode >= 37 && e.keyCode <= 40)) {
       e.preventDefault();
       return;
@@ -262,8 +309,27 @@ export class Select implements OnInit, OnDestroy {
   }
 
   public inputEvent(e:any, isUpMode:boolean = false) {
-    // esc and tab
-    if (!isUpMode && (e.keyCode === 27 || e.keyCode === 9)) {
+    // tab
+    if (e.keyCode === 9) {
+      return;
+    }
+
+    // backspace
+    if (!isUpMode && e.keyCode === 8) {
+      let el:any = this.element.nativeElement
+        .querySelector('div.ui-select-container > input');
+
+      if (!el.value || el.value.length <= 0) {
+        if (this.active.length > 0) {
+          this.remove(this.active[this.active.length - 1]);
+        }
+
+        e.preventDefault();
+      }
+    }
+
+    // esc
+    if (!isUpMode && e.keyCode === 27) {
       this.hideOptions();
       this.element.nativeElement.children[0].focus();
       e.preventDefault();
@@ -368,7 +434,12 @@ export class Select implements OnInit, OnDestroy {
 
     this.doEvent('selected', value);
     this.hideOptions();
-    this.element.nativeElement.children[0].focus();
+
+    if (this.multiple === true) {
+      this.focusToInput('');
+    } else {
+      this.element.nativeElement.querySelector('.ui-select-container').focus();
+    }
   }
 
   private selectActive(value:SelectItem) {
@@ -377,14 +448,6 @@ export class Select implements OnInit, OnDestroy {
 
   private isActive(value:SelectItem):boolean {
     return this.activeOption.text === value.text;
-  }
-
-  public hasSearchInput():boolean {
-    if (this.multiple === true) {
-      return false;
-    }
-
-    return this.showSearchInputInDropdown;
   }
 }
 

@@ -4,7 +4,7 @@ import {Component, View, CORE_DIRECTIVES, NgNonBindable} from 'angular2/angular2
 
 import {tabs} from 'ng2-bootstrap';
 import {SingleDemo} from './select/single-demo';
-// import {MultipleDemo} from './select/multiple-demo';
+import {MultipleDemo} from './select/multiple-demo';
 // import {ChildrenDemo} from './select/children-demo';
 // import {MenuDemo} from './select/menu-demo';
 
@@ -18,12 +18,12 @@ let tabDesc:Array<any> = [
     heading: 'Single',
     ts: require('!!prismjs?lang=typescript!./select/single-demo.ts'),
     html: require('!!prismjs?lang=markup!./select/single-demo.html')
-  }/*,
+  },
   {
     heading: 'Multiple',
     ts: require('!!prismjs?lang=typescript!./select/multiple-demo.ts'),
     html: require('!!prismjs?lang=markup!./select/multiple-demo.html')
-  },
+  }/*,
   {
     heading: 'Children',
     ts: require('!!prismjs?lang=typescript!./select/children-demo.ts'),
@@ -86,7 +86,7 @@ tabDesc.forEach(desc => {
   </section>
   `,
   // directives: [SingleDemo, MultipleDemo, ChildrenDemo, MenuDemo, tabs, CORE_DIRECTIVES, NgNonBindable]
-  directives: [SingleDemo, tabs, CORE_DIRECTIVES, NgNonBindable]
+  directives: [SingleDemo, MultipleDemo, tabs, CORE_DIRECTIVES, NgNonBindable]
 })
 export class SelectSection {
   private currentHeading:string = 'Single';
