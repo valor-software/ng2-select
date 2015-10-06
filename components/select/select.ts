@@ -15,18 +15,6 @@ import {IOptionsBehavior} from './select-interfaces';
 
 let cssCommon = require('./common.css');
 
-function getIndex(a:Array<SelectItem>, v:SelectItem):number {
-  if (v) {
-    for (let i = 0; i < a.length; i++) {
-      if (a[i].id === v.id) {
-        return i;
-      }
-    }
-  }
-
-  return -1;
-}
-
 let optionsTemplate = `
     <ul *ng-if="optionsOpened && options && options.length > 0 && !itemObjects[0].hasChildren()"
         class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
@@ -297,6 +285,12 @@ export class Select implements OnInit, OnDestroy {
       return;
     }
 
+    if (isUpMode && (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 38 ||
+      e.keyCode === 40 || e.keyCode === 13)) {
+      e.preventDefault();
+      return;
+    }
+
     // backspace
     if (!isUpMode && e.keyCode === 8) {
       let el:any = this.element.nativeElement
@@ -423,7 +417,7 @@ export module Select {
       let ai = this.actor.options.indexOf(this.actor.activeOption);
 
       if (ai < 0 && optionsMap !== null) {
-        ai = optionsMap.get(this.actor.activeOption.id) - 1;
+        ai = optionsMap.get(this.actor.activeOption.id);
       }
 
       return ai;
@@ -505,14 +499,8 @@ export module Select {
         (this.actor.multiple === false ||
         (this.actor.multiple === true &&
         this.actor.active.indexOf(option) < 0)));
-      let isActiveAvailable = getIndex(options, this.actor.activeOption) >= 0;
-
       this.actor.options = options;
-
-      if (this.actor.options.length > 0 && !isActiveAvailable) {
-        this.actor.activeOption = this.actor.options[0];
-      }
-
+      this.actor.activeOption = this.actor.options[0];
       super.ensureHighlightVisible();
     }
   }
@@ -538,8 +526,10 @@ export module Select {
     }
 
     public prev() {
-      let indexParent = getIndex(this.actor.options, this.actor.activeOption.parent);
-      let index = getIndex(this.actor.options[indexParent].children, this.actor.activeOption);
+      let indexParent = this.actor.options
+        .findIndex(a => this.actor.activeOption.parent && this.actor.activeOption.parent.id === a.id);
+      let index = this.actor.options[indexParent].children
+        .findIndex(a => this.actor.activeOption && this.actor.activeOption.id === a.id);
       this.actor.activeOption = this.actor.options[indexParent].children[index - 1];
 
       if (!this.actor.activeOption) {
@@ -559,8 +549,10 @@ export module Select {
     }
 
     public next() {
-      let indexParent = getIndex(this.actor.options, this.actor.activeOption.parent);
-      let index = getIndex(this.actor.options[indexParent].children, this.actor.activeOption);
+      let indexParent = this.actor.options
+        .findIndex(a => this.actor.activeOption.parent && this.actor.activeOption.parent.id === a.id);
+      let index = this.actor.options[indexParent].children
+        .findIndex(a => this.actor.activeOption && this.actor.activeOption.id === a.id);
       this.actor.activeOption = this.actor.options[indexParent].children[index + 1];
       if (!this.actor.activeOption) {
         if (this.actor.options[indexParent + 1]) {
@@ -579,8 +571,6 @@ export module Select {
     public filter(query:RegExp) {
       let options:Array<SelectItem> = [];
       let optionsMap:Map<string, number> = new Map<string, number>();
-      let isActiveAvailable = false;
-
       let startPos = 0;
 
       for (let si of this.actor.itemObjects) {
@@ -588,10 +578,6 @@ export module Select {
         startPos = si.fillChildrenHash(optionsMap, startPos);
 
         if (children.length > 0) {
-          if (getIndex(children, this.actor.activeOption) >= 0) {
-            isActiveAvailable = true;
-          }
-
           let newSi = si.getSimilar();
           newSi.children = children;
           options.push(newSi);
@@ -599,11 +585,7 @@ export module Select {
       }
 
       this.actor.options = options;
-
-      if (this.actor.options.length > 0 && !isActiveAvailable) {
-        this.actor.activeOption = this.actor.options[0];
-      }
-
+      this.actor.activeOption = this.actor.options[0];
       super.ensureHighlightVisible(optionsMap);
     }
   }

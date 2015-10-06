@@ -27,7 +27,7 @@ export class SelectItem {
   public fillChildrenHash(optionsMap:Map<string, number>, startIndex:number):number {
     let i = startIndex;
     this.children.map(child => {
-      optionsMap.set(child.id, ++i);
+      optionsMap.set(child.id, i++);
     });
 
     return i;
