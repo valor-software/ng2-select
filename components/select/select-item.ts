@@ -21,11 +21,16 @@ export class SelectItem {
         });
         this.text = source.text;
       }
-
-      if (source.submenu) {
-        this.subMenu = new SelectSubMenu(source.submenu, this);
-      }
     }
+  }
+
+  public fillChildrenHash(optionsMap:Map<string, number>, startIndex:number):number {
+    let i = startIndex;
+    this.children.map(child => {
+      optionsMap.set(child.id, ++i);
+    });
+
+    return i;
   }
 
   public hasChildren():boolean {

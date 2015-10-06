@@ -11,6 +11,7 @@ import {
 import {bind, forwardRef, ResolvedBinding, Injector} from 'angular2/di';
 
 import {SelectItem} from './select-item';
+import {IOptionsBehavior} from './select-interfaces';
 
 let cssCommon = require('./common.css');
 
@@ -25,6 +26,41 @@ function getIndex(a:Array<SelectItem>, v:SelectItem):number {
 
   return -1;
 }
+
+let optionsTemplate = `
+    <ul *ng-if="optionsOpened && options && options.length > 0 && !itemObjects[0].hasChildren()"
+        class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
+      <li class="ui-select-choices-group">
+        <div *ng-for="#o of options"
+             class="ui-select-choices-row"
+             (mouseenter)="selectActive(o)"
+             (click)="selectMatch(o, $event)"
+             [ng-class]="{'active': isActive(o)}">
+          <a href="javascript:void(0)" class="ui-select-choices-row-inner">
+            <div>{{o.text}}</div>
+          </a>
+        </div>
+      </li>
+    </ul>
+
+    <ul *ng-if="optionsOpened && options && options.length > 0 && itemObjects[0].hasChildren()"
+        class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
+      <li *ng-for="#c of options; #index=index" class="ui-select-choices-group">
+        <div class="divider" *ng-if="index > 0"></div>
+        <div class="ui-select-choices-group-label dropdown-header">{{c.text}}</div>
+
+        <div *ng-for="#o of c.children"
+             class="ui-select-choices-row"
+             (mouseenter)="selectActive(o)"
+             (click)="selectMatch(o, $event)"
+             [ng-class]="{'active': isActive(o)}">
+          <a href="javascript:void(0)" class="ui-select-choices-row-inner">
+            <div>{{o.text}}</div>
+          </a>
+        </div>
+      </li>
+    </ul>
+`;
 
 @Component({
   selector: 'ng2-select',
@@ -63,20 +99,7 @@ function getIndex(a:Array<SelectItem>, v:SelectItem):number {
            class="form-control ui-select-search"
            *ng-if="inputMode"
            placeholder="{{active.length <= 0 ? placeholder : ''}}">
-    <ul *ng-if="optionsOpened && options && options.length > 0"
-        class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
-      <li class="ui-select-choices-group">
-        <div *ng-for="#o of options"
-             class="ui-select-choices-row"
-             (mouseenter)="selectActive(o)"
-             (click)="selectMatch(o, $event)"
-             [ng-class]="{'active': isActive(o)}">
-          <a href="javascript:void(0)" class="ui-select-choices-row-inner">
-            <div>{{o.text}}</div>
-          </a>
-        </div>
-      </li>
-    </ul>
+    ${optionsTemplate}
 </div>
 
 <div tabindex="0"
@@ -107,41 +130,30 @@ function getIndex(a:Array<SelectItem>, v:SelectItem):number {
            class="ui-select-search input-xs"
            placeholder="{{active.length <= 0 ? placeholder : ''}}"
            role="combobox">
-    <ul *ng-if="optionsOpened && options && options.length > 0"
-        class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
-        <li class="ui-select-choices-group">
-            <div *ng-for="#o of options"
-                 class="ui-select-choices-row"
-                 (mouseenter)="selectActive(o)"
-                 (click)="selectMatch(o, $event)"
-                 [ng-class]="{'active': isActive(o)}">
-                <a href="javascript:void(0)" class="ui-select-choices-row-inner">
-                    <div>{{o.text}}</div>
-                </a>
-            </div>
-        </li>
-    </ul>
+    ${optionsTemplate}
 </div>
   `,
   styles: [cssCommon],
   directives: [CORE_DIRECTIVES, FORM_DIRECTIVES]
 })
 export class Select implements OnInit, OnDestroy {
+  public multiple:boolean = false;
+  public options:Array<SelectItem> = [];
+  public itemObjects:Array<SelectItem> = [];
+  public active:Array<SelectItem> = [];
+  public activeOption:SelectItem;
+
   private data:EventEmitter = new EventEmitter();
-  private multiple:boolean = false;
   private selected:EventEmitter = new EventEmitter();
   private removed:EventEmitter = new EventEmitter();
   private allowClear:boolean = false;
   private placeholder:string = '';
   private initData:Array<any> = [];
   private _items:Array<any> = [];
-  private options:Array<SelectItem> = [];
-  private itemObjects:Array<SelectItem> = [];
-  private active:Array<SelectItem> = [];
-  private activeOption:SelectItem;
   private offSideClickHandler:any;
   private inputMode:boolean = false;
   private optionsOpened:boolean = false;
+  private behavior:IOptionsBehavior;
 
   constructor(public element:ElementRef) {
   }
@@ -201,7 +213,7 @@ export class Select implements OnInit, OnDestroy {
       this.multiple === true && !this.active.find(o => option.text === o.text)));
 
     if (this.options.length > 0) {
-      this.activeOption = this.options[0];
+      this.behavior.first();
     }
 
     this.optionsOpened = true;
@@ -217,6 +229,8 @@ export class Select implements OnInit, OnDestroy {
   }
 
   onInit() {
+    this.behavior = this.itemObjects[0].hasChildren() ?
+      new Select.ChildrenBehavior(this) : new Select.GenericBehavior(this);
     this.offSideClickHandler = this.getOffSideClickHandler(this);
     document.addEventListener('click', this.offSideClickHandler);
 
@@ -272,43 +286,6 @@ export class Select implements OnInit, OnDestroy {
     }
   }
 
-  private _getActiveIndex():number {
-    return this.options.indexOf(this.activeOption);
-  }
-
-  private _ensureHighlightVisible() {
-    let container = this.element.nativeElement.children[0].querySelector('.ui-select-choices-content');
-    if (!container) {
-      return;
-    }
-
-    let choices = container.querySelectorAll('.ui-select-choices-row');
-    if (choices.length < 1) {
-      return;
-    }
-
-    if (this._getActiveIndex() < 0) {
-      return;
-    }
-
-    let highlighted:any = choices[this._getActiveIndex()];
-    if (!highlighted) {
-      return;
-    }
-
-    let posY:number = highlighted.offsetTop + highlighted.clientHeight - container.scrollTop;
-    let height:number = container.offsetHeight;
-
-    if (posY > height) {
-      container.scrollTop += posY - height;
-    } else if (posY < highlighted.clientHeight) {
-      // if (ctrl.isGrouped && ctrl.activeIndex === 0)
-      //  container[0].scrollTop = 0; //To make group header visible when going all the way up
-      // else
-      container.scrollTop -= highlighted.clientHeight - posY;
-    }
-  }
-
   private hideOptions() {
     this.inputMode = false;
     this.optionsOpened = false;
@@ -352,34 +329,28 @@ export class Select implements OnInit, OnDestroy {
 
     // left
     if (!isUpMode && e.keyCode === 37 && this.items.length > 0) {
-      this.activeOption = this.options[0];
-      this._ensureHighlightVisible();
+      this.behavior.first();
       e.preventDefault();
       return;
     }
 
     // right
     if (!isUpMode && e.keyCode === 39 && this.items.length > 0) {
-      this.activeOption = this.options[this.options.length - 1];
-      this._ensureHighlightVisible();
+      this.behavior.last();
       e.preventDefault();
       return;
     }
 
     // up
     if (!isUpMode && e.keyCode === 38) {
-      let index = this.options.indexOf(this.activeOption);
-      this.activeOption = this.options[index - 1 < 0 ? this.options.length - 1 : index - 1];
-      this._ensureHighlightVisible();
+      this.behavior.prev();
       e.preventDefault();
       return;
     }
 
     // down
     if (!isUpMode && e.keyCode === 40) {
-      let index = this.options.indexOf(this.activeOption);
-      this.activeOption = this.options[index + 1 > this.options.length - 1 ? 0 : index + 1];
-      this._ensureHighlightVisible();
+      this.behavior.next();
       e.preventDefault();
       return;
     }
@@ -392,26 +363,8 @@ export class Select implements OnInit, OnDestroy {
     }
 
     if (e.srcElement) {
-      let query:RegExp = new RegExp(e.srcElement.value, 'ig');
-      let {options, isActiveAvailable} = this.filter(query);
-      this.options = options;
-
-      if (this.options.length > 0 && !isActiveAvailable) {
-        this.activeOption = this.options[0];
-      }
-
-      this._ensureHighlightVisible();
+      this.behavior.filter(new RegExp(e.srcElement.value, 'ig'));
     }
-  }
-
-  private filter(query:RegExp):any {
-    let options = this.itemObjects
-      .filter(option => query.test(option.text) &&
-      (this.multiple === false ||
-      (this.multiple === true &&
-      this.active.indexOf(option) < 0)));
-    let isActiveAvailable = getIndex(options, this.activeOption) >= 0;
-    return {options, isActiveAvailable};
   }
 
   private selectActiveMatch() {
@@ -454,6 +407,205 @@ export class Select implements OnInit, OnDestroy {
 
   private isActive(value:SelectItem):boolean {
     return this.activeOption.text === value.text;
+  }
+}
+
+
+export module Select {
+
+  export class Behavior {
+    public optionsMap:Map<string, number> = new Map<string, number>();
+
+    constructor(public actor:Select) {
+    }
+
+    private getActiveIndex(optionsMap:Map<string, number> = null):number {
+      let ai = this.actor.options.indexOf(this.actor.activeOption);
+
+      if (ai < 0 && optionsMap !== null) {
+        ai = optionsMap.get(this.actor.activeOption.id) - 1;
+      }
+
+      return ai;
+    }
+
+    public fillOptionsMap() {
+      this.optionsMap.clear();
+      let startPos = 0;
+      this.actor.itemObjects.map(i => {
+        startPos = i.fillChildrenHash(this.optionsMap, startPos);
+      });
+    }
+
+    public ensureHighlightVisible(optionsMap:Map<string, number> = null) {
+      let container = this.actor.element.nativeElement.querySelector('.ui-select-choices-content');
+
+      if (!container) {
+        return;
+      }
+
+      let choices = container.querySelectorAll('.ui-select-choices-row');
+      if (choices.length < 1) {
+        return;
+      }
+
+      let activeIndex = this.getActiveIndex(optionsMap);
+      if (activeIndex < 0) {
+        return;
+      }
+
+      let highlighted:any = choices[activeIndex];
+      if (!highlighted) {
+        return;
+      }
+
+      let posY:number = highlighted.offsetTop + highlighted.clientHeight - container.scrollTop;
+      let height:number = container.offsetHeight;
+
+      if (posY > height) {
+        container.scrollTop += posY - height;
+      } else if (posY < highlighted.clientHeight) {
+        container.scrollTop -= highlighted.clientHeight - posY;
+      }
+    }
+  }
+
+  export class GenericBehavior extends Behavior implements IOptionsBehavior {
+    constructor(public actor:Select) {
+      super(actor);
+    }
+
+    public first() {
+      this.actor.activeOption = this.actor.options[0];
+      super.ensureHighlightVisible();
+    }
+
+    public last() {
+      this.actor.activeOption = this.actor.options[this.actor.options.length - 1];
+      super.ensureHighlightVisible();
+    }
+
+    public prev() {
+      let index = this.actor.options.indexOf(this.actor.activeOption);
+      this.actor.activeOption = this.actor
+        .options[index - 1 < 0 ? this.actor.options.length - 1 : index - 1];
+      super.ensureHighlightVisible();
+    }
+
+    public next() {
+      let index = this.actor.options.indexOf(this.actor.activeOption);
+      this.actor.activeOption = this.actor
+        .options[index + 1 > this.actor.options.length - 1 ? 0 : index + 1];
+      super.ensureHighlightVisible();
+    }
+
+    public filter(query:RegExp) {
+      let options = this.actor.itemObjects
+        .filter(option => query.test(option.text) &&
+        (this.actor.multiple === false ||
+        (this.actor.multiple === true &&
+        this.actor.active.indexOf(option) < 0)));
+      let isActiveAvailable = getIndex(options, this.actor.activeOption) >= 0;
+
+      this.actor.options = options;
+
+      if (this.actor.options.length > 0 && !isActiveAvailable) {
+        this.actor.activeOption = this.actor.options[0];
+      }
+
+      super.ensureHighlightVisible();
+    }
+  }
+
+  export class ChildrenBehavior extends Behavior implements IOptionsBehavior {
+    constructor(public actor:Select) {
+      super(actor);
+    }
+
+    public first() {
+      this.actor.activeOption = this.actor.options[0].children[0];
+      this.fillOptionsMap();
+      this.ensureHighlightVisible(this.optionsMap);
+    }
+
+    public last() {
+      this.actor.activeOption =
+        this.actor
+          .options[this.actor.options.length - 1]
+          .children[this.actor.options[this.actor.options.length - 1].children.length - 1];
+      this.fillOptionsMap();
+      this.ensureHighlightVisible(this.optionsMap);
+    }
+
+    public prev() {
+      let indexParent = getIndex(this.actor.options, this.actor.activeOption.parent);
+      let index = getIndex(this.actor.options[indexParent].children, this.actor.activeOption);
+      this.actor.activeOption = this.actor.options[indexParent].children[index - 1];
+
+      if (!this.actor.activeOption) {
+        if (this.actor.options[indexParent - 1]) {
+          this.actor.activeOption = this.actor
+            .options[indexParent - 1]
+            .children[this.actor.options[indexParent - 1].children.length - 1];
+        }
+      }
+
+      if (!this.actor.activeOption) {
+        this.last();
+      }
+
+      this.fillOptionsMap();
+      this.ensureHighlightVisible(this.optionsMap);
+    }
+
+    public next() {
+      let indexParent = getIndex(this.actor.options, this.actor.activeOption.parent);
+      let index = getIndex(this.actor.options[indexParent].children, this.actor.activeOption);
+      this.actor.activeOption = this.actor.options[indexParent].children[index + 1];
+      if (!this.actor.activeOption) {
+        if (this.actor.options[indexParent + 1]) {
+          this.actor.activeOption = this.actor.options[indexParent + 1].children[0];
+        }
+      }
+
+      if (!this.actor.activeOption) {
+        this.first();
+      }
+
+      this.fillOptionsMap();
+      this.ensureHighlightVisible(this.optionsMap);
+    }
+
+    public filter(query:RegExp) {
+      let options:Array<SelectItem> = [];
+      let optionsMap:Map<string, number> = new Map<string, number>();
+      let isActiveAvailable = false;
+
+      let startPos = 0;
+
+      for (let si of this.actor.itemObjects) {
+        let children:Array<SelectItem> = si.children.filter(option => query.test(option.text));
+        startPos = si.fillChildrenHash(optionsMap, startPos);
+
+        if (children.length > 0) {
+          if (getIndex(children, this.actor.activeOption) >= 0) {
+            isActiveAvailable = true;
+          }
+
+          let newSi = si.getSimilar();
+          newSi.children = children;
+          options.push(newSi);
+        }
+      }
+
+      this.actor.options = options;
+
+      if (this.actor.options.length > 0 && !isActiveAvailable) {
+        this.actor.activeOption = this.actor.options[0];
+      }
+
+      super.ensureHighlightVisible(optionsMap);
+    }
   }
 }
 

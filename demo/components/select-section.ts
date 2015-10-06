@@ -5,8 +5,7 @@ import {Component, View, CORE_DIRECTIVES, NgNonBindable} from 'angular2/angular2
 import {tabs} from 'ng2-bootstrap';
 import {SingleDemo} from './select/single-demo';
 import {MultipleDemo} from './select/multiple-demo';
-// import {ChildrenDemo} from './select/children-demo';
-// import {MenuDemo} from './select/menu-demo';
+import {ChildrenDemo} from './select/children-demo';
 
 let name = 'Select';
 let src = 'https://github.com/valor-software/ng2-select/blob/master/components/select/select.ts';
@@ -23,17 +22,12 @@ let tabDesc:Array<any> = [
     heading: 'Multiple',
     ts: require('!!prismjs?lang=typescript!./select/multiple-demo.ts'),
     html: require('!!prismjs?lang=markup!./select/multiple-demo.html')
-  }/*,
+  },
   {
     heading: 'Children',
     ts: require('!!prismjs?lang=typescript!./select/children-demo.ts'),
     html: require('!!prismjs?lang=markup!./select/children-demo.html')
-  },
-  {
-    heading: 'Menu',
-    ts: require('!!prismjs?lang=typescript!./select/menu-demo.ts'),
-    html: require('!!prismjs?lang=markup!./select/menu-demo.html')
-  }*/
+  }
 ];
 
 let tabsContent:string = ``;
@@ -85,8 +79,7 @@ tabDesc.forEach(desc => {
     </div>
   </section>
   `,
-  // directives: [SingleDemo, MultipleDemo, ChildrenDemo, MenuDemo, tabs, CORE_DIRECTIVES, NgNonBindable]
-  directives: [SingleDemo, MultipleDemo, tabs, CORE_DIRECTIVES, NgNonBindable]
+  directives: [SingleDemo, MultipleDemo, ChildrenDemo, tabs, CORE_DIRECTIVES, NgNonBindable]
 })
 export class SelectSection {
   private currentHeading:string = 'Single';
