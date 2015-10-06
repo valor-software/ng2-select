@@ -500,8 +500,11 @@ export module Select {
         (this.actor.multiple === true &&
         this.actor.active.indexOf(option) < 0)));
       this.actor.options = options;
-      this.actor.activeOption = this.actor.options[0];
-      super.ensureHighlightVisible();
+
+      if (this.actor.options.length > 0) {
+        this.actor.activeOption = this.actor.options[0];
+        super.ensureHighlightVisible();
+      }
     }
   }
 
@@ -585,8 +588,11 @@ export module Select {
       }
 
       this.actor.options = options;
-      this.actor.activeOption = this.actor.options[0];
-      super.ensureHighlightVisible(optionsMap);
+
+      if (this.actor.options.length > 0) {
+        this.actor.activeOption = this.actor.options[0].children[0];
+        super.ensureHighlightVisible(optionsMap);
+      }
     }
   }
 }
