@@ -15,20 +15,20 @@ webpackJsonp([2],{
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(86));
-	__export(__webpack_require__(84));
+	__export(__webpack_require__(88));
+	__export(__webpack_require__(85));
 	//# sourceMappingURL=index.js.map
 
 /***/ },
 
-/***/ 83:
+/***/ 84:
 /***/ function(module, exports) {
 
-	module.exports = "\n/* Style when highlighting a search. */\n.ui-select-highlight {\n  font-weight: bold;\n}\n\n.ui-select-offscreen {\n  clip: rect(0 0 0 0) !important;\n  width: 1px !important;\n  height: 1px !important;\n  border: 0 !important;\n  margin: 0 !important;\n  padding: 0 !important;\n  overflow: hidden !important;\n  position: absolute !important;\n  outline: 0 !important;\n  left: 0px !important;\n  top: 0px !important;\n}\n\n\n.ui-select-choices-row:hover {\n  background-color: #f5f5f5;\n}\n\n/* Select2 theme */\n\n/* Mark invalid Select2 */\n.ng-dirty.ng-invalid > a.select2-choice {\n    border-color: #D44950;\n}\n\n.select2-result-single {\n  padding-left: 0;\n}\n\n.select2-locked > .select2-search-choice-close{\n  display:none;\n}\n\n.select-locked > .ui-select-match-close{\n    display:none;\n}\n\nbody > .select2-container.open {\n  z-index: 9999; /* The z-index Select2 applies to the select2-drop */\n}\n\n/* Handle up direction Select2 */\n.ui-select-container[theme=\"select2\"].direction-up .ui-select-match {\n    border-radius: 4px; /* FIXME hardcoded value :-/ */\n    border-top-left-radius: 0;\n    border-top-right-radius: 0;\n}\n.ui-select-container[theme=\"select2\"].direction-up .ui-select-dropdown {\n    border-radius: 4px; /* FIXME hardcoded value :-/ */\n    border-bottom-left-radius: 0;\n    border-bottom-right-radius: 0;\n\n    border-top-width: 1px;  /* FIXME hardcoded value :-/ */\n    border-top-style: solid;\n\n    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.25);\n\n    margin-top: -4px; /* FIXME hardcoded value :-/ */\n}\n.ui-select-container[theme=\"select2\"].direction-up .ui-select-dropdown .select2-search {\n    margin-top: 4px; /* FIXME hardcoded value :-/ */\n}\n.ui-select-container[theme=\"select2\"].direction-up.select2-dropdown-open .ui-select-match {\n    border-bottom-color: #5897fb;\n}\n\n/* Selectize theme */\n\n/* Helper class to show styles when focus */\n.selectize-input.selectize-focus{\n  border-color: #007FBB !important;\n}\n\n/* Fix input width for Selectize theme */\n.selectize-control > .selectize-input > input {\n  width: 100%;\n}\n\n/* Fix dropdown width for Selectize theme */\n.selectize-control > .selectize-dropdown {\n  width: 100%;\n}\n\n/* Mark invalid Selectize */\n.ng-dirty.ng-invalid > div.selectize-input {\n    border-color: #D44950;\n}\n\n/* Handle up direction Selectize */\n.ui-select-container[theme=\"selectize\"].direction-up .ui-select-dropdown {\n    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.25);\n\n    margin-top: -2px; /* FIXME hardcoded value :-/ */\n}\n\n/* Bootstrap theme */\n\n/* Helper class to show styles when focus */\n.btn-default-focus {\n  color: #333;\n  background-color: #EBEBEB;\n  border-color: #ADADAD;\n  text-decoration: none;\n  outline: 5px auto -webkit-focus-ring-color;\n  outline-offset: -2px;\n  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);\n}\n\n.ui-select-bootstrap .ui-select-toggle {\n  position: relative;\n}\n\n.ui-select-bootstrap .ui-select-toggle > .caret {\n  position: absolute;\n  height: 10px;\n  top: 50%;\n  right: 10px;\n  margin-top: -2px;\n}\n\n/* Fix Bootstrap dropdown position when inside a input-group */\n.input-group > .ui-select-bootstrap.dropdown {\n  /* Instead of relative */\n  position: static;\n}\n\n.input-group > .ui-select-bootstrap > input.ui-select-search.form-control {\n  border-radius: 4px; /* FIXME hardcoded value :-/ */\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0;\n}\n.input-group > .ui-select-bootstrap > input.ui-select-search.form-control.direction-up {\n  border-radius: 4px !important; /* FIXME hardcoded value :-/ */\n  border-top-right-radius: 0 !important;\n  border-bottom-right-radius: 0 !important;\n}\n\n.ui-select-bootstrap > .ui-select-match > .btn{\n  /* Instead of center because of .btn */\n  text-align: left !important;\n}\n\n.ui-select-bootstrap > .ui-select-match > .caret {\n  position: absolute;\n  top: 45%;\n  right: 15px;\n}\n\n/* See Scrollable Menu with Bootstrap 3 http://stackoverflow.com/questions/19227496 */\n.ui-select-bootstrap > .ui-select-choices {\n  width: 100%;\n  height: auto;\n  max-height: 200px;\n  overflow-x: hidden;\n  margin-top: -1px;\n}\n\nbody > .ui-select-bootstrap.open {\n  z-index: 1000; /* Standard Bootstrap dropdown z-index */\n}\n\n.ui-select-multiple.ui-select-bootstrap {\n  height: auto;\n  padding: 3px 3px 0 3px;\n}\n\n.ui-select-multiple.ui-select-bootstrap input.ui-select-search {\n  background-color: transparent !important; /* To prevent double background when disabled */\n  border: none;\n  outline: none;\n  height: 1.666666em;\n  margin-bottom: 3px;\n}\n\n.ui-select-multiple.ui-select-bootstrap .ui-select-match .close {\n  font-size: 1.6em;\n  line-height: 0.75;\n}\n\n.ui-select-multiple.ui-select-bootstrap .ui-select-match-item {\n  outline: 0;\n  margin: 0 3px 3px 0;\n}\n\n.ui-select-multiple .ui-select-match-item {\n  position: relative;\n}\n\n.ui-select-multiple .ui-select-match-item.dropping-before:before {\n  content: \"\";\n  position: absolute;\n  top: 0;\n  right: 100%;\n  height: 100%;\n  margin-right: 2px;\n  border-left: 1px solid #428bca;\n}\n\n.ui-select-multiple .ui-select-match-item.dropping-after:after {\n  content: \"\";\n  position: absolute;\n  top: 0;\n  left: 100%;\n  height: 100%;\n  margin-left: 2px;\n  border-right: 1px solid #428bca;\n}\n\n.ui-select-bootstrap .ui-select-choices-row>a {\n    display: block;\n    padding: 3px 20px;\n    clear: both;\n    font-weight: 400;\n    line-height: 1.42857143;\n    color: #333;\n    white-space: nowrap;\n}\n\n.ui-select-bootstrap .ui-select-choices-row>a:hover, .ui-select-bootstrap .ui-select-choices-row>a:focus {\n    text-decoration: none;\n    color: #262626;\n    background-color: #f5f5f5;\n}\n\n.ui-select-bootstrap .ui-select-choices-row.active>a {\n    color: #fff;\n    text-decoration: none;\n    outline: 0;\n    background-color: #428bca;\n}\n\n.ui-select-bootstrap .ui-select-choices-row.disabled>a,\n.ui-select-bootstrap .ui-select-choices-row.active.disabled>a {\n    color: #777;\n    cursor: not-allowed;\n    background-color: #fff;\n}\n\n/* fix hide/show angular animation */\n.ui-select-match.ng-hide-add,\n.ui-select-search.ng-hide-add {\n    display: none !important;\n}\n\n/* Mark invalid Bootstrap */\n.ui-select-bootstrap.ng-dirty.ng-invalid > button.btn.ui-select-match {\n    border-color: #D44950;\n}\n\n/* Handle up direction Bootstrap */\n.ui-select-container[theme=\"bootstrap\"].direction-up .ui-select-dropdown {\n    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.25);\n}\n"
+	module.exports = "\n/* Style when highlighting a search. */\n.ui-select-highlight {\n  font-weight: bold;\n}\n\n.ui-select-offscreen {\n  clip: rect(0 0 0 0) !important;\n  width: 1px !important;\n  height: 1px !important;\n  border: 0 !important;\n  margin: 0 !important;\n  padding: 0 !important;\n  overflow: hidden !important;\n  position: absolute !important;\n  outline: 0 !important;\n  left: 0px !important;\n  top: 0px !important;\n}\n\n\n.ui-select-choices-row:hover {\n  background-color: #f5f5f5;\n}\n\n/* Select2 theme */\n\n/* Mark invalid Select2 */\n.ng-dirty.ng-invalid > a.select2-choice {\n    border-color: #D44950;\n}\n\n.select2-result-single {\n  padding-left: 0;\n}\n\n.select2-locked > .select2-search-choice-close{\n  display:none;\n}\n\n.select-locked > .ui-select-match-close{\n    display:none;\n}\n\nbody > .select2-container.open {\n  z-index: 9999; /* The z-index Select2 applies to the select2-drop */\n}\n\n/* Handle up direction Select2 */\n.ui-select-container[theme=\"select2\"].direction-up .ui-select-match {\n    border-radius: 4px; /* FIXME hardcoded value :-/ */\n    border-top-left-radius: 0;\n    border-top-right-radius: 0;\n}\n.ui-select-container[theme=\"select2\"].direction-up .ui-select-dropdown {\n    border-radius: 4px; /* FIXME hardcoded value :-/ */\n    border-bottom-left-radius: 0;\n    border-bottom-right-radius: 0;\n\n    border-top-width: 1px;  /* FIXME hardcoded value :-/ */\n    border-top-style: solid;\n\n    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.25);\n\n    margin-top: -4px; /* FIXME hardcoded value :-/ */\n}\n.ui-select-container[theme=\"select2\"].direction-up .ui-select-dropdown .select2-search {\n    margin-top: 4px; /* FIXME hardcoded value :-/ */\n}\n.ui-select-container[theme=\"select2\"].direction-up.select2-dropdown-open .ui-select-match {\n    border-bottom-color: #5897fb;\n}\n\n/* Selectize theme */\n\n/* Helper class to show styles when focus */\n.selectize-input.selectize-focus{\n  border-color: #007FBB !important;\n}\n\n/* Fix input width for Selectize theme */\n.selectize-control > .selectize-input > input {\n  width: 100%;\n}\n\n/* Fix dropdown width for Selectize theme */\n.selectize-control > .selectize-dropdown {\n  width: 100%;\n}\n\n/* Mark invalid Selectize */\n.ng-dirty.ng-invalid > div.selectize-input {\n    border-color: #D44950;\n}\n\n/* Handle up direction Selectize */\n.ui-select-container[theme=\"selectize\"].direction-up .ui-select-dropdown {\n    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.25);\n\n    margin-top: -2px; /* FIXME hardcoded value :-/ */\n}\n\n/* Bootstrap theme */\n\n/* Helper class to show styles when focus */\n.btn-default-focus {\n  color: #333;\n  background-color: #EBEBEB;\n  border-color: #ADADAD;\n  text-decoration: none;\n  outline: 5px auto -webkit-focus-ring-color;\n  outline-offset: -2px;\n  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);\n}\n\n.ui-select-bootstrap .ui-select-toggle {\n  position: relative;\n}\n\n.ui-select-bootstrap .ui-select-toggle > .caret {\n  position: absolute;\n  height: 10px;\n  top: 50%;\n  right: 10px;\n  margin-top: -2px;\n}\n\n/* Fix Bootstrap dropdown position when inside a input-group */\n.input-group > .ui-select-bootstrap.dropdown {\n  /* Instead of relative */\n  position: static;\n}\n\n.input-group > .ui-select-bootstrap > input.ui-select-search.form-control {\n  border-radius: 4px; /* FIXME hardcoded value :-/ */\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0;\n}\n.input-group > .ui-select-bootstrap > input.ui-select-search.form-control.direction-up {\n  border-radius: 4px !important; /* FIXME hardcoded value :-/ */\n  border-top-right-radius: 0 !important;\n  border-bottom-right-radius: 0 !important;\n}\n\n.ui-select-bootstrap > .ui-select-match > .btn{\n  /* Instead of center because of .btn */\n  text-align: left !important;\n}\n\n.ui-select-bootstrap > .ui-select-match > .caret {\n  position: absolute;\n  top: 45%;\n  right: 15px;\n}\n\n.ui-disabled {\n    background-color: #eceeef ;\n    border-radius: 4px;\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    z-index: 5;\n    opacity: 0.6;\n    top: 0;\n    left: 0;\n    cursor: not-allowed;\n}\n\n/* See Scrollable Menu with Bootstrap 3 http://stackoverflow.com/questions/19227496 */\n.ui-select-bootstrap > .ui-select-choices {\n  width: 100%;\n  height: auto;\n  max-height: 200px;\n  overflow-x: hidden;\n  margin-top: -1px;\n}\n\nbody > .ui-select-bootstrap.open {\n  z-index: 1000; /* Standard Bootstrap dropdown z-index */\n}\n\n.ui-select-multiple.ui-select-bootstrap {\n  height: auto;\n  padding: 3px 3px 0 3px;\n}\n\n.ui-select-multiple.ui-select-bootstrap input.ui-select-search {\n  background-color: transparent !important; /* To prevent double background when disabled */\n  border: none;\n  outline: none;\n  height: 1.666666em;\n  margin-bottom: 3px;\n}\n\n.ui-select-multiple.ui-select-bootstrap .ui-select-match .close {\n  font-size: 1.6em;\n  line-height: 0.75;\n}\n\n.ui-select-multiple.ui-select-bootstrap .ui-select-match-item {\n  outline: 0;\n  margin: 0 3px 3px 0;\n}\n\n.ui-select-multiple .ui-select-match-item {\n  position: relative;\n}\n\n.ui-select-multiple .ui-select-match-item.dropping-before:before {\n  content: \"\";\n  position: absolute;\n  top: 0;\n  right: 100%;\n  height: 100%;\n  margin-right: 2px;\n  border-left: 1px solid #428bca;\n}\n\n.ui-select-multiple .ui-select-match-item.dropping-after:after {\n  content: \"\";\n  position: absolute;\n  top: 0;\n  left: 100%;\n  height: 100%;\n  margin-left: 2px;\n  border-right: 1px solid #428bca;\n}\n\n.ui-select-bootstrap .ui-select-choices-row>a {\n    display: block;\n    padding: 3px 20px;\n    clear: both;\n    font-weight: 400;\n    line-height: 1.42857143;\n    color: #333;\n    white-space: nowrap;\n}\n\n.ui-select-bootstrap .ui-select-choices-row>a:hover, .ui-select-bootstrap .ui-select-choices-row>a:focus {\n    text-decoration: none;\n    color: #262626;\n    background-color: #f5f5f5;\n}\n\n.ui-select-bootstrap .ui-select-choices-row.active>a {\n    color: #fff;\n    text-decoration: none;\n    outline: 0;\n    background-color: #428bca;\n}\n\n.ui-select-bootstrap .ui-select-choices-row.disabled>a,\n.ui-select-bootstrap .ui-select-choices-row.active.disabled>a {\n    color: #777;\n    cursor: not-allowed;\n    background-color: #fff;\n}\n\n/* fix hide/show angular animation */\n.ui-select-match.ng-hide-add,\n.ui-select-search.ng-hide-add {\n    display: none !important;\n}\n\n/* Mark invalid Bootstrap */\n.ui-select-bootstrap.ng-dirty.ng-invalid > button.btn.ui-select-match {\n    border-color: #D44950;\n}\n\n/* Handle up direction Bootstrap */\n.ui-select-container[theme=\"bootstrap\"].direction-up .ui-select-dropdown {\n    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.25);\n}\n"
 
 /***/ },
 
-/***/ 84:
+/***/ 85:
 /***/ function(module, exports) {
 
 	(function (Ng2SelectTheme) {
@@ -60,7 +60,7 @@ webpackJsonp([2],{
 
 /***/ },
 
-/***/ 85:
+/***/ 86:
 /***/ function(module, exports) {
 
 	var SelectItem = (function () {
@@ -106,7 +106,50 @@ webpackJsonp([2],{
 
 /***/ },
 
-/***/ 86:
+/***/ 87:
+/***/ function(module, exports, __webpack_require__) {
+
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") return Reflect.decorate(decorators, target, key, desc);
+	    switch (arguments.length) {
+	        case 2: return decorators.reduceRight(function(o, d) { return (d && d(o)) || o; }, target);
+	        case 3: return decorators.reduceRight(function(o, d) { return (d && d(target, key)), void 0; }, void 0);
+	        case 4: return decorators.reduceRight(function(o, d) { return (d && d(target, key, o)) || o; }, desc);
+	    }
+	};
+	var __metadata = (this && this.__metadata) || function (k, v) {
+	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+	};
+	var angular2_1 = __webpack_require__(5);
+	var HightlightPipe = (function () {
+	    function HightlightPipe() {
+	    }
+	    HightlightPipe.prototype.transform = function (value, args) {
+	        if (args.length < 1) {
+	            return value;
+	        }
+	        var query = args[0];
+	        return query ?
+	            value.replace(new RegExp(this.escapeRegexp(query), 'gi'), '<strong>$&</strong>') :
+	            value;
+	    };
+	    HightlightPipe.prototype.escapeRegexp = function (queryToEscape) {
+	        return queryToEscape.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
+	    };
+	    HightlightPipe = __decorate([
+	        angular2_1.Pipe({
+	            name: 'hightlight'
+	        }), 
+	        __metadata('design:paramtypes', [])
+	    ], HightlightPipe);
+	    return HightlightPipe;
+	})();
+	exports.HightlightPipe = HightlightPipe;
+	//# sourceMappingURL=select-pipes.js.map
+
+/***/ },
+
+/***/ 88:
 /***/ function(module, exports, __webpack_require__) {
 
 	/// <reference path="../../tsd.d.ts" />
@@ -127,9 +170,10 @@ webpackJsonp([2],{
 	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 	};
 	var angular2_1 = __webpack_require__(5);
-	var select_item_1 = __webpack_require__(85);
-	var cssCommon = __webpack_require__(83);
-	var optionsTemplate = "\n    <ul *ng-if=\"optionsOpened && options && options.length > 0 && !itemObjects[0].hasChildren()\"\n        class=\"ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu\">\n      <li class=\"ui-select-choices-group\">\n        <div *ng-for=\"#o of options\"\n             class=\"ui-select-choices-row\"\n             (mouseenter)=\"selectActive(o)\"\n             (click)=\"selectMatch(o, $event)\"\n             [ng-class]=\"{'active': isActive(o)}\">\n          <a href=\"javascript:void(0)\" class=\"ui-select-choices-row-inner\">\n            <div>{{o.text}}</div>\n          </a>\n        </div>\n      </li>\n    </ul>\n\n    <ul *ng-if=\"optionsOpened && options && options.length > 0 && itemObjects[0].hasChildren()\"\n        class=\"ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu\">\n      <li *ng-for=\"#c of options; #index=index\" class=\"ui-select-choices-group\">\n        <div class=\"divider\" *ng-if=\"index > 0\"></div>\n        <div class=\"ui-select-choices-group-label dropdown-header\">{{c.text}}</div>\n\n        <div *ng-for=\"#o of c.children\"\n             class=\"ui-select-choices-row\"\n             (mouseenter)=\"selectActive(o)\"\n             (click)=\"selectMatch(o, $event)\"\n             [ng-class]=\"{'active': isActive(o)}\">\n          <a href=\"javascript:void(0)\" class=\"ui-select-choices-row-inner\">\n            <div>{{o.text}}</div>\n          </a>\n        </div>\n      </li>\n    </ul>\n";
+	var select_item_1 = __webpack_require__(86);
+	var select_pipes_1 = __webpack_require__(87);
+	var cssCommon = __webpack_require__(84);
+	var optionsTemplate = "\n    <ul *ng-if=\"optionsOpened && options && options.length > 0 && !itemObjects[0].hasChildren()\"\n        class=\"ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu\">\n      <li class=\"ui-select-choices-group\">\n        <div *ng-for=\"#o of options\"\n             class=\"ui-select-choices-row\"\n             (mouseenter)=\"selectActive(o)\"\n             (click)=\"selectMatch(o, $event)\"\n             [ng-class]=\"{'active': isActive(o)}\">\n          <a href=\"javascript:void(0)\" class=\"ui-select-choices-row-inner\">\n            <div [inner-html]=\"o.text | hightlight:inputValue\"></div>\n          </a>\n        </div>\n      </li>\n    </ul>\n\n    <ul *ng-if=\"optionsOpened && options && options.length > 0 && itemObjects[0].hasChildren()\"\n        class=\"ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu\">\n      <li *ng-for=\"#c of options; #index=index\" class=\"ui-select-choices-group\">\n        <div class=\"divider\" *ng-if=\"index > 0\"></div>\n        <div class=\"ui-select-choices-group-label dropdown-header\">{{c.text}}</div>\n\n        <div *ng-for=\"#o of c.children\"\n             class=\"ui-select-choices-row\"\n             (mouseenter)=\"selectActive(o)\"\n             (click)=\"selectMatch(o, $event)\"\n             [ng-class]=\"{'active': isActive(o)}\">\n          <a href=\"javascript:void(0)\" class=\"ui-select-choices-row-inner\">\n            <div [inner-html]=\"o.text | hightlight:inputValue\"></div>\n          </a>\n        </div>\n      </li>\n    </ul>\n";
 	var Select = (function () {
 	    function Select(element) {
 	        this.element = element;
@@ -140,12 +184,15 @@ webpackJsonp([2],{
 	        this.data = new angular2_1.EventEmitter();
 	        this.selected = new angular2_1.EventEmitter();
 	        this.removed = new angular2_1.EventEmitter();
+	        this.typed = new angular2_1.EventEmitter();
 	        this.allowClear = false;
 	        this.placeholder = '';
 	        this.initData = [];
 	        this._items = [];
 	        this.inputMode = false;
 	        this.optionsOpened = false;
+	        this._disabled = false;
+	        this.inputValue = '';
 	    }
 	    Select.prototype.focusToInput = function (value) {
 	        var _this = this;
@@ -156,15 +203,18 @@ webpackJsonp([2],{
 	            el.value = value;
 	        }, 0);
 	    };
-	    Select.prototype.f = function (e) {
+	    Select.prototype.matchClick = function (e) {
+	        if (this.disabled === true) {
+	            return;
+	        }
 	        this.inputMode = !this.inputMode;
 	        if (this.inputMode === true && ((this.multiple === true && e) || this.multiple === false)) {
 	            this.focusToInput();
 	            this.open();
 	        }
 	    };
-	    Select.prototype.ff = function (e) {
-	        if (this.inputMode === true) {
+	    Select.prototype.mainClick = function (e) {
+	        if (this.inputMode === true || this.disabled === true) {
 	            return;
 	        }
 	        if (e.keyCode === 46) {
@@ -212,6 +262,19 @@ webpackJsonp([2],{
 	        enumerable: true,
 	        configurable: true
 	    });
+	    Object.defineProperty(Select.prototype, "disabled", {
+	        get: function () {
+	            return this._disabled;
+	        },
+	        set: function (value) {
+	            this._disabled = value;
+	            if (this.disabled === true) {
+	                this.hideOptions();
+	            }
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
 	    Select.prototype.onInit = function () {
 	        this.behavior = this.itemObjects[0].hasChildren() ?
 	            new Select.ChildrenBehavior(this) : new Select.GenericBehavior(this);
@@ -235,7 +298,7 @@ webpackJsonp([2],{
 	            if (e.srcElement && e.srcElement.className &&
 	                e.srcElement.className.indexOf('ui-select') >= 0) {
 	                if (e.target.nodeName !== 'INPUT') {
-	                    context.f();
+	                    context.matchClick(null);
 	                }
 	                return;
 	            }
@@ -244,6 +307,9 @@ webpackJsonp([2],{
 	        };
 	    };
 	    Select.prototype.remove = function (item) {
+	        if (this.disabled === true) {
+	            return;
+	        }
 	        if (this.multiple === true && this.active) {
 	            var index = this.active.indexOf(item);
 	            this.active.splice(index, 1);
@@ -323,7 +389,9 @@ webpackJsonp([2],{
 	            return;
 	        }
 	        if (e.srcElement) {
-	            this.behavior.filter(new RegExp(e.srcElement.value, 'ig'));
+	            this.inputValue = e.srcElement.value;
+	            this.behavior.filter(new RegExp(this.inputValue, 'ig'));
+	            this.doEvent('typed', this.inputValue);
 	        }
 	    };
 	    Select.prototype.selectActiveMatch = function () {
@@ -369,13 +437,15 @@ webpackJsonp([2],{
 	                'placeholder',
 	                'initData:data',
 	                'items',
+	                'disabled',
 	                'multiple'],
-	            events: ['selected', 'removed', 'data']
+	            events: ['selected', 'removed', 'typed', 'data']
 	        }),
 	        angular2_1.View({
-	            template: "\n<div tabindex=\"0\"\n     *ng-if=\"multiple === false\"\n     (keyup)=\"ff($event)\"\n     class=\"ui-select-container ui-select-bootstrap dropdown open\">\n    <div class=\"ui-select-match\" *ng-if=\"!inputMode\" class=\"btn-default-focus\">\n      <span tabindex=\"-1\"\n          class=\"btn btn-default btn-secondary form-control ui-select-toggle\"\n          (^click)=\"f()\"\n          style=\"outline: 0;\">\n        <span *ng-if=\"active.length <= 0\" class=\"ui-select-placeholder text-muted\">{{placeholder}}</span>\n        <span *ng-if=\"active.length > 0\" class=\"ui-select-match-text pull-left\"\n              [ng-class]=\"{'ui-select-allow-clear': allowClear && active.length > 0}\">{{active[0].text}}</span>\n        <i class=\"dropdown-toggle pull-right\" ng-click=\"$select.toggle($event)\"></i>\n        <i class=\"caret pull-right\" ng-click=\"$select.toggle($event)\"></i>\n        <a *ng-if=\"allowClear && active.length>0\" style=\"margin-right: 10px; padding: 0;\"\n          (click)=\"remove(activeOption)\" class=\"btn btn-xs btn-link pull-right\">\n          <i class=\"glyphicon glyphicon-remove\"></i>\n        </a>\n      </span>\n    </div>\n    <input type=\"text\" autocomplete=\"false\" tabindex=\"-1\"\n           (keydown)=\"inputEvent($event)\"\n           (keyup)=\"inputEvent($event, true)\"\n           class=\"form-control ui-select-search\"\n           *ng-if=\"inputMode\"\n           placeholder=\"{{active.length <= 0 ? placeholder : ''}}\">\n    " + optionsTemplate + "\n</div>\n\n<div tabindex=\"0\"\n     *ng-if=\"multiple === true\"\n     (keyup)=\"ff($event)\"\n     (focus)=\"focusToInput('')\"\n     class=\"ui-select-container ui-select-multiple ui-select-bootstrap dropdown form-control open\">\n    <span class=\"ui-select-match\">\n        <span *ng-for=\"#a of active\">\n            <span class=\"ui-select-match-item btn btn-default btn-secondary btn-xs\"\n                  tabindex=\"-1\"\n                  type=\"button\"\n                  [ng-class]=\"{'btn-default': true}\">\n               <a class=\"close ui-select-match-close\"\n                  (click)=\"remove(a)\">&nbsp;&times;</a>\n               <span>{{a.text}}</span>\n           </span>\n        </span>\n    </span>\n    <input type=\"text\"\n           (keydown)=\"inputEvent($event)\"\n           (keyup)=\"inputEvent($event, true)\"\n           (click)=\"f($event)\"\n           autocomplete=\"false\"\n           autocorrect=\"off\"\n           autocapitalize=\"off\"\n           spellcheck=\"false\"\n           class=\"ui-select-search input-xs\"\n           placeholder=\"{{active.length <= 0 ? placeholder : ''}}\"\n           role=\"combobox\">\n    " + optionsTemplate + "\n</div>\n  ",
+	            template: "\n<div tabindex=\"0\"\n     *ng-if=\"multiple === false\"\n     (keyup)=\"mainClick($event)\"\n     class=\"ui-select-container ui-select-bootstrap dropdown open\">\n    <div [ng-class]=\"{'ui-disabled': disabled}\"></div>\n    <div class=\"ui-select-match\"\n         *ng-if=\"!inputMode\">\n      <span tabindex=\"-1\"\n          class=\"btn btn-default btn-secondary form-control ui-select-toggle\"\n          (^click)=\"matchClick()\"\n          style=\"outline: 0;\">\n        <span *ng-if=\"active.length <= 0\" class=\"ui-select-placeholder text-muted\">{{placeholder}}</span>\n        <span *ng-if=\"active.length > 0\" class=\"ui-select-match-text pull-left\"\n              [ng-class]=\"{'ui-select-allow-clear': allowClear && active.length > 0}\">{{active[0].text}}</span>\n        <i class=\"dropdown-toggle pull-right\"></i>\n        <i class=\"caret pull-right\"></i>\n        <a *ng-if=\"allowClear && active.length>0\" style=\"margin-right: 10px; padding: 0;\"\n          (click)=\"remove(activeOption)\" class=\"btn btn-xs btn-link pull-right\">\n          <i class=\"glyphicon glyphicon-remove\"></i>\n        </a>\n      </span>\n    </div>\n    <input type=\"text\" autocomplete=\"false\" tabindex=\"-1\"\n           (keydown)=\"inputEvent($event)\"\n           (keyup)=\"inputEvent($event, true)\"\n           [disabled]=\"disabled\"\n           class=\"form-control ui-select-search\"\n           *ng-if=\"inputMode\"\n           placeholder=\"{{active.length <= 0 ? placeholder : ''}}\">\n    " + optionsTemplate + "\n</div>\n\n<div tabindex=\"0\"\n     *ng-if=\"multiple === true\"\n     (keyup)=\"mainClick($event)\"\n     (focus)=\"focusToInput('')\"\n     class=\"ui-select-container ui-select-multiple ui-select-bootstrap dropdown form-control open\">\n    <div [ng-class]=\"{'ui-disabled': disabled}\"></div>\n    <span class=\"ui-select-match\">\n        <span *ng-for=\"#a of active\">\n            <span class=\"ui-select-match-item btn btn-default btn-secondary btn-xs\"\n                  tabindex=\"-1\"\n                  type=\"button\"\n                  [ng-class]=\"{'btn-default': true}\">\n               <a class=\"close ui-select-match-close\"\n                  (click)=\"remove(a)\">&nbsp;&times;</a>\n               <span>{{a.text}}</span>\n           </span>\n        </span>\n    </span>\n    <input type=\"text\"\n           (keydown)=\"inputEvent($event)\"\n           (keyup)=\"inputEvent($event, true)\"\n           (click)=\"matchClick($event)\"\n           [disabled]=\"disabled\"\n           autocomplete=\"false\"\n           autocorrect=\"off\"\n           autocapitalize=\"off\"\n           spellcheck=\"false\"\n           class=\"ui-select-search input-xs\"\n           placeholder=\"{{active.length <= 0 ? placeholder : ''}}\"\n           role=\"combobox\">\n    " + optionsTemplate + "\n</div>\n  ",
 	            styles: [cssCommon],
-	            directives: [angular2_1.CORE_DIRECTIVES, angular2_1.FORM_DIRECTIVES]
+	            directives: [angular2_1.CORE_DIRECTIVES, angular2_1.FORM_DIRECTIVES],
+	            pipes: [select_pipes_1.HightlightPipe]
 	        }), 
 	        __metadata('design:paramtypes', [angular2_1.ElementRef])
 	    ], Select);
