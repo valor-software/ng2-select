@@ -68,14 +68,15 @@ let optionsTemplate = `
      class="ui-select-container ui-select-bootstrap dropdown open">
     <div class="ui-select-match" *ng-if="!inputMode" class="btn-default-focus">
       <span tabindex="-1"
-          class="btn btn-default form-control ui-select-toggle"
+          class="btn btn-default btn-secondary form-control ui-select-toggle"
           (^click)="f()"
           style="outline: 0;">
         <span *ng-if="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
         <span *ng-if="active.length > 0" class="ui-select-match-text pull-left"
               [ng-class]="{'ui-select-allow-clear': allowClear && active.length > 0}">{{active[0].text}}</span>
+        <i class="dropdown-toggle pull-right" ng-click="$select.toggle($event)"></i>
         <i class="caret pull-right" ng-click="$select.toggle($event)"></i>
-        <a *ng-if="allowClear && active.length>0" style="margin-right: 10px"
+        <a *ng-if="allowClear && active.length>0" style="margin-right: 10px; padding: 0;"
           (click)="remove(activeOption)" class="btn btn-xs btn-link pull-right">
           <i class="glyphicon glyphicon-remove"></i>
         </a>
@@ -97,7 +98,7 @@ let optionsTemplate = `
      class="ui-select-container ui-select-multiple ui-select-bootstrap dropdown form-control open">
     <span class="ui-select-match">
         <span *ng-for="#a of active">
-            <span class="ui-select-match-item btn btn-default btn-xs"
+            <span class="ui-select-match-item btn btn-default btn-secondary btn-xs"
                   tabindex="-1"
                   type="button"
                   [ng-class]="{'btn-default': true}">
