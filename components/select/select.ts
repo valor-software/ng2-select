@@ -4,13 +4,13 @@ import {
   Component, View, OnInit, OnDestroy,
   Directive, ViewEncapsulation, Self,
   EventEmitter, ElementRef, ComponentRef,
-  DynamicComponentLoader,
-  CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass, NgStyle
+  Pipe, CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass, NgStyle
 } from 'angular2/angular2';
 
 import {bind, forwardRef, ResolvedBinding, Injector} from 'angular2/di';
 
 import {SelectItem} from './select-item';
+import {HightlightPipe} from './select-pipes';
 import {IOptionsBehavior} from './select-interfaces';
 
 let cssCommon = require('./common.css');
@@ -25,7 +25,7 @@ let optionsTemplate = `
              (click)="selectMatch(o, $event)"
              [ng-class]="{'active': isActive(o)}">
           <a href="javascript:void(0)" class="ui-select-choices-row-inner">
-            <div>{{o.text}}</div>
+            <div [inner-html]="o.text | hightlight:inputValue"></div>
           </a>
         </div>
       </li>
@@ -43,7 +43,7 @@ let optionsTemplate = `
              (click)="selectMatch(o, $event)"
              [ng-class]="{'active': isActive(o)}">
           <a href="javascript:void(0)" class="ui-select-choices-row-inner">
-            <div>{{o.text}}</div>
+            <div [inner-html]="o.text | hightlight:inputValue"></div>
           </a>
         </div>
       </li>
@@ -129,7 +129,8 @@ let optionsTemplate = `
 </div>
   `,
   styles: [cssCommon],
-  directives: [CORE_DIRECTIVES, FORM_DIRECTIVES]
+  directives: [CORE_DIRECTIVES, FORM_DIRECTIVES],
+  pipes: [HightlightPipe]
 })
 export class Select implements OnInit, OnDestroy {
   public multiple:boolean = false;
@@ -150,7 +151,8 @@ export class Select implements OnInit, OnDestroy {
   private inputMode:boolean = false;
   private optionsOpened:boolean = false;
   private behavior:IOptionsBehavior;
-  public _disabled:boolean = false;
+  private _disabled:boolean = false;
+  private inputValue:string = '';
 
   constructor(public element:ElementRef) {
   }
@@ -386,8 +388,9 @@ export class Select implements OnInit, OnDestroy {
     }
 
     if (e.srcElement) {
-      this.behavior.filter(new RegExp(e.srcElement.value, 'ig'));
-      this.doEvent('typed', e.srcElement.value);
+      this.inputValue = e.srcElement.value;
+      this.behavior.filter(new RegExp(this.inputValue, 'ig'));
+      this.doEvent('typed', this.inputValue);
     }
   }
 
