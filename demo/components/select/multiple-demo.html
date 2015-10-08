@@ -3,9 +3,17 @@
     <ng2-select [data]="value"
                 [multiple]="true"
                 [items]="items"
+                [disabled]="disabled"
                 (data)="refreshValue($event)"
                 (selected)="selected($event)"
                 (removed)="removed($event)"
                 [placeholder]="'No city selected'"></ng2-select>
     <p><pre>{{itemsToString(value)}}</pre></p>
+    <div>
+        <button type="button" class="btn btn-primary"
+                [(ng-model)]="disabledV" btn-checkbox
+                btn-checkbox-true="1" btn-checkbox-false="0">
+            {{disabled === '1' ? 'Enable' : 'Disable'}}
+        </button>
+    </div>
 </div>

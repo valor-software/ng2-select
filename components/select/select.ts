@@ -57,6 +57,7 @@ let optionsTemplate = `
     'placeholder',
     'initData:data',
     'items',
+    'disabled',
     'multiple'],
   events: ['selected', 'removed', 'data']
 })
@@ -64,18 +65,21 @@ let optionsTemplate = `
   template: `
 <div tabindex="0"
      *ng-if="multiple === false"
-     (keyup)="ff($event)"
+     (keyup)="mainClick($event)"
      class="ui-select-container ui-select-bootstrap dropdown open">
-    <div class="ui-select-match" *ng-if="!inputMode" class="btn-default-focus">
+    <div class="ui-select-match"
+         [ng-class]="{'ui-disabled': disabled}"
+         *ng-if="!inputMode">
       <span tabindex="-1"
+          [ng-class]="{'ui-disabled': disabled}"
           class="btn btn-default btn-secondary form-control ui-select-toggle"
-          (^click)="f()"
+          (^click)="matchClick()"
           style="outline: 0;">
         <span *ng-if="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
         <span *ng-if="active.length > 0" class="ui-select-match-text pull-left"
               [ng-class]="{'ui-select-allow-clear': allowClear && active.length > 0}">{{active[0].text}}</span>
-        <i class="dropdown-toggle pull-right" ng-click="$select.toggle($event)"></i>
-        <i class="caret pull-right" ng-click="$select.toggle($event)"></i>
+        <i class="dropdown-toggle pull-right"></i>
+        <i class="caret pull-right"></i>
         <a *ng-if="allowClear && active.length>0" style="margin-right: 10px; padding: 0;"
           (click)="remove(activeOption)" class="btn btn-xs btn-link pull-right">
           <i class="glyphicon glyphicon-remove"></i>
@@ -85,6 +89,7 @@ let optionsTemplate = `
     <input type="text" autocomplete="false" tabindex="-1"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
+           [disabled]="disabled"
            class="form-control ui-select-search"
            *ng-if="inputMode"
            placeholder="{{active.length <= 0 ? placeholder : ''}}">
@@ -93,15 +98,17 @@ let optionsTemplate = `
 
 <div tabindex="0"
      *ng-if="multiple === true"
-     (keyup)="ff($event)"
+     (keyup)="mainClick($event)"
      (focus)="focusToInput('')"
+     [ng-class]="{'ui-disabled': disabled}"
      class="ui-select-container ui-select-multiple ui-select-bootstrap dropdown form-control open">
-    <span class="ui-select-match">
+    <span class="ui-select-match"
+          [ng-class]="{'ui-disabled': disabled}">
         <span *ng-for="#a of active">
             <span class="ui-select-match-item btn btn-default btn-secondary btn-xs"
                   tabindex="-1"
                   type="button"
-                  [ng-class]="{'btn-default': true}">
+                  [ng-class]="{'btn-default': true, 'ui-disabled': disabled}">
                <a class="close ui-select-match-close"
                   (click)="remove(a)">&nbsp;&times;</a>
                <span>{{a.text}}</span>
@@ -111,7 +118,8 @@ let optionsTemplate = `
     <input type="text"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
-           (click)="f($event)"
+           (click)="matchClick($event)"
+           [disabled]="disabled"
            autocomplete="false"
            autocorrect="off"
            autocapitalize="off"
@@ -143,6 +151,7 @@ export class Select implements OnInit, OnDestroy {
   private inputMode:boolean = false;
   private optionsOpened:boolean = false;
   private behavior:IOptionsBehavior;
+  public _disabled:boolean = false;
 
   constructor(public element:ElementRef) {
   }
@@ -155,7 +164,11 @@ export class Select implements OnInit, OnDestroy {
     }, 0);
   }
 
-  private f(e:any) {
+  private matchClick(e:any) {
+    if (this.disabled === true) {
+      return;
+    }
+
     this.inputMode = !this.inputMode;
     if (this.inputMode === true && ((this.multiple === true && e) || this.multiple === false)) {
       this.focusToInput();
@@ -163,8 +176,8 @@ export class Select implements OnInit, OnDestroy {
     }
   }
 
-  private ff(e:any) {
-    if (this.inputMode === true) {
+  private mainClick(e:any) {
+    if (this.inputMode === true || this.disabled === true) {
       return;
     }
 
@@ -217,6 +230,18 @@ export class Select implements OnInit, OnDestroy {
     this.itemObjects = this._items.map((item:any) => new SelectItem(item));
   }
 
+  public get disabled():boolean {
+    return this._disabled;
+  }
+
+  public set disabled(value:boolean) {
+    this._disabled = value;
+
+    if (this.disabled === true) {
+      this.hideOptions();
+    }
+  }
+
   onInit() {
     this.behavior = this.itemObjects[0].hasChildren() ?
       new Select.ChildrenBehavior(this) : new Select.GenericBehavior(this);
@@ -244,7 +269,7 @@ export class Select implements OnInit, OnDestroy {
       if (e.srcElement && e.srcElement.className &&
         e.srcElement.className.indexOf('ui-select') >= 0) {
         if (e.target.nodeName !== 'INPUT') {
-          context.f();
+          context.matchClick(null);
         }
         return;
       }
@@ -255,6 +280,10 @@ export class Select implements OnInit, OnDestroy {
   }
 
   public remove(item:SelectItem) {
+    if (this.disabled === true) {
+      return;
+    }
+
     if (this.multiple === true && this.active) {
       let index = this.active.indexOf(item);
       this.active.splice(index, 1);

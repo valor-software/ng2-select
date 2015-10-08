@@ -5,6 +5,8 @@ import {
   CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass
 } from 'angular2/angular2';
 
+import {ButtonCheckbox} from 'ng2-bootstrap';
+
 import {select} from '../../../components/index';
 
 // webpack html imports
@@ -15,10 +17,12 @@ let template = require('./children-demo.html');
 })
 @View({
   template: template,
-  directives: [select, NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES]
+  directives: [select, NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES, ButtonCheckbox]
 })
 export class ChildrenDemo {
   private value:any = {};
+  private _disabledV:string = '0';
+  private disabled:boolean = false;
   private items:Array<any> = [
     {
       text: 'Austria',
@@ -195,6 +199,15 @@ export class ChildrenDemo {
       ]
     }
   ];
+
+  private get disabledV():string {
+    return this._disabledV;
+  }
+
+  private set disabledV(value:string) {
+    this._disabledV = value;
+    this.disabled = this._disabledV === '1';
+  }
 
   private selected(value:any) {
     console.log('Selected value is: ', value);

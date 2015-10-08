@@ -5,6 +5,8 @@ import {
   CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass
 } from 'angular2/angular2';
 
+import {ButtonCheckbox} from 'ng2-bootstrap';
+
 import {select} from '../../../components/index';
 
 // webpack html imports
@@ -15,10 +17,12 @@ let template = require('./single-demo.html');
 })
 @View({
   template: template,
-  directives: [select, NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES]
+  directives: [select, NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES, ButtonCheckbox]
 })
 export class SingleDemo {
   private value:any = {};
+  private _disabledV:string = '0';
+  private disabled:boolean = false;
   private items:Array<string> = ['Amsterdam', 'Antwerp', 'Athens', 'Barcelona',
     'Berlin', 'Birmingham', 'Bradford', 'Bremen', 'Brussels', 'Bucharest',
     'Budapest', 'Cologne', 'Copenhagen', 'Dortmund', 'Dresden', 'Dublin', 'Düsseldorf',
@@ -28,6 +32,15 @@ export class SingleDemo {
     'Paris', 'Poznań', 'Prague', 'Riga', 'Rome', 'Rotterdam', 'Seville', 'Sheffield',
     'Sofia', 'Stockholm', 'Stuttgart', 'The Hague', 'Turin', 'Valencia', 'Vienna',
     'Vilnius', 'Warsaw', 'Wrocław', 'Zagreb', 'Zaragoza'];
+
+  private get disabledV():string {
+    return this._disabledV;
+  }
+
+  private set disabledV(value:string) {
+    this._disabledV = value;
+    this.disabled = this._disabledV === '1';
+  }
 
   private selected(value:any) {
     console.log('Selected value is: ', value);
