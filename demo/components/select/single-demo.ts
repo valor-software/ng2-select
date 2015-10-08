@@ -50,6 +50,10 @@ export class SingleDemo {
     console.log('Removed value is: ', value);
   }
 
+  private typed(value:any) {
+    console.log('New search input: ', value);
+  }
+
   private refreshValue(value:any) {
     this.value = value;
   }

@@ -59,7 +59,7 @@ let optionsTemplate = `
     'items',
     'disabled',
     'multiple'],
-  events: ['selected', 'removed', 'data']
+  events: ['selected', 'removed', 'typed', 'data']
 })
 @View({
   template: `
@@ -143,6 +143,7 @@ export class Select implements OnInit, OnDestroy {
   private data:EventEmitter = new EventEmitter();
   private selected:EventEmitter = new EventEmitter();
   private removed:EventEmitter = new EventEmitter();
+  private typed:EventEmitter = new EventEmitter();
   private allowClear:boolean = false;
   private placeholder:string = '';
   private initData:Array<any> = [];
@@ -388,6 +389,7 @@ export class Select implements OnInit, OnDestroy {
 
     if (e.srcElement) {
       this.behavior.filter(new RegExp(e.srcElement.value, 'ig'));
+      this.doEvent('typed', e.srcElement.value);
     }
   }
 

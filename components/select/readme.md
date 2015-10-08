@@ -37,3 +37,4 @@ import {select} from 'ng2-select';
   - `data` - it fires during all events of this component; returns `Array<any>` - current selected data
   - `selected` - it fires after a new option selected; returns object with `id` and `text` properties that describes a new option.
   - `removed` - it fires after an option removed; returns object with `id` and `text` properties that describes a removed option.
+  - `typed` - it fires after changing of search input; returns `string` with that value.
