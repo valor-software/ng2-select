@@ -154,7 +154,16 @@ body > .select2-container.open {
 }
 
 .ui-disabled {
-    background-color: #3c3c3c;
+    background-color: #eceeef ;
+    border-radius: 4px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    opacity: 0.6;
+    top: 0;
+    left: 0;
+    cursor: not-allowed;
 }
 
 /* See Scrollable Menu with Bootstrap 3 http://stackoverflow.com/questions/19227496 */

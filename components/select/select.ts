@@ -67,11 +67,10 @@ let optionsTemplate = `
      *ng-if="multiple === false"
      (keyup)="mainClick($event)"
      class="ui-select-container ui-select-bootstrap dropdown open">
+    <div [ng-class]="{'ui-disabled': disabled}"></div>
     <div class="ui-select-match"
-         [ng-class]="{'ui-disabled': disabled}"
          *ng-if="!inputMode">
       <span tabindex="-1"
-          [ng-class]="{'ui-disabled': disabled}"
           class="btn btn-default btn-secondary form-control ui-select-toggle"
           (^click)="matchClick()"
           style="outline: 0;">
@@ -100,15 +99,14 @@ let optionsTemplate = `
      *ng-if="multiple === true"
      (keyup)="mainClick($event)"
      (focus)="focusToInput('')"
-     [ng-class]="{'ui-disabled': disabled}"
      class="ui-select-container ui-select-multiple ui-select-bootstrap dropdown form-control open">
-    <span class="ui-select-match"
-          [ng-class]="{'ui-disabled': disabled}">
+    <div [ng-class]="{'ui-disabled': disabled}"></div>
+    <span class="ui-select-match">
         <span *ng-for="#a of active">
             <span class="ui-select-match-item btn btn-default btn-secondary btn-xs"
                   tabindex="-1"
                   type="button"
-                  [ng-class]="{'btn-default': true, 'ui-disabled': disabled}">
+                  [ng-class]="{'btn-default': true}">
                <a class="close ui-select-match-close"
                   (click)="remove(a)">&nbsp;&times;</a>
                <span>{{a.text}}</span>
