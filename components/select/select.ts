@@ -4,10 +4,9 @@ import {
   Component, View, OnInit, OnDestroy,
   Directive, ViewEncapsulation, Self,
   EventEmitter, ElementRef, ComponentRef,
-  Pipe, CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass, NgStyle
+  Pipe, CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass, NgStyle,
+  bind, forwardRef, ResolvedBinding, Injector
 } from 'angular2/angular2';
-
-import {bind, forwardRef, ResolvedBinding, Injector} from 'angular2/di';
 
 import {SelectItem} from './select-item';
 import {HightlightPipe} from './select-pipes';

@@ -1,6 +1,6 @@
 /// <reference path="../../tsd.d.ts" />
 
-import {Component, View, CORE_DIRECTIVES, NgNonBindable} from 'angular2/angular2';
+import {Component, View, CORE_DIRECTIVES} from 'angular2/angular2';
 
 import {tabs} from 'ng2-bootstrap';
 import {SingleDemo} from './select/single-demo';
@@ -79,7 +79,7 @@ tabDesc.forEach(desc => {
     </div>
   </section>
   `,
-  directives: [SingleDemo, MultipleDemo, ChildrenDemo, tabs, CORE_DIRECTIVES, NgNonBindable]
+  directives: [SingleDemo, MultipleDemo, ChildrenDemo, tabs, CORE_DIRECTIVES]
 })
 export class SelectSection {
   private currentHeading:string = 'Single';
