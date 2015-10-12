@@ -23,6 +23,7 @@
     "./components/select/select-item.ts",
     "./components/select/select-interfaces.ts",
     "./components/select/select-pipes.ts",
+    "./components/ng2-select-config.ts",
     "./components/index.ts"
   ]
 }
