@@ -7,7 +7,7 @@ import {
 
 import {ButtonCheckbox} from 'ng2-bootstrap';
 
-import {select} from '../../../components/select/select';
+import {select} from '../../../components/index';
 
 // webpack html imports
 let template = require('./single-demo.html');
