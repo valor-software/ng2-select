@@ -107,11 +107,13 @@ var config = {
         loader: 'ts',
         query: {
           ignoreDiagnostics: [
-            // 2307 ->  Cannot find external module
+            // TS2305 -> Module 'ng' has no exported member
+            2305,
+            // TS2307 ->  Cannot find external module
             2307,
-            // 2300 -> Duplicate identifier
+            // TS2300 -> Duplicate identifier
             2300,
-            // 2309 -> An export assignment cannot be used in a module with other exported elements.
+            // TS2309 -> An export assignment cannot be used in a module with other exported elements.
             2309
           ]
         },
