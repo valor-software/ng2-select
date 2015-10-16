@@ -12,8 +12,6 @@ import {SelectItem} from './select-item';
 import {HightlightPipe} from './select-pipes';
 import {IOptionsBehavior} from './select-interfaces';
 
-let cssCommon = require('./common.css');
-
 let optionsTemplate = `
     <ul *ng-if="optionsOpened && options && options.length > 0 && !itemObjects[0].hasChildren()"
         class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
@@ -62,6 +60,9 @@ let optionsTemplate = `
 })
 @View({
   template: `
+<style>
+  @import url(/build/common.css);
+</style>
 <div tabindex="0"
      *ng-if="multiple === false"
      (keyup)="mainClick($event)"
@@ -127,7 +128,6 @@ let optionsTemplate = `
     ${optionsTemplate}
 </div>
   `,
-  styles: [cssCommon],
   directives: [CORE_DIRECTIVES, FORM_DIRECTIVES],
   pipes: [HightlightPipe]
 })
