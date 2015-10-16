@@ -14,16 +14,10 @@
     "noEmitOnError": false,
     "noImplicitAny": false
   },
-  "filesGlob": [
-    "!./node_modules/**/*.ts"
+  "exclude": [
+    "node_modules"
   ],
   "files": [
-    "./tsd.d.ts",
-    "./components/select/select.ts",
-    "./components/select/select-item.ts",
-    "./components/select/select-interfaces.ts",
-    "./components/select/select-pipes.ts",
-    "./components/ng2-select-config.ts",
     "./components/index.ts"
   ]
 }
