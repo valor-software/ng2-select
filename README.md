@@ -10,7 +10,9 @@ Native Select Angular2 component
 
   Alternatively, you can [download it in a ZIP file](https://github.com/valor-software/ng2-select/archive/master.zip).
 
-2. More information regardidocng using of ***ng2-select*** is located in
+2. Include `ng2-select.css` in your project
+
+3. More information regarding of using ***ng2-select*** is located in
   [demo](http://valor-software.github.io/ng2-select/) and [demo sources](https://github.com/valor-software/ng2-select/tree/master/demo).
 
 ## API

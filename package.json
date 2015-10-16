@@ -4,7 +4,7 @@
   "description": "angular2 select component",
   "scripts": {
     "deploy": "NODE_ENV=production webpack -p --progress --color --optimize-minimize --optimize-dedupe --optimize-occurence-order",
-    "prepublish": "gulp clean && tsc",
+    "prepublish": "gulp clean && tsc && mkdir -p dist/css && cp components/css/ng2-select.css dist/css",
     "prestart": "npm install",
     "server": "webpack-dev-server --hot --inline --colors --display-error-details --display-cached",
     "start": "npm run server",

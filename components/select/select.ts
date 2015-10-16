@@ -58,10 +58,7 @@ let optionsTemplate = `
 })
 @View({
   template: `
-<style>
-  @import url(/build/common.css);
-</style>
-<div tabindex="0"
+  <div tabindex="0"
      *ng-if="multiple === false"
      (keyup)="mainClick($event)"
      class="ui-select-container ui-select-bootstrap dropdown open">
