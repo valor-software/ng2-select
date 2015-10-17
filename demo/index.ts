@@ -26,8 +26,8 @@ let gettingStarted = require('./getting-started.md');
       <p>Native Angular2 component for Select</p>
       <a class="btn btn-primary" href="https://github.com/valor-software/ng2-select">View on GitHub</a>
       <div class="row">
-        <!--<div class="col-lg-1"><iframe src="https://ghbtns.com/github-btn.html?user=valor-software&repo=ng2-bootstrap&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe></div>
-        <div class="col-lg-1"><iframe src="https://ghbtns.com/github-btn.html?user=valor-software&repo=ng2-bootstrap&type=fork&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe></div>-->
+        <div class="col-lg-1"><iframe src="https://ghbtns.com/github-btn.html?user=valor-software&repo=ng2-select&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe></div>
+        <div class="col-lg-1"><iframe src="https://ghbtns.com/github-btn.html?user=valor-software&repo=ng2-select&type=fork&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe></div>
       </div>
     </div>
   </main>
