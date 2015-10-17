@@ -98,8 +98,8 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(361);
-	__webpack_require__(347);
+	__webpack_require__(360);
+	__webpack_require__(346);
 	__webpack_require__(6);
 	module.exports = __webpack_require__(101);
 
@@ -108,8 +108,7 @@
 /* 1 */
 /***/ function(module, exports) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';/// <reference path="../../../manual_typings/globals.d.ts" />
-	var __extends = (this && this.__extends) || function (d, b) {
+	/* WEBPACK VAR INJECTION */(function(global) {'use strict';var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -292,7 +291,7 @@
 	var NumberParseError = (function (_super) {
 	    __extends(NumberParseError, _super);
 	    function NumberParseError(message) {
-	        _super.call(this, message);
+	        _super.call(this);
 	        this.message = message;
 	    }
 	    NumberParseError.prototype.toString = function () { return this.message; };
@@ -438,6 +437,7 @@
 	        if (milliseconds === void 0) { milliseconds = 0; }
 	        return new exports.Date(year, month - 1, day, hour, minutes, seconds, milliseconds);
 	    };
+	    DateWrapper.fromISOString = function (str) { return new exports.Date(str); };
 	    DateWrapper.fromMillis = function (ms) { return new exports.Date(ms); };
 	    DateWrapper.toMillis = function (date) { return date.getTime(); };
 	    DateWrapper.now = function () { return new exports.Date(); };
@@ -513,26 +513,28 @@
 	var forward_ref_1 = __webpack_require__(72);
 	exports.forwardRef = forward_ref_1.forwardRef;
 	exports.resolveForwardRef = forward_ref_1.resolveForwardRef;
-	var injector_1 = __webpack_require__(129);
+	var injector_1 = __webpack_require__(128);
 	exports.Injector = injector_1.Injector;
-	var binding_1 = __webpack_require__(43);
-	exports.Binding = binding_1.Binding;
-	exports.BindingBuilder = binding_1.BindingBuilder;
-	exports.ResolvedFactory = binding_1.ResolvedFactory;
-	exports.Dependency = binding_1.Dependency;
-	exports.bind = binding_1.bind;
+	var provider_1 = __webpack_require__(43);
+	exports.Binding = provider_1.Binding;
+	exports.ProviderBuilder = provider_1.ProviderBuilder;
+	exports.ResolvedFactory = provider_1.ResolvedFactory;
+	exports.Dependency = provider_1.Dependency;
+	exports.bind = provider_1.bind;
+	exports.Provider = provider_1.Provider;
+	exports.provide = provider_1.provide;
 	var key_1 = __webpack_require__(73);
 	exports.Key = key_1.Key;
 	exports.TypeLiteral = key_1.TypeLiteral;
 	var exceptions_1 = __webpack_require__(71);
-	exports.NoBindingError = exceptions_1.NoBindingError;
-	exports.AbstractBindingError = exceptions_1.AbstractBindingError;
+	exports.NoProviderError = exceptions_1.NoProviderError;
+	exports.AbstractProviderError = exceptions_1.AbstractProviderError;
 	exports.CyclicDependencyError = exceptions_1.CyclicDependencyError;
 	exports.InstantiationError = exceptions_1.InstantiationError;
-	exports.InvalidBindingError = exceptions_1.InvalidBindingError;
+	exports.InvalidProviderError = exceptions_1.InvalidProviderError;
 	exports.NoAnnotationError = exceptions_1.NoAnnotationError;
 	exports.OutOfBoundsError = exceptions_1.OutOfBoundsError;
-	var opaque_token_1 = __webpack_require__(290);
+	var opaque_token_1 = __webpack_require__(289);
 	exports.OpaqueToken = opaque_token_1.OpaqueToken;
 	//# sourceMappingURL=di.js.map
 
@@ -628,10 +630,6 @@
 	        return r;
 	    };
 	    MapWrapper.createFromPairs = function (pairs) { return createMapFromPairs(pairs); };
-	    MapWrapper.forEach = function (m, fn) { m.forEach(fn); };
-	    MapWrapper.get = function (map, key) { return map.get(key); };
-	    MapWrapper.size = function (m) { return m.size; };
-	    MapWrapper.delete = function (m, k) { m.delete(k); };
 	    MapWrapper.clearValues = function (m) { _clearValues(m); };
 	    MapWrapper.iterable = function (m) { return m; };
 	    MapWrapper.keys = function (m) { return _arrayFromMap(m, false); };
@@ -887,14 +885,13 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';/// <reference path="../../../manual_typings/globals.d.ts" />
-	var __extends = (this && this.__extends) || function (d, b) {
+	'use strict';var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var exception_handler_1 = __webpack_require__(136);
-	var exception_handler_2 = __webpack_require__(136);
+	var exception_handler_1 = __webpack_require__(135);
+	var exception_handler_2 = __webpack_require__(135);
 	exports.ExceptionHandler = exception_handler_2.ExceptionHandler;
 	var BaseException = (function (_super) {
 	    __extends(BaseException, _super);
@@ -970,9 +967,9 @@
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
 	__export(__webpack_require__(101));
-	__export(__webpack_require__(265));
-	__export(__webpack_require__(256));
-	__export(__webpack_require__(255));
+	__export(__webpack_require__(264));
+	__export(__webpack_require__(263));
+	__export(__webpack_require__(262));
 	//# sourceMappingURL=angular2.js.map
 
 /***/ },
@@ -1006,68 +1003,900 @@
 	var directives_2 = __webpack_require__(36);
 	var view_2 = __webpack_require__(19);
 	var decorators_1 = __webpack_require__(95);
+	// TODO(alexeagle): remove the duplication of this doc. It is copied from ComponentMetadata.
 	/**
-	 * {@link ComponentMetadata} factory function.
+	 * Declare reusable UI building blocks for an application.
+	 *
+	 * Each Angular component requires a single `@Component` and at least one `@View` annotation. The
+	 * `@Component`
+	 * annotation specifies when a component is instantiated, and which properties and hostListeners it
+	 * binds to.
+	 *
+	 * When a component is instantiated, Angular
+	 * - creates a shadow DOM for the component.
+	 * - loads the selected template into the shadow DOM.
+	 * - creates all the injectable objects configured with `providers` and `viewProviders`.
+	 *
+	 * All template expressions and statements are then evaluated against the component instance.
+	 *
+	 * For details on the `@View` annotation, see {@link ViewMetadata}.
+	 *
+	 * ## Lifecycle hooks
+	 *
+	 * When the component class implements some {@link angular2/lifecycle_hooks} the callbacks are
+	 * called by the change detection at defined points in time during the life of the component.
+	 *
+	 * ## Example
+	 *
+	 * ```
+	 * @Component({
+	 *   selector: 'greet',
+	 *   template: 'Hello {{name}}!'
+	 * })
+	 * class Greet {
+	 *   name: string;
+	 *
+	 *   constructor() {
+	 *     this.name = 'World';
+	 *   }
+	 * }
+	 * ```
+	 *
 	 */
 	exports.Component = decorators_1.makeDecorator(directives_2.ComponentMetadata, function (fn) { return fn.View = exports.View; });
+	// TODO(alexeagle): remove the duplication of this doc. It is copied from DirectiveMetadata.
 	/**
-	 * {@link DirectiveMetadata} factory function.
+	 * Directives allow you to attach behavior to elements in the DOM.
+	 *
+	 * {@link DirectiveMetadata}s with an embedded view are called {@link ComponentMetadata}s.
+	 *
+	 * A directive consists of a single directive annotation and a controller class. When the
+	 * directive's `selector` matches
+	 * elements in the DOM, the following steps occur:
+	 *
+	 * 1. For each directive, the `ElementInjector` attempts to resolve the directive's constructor
+	 * arguments.
+	 * 2. Angular instantiates directives for each matched element using `ElementInjector` in a
+	 * depth-first order,
+	 *    as declared in the HTML.
+	 *
+	 * ## Understanding How Injection Works
+	 *
+	 * There are three stages of injection resolution.
+	 * - *Pre-existing Injectors*:
+	 *   - The terminal {@link Injector} cannot resolve dependencies. It either throws an error or, if
+	 * the dependency was
+	 *     specified as `@Optional`, returns `null`.
+	 *   - The platform injector resolves browser singleton resources, such as: cookies, title,
+	 * location, and others.
+	 * - *Component Injectors*: Each component instance has its own {@link Injector}, and they follow
+	 * the same parent-child hierarchy
+	 *     as the component instances in the DOM.
+	 * - *Element Injectors*: Each component instance has a Shadow DOM. Within the Shadow DOM each
+	 * element has an `ElementInjector`
+	 *     which follow the same parent-child hierarchy as the DOM elements themselves.
+	 *
+	 * When a template is instantiated, it also must instantiate the corresponding directives in a
+	 * depth-first order. The
+	 * current `ElementInjector` resolves the constructor dependencies for each directive.
+	 *
+	 * Angular then resolves dependencies as follows, according to the order in which they appear in the
+	 * {@link ViewMetadata}:
+	 *
+	 * 1. Dependencies on the current element
+	 * 2. Dependencies on element injectors and their parents until it encounters a Shadow DOM boundary
+	 * 3. Dependencies on component injectors and their parents until it encounters the root component
+	 * 4. Dependencies on pre-existing injectors
+	 *
+	 *
+	 * The `ElementInjector` can inject other directives, element-specific special objects, or it can
+	 * delegate to the parent
+	 * injector.
+	 *
+	 * To inject other directives, declare the constructor parameter as:
+	 * - `directive:DirectiveType`: a directive on the current element only
+	 * - `@Host() directive:DirectiveType`: any directive that matches the type between the current
+	 * element and the
+	 *    Shadow DOM root.
+	 * - `@Query(DirectiveType) query:QueryList<DirectiveType>`: A live collection of direct child
+	 * directives.
+	 * - `@QueryDescendants(DirectiveType) query:QueryList<DirectiveType>`: A live collection of any
+	 * child directives.
+	 *
+	 * To inject element-specific special objects, declare the constructor parameter as:
+	 * - `element: ElementRef` to obtain a reference to logical element in the view.
+	 * - `viewContainer: ViewContainerRef` to control child template instantiation, for
+	 * {@link DirectiveMetadata} directives only
+	 * - `bindingPropagation: BindingPropagation` to control change detection in a more granular way.
+	 *
+	 * ## Example
+	 *
+	 * The following example demonstrates how dependency injection resolves constructor arguments in
+	 * practice.
+	 *
+	 *
+	 * Assume this HTML template:
+	 *
+	 * ```
+	 * <div dependency="1">
+	 *   <div dependency="2">
+	 *     <div dependency="3" my-directive>
+	 *       <div dependency="4">
+	 *         <div dependency="5"></div>
+	 *       </div>
+	 *       <div dependency="6"></div>
+	 *     </div>
+	 *   </div>
+	 * </div>
+	 * ```
+	 *
+	 * With the following `dependency` decorator and `SomeService` injectable class.
+	 *
+	 * ```
+	 * @Injectable()
+	 * class SomeService {
+	 * }
+	 *
+	 * @Directive({
+	 *   selector: '[dependency]',
+	 *   inputs: [
+	 *     'id: dependency'
+	 *   ]
+	 * })
+	 * class Dependency {
+	 *   id:string;
+	 * }
+	 * ```
+	 *
+	 * Let's step through the different ways in which `MyDirective` could be declared...
+	 *
+	 *
+	 * ### No injection
+	 *
+	 * Here the constructor is declared with no arguments, therefore nothing is injected into
+	 * `MyDirective`.
+	 *
+	 * ```
+	 * @Directive({ selector: '[my-directive]' })
+	 * class MyDirective {
+	 *   constructor() {
+	 *   }
+	 * }
+	 * ```
+	 *
+	 * This directive would be instantiated with no dependencies.
+	 *
+	 *
+	 * ### Component-level injection
+	 *
+	 * Directives can inject any injectable instance from the closest component injector or any of its
+	 * parents.
+	 *
+	 * Here, the constructor declares a parameter, `someService`, and injects the `SomeService` type
+	 * from the parent
+	 * component's injector.
+	 * ```
+	 * @Directive({ selector: '[my-directive]' })
+	 * class MyDirective {
+	 *   constructor(someService: SomeService) {
+	 *   }
+	 * }
+	 * ```
+	 *
+	 * This directive would be instantiated with a dependency on `SomeService`.
+	 *
+	 *
+	 * ### Injecting a directive from the current element
+	 *
+	 * Directives can inject other directives declared on the current element.
+	 *
+	 * ```
+	 * @Directive({ selector: '[my-directive]' })
+	 * class MyDirective {
+	 *   constructor(dependency: Dependency) {
+	 *     expect(dependency.id).toEqual(3);
+	 *   }
+	 * }
+	 * ```
+	 * This directive would be instantiated with `Dependency` declared at the same element, in this case
+	 * `dependency="3"`.
+	 *
+	 * ### Injecting a directive from any ancestor elements
+	 *
+	 * Directives can inject other directives declared on any ancestor element (in the current Shadow
+	 * DOM), i.e. on the current element, the
+	 * parent element, or its parents.
+	 * ```
+	 * @Directive({ selector: '[my-directive]' })
+	 * class MyDirective {
+	 *   constructor(@Host() dependency: Dependency) {
+	 *     expect(dependency.id).toEqual(2);
+	 *   }
+	 * }
+	 * ```
+	 *
+	 * `@Host` checks the current element, the parent, as well as its parents recursively. If
+	 * `dependency="2"` didn't
+	 * exist on the direct parent, this injection would
+	 * have returned
+	 * `dependency="1"`.
+	 *
+	 *
+	 * ### Injecting a live collection of direct child directives
+	 *
+	 *
+	 * A directive can also query for other child directives. Since parent directives are instantiated
+	 * before child directives, a directive can't simply inject the list of child directives. Instead,
+	 * the directive injects a {@link QueryList}, which updates its contents as children are added,
+	 * removed, or moved by a directive that uses a {@link ViewContainerRef} such as a `ng-for`, an
+	 * `ng-if`, or an `ng-switch`.
+	 *
+	 * ```
+	 * @Directive({ selector: '[my-directive]' })
+	 * class MyDirective {
+	 *   constructor(@Query(Dependency) dependencies:QueryList<Dependency>) {
+	 *   }
+	 * }
+	 * ```
+	 *
+	 * This directive would be instantiated with a {@link QueryList} which contains `Dependency` 4 and
+	 * 6. Here, `Dependency` 5 would not be included, because it is not a direct child.
+	 *
+	 * ### Injecting a live collection of descendant directives
+	 *
+	 * By passing the descendant flag to `@Query` above, we can include the children of the child
+	 * elements.
+	 *
+	 * ```
+	 * @Directive({ selector: '[my-directive]' })
+	 * class MyDirective {
+	 *   constructor(@Query(Dependency, {descendants: true}) dependencies:QueryList<Dependency>) {
+	 *   }
+	 * }
+	 * ```
+	 *
+	 * This directive would be instantiated with a Query which would contain `Dependency` 4, 5 and 6.
+	 *
+	 * ### Optional injection
+	 *
+	 * The normal behavior of directives is to return an error when a specified dependency cannot be
+	 * resolved. If you
+	 * would like to inject `null` on unresolved dependency instead, you can annotate that dependency
+	 * with `@Optional()`.
+	 * This explicitly permits the author of a template to treat some of the surrounding directives as
+	 * optional.
+	 *
+	 * ```
+	 * @Directive({ selector: '[my-directive]' })
+	 * class MyDirective {
+	 *   constructor(@Optional() dependency:Dependency) {
+	 *   }
+	 * }
+	 * ```
+	 *
+	 * This directive would be instantiated with a `Dependency` directive found on the current element.
+	 * If none can be
+	 * found, the injector supplies `null` instead of throwing an error.
+	 *
+	 * ## Example
+	 *
+	 * Here we use a decorator directive to simply define basic tool-tip behavior.
+	 *
+	 * ```
+	 * @Directive({
+	 *   selector: '[tooltip]',
+	 *   inputs: [
+	 *     'text: tooltip'
+	 *   ],
+	 *   host: {
+	 *     '(mouseenter)': 'onMouseEnter()',
+	 *     '(mouseleave)': 'onMouseLeave()'
+	 *   }
+	 * })
+	 * class Tooltip{
+	 *   text:string;
+	 *   overlay:Overlay; // NOT YET IMPLEMENTED
+	 *   overlayManager:OverlayManager; // NOT YET IMPLEMENTED
+	 *
+	 *   constructor(overlayManager:OverlayManager) {
+	 *     this.overlay = overlay;
+	 *   }
+	 *
+	 *   onMouseEnter() {
+	 *     // exact signature to be determined
+	 *     this.overlay = this.overlayManager.open(text, ...);
+	 *   }
+	 *
+	 *   onMouseLeave() {
+	 *     this.overlay.close();
+	 *     this.overlay = null;
+	 *   }
+	 * }
+	 * ```
+	 * In our HTML template, we can then add this behavior to a `<div>` or any other element with the
+	 * `tooltip` selector,
+	 * like so:
+	 *
+	 * ```
+	 * <div tooltip="some text here"></div>
+	 * ```
+	 *
+	 * Directives can also control the instantiation, destruction, and positioning of inline template
+	 * elements:
+	 *
+	 * A directive uses a {@link ViewContainerRef} to instantiate, insert, move, and destroy views at
+	 * runtime.
+	 * The {@link ViewContainerRef} is created as a result of `<template>` element, and represents a
+	 * location in the current view
+	 * where these actions are performed.
+	 *
+	 * Views are always created as children of the current {@link ViewMetadata}, and as siblings of the
+	 * `<template>` element. Thus a
+	 * directive in a child view cannot inject the directive that created it.
+	 *
+	 * Since directives that create views via ViewContainers are common in Angular, and using the full
+	 * `<template>` element syntax is wordy, Angular
+	 * also supports a shorthand notation: `<li *foo="bar">` and `<li template="foo: bar">` are
+	 * equivalent.
+	 *
+	 * Thus,
+	 *
+	 * ```
+	 * <ul>
+	 *   <li *foo="bar" title="text"></li>
+	 * </ul>
+	 * ```
+	 *
+	 * Expands in use to:
+	 *
+	 * ```
+	 * <ul>
+	 *   <template [foo]="bar">
+	 *     <li title="text"></li>
+	 *   </template>
+	 * </ul>
+	 * ```
+	 *
+	 * Notice that although the shorthand places `*foo="bar"` within the `<li>` element, the binding for
+	 * the directive
+	 * controller is correctly instantiated on the `<template>` element rather than the `<li>` element.
+	 *
+	 * ## Lifecycle hooks
+	 *
+	 * When the directive class implements some {@link angular2/lifecycle_hooks} the callbacks are
+	 * called by the change detection at defined points in time during the life of the directive.
+	 *
+	 * ## Example
+	 *
+	 * Let's suppose we want to implement the `unless` behavior, to conditionally include a template.
+	 *
+	 * Here is a simple directive that triggers on an `unless` selector:
+	 *
+	 * ```
+	 * @Directive({
+	 *   selector: '[unless]',
+	 *   inputs: ['unless']
+	 * })
+	 * export class Unless {
+	 *   viewContainer: ViewContainerRef;
+	 *   templateRef: TemplateRef;
+	 *   prevCondition: boolean;
+	 *
+	 *   constructor(viewContainer: ViewContainerRef, templateRef: TemplateRef) {
+	 *     this.viewContainer = viewContainer;
+	 *     this.templateRef = templateRef;
+	 *     this.prevCondition = null;
+	 *   }
+	 *
+	 *   set unless(newCondition) {
+	 *     if (newCondition && (isBlank(this.prevCondition) || !this.prevCondition)) {
+	 *       this.prevCondition = true;
+	 *       this.viewContainer.clear();
+	 *     } else if (!newCondition && (isBlank(this.prevCondition) || this.prevCondition)) {
+	 *       this.prevCondition = false;
+	 *       this.viewContainer.create(this.templateRef);
+	 *     }
+	 *   }
+	 * }
+	 * ```
+	 *
+	 * We can then use this `unless` selector in a template:
+	 * ```
+	 * <ul>
+	 *   <li *unless="expr"></li>
+	 * </ul>
+	 * ```
+	 *
+	 * Once the directive instantiates the child view, the shorthand notation for the template expands
+	 * and the result is:
+	 *
+	 * ```
+	 * <ul>
+	 *   <template [unless]="exp">
+	 *     <li></li>
+	 *   </template>
+	 *   <li></li>
+	 * </ul>
+	 * ```
+	 *
+	 * Note also that although the `<li></li>` template still exists inside the `<template></template>`,
+	 * the instantiated
+	 * view occurs on the second `<li></li>` which is a sibling to the `<template>` element.
 	 */
 	exports.Directive = decorators_1.makeDecorator(directives_2.DirectiveMetadata);
+	// TODO(alexeagle): remove the duplication of this doc. It is copied from ViewMetadata.
 	/**
-	 * {@link ViewMetadata} factory function.
+	 * Metadata properties available for configuring Views.
+	 *
+	 * Each Angular component requires a single `@Component` and at least one `@View` annotation. The
+	 * `@View` annotation specifies the HTML template to use, and lists the directives that are active
+	 * within the template.
+	 *
+	 * When a component is instantiated, the template is loaded into the component's shadow root, and
+	 * the expressions and statements in the template are evaluated against the component.
+	 *
+	 * For details on the `@Component` annotation, see {@link ComponentMetadata}.
+	 *
+	 * ## Example
+	 *
+	 * ```
+	 * @Component({
+	 *   selector: 'greet',
+	 *   template: 'Hello {{name}}!',
+	 *   directives: [GreetUser, Bold]
+	 * })
+	 * class Greet {
+	 *   name: string;
+	 *
+	 *   constructor() {
+	 *     this.name = 'World';
+	 *   }
+	 * }
+	 * ```
 	 */
 	exports.View = decorators_1.makeDecorator(view_2.ViewMetadata, function (fn) { return fn.View = exports.View; });
+	// TODO(alexeagle): remove the duplication of this doc. It is copied from AttributeMetadata.
 	/**
-	 * {@link AttributeMetadata} factory function.
+	 * Metadata properties available for configuring Views.
+	 *
+	 * Each Angular component requires a single `@Component` and at least one `@View` annotation. The
+	 * `@View` annotation specifies the HTML template to use, and lists the directives that are active
+	 * within the template.
+	 *
+	 * When a component is instantiated, the template is loaded into the component's shadow root, and
+	 * the expressions and statements in the template are evaluated against the component.
+	 *
+	 * For details on the `@Component` annotation, see {@link ComponentMetadata}.
+	 *
+	 * ## Example
+	 *
+	 * ```
+	 * @Component({
+	 *   selector: 'greet',
+	 *   template: 'Hello {{name}}!',
+	 *   directives: [GreetUser, Bold]
+	 * })
+	 * class Greet {
+	 *   name: string;
+	 *
+	 *   constructor() {
+	 *     this.name = 'World';
+	 *   }
+	 * }
+	 * ```
 	 */
 	exports.Attribute = decorators_1.makeParamDecorator(di_2.AttributeMetadata);
+	// TODO(alexeagle): remove the duplication of this doc. It is copied from QueryMetadata.
 	/**
-	 * {@link QueryMetadata} factory function.
+	 * Declares an injectable parameter to be a live list of directives or variable
+	 * bindings from the content children of a directive.
+	 *
+	 * ### Example ([live demo](http://plnkr.co/edit/lY9m8HLy7z06vDoUaSN2?p=preview))
+	 *
+	 * Assume that `<tabs>` component would like to get a list its children `<pane>`
+	 * components as shown in this example:
+	 *
+	 * ```html
+	 * <tabs>
+	 *   <pane title="Overview">...</pane>
+	 *   <pane *ng-for="#o of objects" [title]="o.title">{{o.text}}</pane>
+	 * </tabs>
+	 * ```
+	 *
+	 * The preferred solution is to query for `Pane` directives using this decorator.
+	 *
+	 * ```javascript
+	 * @Component({
+	 *   selector: 'pane',
+	 *   inputs: ['title']
+	 * })
+	 * class Pane {
+	 *   title:string;
+	 * }
+	 *
+	 * @Component({
+	 *  selector: 'tabs',
+	 *  template: `
+	 *    <ul>
+	 *      <li *ng-for="#pane of panes">{{pane.title}}</li>
+	 *    </ul>
+	 *    <content></content>
+	 *  `
+	 * })
+	 * class Tabs {
+	 *   panes: QueryList<Pane>;
+	 *   constructor(@Query(Pane) panes:QueryList<Pane>) {
+	 *     this.panes = panes;
+	 *   }
+	 * }
+	 * ```
+	 *
+	 * A query can look for variable bindings by passing in a string with desired binding symbol.
+	 *
+	 * ### Example ([live demo](http://plnkr.co/edit/sT2j25cH1dURAyBRCKx1?p=preview))
+	 * ```html
+	 * <seeker>
+	 *   <div #findme>...</div>
+	 * </seeker>
+	 *
+	 * @Component({ selector: 'foo' })
+	 * class seeker {
+	 *   constructor(@Query('findme') elList: QueryList<ElementRef>) {...}
+	 * }
+	 * ```
+	 *
+	 * In this case the object that is injected depend on the type of the variable
+	 * binding. It can be an ElementRef, a directive or a component.
+	 *
+	 * Passing in a comma separated list of variable bindings will query for all of them.
+	 *
+	 * ```html
+	 * <seeker>
+	 *   <div #find-me>...</div>
+	 *   <div #find-me-too>...</div>
+	 * </seeker>
+	 *
+	 *  @Component({
+	 *   selector: 'foo'
+	 * })
+	 * class Seeker {
+	 *   constructor(@Query('findMe, findMeToo') elList: QueryList<ElementRef>) {...}
+	 * }
+	 * ```
+	 *
+	 * Configure whether query looks for direct children or all descendants
+	 * of the querying element, by using the `descendants` parameter.
+	 * It is set to `false` by default.
+	 *
+	 * ### Example ([live demo](http://plnkr.co/edit/wtGeB977bv7qvA5FTYl9?p=preview))
+	 * ```html
+	 * <container #first>
+	 *   <item>a</item>
+	 *   <item>b</item>
+	 *   <container #second>
+	 *     <item>c</item>
+	 *   </container>
+	 * </container>
+	 * ```
+	 *
+	 * When querying for items, the first container will see only `a` and `b` by default,
+	 * but with `Query(TextDirective, {descendants: true})` it will see `c` too.
+	 *
+	 * The queried directives are kept in a depth-first pre-order with respect to their
+	 * positions in the DOM.
+	 *
+	 * Query does not look deep into any subcomponent views.
+	 *
+	 * Query is updated as part of the change-detection cycle. Since change detection
+	 * happens after construction of a directive, QueryList will always be empty when observed in the
+	 * constructor.
+	 *
+	 * The injected object is an unmodifiable live list.
+	 * See {@link QueryList} for more details.
 	 */
 	exports.Query = decorators_1.makeParamDecorator(di_2.QueryMetadata);
+	// TODO(alexeagle): remove the duplication of this doc. It is copied from ContentChildrenMetadata.
 	/**
-	 * {@link ContentChildrenMetadata} factory function.
+	 * Configures a content query.
+	 *
+	 * Content queries are set before the `afterContentInit` callback is called.
+	 *
+	 * ### Example
+	 *
+	 * ```
+	 * @Directive({
+	 *   selector: 'someDir'
+	 * })
+	 * class SomeDir {
+	 *   @ContentChildren(ChildDirective) contentChildren: QueryList<ChildDirective>;
+	 *
+	 *   afterContentInit() {
+	 *     // contentChildren is set
+	 *   }
+	 * }
+	 * ```
 	 */
 	exports.ContentChildren = decorators_1.makePropDecorator(di_2.ContentChildrenMetadata);
+	// TODO(alexeagle): remove the duplication of this doc. It is copied from ContentChildMetadata.
 	/**
-	 * {@link ContentChildMetadata} factory function.
+	 * Configures a content query.
+	 *
+	 * Content queries are set before the `afterContentInit` callback is called.
+	 *
+	 * ### Example
+	 *
+	 * ```
+	 * @Directive({
+	 *   selector: 'someDir'
+	 * })
+	 * class SomeDir {
+	 *   @ContentChild(ChildDirective) contentChild;
+	 *
+	 *   afterContentInit() {
+	 *     // contentChild is set
+	 *   }
+	 * }
+	 * ```
 	 */
 	exports.ContentChild = decorators_1.makePropDecorator(di_2.ContentChildMetadata);
+	// TODO(alexeagle): remove the duplication of this doc. It is copied from ViewChildrenMetadata.
 	/**
-	 * {@link ViewChildrenMetadata} factory function.
+	 * Configures a view query.
+	 *
+	 * View queries are set before the `afterViewInit` callback is called.
+	 *
+	 * ### Example
+	 *
+	 * ```
+	 * @Component({
+	 *   selector: 'someDir',
+	 *   templateUrl: 'someTemplate',
+	 *   directives: [ItemDirective]
+	 * })
+	 * class SomeDir {
+	 *   @ViewChildren(ItemDirective) viewChildren: QueryList<ItemDirective>;
+	 *
+	 *   afterViewInit() {
+	 *     // viewChildren is set
+	 *   }
+	 * }
+	 * ```
 	 */
 	exports.ViewChildren = decorators_1.makePropDecorator(di_2.ViewChildrenMetadata);
+	// TODO(alexeagle): remove the duplication of this doc. It is copied from ViewChildMetadata.
 	/**
-	 * {@link ViewChildMetadata} factory function.
+	 * Configures a view query.
+	 *
+	 * View queries are set before the `afterViewInit` callback is called.
+	 *
+	 * ### Example
+	 *
+	 * ```
+	 * @Component({
+	 *   selector: 'someDir',
+	 *   templateUrl: 'someTemplate',
+	 *   directives: [ItemDirective]
+	 * })
+	 * class SomeDir {
+	 *   @ViewChild(ItemDirective) viewChild:ItemDirective;
+	 *
+	 *   afterViewInit() {
+	 *     // viewChild is set
+	 *   }
+	 * }
+	 * ```
 	 */
 	exports.ViewChild = decorators_1.makePropDecorator(di_2.ViewChildMetadata);
+	// TODO(alexeagle): remove the duplication of this doc. It is copied from ViewQueryMetadata.
 	/**
-	 * {@link di/ViewQueryMetadata} factory function.
+	 * Similar to {@link QueryMetadata}, but querying the component view, instead of
+	 * the content children.
+	 *
+	 * ### Example ([live demo](http://plnkr.co/edit/eNsFHDf7YjyM6IzKxM1j?p=preview))
+	 *
+	 * ```javascript
+	 * @Component({...})
+	 * @View({
+	 *   template: `
+	 *     <item> a </item>
+	 *     <item> b </item>
+	 *     <item> c </item>
+	 *   `
+	 * })
+	 * class MyComponent {
+	 *   shown: boolean;
+	 *
+	 *   constructor(private @Query(Item) items:QueryList<Item>) {
+	 *     items.onChange(() => console.log(items.length));
+	 *   }
+	 * }
+	 * ```
+	 *
+	 * Supports the same querying parameters as {@link QueryMetadata}, except
+	 * `descendants`. This always queries the whole view.
+	 *
+	 * As `shown` is flipped between true and false, items will contain zero of one
+	 * items.
+	 *
+	 * Specifies that a {@link QueryList} should be injected.
+	 *
+	 * The injected object is an iterable and observable live list.
+	 * See {@link QueryList} for more details.
 	 */
 	exports.ViewQuery = decorators_1.makeParamDecorator(di_2.ViewQueryMetadata);
+	// TODO(alexeagle): remove the duplication of this doc. It is copied from PipeMetadata.
 	/**
-	 * {@link PipeMetadata} factory function.
+	 * Declare reusable pipe function.
+	 *
+	 * ## Example
+	 *
+	 * ```
+	 * @Pipe({
+	 *   name: 'lowercase'
+	 * })
+	 * class Lowercase {
+	 *   transform(v, args) { return v.toLowerCase(); }
+	 * }
+	 * ```
 	 */
 	exports.Pipe = decorators_1.makeDecorator(directives_2.PipeMetadata);
+	// TODO(alexeagle): remove the duplication of this doc. It is copied from InputMetadata.
 	/**
-	 * {@link InputMetadata} factory function.
+	 * Declares a data-bound input property.
 	 *
-	 * See {@link InputMetadata}.
+	 * Angular automatically updates data-bound properties during change detection.
+	 *
+	 * `InputMetadata` takes an optional parameter that specifies the name
+	 * used when instantiating a component in the template. When not provided,
+	 * the name of the decorated property is used.
+	 *
+	 * ### Example
+	 *
+	 * The following example creates a component with two input properties.
+	 *
+	 * ```typescript
+	 * @Component({
+	 *   selector: 'bank-account',
+	 *   template: `
+	 *     Bank Name: {{bankName}}
+	 *     Account Id: {{id}}
+	 *   `
+	 * })
+	 * class BankAccount {
+	 *   @Input() bankName: string;
+	 *   @Input('account-id') id: string;
+	 *
+	 *   // this property is not bound, and won't be automatically updated by Angular
+	 *   normalizedBankName: string;
+	 * }
+	 *
+	 * @Component({
+	 *   selector: 'app',
+	 *   template: `
+	 *     <bank-account bank-name="RBC" account-id="4747"></bank-account>
+	 *   `,
+	 *   directives: [BankAccount]
+	 * })
+	 * class App {}
+	 *
+	 * bootstrap(App);
+	 * ```
 	 */
 	exports.Input = decorators_1.makePropDecorator(directives_2.InputMetadata);
+	// TODO(alexeagle): remove the duplication of this doc. It is copied from OutputMetadata.
 	/**
-	 * {@link OutputMetadata} factory function.
+	 * Declares an event-bound output property.
 	 *
-	 * See {@link OutputMetadatas}.
+	 * When an output property emits an event, an event handler attached to that event
+	 * the template is invoked.
+	 *
+	 * `OutputMetadata` takes an optional parameter that specifies the name
+	 * used when instantiating a component in the template. When not provided,
+	 * the name of the decorated property is used.
+	 *
+	 * ### Example
+	 *
+	 * ```typescript
+	 * @Directive({
+	 *   selector: 'interval-dir',
+	 * })
+	 * class IntervalDir {
+	 *   @Output() everySecond = new EventEmitter();
+	 *   @Output('everyFiveSeconds') five5Secs = new EventEmitter();
+	 *
+	 *   constructor() {
+	 *     setInterval(() => this.everySecond.next("event"), 1000);
+	 *     setInterval(() => this.five5Secs.next("event"), 5000);
+	 *   }
+	 * }
+	 *
+	 * @Component({
+	 *   selector: 'app',
+	 *   template: `
+	 *     <interval-dir (every-second)="everySecond()" (every-five-seconds)="everyFiveSeconds()">
+	 *     </interval-dir>
+	 *   `,
+	 *   directives: [IntervalDir]
+	 * })
+	 * class App {
+	 *   everySecond() { console.log('second'); }
+	 *   everyFiveSeconds() { console.log('five seconds'); }
+	 * }
+	 * bootstrap(App);
+	 * ```
 	 */
 	exports.Output = decorators_1.makePropDecorator(directives_2.OutputMetadata);
+	// TODO(alexeagle): remove the duplication of this doc. It is copied from HostBindingMetadata.
 	/**
-	 * {@link HostBindingMetadata} factory function.
+	 * Declares a host property binding.
+	 *
+	 * Angular automatically checks host property bindings during change detection.
+	 * If a binding changes, it will update the host element of the directive.
+	 *
+	 * `HostBindingMetadata` takes an optional parameter that specifies the property
+	 * name of the host element that will be updated. When not provided,
+	 * the class property name is used.
+	 *
+	 * ### Example
+	 *
+	 * The following example creates a directive that sets the `valid` and `invalid` classes
+	 * on the DOM element that has ng-model directive on it.
+	 *
+	 * ```typescript
+	 * @Directive({selector: '[ng-model]'})
+	 * class NgModelStatus {
+	 *   constructor(public control:NgModel) {}
+	 *   @HostBinding('[class.valid]') get valid { return this.control.valid; }
+	 *   @HostBinding('[class.invalid]') get invalid { return this.control.invalid; }
+	 * }
+	 *
+	 * @Component({
+	 *   selector: 'app',
+	 *   template: `<input [(ng-model)]="prop">`,
+	 *   directives: [FORM_DIRECTIVES, NgModelStatus]
+	 * })
+	 * class App {
+	 *   prop;
+	 * }
+	 *
+	 * bootstrap(App);
+	 * ```
 	 */
 	exports.HostBinding = decorators_1.makePropDecorator(directives_2.HostBindingMetadata);
+	// TODO(alexeagle): remove the duplication of this doc. It is copied from HostListenerMetadata.
 	/**
-	 * {@link HostListenerMetadata} factory function.
+	 * Declares a host listener.
+	 *
+	 * Angular will invoke the decorated method when the host element emits the specified event.
+	 *
+	 * If the decorated method returns `false`, then `preventDefault` is applied on the DOM
+	 * event.
+	 *
+	 * ### Example
+	 *
+	 * The following example declares a directive that attaches a click listener to the button and
+	 * counts clicks.
+	 *
+	 * ```typescript
+	 * @Directive({selector: 'button[counting]'})
+	 * class CountClicks {
+	 *   numberOfClicks = 0;
+	 *
+	 *   @HostListener('click', ['$event.target'])
+	 *   onClick(btn) {
+	 *     console.log("button", btn, "number of clicks:", this.numberOfClicks++);
+	 *   }
+	 * }
+	 *
+	 * @Component({
+	 *   selector: 'app',
+	 *   template: `<button counting>Increment</button>`,
+	 *   directives: [CountClicks]
+	 * })
+	 * class App {}
+	 *
+	 * bootstrap(App);
+	 * ```
 	 */
 	exports.HostListener = decorators_1.makePropDecorator(directives_2.HostListenerMetadata);
 	//# sourceMappingURL=metadata.js.map
@@ -1104,10 +1933,9 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	///<reference path="../../../typings/tsd.d.ts" />
 	var lang_1 = __webpack_require__(1);
 	// TODO(jeffbcross): use ES6 import once typings are available
-	var Subject = __webpack_require__(258);
+	var Subject = __webpack_require__(255);
 	var PromiseWrapper = (function () {
 	    function PromiseWrapper() {
 	    }
@@ -1151,7 +1979,9 @@
 	var TimerWrapper = (function () {
 	    function TimerWrapper() {
 	    }
-	    TimerWrapper.setTimeout = function (fn, millis) { return lang_1.global.setTimeout(fn, millis); };
+	    TimerWrapper.setTimeout = function (fn, millis) {
+	        return lang_1.global.setTimeout(fn, millis);
+	    };
 	    TimerWrapper.clearTimeout = function (id) { lang_1.global.clearTimeout(id); };
 	    TimerWrapper.setInterval = function (fn, millis) {
 	        return lang_1.global.setInterval(fn, millis);
@@ -1194,8 +2024,9 @@
 	 * title gets clicked:
 	 *
 	 * ```
-	 * @Component({selector: 'zippy'})
-	 * @View({template: `
+	 * @Component({
+	 *   selector: 'zippy',
+	 *   template: `
 	 *   <div class="zippy">
 	 *     <div (click)="toggle()">Toggle</div>
 	 *     <div [hidden]="!visible">
@@ -1227,6 +2058,7 @@
 	    __extends(EventEmitter, _super);
 	    function EventEmitter() {
 	        _super.apply(this, arguments);
+	        /** @internal */
 	        this._subject = new Subject();
 	    }
 	    EventEmitter.prototype.observer = function (generator) {
@@ -1245,10 +2077,10 @@
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';var iterable_differs_1 = __webpack_require__(114);
-	var default_iterable_differ_1 = __webpack_require__(273);
-	var keyvalue_differs_1 = __webpack_require__(115);
-	var default_keyvalue_differ_1 = __webpack_require__(274);
+	'use strict';var iterable_differs_1 = __webpack_require__(113);
+	var default_iterable_differ_1 = __webpack_require__(272);
+	var keyvalue_differs_1 = __webpack_require__(114);
+	var default_keyvalue_differ_1 = __webpack_require__(273);
 	var lang_1 = __webpack_require__(1);
 	var ast_1 = __webpack_require__(61);
 	exports.ASTWithSource = ast_1.ASTWithSource;
@@ -1257,13 +2089,13 @@
 	exports.PropertyRead = ast_1.PropertyRead;
 	exports.LiteralArray = ast_1.LiteralArray;
 	exports.ImplicitReceiver = ast_1.ImplicitReceiver;
-	var lexer_1 = __webpack_require__(118);
+	var lexer_1 = __webpack_require__(117);
 	exports.Lexer = lexer_1.Lexer;
-	var parser_1 = __webpack_require__(279);
+	var parser_1 = __webpack_require__(278);
 	exports.Parser = parser_1.Parser;
-	var locals_1 = __webpack_require__(278);
+	var locals_1 = __webpack_require__(277);
 	exports.Locals = locals_1.Locals;
-	var exceptions_1 = __webpack_require__(117);
+	var exceptions_1 = __webpack_require__(116);
 	exports.DehydratedException = exceptions_1.DehydratedException;
 	exports.ExpressionChangedAfterItHasBeenCheckedException = exceptions_1.ExpressionChangedAfterItHasBeenCheckedException;
 	exports.ChangeDetectionError = exceptions_1.ChangeDetectionError;
@@ -1274,23 +2106,23 @@
 	var constants_1 = __webpack_require__(17);
 	exports.ChangeDetectionStrategy = constants_1.ChangeDetectionStrategy;
 	exports.CHANGE_DECTION_STRATEGY_VALUES = constants_1.CHANGE_DECTION_STRATEGY_VALUES;
-	var proto_change_detector_1 = __webpack_require__(119);
+	var proto_change_detector_1 = __webpack_require__(118);
 	exports.DynamicProtoChangeDetector = proto_change_detector_1.DynamicProtoChangeDetector;
-	var jit_proto_change_detector_1 = __webpack_require__(276);
+	var jit_proto_change_detector_1 = __webpack_require__(275);
 	exports.JitProtoChangeDetector = jit_proto_change_detector_1.JitProtoChangeDetector;
-	var binding_record_1 = __webpack_require__(110);
+	var binding_record_1 = __webpack_require__(109);
 	exports.BindingRecord = binding_record_1.BindingRecord;
 	exports.BindingTarget = binding_record_1.BindingTarget;
 	var directive_record_1 = __webpack_require__(59);
 	exports.DirectiveIndex = directive_record_1.DirectiveIndex;
 	exports.DirectiveRecord = directive_record_1.DirectiveRecord;
-	var dynamic_change_detector_1 = __webpack_require__(116);
+	var dynamic_change_detector_1 = __webpack_require__(115);
 	exports.DynamicChangeDetector = dynamic_change_detector_1.DynamicChangeDetector;
-	var change_detector_ref_1 = __webpack_require__(112);
+	var change_detector_ref_1 = __webpack_require__(111);
 	exports.ChangeDetectorRef = change_detector_ref_1.ChangeDetectorRef;
-	var iterable_differs_2 = __webpack_require__(114);
+	var iterable_differs_2 = __webpack_require__(113);
 	exports.IterableDiffers = iterable_differs_2.IterableDiffers;
-	var keyvalue_differs_2 = __webpack_require__(115);
+	var keyvalue_differs_2 = __webpack_require__(114);
 	exports.KeyValueDiffers = keyvalue_differs_2.KeyValueDiffers;
 	var change_detection_util_1 = __webpack_require__(31);
 	exports.WrappedValue = change_detection_util_1.WrappedValue;
@@ -1311,11 +2143,11 @@
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';var reflector_1 = __webpack_require__(157);
-	var reflector_2 = __webpack_require__(157);
+	'use strict';var reflector_1 = __webpack_require__(156);
+	var reflector_2 = __webpack_require__(156);
 	exports.Reflector = reflector_2.Reflector;
 	exports.ReflectionInfo = reflector_2.ReflectionInfo;
-	var reflection_capabilities_1 = __webpack_require__(304);
+	var reflection_capabilities_1 = __webpack_require__(303);
 	exports.reflector = new reflector_1.Reflector(new reflection_capabilities_1.ReflectionCapabilities());
 	//# sourceMappingURL=reflection.js.map
 
@@ -1418,7 +2250,7 @@
 	exports.Compiler = compiler_1.Compiler;
 	var view_manager_1 = __webpack_require__(35);
 	exports.AppViewManager = view_manager_1.AppViewManager;
-	var query_list_1 = __webpack_require__(145);
+	var query_list_1 = __webpack_require__(144);
 	exports.QueryList = query_list_1.QueryList;
 	var dynamic_component_loader_1 = __webpack_require__(49);
 	exports.DynamicComponentLoader = dynamic_component_loader_1.DynamicComponentLoader;
@@ -1633,8 +2465,8 @@
 	    __extends(ViewRef_, _super);
 	    function ViewRef_(_view) {
 	        _super.call(this);
-	        this._view = _view;
 	        this._changeDetectorRef = null;
+	        this._view = _view;
 	    }
 	    Object.defineProperty(ViewRef_.prototype, "render", {
 	        /**
@@ -2023,6 +2855,26 @@
 	    Validators.required = function (control) {
 	        return lang_1.isBlank(control.value) || control.value == "" ? { "required": true } : null;
 	    };
+	    Validators.minLength = function (minLength) {
+	        return function (control) {
+	            if (lang_1.isPresent(Validators.required(control)))
+	                return null;
+	            var v = control.value;
+	            return v.length < minLength ?
+	                { "minlength": { "requiredLength": minLength, "actualLength": v.length } } :
+	                null;
+	        };
+	    };
+	    Validators.maxLength = function (maxLength) {
+	        return function (control) {
+	            if (lang_1.isPresent(Validators.required(control)))
+	                return null;
+	            var v = control.value;
+	            return v.length > maxLength ?
+	                { "maxlength": { "requiredLength": maxLength, "actualLength": v.length } } :
+	                null;
+	        };
+	    };
 	    Validators.nullValidator = function (c) { return null; };
 	    Validators.compose = function (validators) {
 	        if (lang_1.isBlank(validators))
@@ -2128,9 +2980,7 @@
 	 *
 	 * ```
 	 * @Component({
-	 *   selector: 'greet'
-	 * })
-	 * @View({
+	 *   selector: 'greet',
 	 *   template: 'Hello {{name}}!',
 	 *   directives: [GreetUser, Bold]
 	 * })
@@ -2168,7 +3018,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';// Public API for render
-	var render_1 = __webpack_require__(158);
+	var render_1 = __webpack_require__(157);
 	exports.Renderer = render_1.Renderer;
 	exports.RenderViewRef = render_1.RenderViewRef;
 	exports.RenderProtoViewRef = render_1.RenderProtoViewRef;
@@ -2230,7 +3080,7 @@
 	 * }
 	 *
 	 * var injector = Injector.resolveAndCreate([
-	 *  bind("MyEngine").toClass(Engine),
+	 *  provide("MyEngine", {useClass: Engine}),
 	 *  Car
 	 * ]);
 	 *
@@ -2464,9 +3314,7 @@
 	 *
 	 * @Component({
 	 *   selector: 'parent-cmp',
-	 *   bindings: [HostService]
-	 * })
-	 * @View({
+	 *   providers: [HostService],
 	 *   template: `
 	 *     Dir: <child-directive></child-directive>
 	 *   `,
@@ -2477,9 +3325,7 @@
 	 *
 	 * @Component({
 	 *   selector: 'app',
-	 *   bindings: [OtherService]
-	 * })
-	 * @View({
+	 *   providers: [OtherService],
 	 *   template: `
 	 *     Parent: <parent-cmp></parent-cmp>
 	 *   `,
@@ -2656,7 +3502,7 @@
 /* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';var impl = __webpack_require__(302);
+	'use strict';var impl = __webpack_require__(301);
 	// Change exports to const once https://github.com/angular/ts2dart/issues/150
 	/**
 	 * True if WTF is enabled.
@@ -2864,8 +3710,8 @@
 	var exceptions_1 = __webpack_require__(5);
 	var collection_1 = __webpack_require__(4);
 	var constants_1 = __webpack_require__(17);
-	var pipe_lifecycle_reflector_1 = __webpack_require__(280);
-	var binding_record_1 = __webpack_require__(110);
+	var pipe_lifecycle_reflector_1 = __webpack_require__(279);
+	var binding_record_1 = __webpack_require__(109);
 	var directive_record_1 = __webpack_require__(59);
 	/**
 	 * Indicates that the result of a {@link PipeMetadata} transformation has changed even though the
@@ -3158,10 +4004,7 @@
 /* 34 */
 /***/ function(module, exports) {
 
-	'use strict';/**
-	 * @internal
-	 */
-	(function (LifecycleHooks) {
+	'use strict';(function (LifecycleHooks) {
 	    LifecycleHooks[LifecycleHooks["OnInit"] = 0] = "OnInit";
 	    LifecycleHooks[LifecycleHooks["OnDestroy"] = 1] = "OnDestroy";
 	    LifecycleHooks[LifecycleHooks["DoCheck"] = 2] = "DoCheck";
@@ -3216,8 +4059,8 @@
 	var viewModule = __webpack_require__(85);
 	var view_ref_1 = __webpack_require__(15);
 	var api_1 = __webpack_require__(28);
-	var view_manager_utils_1 = __webpack_require__(146);
-	var view_pool_1 = __webpack_require__(147);
+	var view_manager_utils_1 = __webpack_require__(145);
+	var view_pool_1 = __webpack_require__(146);
 	var view_listener_1 = __webpack_require__(87);
 	var profile_1 = __webpack_require__(27);
 	var proto_view_factory_1 = __webpack_require__(50);
@@ -3251,12 +4094,19 @@
 	        this._viewListener = _viewListener;
 	        this._utils = _utils;
 	        this._renderer = _renderer;
+	        /** @internal */
 	        this._createRootHostViewScope = profile_1.wtfCreateScope('AppViewManager#createRootHostView()');
+	        /** @internal */
 	        this._destroyRootHostViewScope = profile_1.wtfCreateScope('AppViewManager#destroyRootHostView()');
+	        /** @internal */
 	        this._createEmbeddedViewInContainerScope = profile_1.wtfCreateScope('AppViewManager#createEmbeddedViewInContainer()');
+	        /** @internal */
 	        this._createHostViewInContainerScope = profile_1.wtfCreateScope('AppViewManager#createHostViewInContainer()');
+	        /** @internal */
 	        this._destroyViewInContainerScope = profile_1.wtfCreateScope('AppViewMananger#destroyViewInContainer()');
+	        /** @internal */
 	        this._attachViewInContainerScope = profile_1.wtfCreateScope('AppViewMananger#attachViewInContainer()');
+	        /** @internal */
 	        this._detachViewInContainerScope = profile_1.wtfCreateScope('AppViewMananger#detachViewInContainer()');
 	        this._protoViewFactory = _protoViewFactory;
 	    }
@@ -3330,6 +4180,7 @@
 	    /**
 	     *
 	     * See {@link AppViewManager#destroyViewInContainer}.
+	     * @internal
 	     */
 	    AppViewManager_.prototype._createViewInContainer = function (viewContainerLocation, index, protoView, context, imperativelyCreatedInjector) {
 	        var parentView = view_ref_1.internalView(viewContainerLocation.parentView);
@@ -3356,6 +4207,7 @@
 	        this._utils.hydrateViewInContainer(parentView, boundElementIndex, contextView, contextBoundElementIndex, index, imperativelyCreatedInjector);
 	        return view.ref;
 	    };
+	    /** @internal */
 	    AppViewManager_.prototype._attachRenderView = function (parentView, boundElementIndex, index, view) {
 	        var elementRef = parentView.elementRefs[boundElementIndex];
 	        if (index === 0) {
@@ -3400,12 +4252,14 @@
 	        this._renderer.detachFragment(view.renderFragment);
 	        return profile_1.wtfLeave(s, view.ref);
 	    };
+	    /** @internal */
 	    AppViewManager_.prototype._createMainView = function (protoView, renderViewWithFragments) {
 	        var mergedParentView = this._utils.createView(protoView, renderViewWithFragments, this, this._renderer);
 	        this._renderer.setEventDispatcher(mergedParentView.render, mergedParentView);
 	        this._viewListener.viewCreated(mergedParentView);
 	        return mergedParentView;
 	    };
+	    /** @internal */
 	    AppViewManager_.prototype._createPooledView = function (protoView) {
 	        var view = this._viewPool.getView(protoView);
 	        if (lang_1.isBlank(view)) {
@@ -3413,6 +4267,7 @@
 	        }
 	        return view;
 	    };
+	    /** @internal */
 	    AppViewManager_.prototype._destroyPooledView = function (view) {
 	        var wasReturned = this._viewPool.returnView(view);
 	        if (!wasReturned) {
@@ -3420,6 +4275,7 @@
 	            this._renderer.destroyView(view.render);
 	        }
 	    };
+	    /** @internal */
 	    AppViewManager_.prototype._destroyViewInContainer = function (parentView, boundElementIndex, index) {
 	        var viewContainer = parentView.viewContainers[boundElementIndex];
 	        var view = viewContainer.views[index];
@@ -3438,6 +4294,7 @@
 	            this._destroyPooledView(view);
 	        }
 	    };
+	    /** @internal */
 	    AppViewManager_.prototype._viewDehydrateRecurse = function (view) {
 	        if (view.hydrated()) {
 	            this._utils.dehydrateView(view);
@@ -3872,20 +4729,181 @@
 	var DirectiveMetadata = (function (_super) {
 	    __extends(DirectiveMetadata, _super);
 	    function DirectiveMetadata(_a) {
-	        var _b = _a === void 0 ? {} : _a, selector = _b.selector, inputs = _b.inputs, outputs = _b.outputs, properties = _b.properties, events = _b.events, host = _b.host, bindings = _b.bindings, exportAs = _b.exportAs, moduleId = _b.moduleId, queries = _b.queries;
+	        var _b = _a === void 0 ? {} : _a, selector = _b.selector, inputs = _b.inputs, outputs = _b.outputs, properties = _b.properties, events = _b.events, host = _b.host, bindings = _b.bindings, providers = _b.providers, exportAs = _b.exportAs, moduleId = _b.moduleId, queries = _b.queries;
 	        _super.call(this);
 	        this.selector = selector;
-	        this.inputs = inputs;
-	        this.outputs = outputs;
+	        this._inputs = inputs;
+	        this._properties = properties;
+	        this._outputs = outputs;
+	        this._events = events;
 	        this.host = host;
-	        // TODO: remove this once properties and events are removed.
-	        this.properties = properties;
-	        this.events = events;
 	        this.exportAs = exportAs;
 	        this.moduleId = moduleId;
 	        this.queries = queries;
-	        this.bindings = bindings;
+	        this._providers = providers;
+	        this._bindings = bindings;
 	    }
+	    Object.defineProperty(DirectiveMetadata.prototype, "inputs", {
+	        /**
+	         * Enumerates the set of data-bound input properties for a directive
+	         *
+	         * Angular automatically updates input properties during change detection.
+	         *
+	         * The `inputs` property defines a set of `directiveProperty` to `bindingProperty`
+	         * configuration:
+	         *
+	         * - `directiveProperty` specifies the component property where the value is written.
+	         * - `bindingProperty` specifies the DOM property where the value is read from.
+	         *
+	         * When `bindingProperty` is not provided, it is assumed to be equal to `directiveProperty`.
+	         *
+	         * ### Example ([live demo](http://plnkr.co/edit/ivhfXY?p=preview))
+	         *
+	         * The following example creates a component with two data-bound properties.
+	         *
+	         * ```typescript
+	         * @Component({
+	         *   selector: 'bank-account',
+	         *   inputs: ['bankName', 'id: account-id'],
+	         *   template: `
+	         *     Bank Name: {{bankName}}
+	         *     Account Id: {{id}}
+	         *   `
+	         * })
+	         * class BankAccount {
+	         *   bankName: string;
+	         *   id: string;
+	         *
+	         *   // this property is not bound, and won't be automatically updated by Angular
+	         *   normalizedBankName: string;
+	         * }
+	         *
+	         * @Component({
+	         *   selector: 'app',
+	         *   template: `
+	         *     <bank-account bank-name="RBC" account-id="4747"></bank-account>
+	         *   `,
+	         *   directives: [BankAccount]
+	         * })
+	         * class App {}
+	         *
+	         * bootstrap(App);
+	         * ```
+	         *
+	         */
+	        get: function () {
+	            return lang_1.isPresent(this._properties) && this._properties.length > 0 ? this._properties :
+	                this._inputs;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(DirectiveMetadata.prototype, "properties", {
+	        get: function () { return this.inputs; },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(DirectiveMetadata.prototype, "outputs", {
+	        /**
+	         * Enumerates the set of event-bound output properties.
+	         *
+	         * When an output property emits an event, an event handler attached to that event
+	         * the template is invoked.
+	         *
+	         * The `outputs` property defines a set of `directiveProperty` to `bindingProperty`
+	         * configuration:
+	         *
+	         * - `directiveProperty` specifies the component property that emits events.
+	         * - `bindingProperty` specifies the DOM property the event handler is attached to.
+	         *
+	         * ### Example ([live demo](http://plnkr.co/edit/d5CNq7?p=preview))
+	         *
+	         * ```typescript
+	         * @Directive({
+	         *   selector: 'interval-dir',
+	         *   outputs: ['everySecond', 'five5Secs: everyFiveSeconds']
+	         * })
+	         * class IntervalDir {
+	         *   everySecond = new EventEmitter();
+	         *   five5Secs = new EventEmitter();
+	         *
+	         *   constructor() {
+	         *     setInterval(() => this.everySecond.next("event"), 1000);
+	         *     setInterval(() => this.five5Secs.next("event"), 5000);
+	         *   }
+	         * }
+	         *
+	         * @Component({
+	         *   selector: 'app',
+	         *   template: `
+	         *     <interval-dir (every-second)="everySecond()" (every-five-seconds)="everyFiveSeconds()">
+	         *     </interval-dir>
+	         *   `,
+	         *   directives: [IntervalDir]
+	         * })
+	         * class App {
+	         *   everySecond() { console.log('second'); }
+	         *   everyFiveSeconds() { console.log('five seconds'); }
+	         * }
+	         * bootstrap(App);
+	         * ```
+	         *
+	         */
+	        get: function () {
+	            return lang_1.isPresent(this._events) && this._events.length > 0 ? this._events : this._outputs;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(DirectiveMetadata.prototype, "events", {
+	        get: function () { return this.outputs; },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(DirectiveMetadata.prototype, "providers", {
+	        /**
+	         * Defines the set of injectable objects that are visible to a Directive and its light DOM
+	         * children.
+	         *
+	         * ## Simple Example
+	         *
+	         * Here is an example of a class that can be injected:
+	         *
+	         * ```
+	         * class Greeter {
+	         *    greet(name:string) {
+	         *      return 'Hello ' + name + '!';
+	         *    }
+	         * }
+	         *
+	         * @Directive({
+	         *   selector: 'greet',
+	         *   bindings: [
+	         *     Greeter
+	         *   ]
+	         * })
+	         * class HelloWorld {
+	         *   greeter:Greeter;
+	         *
+	         *   constructor(greeter:Greeter) {
+	         *     this.greeter = greeter;
+	         *   }
+	         * }
+	         * ```
+	         */
+	        get: function () {
+	            return lang_1.isPresent(this._bindings) && this._bindings.length > 0 ? this._bindings :
+	                this._providers;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(DirectiveMetadata.prototype, "bindings", {
+	        /** @deprecated */
+	        get: function () { return this.providers; },
+	        enumerable: true,
+	        configurable: true
+	    });
 	    DirectiveMetadata = __decorate([
 	        lang_1.CONST(), 
 	        __metadata('design:paramtypes', [Object])
@@ -3904,7 +4922,7 @@
 	 * When a component is instantiated, Angular
 	 * - creates a shadow DOM for the component.
 	 * - loads the selected template into the shadow DOM.
-	 * - creates all the injectable objects configured with `bindings` and `viewBindings`.
+	 * - creates all the injectable objects configured with `providers` and `viewProviders`.
 	 *
 	 * All template expressions and statements are then evaluated against the component instance.
 	 *
@@ -3919,9 +4937,7 @@
 	 *
 	 * ```
 	 * @Component({
-	 *   selector: 'greet'
-	 * })
-	 * @View({
+	 *   selector: 'greet',
 	 *   template: 'Hello {{name}}!'
 	 * })
 	 * class Greet {
@@ -3937,7 +4953,7 @@
 	var ComponentMetadata = (function (_super) {
 	    __extends(ComponentMetadata, _super);
 	    function ComponentMetadata(_a) {
-	        var _b = _a === void 0 ? {} : _a, selector = _b.selector, inputs = _b.inputs, outputs = _b.outputs, properties = _b.properties, events = _b.events, host = _b.host, exportAs = _b.exportAs, moduleId = _b.moduleId, bindings = _b.bindings, viewBindings = _b.viewBindings, _c = _b.changeDetection, changeDetection = _c === void 0 ? change_detection_1.ChangeDetectionStrategy.Default : _c, queries = _b.queries, templateUrl = _b.templateUrl, template = _b.template, styleUrls = _b.styleUrls, styles = _b.styles, directives = _b.directives, pipes = _b.pipes, encapsulation = _b.encapsulation;
+	        var _b = _a === void 0 ? {} : _a, selector = _b.selector, inputs = _b.inputs, outputs = _b.outputs, properties = _b.properties, events = _b.events, host = _b.host, exportAs = _b.exportAs, moduleId = _b.moduleId, bindings = _b.bindings, providers = _b.providers, viewBindings = _b.viewBindings, viewProviders = _b.viewProviders, _c = _b.changeDetection, changeDetection = _c === void 0 ? change_detection_1.ChangeDetectionStrategy.Default : _c, queries = _b.queries, templateUrl = _b.templateUrl, template = _b.template, styleUrls = _b.styleUrls, styles = _b.styles, directives = _b.directives, pipes = _b.pipes, encapsulation = _b.encapsulation;
 	        _super.call(this, {
 	            selector: selector,
 	            inputs: inputs,
@@ -3948,10 +4964,12 @@
 	            exportAs: exportAs,
 	            moduleId: moduleId,
 	            bindings: bindings,
+	            providers: providers,
 	            queries: queries
 	        });
 	        this.changeDetection = changeDetection;
-	        this.viewBindings = viewBindings;
+	        this._viewProviders = viewProviders;
+	        this._viewBindings = viewBindings;
 	        this.templateUrl = templateUrl;
 	        this.template = template;
 	        this.styleUrls = styleUrls;
@@ -3960,6 +4978,57 @@
 	        this.pipes = pipes;
 	        this.encapsulation = encapsulation;
 	    }
+	    Object.defineProperty(ComponentMetadata.prototype, "viewProviders", {
+	        /**
+	         * Defines the set of injectable objects that are visible to its view DOM children.
+	         *
+	         * ## Simple Example
+	         *
+	         * Here is an example of a class that can be injected:
+	         *
+	         * ```
+	         * class Greeter {
+	         *    greet(name:string) {
+	         *      return 'Hello ' + name + '!';
+	         *    }
+	         * }
+	         *
+	         * @Directive({
+	         *   selector: 'needs-greeter'
+	         * })
+	         * class NeedsGreeter {
+	         *   greeter:Greeter;
+	         *
+	         *   constructor(greeter:Greeter) {
+	         *     this.greeter = greeter;
+	         *   }
+	         * }
+	         *
+	         * @Component({
+	         *   selector: 'greet',
+	         *   viewProviders: [
+	         *     Greeter
+	         *   ],
+	         *   template: `<needs-greeter></needs-greeter>`,
+	         *   directives: [NeedsGreeter]
+	         * })
+	         * class HelloWorld {
+	         * }
+	         *
+	         * ```
+	         */
+	        get: function () {
+	            return lang_1.isPresent(this._viewBindings) && this._viewBindings.length > 0 ? this._viewBindings :
+	                this._viewProviders;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(ComponentMetadata.prototype, "viewBindings", {
+	        get: function () { return this.viewProviders; },
+	        enumerable: true,
+	        configurable: true
+	    });
 	    ComponentMetadata = __decorate([
 	        lang_1.CONST(), 
 	        __metadata('design:paramtypes', [Object])
@@ -4015,8 +5084,8 @@
 	 * The following example creates a component with two input properties.
 	 *
 	 * ```typescript
-	 * @Component({selector: 'bank-account'})
-	 * @View({
+	 * @Component({
+	 *   selector: 'bank-account',
 	 *   template: `
 	 *     Bank Name: {{bankName}}
 	 *     Account Id: {{id}}
@@ -4030,8 +5099,8 @@
 	 *   normalizedBankName: string;
 	 * }
 	 *
-	 * @Component({selector: 'app'})
-	 * @View({
+	 * @Component({
+	 *   selector: 'app',
 	 *   template: `
 	 *     <bank-account bank-name="RBC" account-id="4747"></bank-account>
 	 *   `,
@@ -4083,8 +5152,8 @@
 	 *   }
 	 * }
 	 *
-	 * @Component({selector: 'app'})
-	 * @View({
+	 * @Component({
+	 *   selector: 'app',
 	 *   template: `
 	 *     <interval-dir (every-second)="everySecond()" (every-five-seconds)="everyFiveSeconds()">
 	 *     </interval-dir>
@@ -4132,8 +5201,8 @@
 	 *   @HostBinding('[class.invalid]') get invalid { return this.control.invalid; }
 	 * }
 	 *
-	 * @Component({selector: 'app'})
-	 * @View({
+	 * @Component({
+	 *   selector: 'app',
 	 *   template: `<input [(ng-model)]="prop">`,
 	 *   directives: [FORM_DIRECTIVES, NgModelStatus]
 	 * })
@@ -4179,8 +5248,8 @@
 	 *   }
 	 * }
 	 *
-	 * @Component({selector: 'app'})
-	 * @View({
+	 * @Component({
+	 *   selector: 'app',
 	 *   template: `<button counting>Increment</button>`,
 	 *   directives: [CountClicks]
 	 * })
@@ -4247,7 +5316,6 @@
 	 *
 	 * ```
 	 * @Component(...)
-	 * @View(...)
 	 * class MyApp {
 	 *   ...
 	 * }
@@ -4265,17 +5333,17 @@
 	 * {@link ViewEncapsulation#Emulated} is being used.
 	 *
 	 * If you need to avoid randomly generated value to be used as an application id, you can provide
-	 * a custom value via a DI binding <!-- TODO: provider --> configuring the root {@link Injector}
+	 * a custom value via a DI provider <!-- TODO: provider --> configuring the root {@link Injector}
 	 * using this token.
 	 */
 	exports.APP_ID = lang_1.CONST_EXPR(new di_1.OpaqueToken('AppId'));
-	function _appIdRandomBindingFactory() {
+	function _appIdRandomProviderFactory() {
 	    return "" + _randomChar() + _randomChar() + _randomChar();
 	}
 	/**
 	 * Bindings that will generate a random APP_ID_TOKEN.
 	 */
-	exports.APP_ID_RANDOM_BINDING = lang_1.CONST_EXPR(new di_1.Binding(exports.APP_ID, { toFactory: _appIdRandomBindingFactory, deps: [] }));
+	exports.APP_ID_RANDOM_PROVIDER = lang_1.CONST_EXPR(new di_1.Provider(exports.APP_ID, { useFactory: _appIdRandomProviderFactory, deps: [] }));
 	function _randomChar() {
 	    return lang_1.StringWrapper.fromCharCode(97 + lang_1.Math.floor(lang_1.Math.random() * 25));
 	}
@@ -4345,7 +5413,7 @@
 	var collection_1 = __webpack_require__(4);
 	var change_detection_1 = __webpack_require__(10);
 	var view_1 = __webpack_require__(19);
-	var selector_1 = __webpack_require__(123);
+	var selector_1 = __webpack_require__(122);
 	var util_1 = __webpack_require__(14);
 	var interfaces_1 = __webpack_require__(34);
 	// group 1: "property" from "[property]"
@@ -4848,7 +5916,12 @@
 /* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	'use strict';var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
 	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") return Reflect.decorate(decorators, target, key, desc);
 	    switch (arguments.length) {
 	        case 2: return decorators.reduceRight(function(o, d) { return (d && d(o)) || o; }, target);
@@ -4867,9 +5940,6 @@
 	var metadata_1 = __webpack_require__(22);
 	var exceptions_2 = __webpack_require__(71);
 	var forward_ref_1 = __webpack_require__(72);
-	/**
-	 * @internal
-	 */
 	var Dependency = (function () {
 	    function Dependency(key, optional, lowerBoundVisibility, upperBoundVisibility, properties) {
 	        this.key = key;
@@ -4886,61 +5956,116 @@
 	/**
 	 * Describes how the {@link Injector} should instantiate a given token.
 	 *
-	 * See {@link bind}.
+	 * See {@link provide}.
 	 *
 	 * ### Example ([live demo](http://plnkr.co/edit/GNAyj6K6PfYg2NBzgwZ5?p%3Dpreview&p=preview))
 	 *
 	 * ```javascript
 	 * var injector = Injector.resolveAndCreate([
-	 *   new Binding("message", { toValue: 'Hello' })
+	 *   new Provider("message", { useValue: 'Hello' })
 	 * ]);
 	 *
 	 * expect(injector.get("message")).toEqual('Hello');
 	 * ```
 	 */
-	var Binding = (function () {
-	    function Binding(token, _a) {
-	        var toClass = _a.toClass, toValue = _a.toValue, toAlias = _a.toAlias, toFactory = _a.toFactory, deps = _a.deps, multi = _a.multi;
+	var Provider = (function () {
+	    function Provider(token, _a) {
+	        var useClass = _a.useClass, useValue = _a.useValue, useExisting = _a.useExisting, useFactory = _a.useFactory, deps = _a.deps, multi = _a.multi;
 	        this.token = token;
-	        this.toClass = toClass;
-	        this.toValue = toValue;
-	        this.toAlias = toAlias;
-	        this.toFactory = toFactory;
+	        this.useClass = useClass;
+	        this.useValue = useValue;
+	        this.useExisting = useExisting;
+	        this.useFactory = useFactory;
 	        this.dependencies = deps;
 	        this._multi = multi;
 	    }
-	    Object.defineProperty(Binding.prototype, "multi", {
+	    Object.defineProperty(Provider.prototype, "multi", {
 	        // TODO: Provide a full working example after alpha38 is released.
 	        /**
-	         * Creates multiple bindings matching the same token (a multi-binding).
+	         * Creates multiple providers matching the same token (a multi-provider).
 	         *
-	         * Multi-bindings are used for creating pluggable service, where the system comes
-	         * with some default bindings, and the user can register additonal bindings.
-	         * The combination of the default bindings and the additional bindings will be
+	         * Multi-providers are used for creating pluggable service, where the system comes
+	         * with some default providers, and the user can register additonal providers.
+	         * The combination of the default providers and the additional providers will be
 	         * used to drive the behavior of the system.
 	         *
 	         * ### Example
 	         *
 	         * ```typescript
 	         * var injector = Injector.resolveAndCreate([
-	         *   new Binding("Strings", { toValue: "String1", multi: true}),
-	         *   new Binding("Strings", { toValue: "String2", multi: true})
+	         *   new Provider("Strings", { useValue: "String1", multi: true}),
+	         *   new Provider("Strings", { useValue: "String2", multi: true})
 	         * ]);
 	         *
 	         * expect(injector.get("Strings")).toEqual(["String1", "String2"]);
 	         * ```
 	         *
-	         * Multi-bindings and regular bindings cannot be mixed. The following
+	         * Multi-providers and regular providers cannot be mixed. The following
 	         * will throw an exception:
 	         *
 	         * ```typescript
 	         * var injector = Injector.resolveAndCreate([
-	         *   new Binding("Strings", { toValue: "String1", multi: true }),
-	         *   new Binding("Strings", { toValue: "String2"})
+	         *   new Provider("Strings", { useValue: "String1", multi: true }),
+	         *   new Provider("Strings", { useValue: "String2"})
 	         * ]);
 	         * ```
 	         */
 	        get: function () { return lang_1.normalizeBool(this._multi); },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Provider = __decorate([
+	        lang_1.CONST(), 
+	        __metadata('design:paramtypes', [Object, Object])
+	    ], Provider);
+	    return Provider;
+	})();
+	exports.Provider = Provider;
+	/**
+	 * @deprecated
+	 */
+	var Binding = (function (_super) {
+	    __extends(Binding, _super);
+	    function Binding(token, _a) {
+	        var toClass = _a.toClass, toValue = _a.toValue, toAlias = _a.toAlias, toFactory = _a.toFactory, deps = _a.deps, multi = _a.multi;
+	        _super.call(this, token, {
+	            useClass: toClass,
+	            useValue: toValue,
+	            useExisting: toAlias,
+	            useFactory: toFactory,
+	            deps: deps,
+	            multi: multi
+	        });
+	    }
+	    Object.defineProperty(Binding.prototype, "toClass", {
+	        /**
+	         * @deprecated
+	         */
+	        get: function () { return this.useClass; },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(Binding.prototype, "toAlias", {
+	        /**
+	         * @deprecated
+	         */
+	        get: function () { return this.useExisting; },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(Binding.prototype, "toFactory", {
+	        /**
+	         * @deprecated
+	         */
+	        get: function () { return this.useFactory; },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(Binding.prototype, "toValue", {
+	        /**
+	         * @deprecated
+	         */
+	        get: function () { return this.useValue; },
 	        enumerable: true,
 	        configurable: true
 	    });
@@ -4949,25 +6074,24 @@
 	        __metadata('design:paramtypes', [Object, Object])
 	    ], Binding);
 	    return Binding;
-	})();
+	})(Provider);
 	exports.Binding = Binding;
-	var ResolvedBinding_ = (function () {
-	    function ResolvedBinding_(key, resolvedFactories, multiBinding) {
+	var ResolvedProvider_ = (function () {
+	    function ResolvedProvider_(key, resolvedFactories, multiProvider) {
 	        this.key = key;
 	        this.resolvedFactories = resolvedFactories;
-	        this.multiBinding = multiBinding;
+	        this.multiProvider = multiProvider;
 	    }
-	    Object.defineProperty(ResolvedBinding_.prototype, "resolvedFactory", {
+	    Object.defineProperty(ResolvedProvider_.prototype, "resolvedFactory", {
 	        get: function () { return this.resolvedFactories[0]; },
 	        enumerable: true,
 	        configurable: true
 	    });
-	    return ResolvedBinding_;
+	    return ResolvedProvider_;
 	})();
-	exports.ResolvedBinding_ = ResolvedBinding_;
+	exports.ResolvedProvider_ = ResolvedProvider_;
 	/**
-	 * @internal
-	 * An internal resolved representation of a factory function created by resolving {@link Binding}.
+	 * An internal resolved representation of a factory function created by resolving {@link Provider}.
 	 */
 	var ResolvedFactory = (function () {
 	    function ResolvedFactory(
@@ -4986,23 +6110,44 @@
 	})();
 	exports.ResolvedFactory = ResolvedFactory;
 	/**
-	 * Creates a {@link Binding}.
+	 * @deprecated
+	 * Creates a {@link Provider}.
 	 *
-	 * To construct a {@link Binding}, bind a `token` to either a class, a value, a factory function, or
-	 * to an alias to another `token`.
-	 * See {@link BindingBuilder} for more details.
+	 * To construct a {@link Provider}, bind a `token` to either a class, a value, a factory function,
+	 * or
+	 * to an existing `token`.
+	 * See {@link ProviderBuilder} for more details.
 	 *
 	 * The `token` is most commonly a class or {@link angular2/di/OpaqueToken}.
 	 */
 	function bind(token) {
-	    return new BindingBuilder(token);
+	    return new ProviderBuilder(token);
 	}
 	exports.bind = bind;
 	/**
+	 * Creates a {@link Provider}.
+	 *
+	 * See {@link Provider} for more details.
+	 *
+	 * <!-- TODO: improve the docs -->
+	 */
+	function provide(token, _a) {
+	    var useClass = _a.useClass, useValue = _a.useValue, useExisting = _a.useExisting, useFactory = _a.useFactory, deps = _a.deps, multi = _a.multi;
+	    return new Provider(token, {
+	        useClass: useClass,
+	        useValue: useValue,
+	        useExisting: useExisting,
+	        useFactory: useFactory,
+	        deps: deps,
+	        multi: multi
+	    });
+	}
+	exports.provide = provide;
+	/**
 	 * Helper class for the {@link bind} function.
 	 */
-	var BindingBuilder = (function () {
-	    function BindingBuilder(token) {
+	var ProviderBuilder = (function () {
+	    function ProviderBuilder(token) {
 	        this.token = token;
 	    }
 	    /**
@@ -5020,11 +6165,11 @@
 	     *
 	     * var injectorClass = Injector.resolveAndCreate([
 	     *   Car,
-	     *   bind(Vehicle).toClass(Car)
+	     *   provide(Vehicle, {useClass: Car})
 	     * ]);
 	     * var injectorAlias = Injector.resolveAndCreate([
 	     *   Car,
-	     *   bind(Vehicle).toAlias(Car)
+	     *   provide(Vehicle, {useExisting: Car})
 	     * ]);
 	     *
 	     * expect(injectorClass.get(Vehicle)).not.toBe(injectorClass.get(Car));
@@ -5034,11 +6179,11 @@
 	     * expect(injectorAlias.get(Vehicle) instanceof Car).toBe(true);
 	     * ```
 	     */
-	    BindingBuilder.prototype.toClass = function (type) {
+	    ProviderBuilder.prototype.toClass = function (type) {
 	        if (!lang_1.isType(type)) {
-	            throw new exceptions_1.BaseException("Trying to create a class binding but \"" + lang_1.stringify(type) + "\" is not a class!");
+	            throw new exceptions_1.BaseException("Trying to create a class provider but \"" + lang_1.stringify(type) + "\" is not a class!");
 	        }
-	        return new Binding(this.token, { toClass: type });
+	        return new Provider(this.token, { useClass: type });
 	    };
 	    /**
 	     * Binds a DI token to a value.
@@ -5047,18 +6192,18 @@
 	     *
 	     * ```typescript
 	     * var injector = Injector.resolveAndCreate([
-	     *   bind('message').toValue('Hello')
+	     *   provide('message', {useValue: 'Hello'})
 	     * ]);
 	     *
 	     * expect(injector.get('message')).toEqual('Hello');
 	     * ```
 	     */
-	    BindingBuilder.prototype.toValue = function (value) { return new Binding(this.token, { toValue: value }); };
+	    ProviderBuilder.prototype.toValue = function (value) { return new Provider(this.token, { useValue: value }); };
 	    /**
-	     * Binds a DI token as an alias for an existing token.
+	     * Binds a DI token to an existing token.
 	     *
-	     * An alias means that we will return the same instance as if the alias token was used. (This is
-	     * in contrast to `toClass` where a separate instance of `toClass` will be returned.)
+	     * Angular will return the same instance as if the provided token was used. (This is
+	     * in contrast to `useClass` where a separate instance of `useClass` will be returned.)
 	     *
 	     * ### Example ([live demo](http://plnkr.co/edit/uBaoF2pN5cfc5AfZapNw?p=preview))
 	     *
@@ -5073,11 +6218,11 @@
 	     *
 	     * var injectorAlias = Injector.resolveAndCreate([
 	     *   Car,
-	     *   bind(Vehicle).toAlias(Car)
+	     *   provide(Vehicle, {useExisting: Car})
 	     * ]);
 	     * var injectorClass = Injector.resolveAndCreate([
 	     *   Car,
-	     *   bind(Vehicle).toClass(Car)
+	     *   provide(Vehicle, {useClass: Car})
 	     * ]);
 	     *
 	     * expect(injectorAlias.get(Vehicle)).toBe(injectorAlias.get(Car));
@@ -5087,11 +6232,11 @@
 	     * expect(injectorClass.get(Vehicle) instanceof Car).toBe(true);
 	     * ```
 	     */
-	    BindingBuilder.prototype.toAlias = function (aliasToken) {
+	    ProviderBuilder.prototype.toAlias = function (aliasToken) {
 	        if (lang_1.isBlank(aliasToken)) {
 	            throw new exceptions_1.BaseException("Can not alias " + lang_1.stringify(this.token) + " to a blank value!");
 	        }
-	        return new Binding(this.token, { toAlias: aliasToken });
+	        return new Provider(this.token, { useExisting: aliasToken });
 	    };
 	    /**
 	     * Binds a DI token to a function which computes the value.
@@ -5100,132 +6245,132 @@
 	     *
 	     * ```typescript
 	     * var injector = Injector.resolveAndCreate([
-	     *   bind(Number).toFactory(() => { return 1+2; }),
-	     *   bind(String).toFactory((v) => { return "Value: " + v; }, [Number])
+	     *   provide(Number, {useFactory: () => { return 1+2; }}),
+	     *   provide(String, {useFactory: (v) => { return "Value: " + v; }, deps: [Number]})
 	     * ]);
 	     *
 	     * expect(injector.get(Number)).toEqual(3);
 	     * expect(injector.get(String)).toEqual('Value: 3');
 	     * ```
 	     */
-	    BindingBuilder.prototype.toFactory = function (factory, dependencies) {
+	    ProviderBuilder.prototype.toFactory = function (factory, dependencies) {
 	        if (!lang_1.isFunction(factory)) {
-	            throw new exceptions_1.BaseException("Trying to create a factory binding but \"" + lang_1.stringify(factory) + "\" is not a function!");
+	            throw new exceptions_1.BaseException("Trying to create a factory provider but \"" + lang_1.stringify(factory) + "\" is not a function!");
 	        }
-	        return new Binding(this.token, { toFactory: factory, deps: dependencies });
+	        return new Provider(this.token, { useFactory: factory, deps: dependencies });
 	    };
-	    return BindingBuilder;
+	    return ProviderBuilder;
 	})();
-	exports.BindingBuilder = BindingBuilder;
+	exports.ProviderBuilder = ProviderBuilder;
 	/**
-	 * Resolve a single binding.
+	 * Resolve a single provider.
 	 */
-	function resolveFactory(binding) {
+	function resolveFactory(provider) {
 	    var factoryFn;
 	    var resolvedDeps;
-	    if (lang_1.isPresent(binding.toClass)) {
-	        var toClass = forward_ref_1.resolveForwardRef(binding.toClass);
-	        factoryFn = reflection_1.reflector.factory(toClass);
-	        resolvedDeps = _dependenciesFor(toClass);
+	    if (lang_1.isPresent(provider.useClass)) {
+	        var useClass = forward_ref_1.resolveForwardRef(provider.useClass);
+	        factoryFn = reflection_1.reflector.factory(useClass);
+	        resolvedDeps = _dependenciesFor(useClass);
 	    }
-	    else if (lang_1.isPresent(binding.toAlias)) {
+	    else if (lang_1.isPresent(provider.useExisting)) {
 	        factoryFn = function (aliasInstance) { return aliasInstance; };
-	        resolvedDeps = [Dependency.fromKey(key_1.Key.get(binding.toAlias))];
+	        resolvedDeps = [Dependency.fromKey(key_1.Key.get(provider.useExisting))];
 	    }
-	    else if (lang_1.isPresent(binding.toFactory)) {
-	        factoryFn = binding.toFactory;
-	        resolvedDeps = _constructDependencies(binding.toFactory, binding.dependencies);
+	    else if (lang_1.isPresent(provider.useFactory)) {
+	        factoryFn = provider.useFactory;
+	        resolvedDeps = _constructDependencies(provider.useFactory, provider.dependencies);
 	    }
 	    else {
-	        factoryFn = function () { return binding.toValue; };
+	        factoryFn = function () { return provider.useValue; };
 	        resolvedDeps = _EMPTY_LIST;
 	    }
 	    return new ResolvedFactory(factoryFn, resolvedDeps);
 	}
 	exports.resolveFactory = resolveFactory;
 	/**
-	 * Converts the {@link Binding} into {@link ResolvedBinding}.
+	 * Converts the {@link Provider} into {@link ResolvedProvider}.
 	 *
-	 * {@link Injector} internally only uses {@link ResolvedBinding}, {@link Binding} contains
-	 * convenience binding syntax.
+	 * {@link Injector} internally only uses {@link ResolvedProvider}, {@link Provider} contains
+	 * convenience provider syntax.
 	 */
-	function resolveBinding(binding) {
-	    return new ResolvedBinding_(key_1.Key.get(binding.token), [resolveFactory(binding)], false);
+	function resolveProvider(provider) {
+	    return new ResolvedProvider_(key_1.Key.get(provider.token), [resolveFactory(provider)], false);
 	}
-	exports.resolveBinding = resolveBinding;
+	exports.resolveProvider = resolveProvider;
 	/**
-	 * Resolve a list of Bindings.
+	 * Resolve a list of Providers.
 	 */
-	function resolveBindings(bindings) {
-	    var normalized = _createListOfBindings(_normalizeBindings(bindings, new Map()));
+	function resolveProviders(providers) {
+	    var normalized = _createListOfProviders(_normalizeProviders(providers, new Map()));
 	    return normalized.map(function (b) {
-	        if (b instanceof _NormalizedBinding) {
-	            return new ResolvedBinding_(b.key, [b.resolvedFactory], false);
+	        if (b instanceof _NormalizedProvider) {
+	            return new ResolvedProvider_(b.key, [b.resolvedFactory], false);
 	        }
 	        else {
 	            var arr = b;
-	            return new ResolvedBinding_(arr[0].key, arr.map(function (_) { return _.resolvedFactory; }), true);
+	            return new ResolvedProvider_(arr[0].key, arr.map(function (_) { return _.resolvedFactory; }), true);
 	        }
 	    });
 	}
-	exports.resolveBindings = resolveBindings;
+	exports.resolveProviders = resolveProviders;
 	/**
 	 * The algorithm works as follows:
 	 *
-	 * [Binding] -> [_NormalizedBinding|[_NormalizedBinding]] -> [ResolvedBinding]
+	 * [Provider] -> [_NormalizedProvider|[_NormalizedProvider]] -> [ResolvedProvider]
 	 *
-	 * _NormalizedBinding is essentially a resolved binding before it was grouped by key.
+	 * _NormalizedProvider is essentially a resolved provider before it was grouped by key.
 	 */
-	var _NormalizedBinding = (function () {
-	    function _NormalizedBinding(key, resolvedFactory) {
+	var _NormalizedProvider = (function () {
+	    function _NormalizedProvider(key, resolvedFactory) {
 	        this.key = key;
 	        this.resolvedFactory = resolvedFactory;
 	    }
-	    return _NormalizedBinding;
+	    return _NormalizedProvider;
 	})();
-	function _createListOfBindings(flattenedBindings) {
-	    return collection_1.MapWrapper.values(flattenedBindings);
+	function _createListOfProviders(flattenedProviders) {
+	    return collection_1.MapWrapper.values(flattenedProviders);
 	}
-	function _normalizeBindings(bindings, res) {
-	    bindings.forEach(function (b) {
+	function _normalizeProviders(providers, res) {
+	    providers.forEach(function (b) {
 	        if (b instanceof lang_1.Type) {
-	            _normalizeBinding(bind(b).toClass(b), res);
+	            _normalizeProvider(provide(b, { useClass: b }), res);
 	        }
-	        else if (b instanceof Binding) {
-	            _normalizeBinding(b, res);
+	        else if (b instanceof Provider) {
+	            _normalizeProvider(b, res);
 	        }
 	        else if (b instanceof Array) {
-	            _normalizeBindings(b, res);
+	            _normalizeProviders(b, res);
 	        }
-	        else if (b instanceof BindingBuilder) {
-	            throw new exceptions_2.InvalidBindingError(b.token);
+	        else if (b instanceof ProviderBuilder) {
+	            throw new exceptions_2.InvalidProviderError(b.token);
 	        }
 	        else {
-	            throw new exceptions_2.InvalidBindingError(b);
+	            throw new exceptions_2.InvalidProviderError(b);
 	        }
 	    });
 	    return res;
 	}
-	function _normalizeBinding(b, res) {
+	function _normalizeProvider(b, res) {
 	    var key = key_1.Key.get(b.token);
 	    var factory = resolveFactory(b);
-	    var normalized = new _NormalizedBinding(key, factory);
+	    var normalized = new _NormalizedProvider(key, factory);
 	    if (b.multi) {
-	        var existingBinding = res.get(key.id);
-	        if (existingBinding instanceof Array) {
-	            existingBinding.push(normalized);
+	        var existingProvider = res.get(key.id);
+	        if (existingProvider instanceof Array) {
+	            existingProvider.push(normalized);
 	        }
-	        else if (lang_1.isBlank(existingBinding)) {
+	        else if (lang_1.isBlank(existingProvider)) {
 	            res.set(key.id, [normalized]);
 	        }
 	        else {
-	            throw new exceptions_2.MixingMultiBindingsWithRegularBindings(existingBinding, b);
+	            throw new exceptions_2.MixingMultiProvidersWithRegularProvidersError(existingProvider, b);
 	        }
 	    }
 	    else {
-	        var existingBinding = res.get(key.id);
-	        if (existingBinding instanceof Array) {
-	            throw new exceptions_2.MixingMultiBindingsWithRegularBindings(existingBinding, b);
+	        var existingProvider = res.get(key.id);
+	        if (existingProvider instanceof Array) {
+	            throw new exceptions_2.MixingMultiProvidersWithRegularProvidersError(existingProvider, b);
 	        }
 	        res.set(key.id, normalized);
 	    }
@@ -5295,7 +6440,7 @@
 	function _createDependency(token, optional, lowerBoundVisibility, upperBoundVisibility, depProps) {
 	    return new Dependency(key_1.Key.get(token), optional, lowerBoundVisibility, upperBoundVisibility, depProps);
 	}
-	//# sourceMappingURL=binding.js.map
+	//# sourceMappingURL=provider.js.map
 
 /***/ },
 /* 44 */
@@ -5319,7 +6464,7 @@
 	var control_value_accessor_1 = __webpack_require__(23);
 	var lang_1 = __webpack_require__(1);
 	var shared_1 = __webpack_require__(12);
-	var CHECKBOX_VALUE_ACCESSOR = lang_1.CONST_EXPR(new di_1.Binding(control_value_accessor_1.NG_VALUE_ACCESSOR, { toAlias: di_1.forwardRef(function () { return CheckboxControlValueAccessor; }), multi: true }));
+	var CHECKBOX_VALUE_ACCESSOR = lang_1.CONST_EXPR(new di_1.Provider(control_value_accessor_1.NG_VALUE_ACCESSOR, { useExisting: di_1.forwardRef(function () { return CheckboxControlValueAccessor; }), multi: true }));
 	/**
 	 * The accessor for writing a value and listening to changes on a checkbox input element.
 	 *
@@ -5373,7 +6518,7 @@
 	var control_value_accessor_1 = __webpack_require__(23);
 	var lang_1 = __webpack_require__(1);
 	var shared_1 = __webpack_require__(12);
-	var DEFAULT_VALUE_ACCESSOR = lang_1.CONST_EXPR(new di_1.Binding(control_value_accessor_1.NG_VALUE_ACCESSOR, { toAlias: di_1.forwardRef(function () { return DefaultValueAccessor; }), multi: true }));
+	var DEFAULT_VALUE_ACCESSOR = lang_1.CONST_EXPR(new di_1.Provider(control_value_accessor_1.NG_VALUE_ACCESSOR, { useExisting: di_1.forwardRef(function () { return DefaultValueAccessor; }), multi: true }));
 	/**
 	 * The default accessor for writing a value and listening to changes that is used by the
 	 * {@link NgModel}, {@link NgFormControl}, and {@link NgControlName} directives.
@@ -5439,7 +6584,7 @@
 	var control_value_accessor_1 = __webpack_require__(23);
 	var lang_1 = __webpack_require__(1);
 	var shared_1 = __webpack_require__(12);
-	var SELECT_VALUE_ACCESSOR = lang_1.CONST_EXPR(new di_1.Binding(control_value_accessor_1.NG_VALUE_ACCESSOR, { toAlias: di_1.forwardRef(function () { return SelectControlValueAccessor; }), multi: true }));
+	var SELECT_VALUE_ACCESSOR = lang_1.CONST_EXPR(new di_1.Provider(control_value_accessor_1.NG_VALUE_ACCESSOR, { useExisting: di_1.forwardRef(function () { return SelectControlValueAccessor; }), multi: true }));
 	/**
 	 * Marks `<option>` as dynamic, so Angular can be notified when options change.
 	 *
@@ -5552,7 +6697,9 @@
 	var AbstractControl = (function () {
 	    function AbstractControl(validator) {
 	        this.validator = validator;
+	        /** @internal */
 	        this._pristine = true;
+	        /** @internal */
 	        this._touched = false;
 	    }
 	    Object.defineProperty(AbstractControl.prototype, "value", {
@@ -5648,6 +6795,7 @@
 	        if (path === void 0) { path = null; }
 	        return lang_1.isPresent(this.getError(errorCode, path));
 	    };
+	    /** @internal */
 	    AbstractControl.prototype._updateValue = function () { };
 	    return AbstractControl;
 	})();
@@ -5748,17 +6896,21 @@
 	        var c = collection_1.StringMapWrapper.contains(this.controls, controlName);
 	        return c && this._included(controlName);
 	    };
+	    /** @internal */
 	    ControlGroup.prototype._setParentForControls = function () {
 	        var _this = this;
 	        collection_1.StringMapWrapper.forEach(this.controls, function (control, name) { control.setParent(_this); });
 	    };
+	    /** @internal */
 	    ControlGroup.prototype._updateValue = function () { this._value = this._reduceValue(); };
+	    /** @internal */
 	    ControlGroup.prototype._reduceValue = function () {
 	        return this._reduceChildren({}, function (acc, control, name) {
 	            acc[name] = control.value;
 	            return acc;
 	        });
 	    };
+	    /** @internal */
 	    ControlGroup.prototype._reduceChildren = function (initValue, fn) {
 	        var _this = this;
 	        var res = initValue;
@@ -5769,6 +6921,7 @@
 	        });
 	        return res;
 	    };
+	    /** @internal */
 	    ControlGroup.prototype._included = function (controlName) {
 	        var isOptional = collection_1.StringMapWrapper.contains(this._optionals, controlName);
 	        return !isOptional || collection_1.StringMapWrapper.get(this._optionals, controlName);
@@ -5843,7 +6996,9 @@
 	        enumerable: true,
 	        configurable: true
 	    });
+	    /** @internal */
 	    ControlArray.prototype._updateValue = function () { this._value = this.controls.map(function (control) { return control.value; }); };
+	    /** @internal */
 	    ControlArray.prototype._setParentForControls = function () {
 	        var _this = this;
 	        this.controls.forEach(function (control) { control.setParent(_this); });
@@ -5956,23 +7111,18 @@
 	        var mergedOutputs = lang_1.isPresent(dm.outputs) ? collection_1.ListWrapper.concat(dm.outputs, outputs) : outputs;
 	        var mergedHost = lang_1.isPresent(dm.host) ? collection_1.StringMapWrapper.merge(dm.host, host) : host;
 	        var mergedQueries = lang_1.isPresent(dm.queries) ? collection_1.StringMapWrapper.merge(dm.queries, queries) : queries;
-	        // TODO: remove after migrating from properties to inputs
-	        if (mergedInputs.length == 0 && lang_1.isPresent(dm.properties))
-	            mergedInputs = dm.properties;
-	        if (mergedOutputs.length == 0 && lang_1.isPresent(dm.events))
-	            mergedOutputs = dm.events;
 	        if (dm instanceof metadata_1.ComponentMetadata) {
 	            return new metadata_1.ComponentMetadata({
 	                selector: dm.selector,
 	                inputs: mergedInputs,
 	                outputs: mergedOutputs,
 	                host: mergedHost,
-	                bindings: dm.bindings,
 	                exportAs: dm.exportAs,
 	                moduleId: dm.moduleId,
 	                queries: mergedQueries,
 	                changeDetection: dm.changeDetection,
-	                viewBindings: dm.viewBindings
+	                providers: dm.providers,
+	                viewProviders: dm.viewProviders
 	            });
 	        }
 	        else {
@@ -5981,10 +7131,10 @@
 	                inputs: mergedInputs,
 	                outputs: mergedOutputs,
 	                host: mergedHost,
-	                bindings: dm.bindings,
 	                exportAs: dm.exportAs,
 	                moduleId: dm.moduleId,
-	                queries: mergedQueries
+	                queries: mergedQueries,
+	                providers: dm.providers
 	            });
 	        }
 	    };
@@ -6114,16 +7264,16 @@
 	            return new ComponentRef_(newLocation, component, type, injector, dispose);
 	        });
 	    };
-	    DynamicComponentLoader_.prototype.loadIntoLocation = function (type, hostLocation, anchorName, bindings) {
-	        if (bindings === void 0) { bindings = null; }
-	        return this.loadNextToLocation(type, this._viewManager.getNamedElementInComponentView(hostLocation, anchorName), bindings);
+	    DynamicComponentLoader_.prototype.loadIntoLocation = function (type, hostLocation, anchorName, providers) {
+	        if (providers === void 0) { providers = null; }
+	        return this.loadNextToLocation(type, this._viewManager.getNamedElementInComponentView(hostLocation, anchorName), providers);
 	    };
-	    DynamicComponentLoader_.prototype.loadNextToLocation = function (type, location, bindings) {
+	    DynamicComponentLoader_.prototype.loadNextToLocation = function (type, location, providers) {
 	        var _this = this;
-	        if (bindings === void 0) { bindings = null; }
+	        if (providers === void 0) { providers = null; }
 	        return this._compiler.compileInHost(type).then(function (hostProtoViewRef) {
 	            var viewContainer = _this._viewManager.getViewContainer(location);
-	            var hostViewRef = viewContainer.createHostView(hostProtoViewRef, viewContainer.length, bindings);
+	            var hostViewRef = viewContainer.createHostView(hostProtoViewRef, viewContainer.length, providers);
 	            var newLocation = _this._viewManager.getHostElement(hostViewRef);
 	            var component = _this._viewManager.getComponent(newLocation);
 	            var dispose = function () {
@@ -6165,17 +7315,17 @@
 	var collection_1 = __webpack_require__(4);
 	var lang_1 = __webpack_require__(1);
 	var di_1 = __webpack_require__(3);
-	var pipe_binding_1 = __webpack_require__(153);
-	var pipes_1 = __webpack_require__(154);
+	var pipe_provider_1 = __webpack_require__(152);
+	var pipes_1 = __webpack_require__(153);
 	var view_1 = __webpack_require__(85);
-	var element_binder_1 = __webpack_require__(298);
-	var element_injector_1 = __webpack_require__(143);
+	var element_binder_1 = __webpack_require__(297);
+	var element_injector_1 = __webpack_require__(142);
 	var directive_resolver_1 = __webpack_require__(48);
 	var view_resolver_1 = __webpack_require__(88);
-	var pipe_resolver_1 = __webpack_require__(144);
+	var pipe_resolver_1 = __webpack_require__(143);
 	var pipes_2 = __webpack_require__(90);
 	var template_commands_1 = __webpack_require__(51);
-	var render_1 = __webpack_require__(266);
+	var render_1 = __webpack_require__(265);
 	var application_tokens_1 = __webpack_require__(38);
 	var ProtoViewFactory = (function () {
 	    function ProtoViewFactory(_renderer, defaultPipes, _directiveResolver, _viewResolver, _pipeResolver, appId) {
@@ -6208,7 +7358,7 @@
 	            var compiledTemplateData = cmd.template.getData(this._appId);
 	            this._renderer.registerComponentTemplate(cmd.templateId, compiledTemplateData.commands, compiledTemplateData.styles, cmd.nativeShadow);
 	            var boundPipes = this._flattenPipes(view).map(function (pipe) { return _this._bindPipe(pipe); });
-	            nestedProtoView = new view_1.AppProtoView(compiledTemplateData.commands, view_1.ViewType.COMPONENT, true, compiledTemplateData.changeDetectorFactory, null, pipes_1.ProtoPipes.fromBindings(boundPipes));
+	            nestedProtoView = new view_1.AppProtoView(compiledTemplateData.commands, view_1.ViewType.COMPONENT, true, compiledTemplateData.changeDetectorFactory, null, pipes_1.ProtoPipes.fromProviders(boundPipes));
 	            // Note: The cache is updated before recursing
 	            // to be able to resolve cycles
 	            this._cache.set(cmd.template.id, nestedProtoView);
@@ -6235,9 +7385,9 @@
 	        var mergeInfo = new view_1.AppProtoViewMergeInfo(initializer.mergeEmbeddedViewCount, initializer.mergeElementCount, initializer.mergeViewCount);
 	        protoView.init(render, initializer.elementBinders, initializer.boundTextCount, mergeInfo, initializer.variableLocations);
 	    };
-	    ProtoViewFactory.prototype._bindPipe = function (typeOrBinding) {
-	        var meta = this._pipeResolver.resolve(typeOrBinding);
-	        return pipe_binding_1.PipeBinding.createFromType(typeOrBinding, meta);
+	    ProtoViewFactory.prototype._bindPipe = function (typeOrProvider) {
+	        var meta = this._pipeResolver.resolve(typeOrProvider);
+	        return pipe_provider_1.PipeProvider.createFromType(typeOrProvider, meta);
 	    };
 	    ProtoViewFactory.prototype._flattenPipes = function (view) {
 	        if (lang_1.isBlank(view.pipes))
@@ -6362,11 +7512,11 @@
 	    if (lang_1.isBlank(parentProtoElementInjector)) {
 	        distanceToParentPei = -1;
 	    }
-	    var componentDirectiveBinding = null;
+	    var componentDirectiveProvider = null;
 	    var isEmbeddedTemplate = false;
-	    var directiveBindings = beginElementCmd.directives.map(function (type) { return bindDirective(directiveResolver, type); });
+	    var directiveProviders = beginElementCmd.directives.map(function (type) { return provideDirective(directiveResolver, type); });
 	    if (beginElementCmd instanceof template_commands_1.BeginComponentCmd) {
-	        componentDirectiveBinding = directiveBindings[0];
+	        componentDirectiveProvider = directiveProviders[0];
 	    }
 	    else if (beginElementCmd instanceof template_commands_1.EmbeddedTemplateCmd) {
 	        isEmbeddedTemplate = true;
@@ -6378,22 +7528,21 @@
 	    //   so that, when hydrating, $implicit can be set to the element.
 	    // - <template> elements need their own ElementInjector so that we can query their TemplateRef
 	    var hasVariables = beginElementCmd.variableNameAndValues.length > 0;
-	    if (directiveBindings.length > 0 || hasVariables || isEmbeddedTemplate) {
+	    if (directiveProviders.length > 0 || hasVariables || isEmbeddedTemplate) {
 	        var directiveVariableBindings = new Map();
 	        if (!isEmbeddedTemplate) {
-	            directiveVariableBindings =
-	                createDirectiveVariableBindings(beginElementCmd.variableNameAndValues, directiveBindings);
+	            directiveVariableBindings = createDirectiveVariableBindings(beginElementCmd.variableNameAndValues, directiveProviders);
 	        }
-	        protoElementInjector = element_injector_1.ProtoElementInjector.create(parentProtoElementInjector, boundElementIndex, directiveBindings, lang_1.isPresent(componentDirectiveBinding), distanceToParentPei, directiveVariableBindings);
+	        protoElementInjector = element_injector_1.ProtoElementInjector.create(parentProtoElementInjector, boundElementIndex, directiveProviders, lang_1.isPresent(componentDirectiveProvider), distanceToParentPei, directiveVariableBindings);
 	        protoElementInjector.attributes = arrayToMap(beginElementCmd.attrNameAndValues, false);
 	    }
-	    return new element_binder_1.ElementBinder(boundElementIndex, parentElementBinder, distanceToParentBinder, protoElementInjector, componentDirectiveBinding, nestedProtoView);
+	    return new element_binder_1.ElementBinder(boundElementIndex, parentElementBinder, distanceToParentBinder, protoElementInjector, componentDirectiveProvider, nestedProtoView);
 	}
-	function bindDirective(directiveResolver, type) {
+	function provideDirective(directiveResolver, type) {
 	    var annotation = directiveResolver.resolve(type);
-	    return element_injector_1.DirectiveBinding.createFromType(type, annotation);
+	    return element_injector_1.DirectiveProvider.createFromType(type, annotation);
 	}
-	function createDirectiveVariableBindings(variableNameAndValues, directiveBindings) {
+	function createDirectiveVariableBindings(variableNameAndValues, directiveProviders) {
 	    var directiveVariableBindings = new Map();
 	    for (var i = 0; i < variableNameAndValues.length; i += 2) {
 	        var templateName = variableNameAndValues[i];
@@ -6684,6 +7833,7 @@
 	        return plugin.addGlobalEventListener(target, eventName, handler);
 	    };
 	    EventManager.prototype.getZone = function () { return this._zone; };
+	    /** @internal */
 	    EventManager.prototype._findPluginFor = function (eventName) {
 	        var plugins = this._plugins;
 	        for (var i = 0; i < plugins.length; i++) {
@@ -6769,9 +7919,7 @@
 	 * import {Component, View, NgIf, NgZone} from 'angular2/angular2';
 	 *
 	 * @Component({
-	 *   selector: 'ng-zone-demo'
-	 * })
-	 * @View({
+	 *   selector: 'ng-zone-demo'.
 	 *   template: `
 	 *     <h2>Demo: NgZone</h2>
 	 *
@@ -6830,17 +7978,26 @@
 	     */
 	    function NgZone(_a) {
 	        var enableLongStackTrace = _a.enableLongStackTrace;
+	        /** @internal */
 	        this._runScope = profile_1.wtfCreateScope("NgZone#run()");
+	        /** @internal */
 	        this._microtaskScope = profile_1.wtfCreateScope("NgZone#microtask()");
-	        this._inVmTurnDone = false;
-	        this._pendingTimeouts = [];
-	        this._onTurnStart = null;
-	        this._onTurnDone = null;
-	        this._onEventDone = null;
-	        this._onErrorHandler = null;
+	        // Number of microtasks pending from _innerZone (& descendants)
+	        /** @internal */
 	        this._pendingMicrotasks = 0;
+	        // Whether some code has been executed in the _innerZone (& descendants) in the current turn
+	        /** @internal */
 	        this._hasExecutedCodeInInnerZone = false;
+	        // run() call depth in _mountZone. 0 at the end of a macrotask
+	        // zone.run(() => {         // top-level call
+	        //   zone.run(() => {});    // nested call -> in-turn
+	        // });
+	        /** @internal */
 	        this._nestedRun = 0;
+	        /** @internal */
+	        this._inVmTurnDone = false;
+	        /** @internal */
+	        this._pendingTimeouts = [];
 	        if (lang_1.global.zone) {
 	            this._disabled = false;
 	            this._mountZone = lang_1.global.zone;
@@ -6953,6 +8110,7 @@
 	            return this._mountZone.run(fn);
 	        }
 	    };
+	    /** @internal */
 	    NgZone.prototype._createInnerZone = function (zone, enableLongStackTrace) {
 	        var microtaskScope = this._microtaskScope;
 	        var ngZone = this;
@@ -7044,6 +8202,7 @@
 	            _innerZone: true
 	        });
 	    };
+	    /** @internal */
 	    NgZone.prototype._onError = function (zone, e) {
 	        if (lang_1.isPresent(this._onErrorHandler)) {
 	            var trace = [lang_1.normalizeBlank(e.stack)];
@@ -7729,6 +8888,8 @@
 	var di_1 = __webpack_require__(3);
 	exports.TEMPLATE_COMMANDS_MODULE_REF = source_module_1.moduleRef("package:angular2/src/core/linker/template_commands" + util_1.MODULE_SUFFIX);
 	var IMPLICIT_TEMPLATE_VAR = '\$implicit';
+	var CLASS_ATTR = 'class';
+	var STYLE_ATTR = 'style';
 	var CommandCompiler = (function () {
 	    function CommandCompiler() {
 	    }
@@ -7850,14 +9011,14 @@
 	        this.transitiveNgContentCount = 0;
 	    }
 	    CommandBuilderVisitor.prototype._readAttrNameAndValues = function (directives, attrAsts) {
-	        var attrNameAndValues = visitAndReturnContext(this, attrAsts, []);
+	        var attrs = keyValueArrayToMap(visitAndReturnContext(this, attrAsts, []));
 	        directives.forEach(function (directiveMeta) {
 	            collection_1.StringMapWrapper.forEach(directiveMeta.hostAttributes, function (value, name) {
-	                attrNameAndValues.push(name);
-	                attrNameAndValues.push(value);
+	                var prevValue = attrs[name];
+	                attrs[name] = lang_1.isPresent(prevValue) ? mergeAttributeValue(name, prevValue, value) : value;
 	            });
 	        });
-	        return removeKeyValueArrayDuplicates(attrNameAndValues);
+	        return mapToKeyValueArray(attrs);
 	    };
 	    CommandBuilderVisitor.prototype.visitNgContent = function (ast, context) {
 	        this.transitiveNgContentCount++;
@@ -7959,6 +9120,34 @@
 	        }
 	    }
 	    return resultKeyValueArray;
+	}
+	function keyValueArrayToMap(keyValueArr) {
+	    var data = {};
+	    for (var i = 0; i < keyValueArr.length; i += 2) {
+	        data[keyValueArr[i]] = keyValueArr[i + 1];
+	    }
+	    return data;
+	}
+	function mapToKeyValueArray(data) {
+	    var entryArray = [];
+	    collection_1.StringMapWrapper.forEach(data, function (value, name) { entryArray.push([name, value]); });
+	    // We need to sort to get a defined output order
+	    // for tests and for caching generated artifacts...
+	    collection_1.ListWrapper.sort(entryArray, function (entry1, entry2) { return lang_1.StringWrapper.compare(entry1[0], entry2[0]); });
+	    var keyValueArray = [];
+	    entryArray.forEach(function (entry) {
+	        keyValueArray.push(entry[0]);
+	        keyValueArray.push(entry[1]);
+	    });
+	    return keyValueArray;
+	}
+	function mergeAttributeValue(attrName, attrValue1, attrValue2) {
+	    if (attrName == CLASS_ATTR || attrName == STYLE_ATTR) {
+	        return attrValue1 + " " + attrValue2;
+	    }
+	    else {
+	        return attrValue2;
+	    }
 	}
 	var DirectiveContext = (function () {
 	    function DirectiveContext(index, eventTargetAndNames, targetVariableNameAndValues, targetDirectives) {
@@ -8202,9 +9391,9 @@
 	var xhr_1 = __webpack_require__(42);
 	var lang_1 = __webpack_require__(1);
 	var async_1 = __webpack_require__(9);
-	var shadow_css_1 = __webpack_require__(286);
+	var shadow_css_1 = __webpack_require__(285);
 	var url_resolver_1 = __webpack_require__(41);
-	var style_url_resolver_1 = __webpack_require__(124);
+	var style_url_resolver_1 = __webpack_require__(123);
 	var util_1 = __webpack_require__(14);
 	var di_1 = __webpack_require__(3);
 	var COMPONENT_VARIABLE = '%COMP%';
@@ -8535,12 +9724,12 @@
 	var directive_metadata_1 = __webpack_require__(40);
 	var di_1 = __webpack_require__(3);
 	var source_module_1 = __webpack_require__(32);
-	var change_detector_compiler_1 = __webpack_require__(120);
+	var change_detector_compiler_1 = __webpack_require__(119);
 	var style_compiler_1 = __webpack_require__(67);
 	var command_compiler_1 = __webpack_require__(63);
-	var template_parser_1 = __webpack_require__(126);
-	var template_normalizer_1 = __webpack_require__(125);
-	var runtime_metadata_1 = __webpack_require__(122);
+	var template_parser_1 = __webpack_require__(125);
+	var template_normalizer_1 = __webpack_require__(124);
+	var runtime_metadata_1 = __webpack_require__(121);
 	var application_tokens_1 = __webpack_require__(38);
 	var command_compiler_2 = __webpack_require__(63);
 	var util_1 = __webpack_require__(14);
@@ -8815,33 +10004,33 @@
 	    }
 	}
 	/**
-	 * Base class for all errors arising from misconfigured bindings.
+	 * Base class for all errors arising from misconfigured providers.
 	 */
-	var AbstractBindingError = (function (_super) {
-	    __extends(AbstractBindingError, _super);
-	    function AbstractBindingError(injector, key, constructResolvingMessage) {
+	var AbstractProviderError = (function (_super) {
+	    __extends(AbstractProviderError, _super);
+	    function AbstractProviderError(injector, key, constructResolvingMessage) {
 	        _super.call(this, "DI Exception");
 	        this.keys = [key];
 	        this.injectors = [injector];
 	        this.constructResolvingMessage = constructResolvingMessage;
 	        this.message = this.constructResolvingMessage(this.keys);
 	    }
-	    AbstractBindingError.prototype.addKey = function (injector, key) {
+	    AbstractProviderError.prototype.addKey = function (injector, key) {
 	        this.injectors.push(injector);
 	        this.keys.push(key);
 	        this.message = this.constructResolvingMessage(this.keys);
 	    };
-	    Object.defineProperty(AbstractBindingError.prototype, "context", {
+	    Object.defineProperty(AbstractProviderError.prototype, "context", {
 	        get: function () { return this.injectors[this.injectors.length - 1].debugContext(); },
 	        enumerable: true,
 	        configurable: true
 	    });
-	    return AbstractBindingError;
+	    return AbstractProviderError;
 	})(exceptions_1.BaseException);
-	exports.AbstractBindingError = AbstractBindingError;
+	exports.AbstractProviderError = AbstractProviderError;
 	/**
 	 * Thrown when trying to retrieve a dependency by `Key` from {@link Injector}, but the
-	 * {@link Injector} does not have a {@link Binding} for {@link Key}.
+	 * {@link Injector} does not have a {@link Provider} for {@link Key}.
 	 *
 	 * ### Example ([live demo](http://plnkr.co/edit/vq8D3FRB9aGbnWJqtEPE?p=preview))
 	 *
@@ -8853,17 +10042,17 @@
 	 * expect(() => Injector.resolveAndCreate([A])).toThrowError();
 	 * ```
 	 */
-	var NoBindingError = (function (_super) {
-	    __extends(NoBindingError, _super);
-	    function NoBindingError(injector, key) {
+	var NoProviderError = (function (_super) {
+	    __extends(NoProviderError, _super);
+	    function NoProviderError(injector, key) {
 	        _super.call(this, injector, key, function (keys) {
 	            var first = lang_1.stringify(collection_1.ListWrapper.first(keys).token);
 	            return "No provider for " + first + "!" + constructResolvingPath(keys);
 	        });
 	    }
-	    return NoBindingError;
-	})(AbstractBindingError);
-	exports.NoBindingError = NoBindingError;
+	    return NoProviderError;
+	})(AbstractProviderError);
+	exports.NoProviderError = NoProviderError;
 	/**
 	 * Thrown when dependencies form a cycle.
 	 *
@@ -8871,8 +10060,8 @@
 	 *
 	 * ```typescript
 	 * var injector = Injector.resolveAndCreate([
-	 *   bind("one").toFactory((two) => "two", [[new Inject("two")]]),
-	 *   bind("two").toFactory((one) => "one", [[new Inject("one")]])
+	 *   provide("one", {useFactory: (two) => "two", deps: [[new Inject("two")]]}),
+	 *   provide("two", {useFactory: (one) => "one", deps: [[new Inject("one")]]})
 	 * ]);
 	 *
 	 * expect(() => injector.get("one")).toThrowError();
@@ -8888,7 +10077,7 @@
 	        });
 	    }
 	    return CyclicDependencyError;
-	})(AbstractBindingError);
+	})(AbstractProviderError);
 	exports.CyclicDependencyError = CyclicDependencyError;
 	/**
 	 * Thrown when a constructing type returns with an Error.
@@ -8949,7 +10138,7 @@
 	})(exceptions_1.WrappedException);
 	exports.InstantiationError = InstantiationError;
 	/**
-	 * Thrown when an object other then {@link Binding} (or `Type`) is passed to {@link Injector}
+	 * Thrown when an object other then {@link Provider} (or `Type`) is passed to {@link Injector}
 	 * creation.
 	 *
 	 * ### Example ([live demo](http://plnkr.co/edit/YatCFbPAMCL0JSSQ4mvH?p=preview))
@@ -8958,15 +10147,15 @@
 	 * expect(() => Injector.resolveAndCreate(["not a type"])).toThrowError();
 	 * ```
 	 */
-	var InvalidBindingError = (function (_super) {
-	    __extends(InvalidBindingError, _super);
-	    function InvalidBindingError(binding) {
-	        _super.call(this, "Invalid binding - only instances of Binding and Type are allowed, got: " +
-	            binding.toString());
+	var InvalidProviderError = (function (_super) {
+	    __extends(InvalidProviderError, _super);
+	    function InvalidProviderError(provider) {
+	        _super.call(this, "Invalid provider - only instances of Provider and Type are allowed, got: " +
+	            provider.toString());
 	    }
-	    return InvalidBindingError;
+	    return InvalidProviderError;
 	})(exceptions_1.BaseException);
-	exports.InvalidBindingError = InvalidBindingError;
+	exports.InvalidProviderError = InvalidProviderError;
 	/**
 	 * Thrown when the class has no annotation information.
 	 *
@@ -8983,7 +10172,7 @@
 	 * expect(() => Injector.resolveAndCreate([A])).toThrowError();
 	 * ```
 	 *
-	 * This error is also thrown when the class not marked with {@link @Injectable} has parameter types.
+	 * This error is also thrown when the class not marked with {@link Injectable} has parameter types.
 	 *
 	 * ```typescript
 	 * class B {}
@@ -9040,26 +10229,26 @@
 	exports.OutOfBoundsError = OutOfBoundsError;
 	// TODO: add a working example after alpha38 is released
 	/**
-	 * Thrown when a multi binding and a regular binding are bound to the same token.
+	 * Thrown when a multi provider and a regular provider are bound to the same token.
 	 *
 	 * ### Example
 	 *
 	 * ```typescript
 	 * expect(() => Injector.resolveAndCreate([
-	 *   new Binding("Strings", {toValue: "string1", multi: true}),
-	 *   new Binding("Strings", {toValue: "string2", multi: false})
+	 *   new Provider("Strings", {useValue: "string1", multi: true}),
+	 *   new Provider("Strings", {useValue: "string2", multi: false})
 	 * ])).toThrowError();
 	 * ```
 	 */
-	var MixingMultiBindingsWithRegularBindings = (function (_super) {
-	    __extends(MixingMultiBindingsWithRegularBindings, _super);
-	    function MixingMultiBindingsWithRegularBindings(binding1, binding2) {
-	        _super.call(this, "Cannot mix multi bindings and regular bindings, got: " + binding1.toString() + " " +
-	            binding2.toString());
+	var MixingMultiProvidersWithRegularProvidersError = (function (_super) {
+	    __extends(MixingMultiProvidersWithRegularProvidersError, _super);
+	    function MixingMultiProvidersWithRegularProvidersError(provider1, provider2) {
+	        _super.call(this, "Cannot mix multi providers and regular providers, got: " + provider1.toString() + " " +
+	            provider2.toString());
 	    }
-	    return MixingMultiBindingsWithRegularBindings;
+	    return MixingMultiProvidersWithRegularProvidersError;
 	})(exceptions_1.BaseException);
-	exports.MixingMultiBindingsWithRegularBindings = MixingMultiBindingsWithRegularBindings;
+	exports.MixingMultiProvidersWithRegularProvidersError = MixingMultiProvidersWithRegularProvidersError;
 	//# sourceMappingURL=exceptions.js.map
 
 /***/ },
@@ -9132,12 +10321,11 @@
 /* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';var collection_1 = __webpack_require__(4);
-	var lang_1 = __webpack_require__(1);
+	'use strict';var lang_1 = __webpack_require__(1);
 	var exceptions_1 = __webpack_require__(5);
-	var type_literal_1 = __webpack_require__(130);
+	var type_literal_1 = __webpack_require__(129);
 	var forward_ref_1 = __webpack_require__(72);
-	var type_literal_2 = __webpack_require__(130);
+	var type_literal_2 = __webpack_require__(129);
 	exports.TypeLiteral = type_literal_2.TypeLiteral;
 	/**
 	 * A unique object used for retrieving items from the {@link Injector}.
@@ -9150,7 +10338,7 @@
 	 * injector to store created objects in a more efficient way.
 	 *
 	 * `Key` should not be created directly. {@link Injector} creates keys automatically when resolving
-	 * bindings.
+	 * providers.
 	 */
 	var Key = (function () {
 	    /**
@@ -9210,7 +10398,7 @@
 	        return newKey;
 	    };
 	    Object.defineProperty(KeyRegistry.prototype, "numberOfKeys", {
-	        get: function () { return collection_1.MapWrapper.size(this._allKeys); },
+	        get: function () { return this._allKeys.size; },
 	        enumerable: true,
 	        configurable: true
 	    });
@@ -9303,7 +10491,7 @@
 	var lang_1 = __webpack_require__(1);
 	var control_container_1 = __webpack_require__(33);
 	var shared_1 = __webpack_require__(12);
-	var controlGroupBinding = lang_1.CONST_EXPR(new di_1.Binding(control_container_1.ControlContainer, { toAlias: di_1.forwardRef(function () { return NgControlGroup; }) }));
+	var controlGroupBinding = lang_1.CONST_EXPR(new di_1.Provider(control_container_1.ControlContainer, { useExisting: di_1.forwardRef(function () { return NgControlGroup; }) }));
 	/**
 	 * Creates and binds a control group to a DOM element.
 	 *
@@ -9315,8 +10503,8 @@
 	 * We can work with each group separately: check its validity, get its value, listen to its changes.
 	 *
 	 *  ```
-	 * @Component({selector: "signup-comp"})
-	 * @View({
+	 * @Component({
+	 *      selector: "signup-comp",
 	 *      directives: [FORM_DIRECTIVES],
 	 *      template: `
 	 *              <form #f="form" (submit)='onSignUp(f.value)'>
@@ -9413,7 +10601,7 @@
 	var control_value_accessor_1 = __webpack_require__(23);
 	var shared_1 = __webpack_require__(12);
 	var validators_1 = __webpack_require__(18);
-	var controlNameBinding = lang_1.CONST_EXPR(new di_1.Binding(ng_control_1.NgControl, { toAlias: di_1.forwardRef(function () { return NgControlName; }) }));
+	var controlNameBinding = lang_1.CONST_EXPR(new di_1.Provider(ng_control_1.NgControl, { useExisting: di_1.forwardRef(function () { return NgControlName; }) }));
 	/**
 	 * Creates and binds a control with a specified name to a DOM element.
 	 *
@@ -9426,8 +10614,8 @@
 	 * changes.
 	 *
 	 *  ```
-	 * @Component({selector: "login-comp"})
-	 * @View({
+	 * @Component({
+	 *      selector: "login-comp",
 	 *      directives: [FORM_DIRECTIVES],
 	 *      template: `
 	 *        <form #f="form" (submit)='onLogIn(f.value)'>
@@ -9448,8 +10636,8 @@
 	 * We can also use ng-model to bind a domain model to the form.
 	 *
 	 *  ```
-	 * @Component({selector: "login-comp"})
-	 * @View({
+	 * @Component({
+	 *      selector: "login-comp",
 	 *      directives: [FORM_DIRECTIVES],
 	 *      template: `
 	 *        <form (submit)='onLogIn()'>
@@ -9474,6 +10662,7 @@
 	    function NgControlName(parent, validators, valueAccessors) {
 	        _super.call(this);
 	        this.update = new async_1.EventEmitter();
+	        /** @internal */
 	        this._added = false;
 	        this._parent = parent;
 	        this.validators = validators;
@@ -9519,7 +10708,7 @@
 	            selector: '[ng-control]',
 	            bindings: [controlNameBinding],
 	            inputs: ['name: ngControl', 'model: ngModel'],
-	            outputs: ['update: ngModel'],
+	            outputs: ['update: ngModelChange'],
 	            exportAs: 'form'
 	        }),
 	        __param(0, di_1.Host()),
@@ -9651,7 +10840,7 @@
 	var control_container_1 = __webpack_require__(33);
 	var model_1 = __webpack_require__(47);
 	var shared_1 = __webpack_require__(12);
-	var formDirectiveBinding = lang_1.CONST_EXPR(new di_1.Binding(control_container_1.ControlContainer, { toAlias: di_1.forwardRef(function () { return NgForm; }) }));
+	var formDirectiveProvider = lang_1.CONST_EXPR(new di_1.Provider(control_container_1.ControlContainer, { useExisting: di_1.forwardRef(function () { return NgForm; }) }));
 	/**
 	 * If `NgForm` is bound in a component, `<form>` elements in that component will be
 	 * upgraded to use the Angular form system.
@@ -9663,9 +10852,9 @@
 	 *
 	 * # Structure
 	 *
-	 * An Angular form is a collection of {@link Control}s in some hierarchy.
-	 * `Control`s can be at the top level or can be organized in {@link ControlGroups}
-	 * or {@link ControlArray}s. This hierarchy is reflected in the form's `value`, a
+	 * An Angular form is a collection of `Control`s in some hierarchy.
+	 * `Control`s can be at the top level or can be organized in `ControlGroup`s
+	 * or `ControlArray`s. This hierarchy is reflected in the form's `value`, a
 	 * JSON object that mirrors the form structure.
 	 *
 	 * # Submission
@@ -9676,9 +10865,7 @@
 	 *
 	 *  ```typescript
 	 * @Component({
-	 *   selector: 'my-app'
-	 * })
-	 * @View({
+	 *   selector: 'my-app',
 	 *   template: `
 	 *     <div>
 	 *       <p>Submit the form to see the data object Angular builds</p>
@@ -9794,15 +10981,17 @@
 	        async_1.ObservableWrapper.callNext(this.ngSubmit, null);
 	        return false;
 	    };
+	    /** @internal */
 	    NgForm.prototype._findContainer = function (path) {
 	        path.pop();
 	        return collection_1.ListWrapper.isEmpty(path) ? this.form : this.form.find(path);
 	    };
+	    /** @internal */
 	    NgForm.prototype._later = function (fn) { async_1.PromiseWrapper.then(async_1.PromiseWrapper.resolve(null), fn, function (_) { }); };
 	    NgForm = __decorate([
 	        metadata_1.Directive({
 	            selector: 'form:not([ng-no-form]):not([ng-form-model]),ng-form,[ng-form]',
-	            bindings: [formDirectiveBinding],
+	            bindings: [formDirectiveProvider],
 	            host: {
 	                '(submit)': 'onSubmit()',
 	            },
@@ -9847,7 +11036,7 @@
 	var validators_1 = __webpack_require__(18);
 	var control_value_accessor_1 = __webpack_require__(23);
 	var shared_1 = __webpack_require__(12);
-	var formControlBinding = lang_1.CONST_EXPR(new di_1.Binding(ng_control_1.NgControl, { toAlias: di_1.forwardRef(function () { return NgFormControl; }) }));
+	var formControlBinding = lang_1.CONST_EXPR(new di_1.Provider(ng_control_1.NgControl, { useExisting: di_1.forwardRef(function () { return NgFormControl; }) }));
 	/**
 	 * Binds an existing {@link Control} to a DOM element.
 	 *
@@ -9859,9 +11048,7 @@
 	 *
 	 *  ```typescript
 	 * @Component({
-	 *   selector: 'my-app'
-	 * })
-	 * @View({
+	 *   selector: 'my-app',
 	 *   template: `
 	 *     <div>
 	 *       <h2>NgFormControl Example</h2>
@@ -9886,8 +11073,8 @@
 	 * ### Example ([live demo](http://plnkr.co/edit/yHMLuHO7DNgT8XvtjTDH?p=preview))
 	 *
 	 *  ```typescript
-	 * @Component({selector: "login-comp"})
-	 * @View({
+	 * @Component({
+	 *      selector: "login-comp",
 	 *      directives: [FORM_DIRECTIVES],
 	 *      template: "<input type='text' [ng-form-control]='loginControl' [(ng-model)]='login'>"
 	 *      })
@@ -9902,6 +11089,7 @@
 	    function NgFormControl(validators, valueAccessors) {
 	        _super.call(this);
 	        this.update = new async_1.EventEmitter();
+	        /** @internal */
 	        this._added = false;
 	        this.validators = validators;
 	        this.valueAccessor = shared_1.selectValueAccessor(this, valueAccessors);
@@ -9941,7 +11129,7 @@
 	            selector: '[ng-form-control]',
 	            bindings: [formControlBinding],
 	            inputs: ['form: ngFormControl', 'model: ngModel'],
-	            outputs: ['update: ngModel'],
+	            outputs: ['update: ngModelChange'],
 	            exportAs: 'form'
 	        }),
 	        __param(0, di_1.Optional()),
@@ -9982,7 +11170,7 @@
 	var di_1 = __webpack_require__(3);
 	var control_container_1 = __webpack_require__(33);
 	var shared_1 = __webpack_require__(12);
-	var formDirectiveBinding = lang_1.CONST_EXPR(new di_1.Binding(control_container_1.ControlContainer, { toAlias: di_1.forwardRef(function () { return NgFormModel; }) }));
+	var formDirectiveProvider = lang_1.CONST_EXPR(new di_1.Provider(control_container_1.ControlContainer, { useExisting: di_1.forwardRef(function () { return NgFormModel; }) }));
 	/**
 	 * Binds an existing control group to a DOM element.
 	 *
@@ -9993,9 +11181,7 @@
 	 *
 	 *  ```typescript
 	 * @Component({
-	 *   selector: 'my-app'
-	 * })
-	 * @View({
+	 *   selector: 'my-app',
 	 *   template: `
 	 *     <div>
 	 *       <h2>NgFormModel Example</h2>
@@ -10028,8 +11214,8 @@
 	 * We can also use ng-model to bind a domain model to the form.
 	 *
 	 *  ```typescript
-	 * @Component({selector: "login-comp"})
-	 * @View({
+	 * @Component({
+	 *      selector: "login-comp",
 	 *      directives: [FORM_DIRECTIVES],
 	 *      template: `
 	 *        <form [ng-form-model]='loginForm'>
@@ -10102,6 +11288,7 @@
 	        async_1.ObservableWrapper.callNext(this.ngSubmit, null);
 	        return false;
 	    };
+	    /** @internal */
 	    NgFormModel.prototype._updateDomValue = function () {
 	        var _this = this;
 	        this.directives.forEach(function (dir) {
@@ -10112,7 +11299,7 @@
 	    NgFormModel = __decorate([
 	        metadata_1.Directive({
 	            selector: '[ng-form-model]',
-	            bindings: [formDirectiveBinding],
+	            bindings: [formDirectiveProvider],
 	            inputs: ['form: ng-form-model'],
 	            host: { '(submit)': 'onSubmit()' },
 	            outputs: ['ngSubmit'],
@@ -10157,7 +11344,7 @@
 	var model_1 = __webpack_require__(47);
 	var validators_1 = __webpack_require__(18);
 	var shared_1 = __webpack_require__(12);
-	var formControlBinding = lang_1.CONST_EXPR(new di_1.Binding(ng_control_1.NgControl, { toAlias: di_1.forwardRef(function () { return NgModel; }) }));
+	var formControlBinding = lang_1.CONST_EXPR(new di_1.Provider(ng_control_1.NgControl, { useExisting: di_1.forwardRef(function () { return NgModel; }) }));
 	/**
 	 * Binds a domain model to a form control.
 	 *
@@ -10169,8 +11356,8 @@
 	 *
 	 * ### Example ([live demo](http://plnkr.co/edit/R3UX5qDaUqFO2VYR0UzH?p=preview))
 	 *  ```typescript
-	 * @Component({selector: "search-comp"})
-	 * @View({
+	 * @Component({
+	 *      selector: "search-comp",
 	 *      directives: [FORM_DIRECTIVES],
 	 *      template: `<input type='text' [(ng-model)]="searchQuery">`
 	 *      })
@@ -10183,7 +11370,9 @@
 	    __extends(NgModel, _super);
 	    function NgModel(validators, valueAccessors) {
 	        _super.call(this);
+	        /** @internal */
 	        this._control = new model_1.Control();
+	        /** @internal */
 	        this._added = false;
 	        this.update = new async_1.EventEmitter();
 	        this.validators = validators;
@@ -10224,7 +11413,7 @@
 	            selector: '[ng-model]:not([ng-control]):not([ng-form-control])',
 	            bindings: [formControlBinding],
 	            inputs: ['model: ngModel'],
-	            outputs: ['update: ngModel'],
+	            outputs: ['update: ngModelChange'],
 	            exportAs: 'form'
 	        }),
 	        __param(0, di_1.Optional()),
@@ -10253,24 +11442,74 @@
 	var __metadata = (this && this.__metadata) || function (k, v) {
 	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 	};
+	var __param = (this && this.__param) || function (paramIndex, decorator) {
+	    return function (target, key) { decorator(target, key, paramIndex); }
+	};
 	var di_1 = __webpack_require__(3);
 	var lang_1 = __webpack_require__(1);
 	var metadata_1 = __webpack_require__(7);
 	var validators_1 = __webpack_require__(18);
-	var DEFAULT_VALIDATORS = lang_1.CONST_EXPR(new di_1.Binding(validators_1.NG_VALIDATORS, { toValue: validators_1.Validators.required, multi: true }));
-	var DefaultValidators = (function () {
-	    function DefaultValidators() {
+	var lang_2 = __webpack_require__(1);
+	var REQUIRED_VALIDATOR = lang_1.CONST_EXPR(new di_1.Provider(validators_1.NG_VALIDATORS, { useValue: validators_1.Validators.required, multi: true }));
+	var RequiredValidator = (function () {
+	    function RequiredValidator() {
 	    }
-	    DefaultValidators = __decorate([
+	    RequiredValidator = __decorate([
 	        metadata_1.Directive({
 	            selector: '[required][ng-control],[required][ng-form-control],[required][ng-model]',
-	            bindings: [DEFAULT_VALIDATORS]
+	            providers: [REQUIRED_VALIDATOR]
 	        }), 
 	        __metadata('design:paramtypes', [])
-	    ], DefaultValidators);
-	    return DefaultValidators;
+	    ], RequiredValidator);
+	    return RequiredValidator;
 	})();
-	exports.DefaultValidators = DefaultValidators;
+	exports.RequiredValidator = RequiredValidator;
+	function createMinLengthValidator(dir) {
+	    return validators_1.Validators.minLength(dir.minLength);
+	}
+	var MIN_LENGTH_VALIDATOR = lang_1.CONST_EXPR(new di_1.Provider(validators_1.NG_VALIDATORS, {
+	    useFactory: createMinLengthValidator,
+	    deps: [di_1.forwardRef(function () { return MinLengthValidator; })],
+	    multi: true
+	}));
+	var MinLengthValidator = (function () {
+	    function MinLengthValidator(minLength) {
+	        this.minLength = lang_2.NumberWrapper.parseInt(minLength, 10);
+	    }
+	    MinLengthValidator = __decorate([
+	        metadata_1.Directive({
+	            selector: '[minlength][ng-control],[minlength][ng-form-control],[minlength][ng-model]',
+	            providers: [MIN_LENGTH_VALIDATOR]
+	        }),
+	        __param(0, metadata_1.Attribute("minlength")), 
+	        __metadata('design:paramtypes', [String])
+	    ], MinLengthValidator);
+	    return MinLengthValidator;
+	})();
+	exports.MinLengthValidator = MinLengthValidator;
+	function createMaxLengthValidator(dir) {
+	    return validators_1.Validators.maxLength(dir.maxLength);
+	}
+	var MAX_LENGTH_VALIDATOR = lang_1.CONST_EXPR(new di_1.Provider(validators_1.NG_VALIDATORS, {
+	    useFactory: createMaxLengthValidator,
+	    deps: [di_1.forwardRef(function () { return MaxLengthValidator; })],
+	    multi: true
+	}));
+	var MaxLengthValidator = (function () {
+	    function MaxLengthValidator(maxLength) {
+	        this.maxLength = lang_2.NumberWrapper.parseInt(maxLength, 10);
+	    }
+	    MaxLengthValidator = __decorate([
+	        metadata_1.Directive({
+	            selector: '[maxlength][ng-control],[maxlength][ng-form-control],[maxlength][ng-model]',
+	            providers: [MAX_LENGTH_VALIDATOR]
+	        }),
+	        __param(0, metadata_1.Attribute("maxlength")), 
+	        __metadata('design:paramtypes', [String])
+	    ], MaxLengthValidator);
+	    return MaxLengthValidator;
+	})();
+	exports.MaxLengthValidator = MaxLengthValidator;
 	//# sourceMappingURL=validators.js.map
 
 /***/ },
@@ -10713,7 +11952,7 @@
 	        this.variableLocations = variableLocations;
 	        this.protoLocals = new collection_1.Map();
 	        if (lang_1.isPresent(this.templateVariableBindings)) {
-	            collection_1.MapWrapper.forEach(this.templateVariableBindings, function (templateName, _) { _this.protoLocals.set(templateName, null); });
+	            this.templateVariableBindings.forEach(function (templateName, _) { _this.protoLocals.set(templateName, null); });
 	        }
 	        if (lang_1.isPresent(variableLocations)) {
 	            // The view's locals needs to have a full set of variable names at construction time
@@ -10721,7 +11960,7 @@
 	            // want
 	            // to actually create variable bindings for the $implicit bindings, add to the
 	            // protoLocals manually.
-	            collection_1.MapWrapper.forEach(variableLocations, function (_, templateName) { _this.protoLocals.set(templateName, null); });
+	            variableLocations.forEach(function (_, templateName) { _this.protoLocals.set(templateName, null); });
 	        }
 	    };
 	    AppProtoView.prototype.isInitialized = function () { return lang_1.isPresent(this.elementBinders); };
@@ -10812,13 +12051,13 @@
 	            index = this.length;
 	        return this.viewManager.createEmbeddedViewInContainer(this.element, index, templateRef);
 	    };
-	    ViewContainerRef_.prototype.createHostView = function (protoViewRef, index, dynamicallyCreatedBindings) {
+	    ViewContainerRef_.prototype.createHostView = function (protoViewRef, index, dynamicallyCreatedProviders) {
 	        if (protoViewRef === void 0) { protoViewRef = null; }
 	        if (index === void 0) { index = -1; }
-	        if (dynamicallyCreatedBindings === void 0) { dynamicallyCreatedBindings = null; }
+	        if (dynamicallyCreatedProviders === void 0) { dynamicallyCreatedProviders = null; }
 	        if (index == -1)
 	            index = this.length;
-	        return this.viewManager.createHostViewInContainer(this.element, index, protoViewRef, dynamicallyCreatedBindings);
+	        return this.viewManager.createHostViewInContainer(this.element, index, protoViewRef, dynamicallyCreatedProviders);
 	    };
 	    // TODO(i): refactor insert+remove into move
 	    ViewContainerRef_.prototype.insert = function (viewRef, index) {
@@ -10907,6 +12146,7 @@
 	var reflection_1 = __webpack_require__(11);
 	var ViewResolver = (function () {
 	    function ViewResolver() {
+	        /** @internal */
 	        this._cache = new collection_1.Map();
 	    }
 	    ViewResolver.prototype.resolve = function (component) {
@@ -10917,6 +12157,7 @@
 	        }
 	        return view;
 	    };
+	    /** @internal */
 	    ViewResolver.prototype._resolve = function (component) {
 	        var compMeta;
 	        var viewMeta;
@@ -10978,6 +12219,7 @@
 	        }
 	        return null;
 	    };
+	    /** @internal */
 	    ViewResolver.prototype._throwMixingViewAndComponent = function (propertyName, component) {
 	        throw new exceptions_1.BaseException("Component '" + lang_1.stringify(component) + "' cannot have both '" + propertyName + "' and '@View' set at the same time\"");
 	    };
@@ -11088,15 +12330,12 @@
 	 *   selector: 'pane',
 	 *   inputs: ['title']
 	 * })
-	 * @View(...)
 	 * class Pane {
 	 *   title:string;
 	 * }
 	 *
 	 * @Component({
-	 *   selector: 'tabs'
-	 * })
-	 * @View({
+	 *  selector: 'tabs',
 	 *  template: `
 	 *    <ul>
 	 *      <li *ng-for="#pane of panes">{{pane.title}}</li>
@@ -11120,10 +12359,7 @@
 	 *   <div #findme>...</div>
 	 * </seeker>
 	 *
-	 * @Component({
-	 *   selector: 'foo'
-	 * })
-	 * @View(...)
+	 * @Component({ selector: 'foo' })
 	 * class seeker {
 	 *   constructor(@Query('findme') elList: QueryList<ElementRef>) {...}
 	 * }
@@ -11143,7 +12379,6 @@
 	 *  @Component({
 	 *   selector: 'foo'
 	 * })
-	 * @View(...)
 	 * class Seeker {
 	 *   constructor(@Query('findMe, findMeToo') elList: QueryList<ElementRef>) {...}
 	 * }
@@ -11362,9 +12597,10 @@
 	 *
 	 * ```
 	 * @Component({
-	 *   selector: 'someDir'
+	 *   selector: 'someDir',
+	 *   templateUrl: 'someTemplate',
+	 *   directives: [ItemDirective]
 	 * })
-	 * @View({templateUrl: 'someTemplate', directives: [ItemDirective]})
 	 * class SomeDir {
 	 *   @ViewChildren(ItemDirective) viewChildren: QueryList<ItemDirective>;
 	 *
@@ -11395,9 +12631,10 @@
 	 *
 	 * ```
 	 * @Component({
-	 *   selector: 'someDir'
+	 *   selector: 'someDir',
+	 *   templateUrl: 'someTemplate',
+	 *   directives: [ItemDirective]
 	 * })
-	 * @View({templateUrl: 'someTemplate', directives: [ItemDirective]})
 	 * class SomeDir {
 	 *   @ViewChild(ItemDirective) viewChild:ItemDirective;
 	 *
@@ -11430,25 +12667,25 @@
 	 * @description
 	 * This module provides a set of common Pipes.
 	 */
-	var async_pipe_1 = __webpack_require__(148);
+	var async_pipe_1 = __webpack_require__(147);
 	exports.AsyncPipe = async_pipe_1.AsyncPipe;
-	var date_pipe_1 = __webpack_require__(149);
+	var date_pipe_1 = __webpack_require__(148);
 	exports.DatePipe = date_pipe_1.DatePipe;
-	var default_pipes_1 = __webpack_require__(300);
+	var default_pipes_1 = __webpack_require__(299);
 	exports.DEFAULT_PIPES = default_pipes_1.DEFAULT_PIPES;
 	exports.DEFAULT_PIPES_TOKEN = default_pipes_1.DEFAULT_PIPES_TOKEN;
-	var json_pipe_1 = __webpack_require__(150);
+	var json_pipe_1 = __webpack_require__(149);
 	exports.JsonPipe = json_pipe_1.JsonPipe;
-	var slice_pipe_1 = __webpack_require__(155);
+	var slice_pipe_1 = __webpack_require__(154);
 	exports.SlicePipe = slice_pipe_1.SlicePipe;
-	var lowercase_pipe_1 = __webpack_require__(151);
+	var lowercase_pipe_1 = __webpack_require__(150);
 	exports.LowerCasePipe = lowercase_pipe_1.LowerCasePipe;
-	var number_pipe_1 = __webpack_require__(152);
+	var number_pipe_1 = __webpack_require__(151);
 	exports.NumberPipe = number_pipe_1.NumberPipe;
 	exports.DecimalPipe = number_pipe_1.DecimalPipe;
 	exports.PercentPipe = number_pipe_1.PercentPipe;
 	exports.CurrencyPipe = number_pipe_1.CurrencyPipe;
-	var uppercase_pipe_1 = __webpack_require__(156);
+	var uppercase_pipe_1 = __webpack_require__(155);
 	exports.UpperCasePipe = uppercase_pipe_1.UpperCasePipe;
 	//# sourceMappingURL=pipes.js.map
 
@@ -11496,7 +12733,9 @@
 	var dom_tokens_1 = __webpack_require__(91);
 	var SharedStylesHost = (function () {
 	    function SharedStylesHost() {
+	        /** @internal */
 	        this._styles = [];
+	        /** @internal */
 	        this._stylesSet = new Set();
 	    }
 	    SharedStylesHost.prototype.addStyles = function (styles) {
@@ -11527,6 +12766,7 @@
 	        this._hostNodes = new Set();
 	        this._hostNodes.add(doc.head);
 	    }
+	    /** @internal */
 	    DomSharedStylesHost.prototype._addStylesToHost = function (styles, host) {
 	        for (var i = 0; i < styles.length; i++) {
 	            var style = styles[i];
@@ -11598,12 +12838,15 @@
 	 */
 	var Testability = (function () {
 	    function Testability(_ngZone) {
-	        this._ngZone = _ngZone;
+	        /** @internal */
 	        this._pendingCount = 0;
+	        /** @internal */
 	        this._callbacks = [];
+	        /** @internal */
 	        this._isAngularEventPending = false;
 	        this._watchAngularEvents(_ngZone);
 	    }
+	    /** @internal */
 	    Testability.prototype._watchAngularEvents = function (_ngZone) {
 	        var _this = this;
 	        _ngZone.overrideOnTurnStart(function () { _this._isAngularEventPending = true; });
@@ -11625,6 +12868,7 @@
 	        return this._pendingCount;
 	    };
 	    Testability.prototype.isStable = function () { return this._pendingCount == 0 && !this._isAngularEventPending; };
+	    /** @internal */
 	    Testability.prototype._runCallbacksIfReady = function () {
 	        var _this = this;
 	        if (!this.isStable()) {
@@ -11645,7 +12889,11 @@
 	    // This only accounts for ngZone, and not pending counts. Use `whenStable` to
 	    // check for stability.
 	    Testability.prototype.isAngularEventPending = function () { return this._isAngularEventPending; };
-	    Testability.prototype.findBindings = function (using, binding, exactMatch) {
+	    Testability.prototype.findBindings = function (using, provider, exactMatch) {
+	        // TODO(juliemr): implement.
+	        return [];
+	    };
+	    Testability.prototype.findProviders = function (using, provider, exactMatch) {
 	        // TODO(juliemr): implement.
 	        return [];
 	    };
@@ -11658,6 +12906,7 @@
 	exports.Testability = Testability;
 	var TestabilityRegistry = (function () {
 	    function TestabilityRegistry() {
+	        /** @internal */
 	        this._applications = new collection_1.Map();
 	        testabilityGetter.addToWindow(this);
 	    }
@@ -11961,38 +13210,7 @@
 /* 97 */,
 /* 98 */,
 /* 99 */,
-/* 100 */,
-/* 101 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';function __export(m) {
-	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-	}
-	/**
-	 * @module
-	 * @description
-	 * Starting point to import all public core APIs.
-	 */
-	__export(__webpack_require__(7));
-	__export(__webpack_require__(313));
-	__export(__webpack_require__(3));
-	__export(__webpack_require__(90));
-	__export(__webpack_require__(295));
-	__export(__webpack_require__(105));
-	__export(__webpack_require__(108));
-	__export(__webpack_require__(310));
-	__export(__webpack_require__(13));
-	__export(__webpack_require__(297));
-	__export(__webpack_require__(314));
-	__export(__webpack_require__(20));
-	__export(__webpack_require__(291));
-	__export(__webpack_require__(139));
-	__export(__webpack_require__(288));
-	__export(__webpack_require__(21));
-	//# sourceMappingURL=core.js.map
-
-/***/ },
-/* 102 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12007,15 +13225,15 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _utilNoop = __webpack_require__(261);
+	var _utilNoop = __webpack_require__(258);
 	
 	var _utilNoop2 = _interopRequireDefault(_utilNoop);
 	
-	var _utilThrowError = __webpack_require__(263);
+	var _utilThrowError = __webpack_require__(260);
 	
 	var _utilThrowError2 = _interopRequireDefault(_utilThrowError);
 	
-	var _utilTryOrOnError = __webpack_require__(264);
+	var _utilTryOrOnError = __webpack_require__(261);
 	
 	var _utilTryOrOnError2 = _interopRequireDefault(_utilTryOrOnError);
 	
@@ -12141,7 +13359,37 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 103 */
+/* 101 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	/**
+	 * @module
+	 * @description
+	 * Starting point to import all public core APIs.
+	 */
+	__export(__webpack_require__(7));
+	__export(__webpack_require__(312));
+	__export(__webpack_require__(3));
+	__export(__webpack_require__(90));
+	__export(__webpack_require__(294));
+	__export(__webpack_require__(104));
+	__export(__webpack_require__(107));
+	__export(__webpack_require__(309));
+	__export(__webpack_require__(13));
+	__export(__webpack_require__(296));
+	__export(__webpack_require__(313));
+	__export(__webpack_require__(20));
+	__export(__webpack_require__(290));
+	__export(__webpack_require__(138));
+	__export(__webpack_require__(287));
+	__export(__webpack_require__(21));
+	//# sourceMappingURL=core.js.map
+
+/***/ },
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -12156,8 +13404,8 @@
 	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 	};
 	var di_1 = __webpack_require__(3);
-	var css_animation_builder_1 = __webpack_require__(268);
-	var browser_details_1 = __webpack_require__(104);
+	var css_animation_builder_1 = __webpack_require__(267);
+	var browser_details_1 = __webpack_require__(103);
 	var AnimationBuilder = (function () {
 	    /**
 	     * Used for DI
@@ -12181,7 +13429,7 @@
 	//# sourceMappingURL=animation_builder.js.map
 
 /***/ },
-/* 104 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -12196,7 +13444,7 @@
 	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 	};
 	var di_1 = __webpack_require__(3);
-	var math_1 = __webpack_require__(138);
+	var math_1 = __webpack_require__(137);
 	var dom_adapter_1 = __webpack_require__(8);
 	var BrowserDetails = (function () {
 	    function BrowserDetails() {
@@ -12261,18 +13509,18 @@
 	//# sourceMappingURL=browser_details.js.map
 
 /***/ },
-/* 105 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
-	var compiler_1 = __webpack_require__(284);
-	var application_common_1 = __webpack_require__(106);
+	var compiler_1 = __webpack_require__(283);
+	var application_common_1 = __webpack_require__(105);
 	var application_tokens_1 = __webpack_require__(38);
 	exports.APP_COMPONENT = application_tokens_1.APP_COMPONENT;
 	exports.APP_ID = application_tokens_1.APP_ID;
-	var application_common_2 = __webpack_require__(106);
+	var application_common_2 = __webpack_require__(105);
 	exports.platform = application_common_2.platform;
-	var application_ref_1 = __webpack_require__(107);
+	var application_ref_1 = __webpack_require__(106);
 	exports.PlatformRef = application_ref_1.PlatformRef;
 	exports.ApplicationRef = application_ref_1.ApplicationRef;
 	exports.applicationCommonBindings = application_ref_1.applicationCommonBindings;
@@ -12282,7 +13530,7 @@
 	/// See [commonBootstrap] for detailed documentation.
 	function bootstrap(appComponentType, appBindings) {
 	    if (appBindings === void 0) { appBindings = null; }
-	    var bindings = [compiler_1.compilerBindings()];
+	    var bindings = [compiler_1.compilerProviders()];
 	    if (lang_1.isPresent(appBindings)) {
 	        bindings.push(appBindings);
 	    }
@@ -12292,31 +13540,31 @@
 	//# sourceMappingURL=application.js.map
 
 /***/ },
-/* 106 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';var forms_1 = __webpack_require__(139);
+	'use strict';var forms_1 = __webpack_require__(138);
 	var di_1 = __webpack_require__(3);
 	var lang_1 = __webpack_require__(1);
-	var browser_adapter_1 = __webpack_require__(293);
-	var browser_testability_1 = __webpack_require__(312);
+	var browser_adapter_1 = __webpack_require__(292);
+	var browser_testability_1 = __webpack_require__(311);
 	var dom_adapter_1 = __webpack_require__(8);
 	var xhr_1 = __webpack_require__(42);
-	var xhr_impl_1 = __webpack_require__(287);
+	var xhr_impl_1 = __webpack_require__(286);
 	var event_manager_1 = __webpack_require__(52);
-	var key_events_1 = __webpack_require__(308);
-	var hammer_gestures_1 = __webpack_require__(307);
+	var key_events_1 = __webpack_require__(307);
+	var hammer_gestures_1 = __webpack_require__(306);
 	var testability_1 = __webpack_require__(94);
 	var api_1 = __webpack_require__(28);
-	var render_1 = __webpack_require__(158);
+	var render_1 = __webpack_require__(157);
 	var shared_styles_host_1 = __webpack_require__(92);
-	var platform_bindings_1 = __webpack_require__(301);
-	var animation_builder_1 = __webpack_require__(103);
-	var browser_details_1 = __webpack_require__(104);
-	var wtf_init_1 = __webpack_require__(303);
-	var application_ref_1 = __webpack_require__(107);
+	var platform_bindings_1 = __webpack_require__(300);
+	var animation_builder_1 = __webpack_require__(102);
+	var browser_details_1 = __webpack_require__(103);
+	var wtf_init_1 = __webpack_require__(302);
+	var application_ref_1 = __webpack_require__(106);
 	/**
-	 * A default set of bindings which apply only to an Angular application running on
+	 * A default set of providers which apply only to an Angular application running on
 	 * the UI thread.
 	 */
 	function applicationDomBindings() {
@@ -12324,22 +13572,21 @@
 	        throw "Must set a root DOM adapter first.";
 	    }
 	    return [
-	        di_1.bind(render_1.DOCUMENT)
-	            .toValue(dom_adapter_1.DOM.defaultDoc()),
+	        di_1.provide(render_1.DOCUMENT, { useValue: dom_adapter_1.DOM.defaultDoc() }),
 	        event_manager_1.EventManager,
-	        new di_1.Binding(event_manager_1.EVENT_MANAGER_PLUGINS, { toClass: event_manager_1.DomEventsPlugin, multi: true }),
-	        new di_1.Binding(event_manager_1.EVENT_MANAGER_PLUGINS, { toClass: key_events_1.KeyEventsPlugin, multi: true }),
-	        new di_1.Binding(event_manager_1.EVENT_MANAGER_PLUGINS, { toClass: hammer_gestures_1.HammerGesturesPlugin, multi: true }),
-	        di_1.bind(render_1.DomRenderer).toClass(render_1.DomRenderer_),
-	        di_1.bind(api_1.Renderer).toAlias(render_1.DomRenderer),
+	        new di_1.Provider(event_manager_1.EVENT_MANAGER_PLUGINS, { useClass: event_manager_1.DomEventsPlugin, multi: true }),
+	        new di_1.Provider(event_manager_1.EVENT_MANAGER_PLUGINS, { useClass: key_events_1.KeyEventsPlugin, multi: true }),
+	        new di_1.Provider(event_manager_1.EVENT_MANAGER_PLUGINS, { useClass: hammer_gestures_1.HammerGesturesPlugin, multi: true }),
+	        di_1.provide(render_1.DomRenderer, { useClass: render_1.DomRenderer_ }),
+	        di_1.provide(api_1.Renderer, { useExisting: render_1.DomRenderer }),
 	        shared_styles_host_1.DomSharedStylesHost,
-	        di_1.bind(shared_styles_host_1.SharedStylesHost).toAlias(shared_styles_host_1.DomSharedStylesHost),
-	        platform_bindings_1.EXCEPTION_BINDING,
-	        di_1.bind(xhr_1.XHR).toValue(new xhr_impl_1.XHRImpl()),
+	        di_1.provide(shared_styles_host_1.SharedStylesHost, { useExisting: shared_styles_host_1.DomSharedStylesHost }),
+	        platform_bindings_1.EXCEPTION_PROVIDER,
+	        di_1.provide(xhr_1.XHR, { useValue: new xhr_impl_1.XHRImpl() }),
 	        testability_1.Testability,
 	        browser_details_1.BrowserDetails,
 	        animation_builder_1.AnimationBuilder,
-	        forms_1.FORM_BINDINGS
+	        forms_1.FORM_PROVIDERS
 	    ];
 	}
 	exports.applicationDomBindings = applicationDomBindings;
@@ -12348,25 +13595,25 @@
 	 *
 	 * See {@link PlatformRef} for details on the Angular platform.
 	 *
-	 * # Without specified bindings
+	 * # Without specified providers
 	 *
-	 * If no bindings are specified, `platform`'s behavior depends on whether an existing
+	 * If no providers are specified, `platform`'s behavior depends on whether an existing
 	 * platform exists:
 	 *
 	 * If no platform exists, a new one will be created with the default {@link platformBindings}.
 	 *
-	 * If a platform already exists, it will be returned (regardless of what bindings it
+	 * If a platform already exists, it will be returned (regardless of what providers it
 	 * was created with). This is a convenience feature, allowing for multiple applications
 	 * to be loaded into the same platform without awareness of each other.
 	 *
-	 * # With specified bindings
+	 * # With specified providers
 	 *
-	 * It is also possible to specify bindings to be made in the new platform. These bindings
+	 * It is also possible to specify providers to be made in the new platform. These providers
 	 * will be shared between all applications on the page. For example, an abstraction for
 	 * the browser cookie jar should be bound at the platform level, because there is only one
 	 * cookie jar regardless of how many applications on the age will be accessing it.
 	 *
-	 * If bindings are specified directly, `platform` will create the Angular platform with
+	 * If providers are specified directly, `platform` will create the Angular platform with
 	 * them if a platform did not exist already. If it did exist, however, an error will be
 	 * thrown.
 	 *
@@ -12404,19 +13651,17 @@
 	 * ```
 	 *
 	 * An application is bootstrapped inside an existing browser DOM, typically `index.html`.
-	 * Unlike Angular 1, Angular 2 does not compile/process bindings in `index.html`. This is
+	 * Unlike Angular 1, Angular 2 does not compile/process providers in `index.html`. This is
 	 * mainly for security reasons, as well as architectural changes in Angular 2. This means
 	 * that `index.html` can safely be processed using server-side technologies such as
-	 * bindings. Bindings can thus use double-curly `{{ syntax }}` without collision from
+	 * providers. Bindings can thus use double-curly `{{ syntax }}` without collision from
 	 * Angular 2 component double-curly `{{ syntax }}`.
 	 *
 	 * We can use this script code:
 	 *
 	 * ```
 	 * @Component({
-	 *    selector: 'my-app'
-	 * })
-	 * @View({
+	 *    selector: 'my-app',
 	 *    template: 'Hello {{ name }}!'
 	 * })
 	 * class MyApp {
@@ -12445,7 +13690,7 @@
 	 *  4. It creates a shadow DOM on the selected component's host element and loads the
 	 *     template into it.
 	 *  5. It instantiates the specified component.
-	 *  6. Finally, Angular performs change detection to apply the initial data bindings for the
+	 *  6. Finally, Angular performs change detection to apply the initial data providers for the
 	 *     application.
 	 *
 	 *
@@ -12489,7 +13734,7 @@
 	 * # API
 	 * - `appComponentType`: The root component which should act as the application. This is
 	 *   a reference to a `Type` which is annotated with `@Component(...)`.
-	 * - `componentInjectableBindings`: An additional set of bindings that can be added to the
+	 * - `componentInjectableBindings`: An additional set of providers that can be added to the
 	 *   app injector to override default injection behavior.
 	 * - `errorReporter`: `function(exception:any, stackTrace:string)` a default error reporter
 	 *   for unhandled exceptions.
@@ -12509,7 +13754,7 @@
 	//# sourceMappingURL=application_common.js.map
 
 /***/ },
-/* 107 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -12529,77 +13774,82 @@
 	var exceptions_1 = __webpack_require__(5);
 	var dom_adapter_1 = __webpack_require__(8);
 	var view_ref_1 = __webpack_require__(15);
-	var life_cycle_1 = __webpack_require__(141);
+	var life_cycle_1 = __webpack_require__(140);
 	var change_detection_1 = __webpack_require__(10);
-	var view_pool_1 = __webpack_require__(147);
+	var view_pool_1 = __webpack_require__(146);
 	var view_manager_1 = __webpack_require__(35);
-	var view_manager_utils_1 = __webpack_require__(146);
+	var view_manager_utils_1 = __webpack_require__(145);
 	var view_listener_1 = __webpack_require__(87);
 	var proto_view_factory_1 = __webpack_require__(50);
 	var pipes_1 = __webpack_require__(90);
 	var view_resolver_1 = __webpack_require__(88);
 	var directive_resolver_1 = __webpack_require__(48);
-	var pipe_resolver_1 = __webpack_require__(144);
+	var pipe_resolver_1 = __webpack_require__(143);
 	var compiler_1 = __webpack_require__(25);
 	var dynamic_component_loader_2 = __webpack_require__(49);
 	var view_manager_2 = __webpack_require__(35);
 	var compiler_2 = __webpack_require__(25);
 	/**
-	 * Constructs the set of bindings meant for use at the platform level.
+	 * Constructs the set of providers meant for use at the platform level.
 	 *
-	 * These are bindings that should be singletons shared among all Angular applications
+	 * These are providers that should be singletons shared among all Angular applications
 	 * running on the page.
 	 */
 	function platformBindings() {
-	    return [di_1.bind(reflection_1.Reflector).toValue(reflection_1.reflector), testability_1.TestabilityRegistry];
+	    return [di_1.provide(reflection_1.Reflector, { useValue: reflection_1.reflector }), testability_1.TestabilityRegistry];
 	}
 	exports.platformBindings = platformBindings;
 	/**
-	 * Construct bindings specific to an individual root component.
+	 * Construct providers specific to an individual root component.
 	 */
-	function _componentBindings(appComponentType) {
+	function _componentProviders(appComponentType) {
 	    return [
-	        di_1.bind(application_tokens_1.APP_COMPONENT)
-	            .toValue(appComponentType),
-	        di_1.bind(application_tokens_1.APP_COMPONENT_REF_PROMISE)
-	            .toFactory(function (dynamicComponentLoader, injector) {
-	            // TODO(rado): investigate whether to support bindings on root component.
-	            return dynamicComponentLoader.loadAsRoot(appComponentType, null, injector)
-	                .then(function (componentRef) {
-	                if (lang_1.isPresent(componentRef.location.nativeElement)) {
-	                    injector.get(testability_1.TestabilityRegistry)
-	                        .registerApplication(componentRef.location.nativeElement, injector.get(testability_1.Testability));
-	                }
-	                return componentRef;
-	            });
-	        }, [dynamic_component_loader_1.DynamicComponentLoader, di_1.Injector]),
-	        di_1.bind(appComponentType)
-	            .toFactory(function (p) { return p.then(function (ref) { return ref.instance; }); }, [application_tokens_1.APP_COMPONENT_REF_PROMISE]),
+	        di_1.provide(application_tokens_1.APP_COMPONENT, { useValue: appComponentType }),
+	        di_1.provide(application_tokens_1.APP_COMPONENT_REF_PROMISE, {
+	            useFactory: function (dynamicComponentLoader, injector) {
+	                // TODO(rado): investigate whether to support bindings on root component.
+	                return dynamicComponentLoader.loadAsRoot(appComponentType, null, injector)
+	                    .then(function (componentRef) {
+	                    if (lang_1.isPresent(componentRef.location.nativeElement)) {
+	                        injector.get(testability_1.TestabilityRegistry)
+	                            .registerApplication(componentRef.location.nativeElement, injector.get(testability_1.Testability));
+	                    }
+	                    return componentRef;
+	                });
+	            },
+	            deps: [dynamic_component_loader_1.DynamicComponentLoader, di_1.Injector]
+	        }),
+	        di_1.provide(appComponentType, {
+	            useFactory: function (p) { return p.then(function (ref) { return ref.instance; }); },
+	            deps: [application_tokens_1.APP_COMPONENT_REF_PROMISE]
+	        }),
 	    ];
 	}
 	/**
-	 * Construct a default set of bindings which should be included in any Angular
+	 * Construct a default set of providers which should be included in any Angular
 	 * application, regardless of whether it runs on the UI thread or in a web worker.
 	 */
 	function applicationCommonBindings() {
 	    return [
-	        di_1.bind(compiler_1.Compiler)
-	            .toClass(compiler_2.Compiler_),
-	        application_tokens_1.APP_ID_RANDOM_BINDING,
+	        di_1.provide(compiler_1.Compiler, { useClass: compiler_2.Compiler_ }),
+	        application_tokens_1.APP_ID_RANDOM_PROVIDER,
 	        view_pool_1.AppViewPool,
-	        di_1.bind(view_pool_1.APP_VIEW_POOL_CAPACITY).toValue(10000),
-	        di_1.bind(view_manager_1.AppViewManager).toClass(view_manager_2.AppViewManager_),
+	        di_1.provide(view_pool_1.APP_VIEW_POOL_CAPACITY, { useValue: 10000 }),
+	        di_1.provide(view_manager_1.AppViewManager, { useClass: view_manager_2.AppViewManager_ }),
 	        view_manager_utils_1.AppViewManagerUtils,
 	        view_listener_1.AppViewListener,
 	        proto_view_factory_1.ProtoViewFactory,
 	        view_resolver_1.ViewResolver,
 	        pipes_1.DEFAULT_PIPES,
-	        di_1.bind(change_detection_1.IterableDiffers).toValue(change_detection_1.defaultIterableDiffers),
-	        di_1.bind(change_detection_1.KeyValueDiffers).toValue(change_detection_1.defaultKeyValueDiffers),
+	        di_1.provide(change_detection_1.IterableDiffers, { useValue: change_detection_1.defaultIterableDiffers }),
+	        di_1.provide(change_detection_1.KeyValueDiffers, { useValue: change_detection_1.defaultKeyValueDiffers }),
 	        directive_resolver_1.DirectiveResolver,
 	        pipe_resolver_1.PipeResolver,
-	        di_1.bind(dynamic_component_loader_1.DynamicComponentLoader).toClass(dynamic_component_loader_2.DynamicComponentLoader_),
-	        di_1.bind(life_cycle_1.LifeCycle).toFactory(function (exceptionHandler) { return new life_cycle_1.LifeCycle_(null, lang_1.assertionsEnabled()); }, [exceptions_1.ExceptionHandler]),
+	        di_1.provide(dynamic_component_loader_1.DynamicComponentLoader, { useClass: dynamic_component_loader_2.DynamicComponentLoader_ }),
+	        di_1.provide(life_cycle_1.LifeCycle, {
+	            useFactory: function (exceptionHandler) { return new life_cycle_1.LifeCycle_(null, lang_1.assertionsEnabled()); },
+	            deps: [exceptions_1.ExceptionHandler]
+	        })
 	    ];
 	}
 	exports.applicationCommonBindings = applicationCommonBindings;
@@ -12611,9 +13861,6 @@
 	}
 	exports.createNgZone = createNgZone;
 	var _platform;
-	/**
-	 * @internal
-	 */
 	function platformCommon(bindings, initializer) {
 	    if (lang_1.isPresent(_platform)) {
 	        if (lang_1.isBlank(bindings)) {
@@ -12645,7 +13892,7 @@
 	    Object.defineProperty(PlatformRef.prototype, "injector", {
 	        /**
 	         * Retrieve the platform {@link Injector}, which is the parent injector for
-	         * every Angular application on the page and provides singleton bindings.
+	         * every Angular application on the page and provides singleton providers.
 	         */
 	        get: function () { return exceptions_1.unimplemented(); },
 	        enumerable: true,
@@ -12661,6 +13908,7 @@
 	        _super.call(this);
 	        this._injector = _injector;
 	        this._dispose = _dispose;
+	        /** @internal */
 	        this._applications = [];
 	    }
 	    Object.defineProperty(PlatformRef_.prototype, "injector", {
@@ -12683,15 +13931,16 @@
 	        });
 	        return completer.promise;
 	    };
-	    PlatformRef_.prototype._initApp = function (zone, bindings) {
+	    PlatformRef_.prototype._initApp = function (zone, providers) {
 	        var _this = this;
 	        var injector;
+	        var app;
 	        zone.run(function () {
-	            bindings.push(di_1.bind(ng_zone_1.NgZone).toValue(zone));
-	            bindings.push(di_1.bind(ApplicationRef).toValue(_this));
+	            providers.push(di_1.provide(ng_zone_1.NgZone, { useValue: zone }));
+	            providers.push(di_1.provide(ApplicationRef, { useFactory: function () { return app; }, deps: [] }));
 	            var exceptionHandler;
 	            try {
-	                injector = _this.injector.resolveAndCreateChild(bindings);
+	                injector = _this.injector.resolveAndCreateChild(providers);
 	                exceptionHandler = injector.get(exceptions_1.ExceptionHandler);
 	                zone.overrideOnErrorHandler(function (e, s) { return exceptionHandler.call(e, s); });
 	            }
@@ -12704,7 +13953,7 @@
 	                }
 	            }
 	        });
-	        var app = new ApplicationRef_(this, zone, injector);
+	        app = new ApplicationRef_(this, zone, injector);
 	        this._applications.push(app);
 	        return app;
 	    };
@@ -12712,6 +13961,7 @@
 	        this._applications.forEach(function (app) { return app.dispose(); });
 	        this._dispose();
 	    };
+	    /** @internal */
 	    PlatformRef_.prototype._applicationDisposed = function (app) { collection_1.ListWrapper.remove(this._applications, app); };
 	    return PlatformRef_;
 	})(PlatformRef);
@@ -12742,6 +13992,15 @@
 	        configurable: true
 	    });
 	    ;
+	    Object.defineProperty(ApplicationRef.prototype, "componentTypes", {
+	        /**
+	         * Get a list of component types registered to this application.
+	         */
+	        get: function () { return exceptions_1.unimplemented(); },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    ;
 	    return ApplicationRef;
 	})();
 	exports.ApplicationRef = ApplicationRef;
@@ -12754,21 +14013,23 @@
 	        this._injector = _injector;
 	        this._bootstrapListeners = [];
 	        this._rootComponents = [];
+	        this._rootComponentTypes = [];
 	    }
 	    ApplicationRef_.prototype.registerBootstrapListener = function (listener) {
 	        this._bootstrapListeners.push(listener);
 	    };
-	    ApplicationRef_.prototype.bootstrap = function (componentType, bindings) {
+	    ApplicationRef_.prototype.bootstrap = function (componentType, providers) {
 	        var _this = this;
 	        var completer = async_1.PromiseWrapper.completer();
 	        this._zone.run(function () {
-	            var componentBindings = _componentBindings(componentType);
-	            if (lang_1.isPresent(bindings)) {
-	                componentBindings.push(bindings);
+	            var componentProviders = _componentProviders(componentType);
+	            if (lang_1.isPresent(providers)) {
+	                componentProviders.push(providers);
 	            }
 	            var exceptionHandler = _this._injector.get(exceptions_1.ExceptionHandler);
+	            _this._rootComponentTypes.push(componentType);
 	            try {
-	                var injector = _this._injector.resolveAndCreateChild(componentBindings);
+	                var injector = _this._injector.resolveAndCreateChild(componentProviders);
 	                var compRefToken = injector.get(application_tokens_1.APP_COMPONENT_REF_PROMISE);
 	                var tick = function (componentRef) {
 	                    var appChangeDetector = view_ref_1.internalView(componentRef.hostView).changeDetector;
@@ -12805,35 +14066,40 @@
 	        this._rootComponents.forEach(function (ref) { return ref.dispose(); });
 	        this._platform._applicationDisposed(this);
 	    };
+	    Object.defineProperty(ApplicationRef_.prototype, "componentTypes", {
+	        get: function () { return this._rootComponentTypes; },
+	        enumerable: true,
+	        configurable: true
+	    });
 	    return ApplicationRef_;
 	})(ApplicationRef);
 	exports.ApplicationRef_ = ApplicationRef_;
 	//# sourceMappingURL=application_ref.js.map
 
 /***/ },
-/* 108 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';// Note: This file only exists so that Dart users can import
 	// bootstrap from angular2/bootstrap. JS users should import
 	// from angular2/core.
-	var application_1 = __webpack_require__(105);
+	var application_1 = __webpack_require__(104);
 	exports.bootstrap = application_1.bootstrap;
 	//# sourceMappingURL=bootstrap.js.map
 
 /***/ },
-/* 109 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
 	var exceptions_1 = __webpack_require__(5);
 	var collection_1 = __webpack_require__(4);
 	var change_detection_util_1 = __webpack_require__(31);
-	var change_detector_ref_1 = __webpack_require__(112);
-	var exceptions_2 = __webpack_require__(117);
+	var change_detector_ref_1 = __webpack_require__(111);
+	var exceptions_2 = __webpack_require__(116);
 	var constants_1 = __webpack_require__(17);
 	var profile_1 = __webpack_require__(27);
-	var observable_facade_1 = __webpack_require__(277);
+	var observable_facade_1 = __webpack_require__(276);
 	var _scope_check = profile_1.wtfCreateScope("ChangeDetector#check(ascii id, bool throwOnChange)");
 	var _Context = (function () {
 	    function _Context(element, componentElement, context, locals, injector, expression) {
@@ -12965,12 +14231,14 @@
 	        this.afterViewLifecycleCallbacksInternal();
 	    };
 	    AbstractChangeDetector.prototype.afterViewLifecycleCallbacksInternal = function () { };
+	    /** @internal */
 	    AbstractChangeDetector.prototype._detectChangesInLightDomChildren = function (throwOnChange) {
 	        var c = this.lightDomChildren;
 	        for (var i = 0; i < c.length; ++i) {
 	            c[i].runDetectChanges(throwOnChange);
 	        }
 	    };
+	    /** @internal */
 	    AbstractChangeDetector.prototype._detectChangesInShadowDomChildren = function (throwOnChange) {
 	        var c = this.shadowDomChildren;
 	        for (var i = 0; i < c.length; ++i) {
@@ -13092,7 +14360,7 @@
 	//# sourceMappingURL=abstract_change_detector.js.map
 
 /***/ },
-/* 110 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
@@ -13205,17 +14473,17 @@
 	//# sourceMappingURL=binding_record.js.map
 
 /***/ },
-/* 111 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
 	var exceptions_1 = __webpack_require__(5);
-	var abstract_change_detector_1 = __webpack_require__(109);
+	var abstract_change_detector_1 = __webpack_require__(108);
 	var change_detection_util_1 = __webpack_require__(31);
-	var codegen_name_util_1 = __webpack_require__(272);
-	var codegen_logic_util_1 = __webpack_require__(271);
-	var codegen_facade_1 = __webpack_require__(113);
-	var proto_change_detector_1 = __webpack_require__(119);
+	var codegen_name_util_1 = __webpack_require__(271);
+	var codegen_logic_util_1 = __webpack_require__(270);
+	var codegen_facade_1 = __webpack_require__(112);
+	var proto_change_detector_1 = __webpack_require__(118);
 	/**
 	 * The code generator takes a list of proto records and creates a function/class
 	 * that "emulates" what the developer would write by hand to implement the same
@@ -13253,14 +14521,17 @@
 	        var _this = this;
 	        return "\n      var " + this.typeName + " = function " + this.typeName + "(dispatcher) {\n        " + this.abstractChangeDetectorVarName + ".call(\n            this, " + JSON.stringify(this.id) + ", dispatcher, " + this.records.length + ",\n            " + this.typeName + ".gen_propertyBindingTargets, " + this.typeName + ".gen_directiveIndices,\n            " + codegen_facade_1.codify(this.changeDetectionStrategy) + ");\n        this.dehydrateDirectives(false);\n      }\n\n      " + this.typeName + ".prototype = Object.create(" + this.abstractChangeDetectorVarName + ".prototype);\n\n      " + this.typeName + ".prototype.detectChangesInRecordsInternal = function(throwOnChange) {\n        " + this._names.genInitLocals() + "\n        var " + IS_CHANGED_LOCAL + " = false;\n        var " + CHANGES_LOCAL + " = null;\n\n        " + this.records.map(function (r) { return _this._genRecord(r); }).join("\n") + "\n      }\n\n      " + this._maybeGenHandleEventInternal() + "\n\n      " + this._genCheckNoChanges() + "\n\n      " + this._maybeGenAfterContentLifecycleCallbacks() + "\n\n      " + this._maybeGenAfterViewLifecycleCallbacks() + "\n\n      " + this._maybeGenHydrateDirectives() + "\n\n      " + this._maybeGenDehydrateDirectives() + "\n\n      " + this._genPropertyBindingTargets() + "\n\n      " + this._genDirectiveIndices() + "\n    ";
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genPropertyBindingTargets = function () {
 	        var targets = this._logic.genPropertyBindingTargets(this.propertyBindingTargets, this.genConfig.genDebugInfo);
 	        return this.typeName + ".gen_propertyBindingTargets = " + targets + ";";
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genDirectiveIndices = function () {
 	        var indices = this._logic.genDirectiveIndices(this.directiveRecords);
 	        return this.typeName + ".gen_directiveIndices = " + indices + ";";
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._maybeGenHandleEventInternal = function () {
 	        var _this = this;
 	        if (this.eventBindings.length > 0) {
@@ -13271,11 +14542,13 @@
 	            return '';
 	        }
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genEventBinding = function (eb) {
 	        var _this = this;
 	        var recs = eb.records.map(function (r) { return _this._genEventBindingEval(eb, r); }).join("\n");
 	        return "\n    if (eventName === \"" + eb.eventName + "\" && elIndex === " + eb.elIndex + ") {\n      " + recs + "\n    }";
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genEventBindingEval = function (eb, r) {
 	        if (r.lastInBinding) {
 	            var evalRecord = this._logic.genEventBindingEvalValue(eb, r);
@@ -13287,6 +14560,7 @@
 	            return this._logic.genEventBindingEvalValue(eb, r);
 	        }
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genMarkPathToRootAsCheckOnce = function (r) {
 	        var br = r.bindingRecord;
 	        if (br.isDefaultChangeDetection()) {
@@ -13296,10 +14570,12 @@
 	            return this._names.getDetectorName(br.directiveRecord.directiveIndex) + ".markPathToRootAsCheckOnce();";
 	        }
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genUpdatePreventDefault = function (eb, r) {
 	        var local = this._names.getEventLocalName(eb, r.selfIndex);
 	        return "if (" + local + " === false) { " + this._names.getPreventDefaultAccesor() + " = true};";
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._maybeGenDehydrateDirectives = function () {
 	        var destroyPipesCode = this._names.genPipeOnDestroy();
 	        if (destroyPipesCode) {
@@ -13310,6 +14586,7 @@
 	            return '';
 	        return this.typeName + ".prototype.dehydrateDirectives = function(destroyPipes) {\n        " + destroyPipesCode + "\n        " + dehydrateFieldsCode + "\n    }";
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._maybeGenHydrateDirectives = function () {
 	        var hydrateDirectivesCode = this._logic.genHydrateDirectives(this.directiveRecords);
 	        var hydrateDetectorsCode = this._logic.genHydrateDetectors(this.directiveRecords);
@@ -13317,6 +14594,7 @@
 	            return '';
 	        return this.typeName + ".prototype.hydrateDirectives = function(directives) {\n      " + hydrateDirectivesCode + "\n      " + hydrateDetectorsCode + "\n    }";
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._maybeGenAfterContentLifecycleCallbacks = function () {
 	        var notifications = this._logic.genContentLifecycleCallbacks(this.directiveRecords);
 	        if (notifications.length > 0) {
@@ -13327,6 +14605,7 @@
 	            return '';
 	        }
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._maybeGenAfterViewLifecycleCallbacks = function () {
 	        var notifications = this._logic.genViewLifecycleCallbacks(this.directiveRecords);
 	        if (notifications.length > 0) {
@@ -13337,6 +14616,7 @@
 	            return '';
 	        }
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genRecord = function (r) {
 	        var rec;
 	        if (r.isLifeCycleRecord()) {
@@ -13350,6 +14630,7 @@
 	        }
 	        return "\n      " + this._maybeFirstInBinding(r) + "\n      " + rec + "\n      " + this._maybeGenLastInDirective(r) + "\n    ";
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genDirectiveLifecycle = function (r) {
 	        if (r.name === "DoCheck") {
 	            return this._genOnCheck(r);
@@ -13364,6 +14645,7 @@
 	            throw new exceptions_1.BaseException("Unknown lifecycle event '" + r.name + "'");
 	        }
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genPipeCheck = function (r) {
 	        var _this = this;
 	        var context = this._names.getLocalName(r.contextIndex);
@@ -13386,6 +14668,7 @@
 	            return init + " if (" + condition + ") { " + genCode + " }";
 	        }
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genReferenceCheck = function (r) {
 	        var _this = this;
 	        var oldValue = this._names.getFieldName(r.selfIndex);
@@ -13406,9 +14689,11 @@
 	            return genCode;
 	        }
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genChangeMarker = function (r) {
 	        return r.argumentToPureFunction ? this._names.getChangeName(r.selfIndex) + " = true" : "";
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genUpdateDirectiveOrElement = function (r) {
 	        if (!r.lastInBinding)
 	            return "";
@@ -13424,6 +14709,7 @@
 	            return "\n        " + this._genThrowOnChangeCheck(oldValue, newValue) + "\n        this.notifyDispatcher(" + newValue + ");\n        " + notifyDebug + "\n      ";
 	        }
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genThrowOnChangeCheck = function (oldValue, newValue) {
 	        if (this.genConfig.genCheckNoChanges) {
 	            return "\n        if(throwOnChange) {\n          this.throwOnChangeError(" + oldValue + ", " + newValue + ");\n        }\n        ";
@@ -13432,6 +14718,7 @@
 	            return '';
 	        }
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genCheckNoChanges = function () {
 	        if (this.genConfig.genCheckNoChanges) {
 	            return this.typeName + ".prototype.checkNoChanges = function() { this.runDetectChanges(true); }";
@@ -13440,6 +14727,7 @@
 	            return '';
 	        }
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genAddToChanges = function (r) {
 	        var newValue = this._names.getLocalName(r.selfIndex);
 	        var oldValue = this._names.getFieldName(r.selfIndex);
@@ -13447,6 +14735,7 @@
 	            return "";
 	        return CHANGES_LOCAL + " = this.addChange(" + CHANGES_LOCAL + ", " + oldValue + ", " + newValue + ");";
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._maybeFirstInBinding = function (r) {
 	        var prev = change_detection_util_1.ChangeDetectionUtil.protoByIndex(this.records, r.selfIndex - 1);
 	        var firstInBindng = lang_1.isBlank(prev) || prev.bindingRecord !== r.bindingRecord;
@@ -13454,23 +14743,28 @@
 	            this._names.getPropertyBindingIndex() + " = " + r.propertyBindingIndex + ";" :
 	            '';
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._maybeGenLastInDirective = function (r) {
 	        if (!r.lastInDirective)
 	            return "";
 	        return "\n      " + CHANGES_LOCAL + " = null;\n      " + this._genNotifyOnPushDetectors(r) + "\n      " + IS_CHANGED_LOCAL + " = false;\n    ";
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genOnCheck = function (r) {
 	        var br = r.bindingRecord;
 	        return "if (!throwOnChange) " + this._names.getDirectiveName(br.directiveRecord.directiveIndex) + ".doCheck();";
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genOnInit = function (r) {
 	        var br = r.bindingRecord;
 	        return "if (!throwOnChange && !" + this._names.getAlreadyCheckedName() + ") " + this._names.getDirectiveName(br.directiveRecord.directiveIndex) + ".onInit();";
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genOnChange = function (r) {
 	        var br = r.bindingRecord;
 	        return "if (!throwOnChange && " + CHANGES_LOCAL + ") " + this._names.getDirectiveName(br.directiveRecord.directiveIndex) + ".onChanges(" + CHANGES_LOCAL + ");";
 	    };
+	    /** @internal */
 	    ChangeDetectorJITGenerator.prototype._genNotifyOnPushDetectors = function (r) {
 	        var br = r.bindingRecord;
 	        if (!r.lastInDirective || br.isDefaultChangeDetection())
@@ -13484,7 +14778,7 @@
 	//# sourceMappingURL=change_detection_jit_generator.js.map
 
 /***/ },
-/* 112 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -13518,7 +14812,7 @@
 	//# sourceMappingURL=change_detector_ref.js.map
 
 /***/ },
-/* 113 */
+/* 112 */
 /***/ function(module, exports) {
 
 	'use strict';/**
@@ -13544,7 +14838,7 @@
 	//# sourceMappingURL=codegen_facade.js.map
 
 /***/ },
-/* 114 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -13580,7 +14874,7 @@
 	        }
 	    };
 	    /**
-	     * Takes an array of {@link IterableDifferFactory} and returns a binding used to extend the
+	     * Takes an array of {@link IterableDifferFactory} and returns a provider used to extend the
 	     * inherited {@link IterableDiffers} instance with the provided factories and return a new
 	     * {@link IterableDiffers} instance.
 	     *
@@ -13592,15 +14886,15 @@
 	     *
 	     * ```
 	     * @Component({
-	     *   viewBindings: [
+	     *   viewProviders: [
 	     *     IterableDiffers.extend([new ImmutableListDiffer()])
 	     *   ]
 	     * })
 	     * ```
 	     */
 	    IterableDiffers.extend = function (factories) {
-	        return new di_1.Binding(IterableDiffers, {
-	            toFactory: function (parent) {
+	        return new di_1.Provider(IterableDiffers, {
+	            useFactory: function (parent) {
 	                if (lang_1.isBlank(parent)) {
 	                    // Typically would occur when calling IterableDiffers.extend inside of dependencies passed
 	                    // to
@@ -13633,7 +14927,7 @@
 	//# sourceMappingURL=iterable_differs.js.map
 
 /***/ },
-/* 115 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -13669,7 +14963,7 @@
 	        }
 	    };
 	    /**
-	     * Takes an array of {@link KeyValueDifferFactory} and returns a binding used to extend the
+	     * Takes an array of {@link KeyValueDifferFactory} and returns a provider used to extend the
 	     * inherited {@link KeyValueDiffers} instance with the provided factories and return a new
 	     * {@link KeyValueDiffers} instance.
 	     *
@@ -13681,15 +14975,15 @@
 	     *
 	     * ```
 	     * @Component({
-	     *   viewBindings: [
+	     *   viewProviders: [
 	     *     KeyValueDiffers.extend([new ImmutableMapDiffer()])
 	     *   ]
 	     * })
 	     * ```
 	     */
 	    KeyValueDiffers.extend = function (factories) {
-	        return new di_1.Binding(KeyValueDiffers, {
-	            toFactory: function (parent) {
+	        return new di_1.Provider(KeyValueDiffers, {
+	            useFactory: function (parent) {
 	                if (lang_1.isBlank(parent)) {
 	                    // Typically would occur when calling KeyValueDiffers.extend inside of dependencies passed
 	                    // to
@@ -13722,7 +15016,7 @@
 	//# sourceMappingURL=keyvalue_differs.js.map
 
 /***/ },
-/* 116 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -13733,7 +15027,7 @@
 	var lang_1 = __webpack_require__(1);
 	var exceptions_1 = __webpack_require__(5);
 	var collection_1 = __webpack_require__(4);
-	var abstract_change_detector_1 = __webpack_require__(109);
+	var abstract_change_detector_1 = __webpack_require__(108);
 	var change_detection_util_1 = __webpack_require__(31);
 	var constants_1 = __webpack_require__(17);
 	var proto_record_1 = __webpack_require__(39);
@@ -13765,6 +15059,7 @@
 	        });
 	        return preventDefault;
 	    };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._processEventBinding = function (eb, locals) {
 	        var values = collection_1.ListWrapper.createFixedSize(eb.records.length);
 	        values[0] = this.values[0];
@@ -13781,12 +15076,14 @@
 	        }
 	        throw new exceptions_1.BaseException("Cannot be reached");
 	    };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._markPathAsCheckOnce = function (proto) {
 	        if (!proto.bindingRecord.isDefaultChangeDetection()) {
 	            var dir = proto.bindingRecord.directiveRecord;
 	            this._getDetectorFor(dir.directiveIndex).markPathToRootAsCheckOnce();
 	        }
 	    };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._matchingEventBindings = function (eventName, elIndex) {
 	        return collection_1.ListWrapper.filter(this._eventBindings, function (eb) { return eb.eventName == eventName && eb.elIndex === elIndex; });
 	    };
@@ -13811,6 +15108,7 @@
 	        collection_1.ListWrapper.fill(this.localPipes, null);
 	        collection_1.ListWrapper.fill(this.prevContexts, change_detection_util_1.ChangeDetectionUtil.uninitialized);
 	    };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._destroyPipes = function () {
 	        for (var i = 0; i < this.localPipes.length; ++i) {
 	            if (lang_1.isPresent(this.localPipes[i])) {
@@ -13858,6 +15156,7 @@
 	            }
 	        }
 	    };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._firstInBinding = function (r) {
 	        var prev = change_detection_util_1.ChangeDetectionUtil.protoByIndex(this._records, r.selfIndex - 1);
 	        return lang_1.isBlank(prev) || prev.bindingRecord !== r.bindingRecord;
@@ -13886,6 +15185,7 @@
 	            }
 	        }
 	    };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._updateDirectiveOrElement = function (change, bindingRecord) {
 	        if (lang_1.isBlank(bindingRecord.directiveRecord)) {
 	            _super.prototype.notifyDispatcher.call(this, change.currentValue);
@@ -13898,6 +15198,7 @@
 	            _super.prototype.logBindingUpdate.call(this, change.currentValue);
 	        }
 	    };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._addChange = function (bindingRecord, change, changes) {
 	        if (bindingRecord.callOnChanges()) {
 	            return _super.prototype.addChange.call(this, changes, change.previousValue, change.currentValue);
@@ -13906,8 +15207,11 @@
 	            return changes;
 	        }
 	    };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._getDirectiveFor = function (directiveIndex) { return this.directives.getDirectiveFor(directiveIndex); };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._getDetectorFor = function (directiveIndex) { return this.directives.getDetectorFor(directiveIndex); };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._check = function (proto, throwOnChange, values, locals) {
 	        if (proto.isPipeRecord()) {
 	            return this._pipeCheck(proto, throwOnChange, values);
@@ -13916,6 +15220,7 @@
 	            return this._referenceCheck(proto, throwOnChange, values, locals);
 	        }
 	    };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._referenceCheck = function (proto, throwOnChange, values, locals) {
 	        if (this._pureFuncAndArgsDidNotChange(proto)) {
 	            this._setChanged(proto, false);
@@ -13953,6 +15258,7 @@
 	            return null;
 	        }
 	    };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._calculateCurrValue = function (proto, values, locals) {
 	        switch (proto.mode) {
 	            case proto_record_1.RecordType.Self:
@@ -14005,6 +15311,7 @@
 	                throw new exceptions_1.BaseException("Unknown operation " + proto.mode);
 	        }
 	    };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._pipeCheck = function (proto, throwOnChange, values) {
 	        var context = this._readContext(proto, values);
 	        var selectedPipe = this._pipeFor(proto, context);
@@ -14041,6 +15348,7 @@
 	            }
 	        }
 	    };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._pipeFor = function (proto, context) {
 	        var storedPipe = this._readPipe(proto);
 	        if (lang_1.isPresent(storedPipe))
@@ -14049,6 +15357,7 @@
 	        this._writePipe(proto, pipe);
 	        return pipe;
 	    };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._readContext = function (proto, values) {
 	        if (proto.contextIndex == -1) {
 	            return this._getDirectiveFor(proto.directiveIndex);
@@ -14058,17 +15367,24 @@
 	        }
 	        return values[proto.contextIndex];
 	    };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._readSelf = function (proto, values) { return values[proto.selfIndex]; };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._writeSelf = function (proto, value, values) { values[proto.selfIndex] = value; };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._readPipe = function (proto) { return this.localPipes[proto.selfIndex]; };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._writePipe = function (proto, value) { this.localPipes[proto.selfIndex] = value; };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._setChanged = function (proto, value) {
 	        if (proto.argumentToPureFunction)
 	            this.changes[proto.selfIndex] = value;
 	    };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._pureFuncAndArgsDidNotChange = function (proto) {
 	        return proto.isPureFunction() && !this._argsChanged(proto);
 	    };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._argsChanged = function (proto) {
 	        var args = proto.args;
 	        for (var i = 0; i < args.length; ++i) {
@@ -14078,9 +15394,11 @@
 	        }
 	        return false;
 	    };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._argsOrContextChanged = function (proto) {
 	        return this._argsChanged(proto) || this.changes[proto.contextIndex];
 	    };
+	    /** @internal */
 	    DynamicChangeDetector.prototype._readArgs = function (proto, values) {
 	        var res = collection_1.ListWrapper.createFixedSize(proto.args.length);
 	        var args = proto.args;
@@ -14104,7 +15422,7 @@
 	//# sourceMappingURL=dynamic_change_detector.js.map
 
 /***/ },
-/* 117 */
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -14123,8 +15441,8 @@
 	 * ### Example
 	 *
 	 * ```typescript
-	 * @Component({selector: 'parent'})
-	 * @View({
+	 * @Component({
+	 *   selector: 'parent',
 	 *   template: `
 	 *     <child [prop]="parentProp"></child>
 	 *   `,
@@ -14170,9 +15488,7 @@
 	 * }
 	 *
 	 * @Component({
-	 *   selector: 'app'
-	 * })
-	 * @View({
+	 *   selector: 'app',
 	 *   template: `
 	 *     <child [prop]="field.first"></child>
 	 *   `,
@@ -14215,7 +15531,7 @@
 	//# sourceMappingURL=exceptions.js.map
 
 /***/ },
-/* 118 */
+/* 117 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -14665,7 +15981,7 @@
 	//# sourceMappingURL=lexer.js.map
 
 /***/ },
-/* 119 */
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
@@ -14673,10 +15989,10 @@
 	var collection_1 = __webpack_require__(4);
 	var ast_1 = __webpack_require__(61);
 	var change_detection_util_1 = __webpack_require__(31);
-	var dynamic_change_detector_1 = __webpack_require__(116);
+	var dynamic_change_detector_1 = __webpack_require__(115);
 	var directive_record_1 = __webpack_require__(59);
-	var event_binding_1 = __webpack_require__(275);
-	var coalesce_1 = __webpack_require__(270);
+	var event_binding_1 = __webpack_require__(274);
+	var coalesce_1 = __webpack_require__(269);
 	var proto_record_1 = __webpack_require__(39);
 	var DynamicProtoChangeDetector = (function () {
 	    function DynamicProtoChangeDetector(_definition) {
@@ -14726,6 +16042,7 @@
 	            this._setArgumentToPureFunction(numberOfRecordsBefore);
 	        }
 	    };
+	    /** @internal */
 	    ProtoRecordBuilder.prototype._setArgumentToPureFunction = function (startIndex) {
 	        var _this = this;
 	        for (var i = startIndex; i < this.records.length; ++i) {
@@ -14741,6 +16058,7 @@
 	            }
 	        }
 	    };
+	    /** @internal */
 	    ProtoRecordBuilder.prototype._appendRecords = function (b, variableNames, bindingIndex) {
 	        if (b.isDirectiveLifecycle()) {
 	            this.records.push(new proto_record_1.ProtoRecord(proto_record_1.RecordType.DirectiveLifecycle, b.lifecycleEvent, null, [], [], -1, null, this.records.length + 1, b, false, false, false, false, null));
@@ -15038,7 +16356,7 @@
 	//# sourceMappingURL=proto_change_detector.js.map
 
 /***/ },
-/* 120 */
+/* 119 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -15053,10 +16371,10 @@
 	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 	};
 	var source_module_1 = __webpack_require__(32);
-	var change_detection_jit_generator_1 = __webpack_require__(111);
-	var change_definition_factory_1 = __webpack_require__(283);
+	var change_detection_jit_generator_1 = __webpack_require__(110);
+	var change_definition_factory_1 = __webpack_require__(282);
 	var change_detection_1 = __webpack_require__(10);
-	var change_detector_codegen_1 = __webpack_require__(315);
+	var change_detector_codegen_1 = __webpack_require__(314);
 	var util_1 = __webpack_require__(14);
 	var di_1 = __webpack_require__(3);
 	var ABSTRACT_CHANGE_DETECTOR = "AbstractChangeDetector";
@@ -15124,7 +16442,7 @@
 	//# sourceMappingURL=change_detector_compiler.js.map
 
 /***/ },
-/* 121 */
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -15180,7 +16498,7 @@
 	//# sourceMappingURL=runtime_compiler.js.map
 
 /***/ },
-/* 122 */
+/* 121 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -15202,7 +16520,7 @@
 	var dirAnn = __webpack_require__(36);
 	var directive_resolver_1 = __webpack_require__(48);
 	var view_resolver_1 = __webpack_require__(88);
-	var directive_lifecycle_reflector_1 = __webpack_require__(142);
+	var directive_lifecycle_reflector_1 = __webpack_require__(141);
 	var interfaces_1 = __webpack_require__(34);
 	var reflection_1 = __webpack_require__(11);
 	var di_2 = __webpack_require__(3);
@@ -15307,7 +16625,7 @@
 	//# sourceMappingURL=runtime_metadata.js.map
 
 /***/ },
-/* 123 */
+/* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var collection_1 = __webpack_require__(4);
@@ -15596,6 +16914,7 @@
 	        }
 	        return result;
 	    };
+	    /** @internal */
 	    SelectorMatcher.prototype._matchTerminal = function (map, name, cssSelector, matchedCallback) {
 	        if (lang_1.isBlank(map) || lang_1.isBlank(name)) {
 	            return false;
@@ -15616,7 +16935,8 @@
 	        }
 	        return result;
 	    };
-	    SelectorMatcher.prototype._matchPartial = function (map, name, cssSelector, matchedCallback /*: (CssSelector, any) => void*/) {
+	    /** @internal */
+	    SelectorMatcher.prototype._matchPartial = function (map, name, cssSelector, matchedCallback /*: (c: CssSelector, a: any) => void*/) {
 	        if (lang_1.isBlank(map) || lang_1.isBlank(name)) {
 	            return false;
 	        }
@@ -15670,7 +16990,7 @@
 	//# sourceMappingURL=selector.js.map
 
 /***/ },
-/* 124 */
+/* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';// Some of the code comes from WebComponents.JS
@@ -15731,7 +17051,7 @@
 	//# sourceMappingURL=style_url_resolver.js.map
 
 /***/ },
-/* 125 */
+/* 124 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -15751,12 +17071,12 @@
 	var async_1 = __webpack_require__(9);
 	var xhr_1 = __webpack_require__(42);
 	var url_resolver_1 = __webpack_require__(41);
-	var style_url_resolver_1 = __webpack_require__(124);
+	var style_url_resolver_1 = __webpack_require__(123);
 	var di_1 = __webpack_require__(3);
 	var view_1 = __webpack_require__(19);
 	var html_ast_1 = __webpack_require__(64);
 	var html_parser_1 = __webpack_require__(65);
-	var template_preparser_1 = __webpack_require__(127);
+	var template_preparser_1 = __webpack_require__(126);
 	var TemplateNormalizer = (function () {
 	    function TemplateNormalizer(_xhr, _urlResolver, _domParser) {
 	        this._xhr = _xhr;
@@ -15855,7 +17175,7 @@
 	//# sourceMappingURL=template_normalizer.js.map
 
 /***/ },
-/* 126 */
+/* 125 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -15876,9 +17196,9 @@
 	var change_detection_1 = __webpack_require__(10);
 	var html_parser_1 = __webpack_require__(65);
 	var template_ast_1 = __webpack_require__(68);
-	var selector_1 = __webpack_require__(123);
+	var selector_1 = __webpack_require__(122);
 	var element_schema_registry_1 = __webpack_require__(66);
-	var template_preparser_1 = __webpack_require__(127);
+	var template_preparser_1 = __webpack_require__(126);
 	var html_ast_1 = __webpack_require__(64);
 	var util_1 = __webpack_require__(14);
 	// Group 1 = "bind-"
@@ -16142,7 +17462,7 @@
 	        targetProps.push(new BoundElementOrDirectiveProperty(name, ast, false, sourceInfo));
 	    };
 	    TemplateParseVisitor.prototype._parseAssignmentEvent = function (name, expression, sourceInfo, targetMatchableAttrs, targetEvents) {
-	        this._parseEvent(name, expression + "=$event", sourceInfo, targetMatchableAttrs, targetEvents);
+	        this._parseEvent(name + "-change", expression + "=$event", sourceInfo, targetMatchableAttrs, targetEvents);
 	    };
 	    TemplateParseVisitor.prototype._parseEvent = function (name, expression, sourceInfo, targetMatchableAttrs, targetEvents) {
 	        // long format: 'target: eventName'
@@ -16423,7 +17743,7 @@
 	//# sourceMappingURL=template_parser.js.map
 
 /***/ },
-/* 127 */
+/* 126 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
@@ -16500,7 +17820,7 @@
 	//# sourceMappingURL=template_preparser.js.map
 
 /***/ },
-/* 128 */
+/* 127 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -16659,6 +17979,7 @@
 	        return this._elementInjector.get(type);
 	    };
 	    DebugElement_.prototype.getLocal = function (name) { return this._parentView.locals.get(name); };
+	    /** @internal */
 	    DebugElement_.prototype._getChildElements = function (view, parentBoundElementIndex) {
 	        var _this = this;
 	        var els = [];
@@ -16744,11 +18065,11 @@
 	//# sourceMappingURL=debug_element.js.map
 
 /***/ },
-/* 129 */
+/* 128 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var collection_1 = __webpack_require__(4);
-	var binding_1 = __webpack_require__(43);
+	var provider_1 = __webpack_require__(43);
 	var exceptions_1 = __webpack_require__(71);
 	var lang_1 = __webpack_require__(1);
 	var key_1 = __webpack_require__(73);
@@ -16757,19 +18078,19 @@
 	var _MAX_CONSTRUCTION_COUNTER = 10;
 	exports.UNDEFINED = lang_1.CONST_EXPR(new Object());
 	/**
-	 * Visibility of a {@link Binding}.
+	 * Visibility of a {@link Provider}.
 	 */
 	(function (Visibility) {
 	    /**
-	     * A `Public` {@link Binding} is only visible to regular (as opposed to host) child injectors.
+	     * A `Public` {@link Provider} is only visible to regular (as opposed to host) child injectors.
 	     */
 	    Visibility[Visibility["Public"] = 0] = "Public";
 	    /**
-	     * A `Private` {@link Binding} is only visible to host (as opposed to regular) child injectors.
+	     * A `Private` {@link Provider} is only visible to host (as opposed to regular) child injectors.
 	     */
 	    Visibility[Visibility["Private"] = 1] = "Private";
 	    /**
-	     * A `PublicAndPrivate` {@link Binding} is visible to both host and regular child injectors.
+	     * A `PublicAndPrivate` {@link Provider} is visible to both host and regular child injectors.
 	     */
 	    Visibility[Visibility["PublicAndPrivate"] = 2] = "PublicAndPrivate";
 	})(exports.Visibility || (exports.Visibility = {}));
@@ -16780,16 +18101,16 @@
 	}
 	var ProtoInjectorInlineStrategy = (function () {
 	    function ProtoInjectorInlineStrategy(protoEI, bwv) {
-	        this.binding0 = null;
-	        this.binding1 = null;
-	        this.binding2 = null;
-	        this.binding3 = null;
-	        this.binding4 = null;
-	        this.binding5 = null;
-	        this.binding6 = null;
-	        this.binding7 = null;
-	        this.binding8 = null;
-	        this.binding9 = null;
+	        this.provider0 = null;
+	        this.provider1 = null;
+	        this.provider2 = null;
+	        this.provider3 = null;
+	        this.provider4 = null;
+	        this.provider5 = null;
+	        this.provider6 = null;
+	        this.provider7 = null;
+	        this.provider8 = null;
+	        this.provider9 = null;
 	        this.keyId0 = null;
 	        this.keyId1 = null;
 	        this.keyId2 = null;
@@ -16812,77 +18133,77 @@
 	        this.visibility9 = null;
 	        var length = bwv.length;
 	        if (length > 0) {
-	            this.binding0 = bwv[0].binding;
+	            this.provider0 = bwv[0].provider;
 	            this.keyId0 = bwv[0].getKeyId();
 	            this.visibility0 = bwv[0].visibility;
 	        }
 	        if (length > 1) {
-	            this.binding1 = bwv[1].binding;
+	            this.provider1 = bwv[1].provider;
 	            this.keyId1 = bwv[1].getKeyId();
 	            this.visibility1 = bwv[1].visibility;
 	        }
 	        if (length > 2) {
-	            this.binding2 = bwv[2].binding;
+	            this.provider2 = bwv[2].provider;
 	            this.keyId2 = bwv[2].getKeyId();
 	            this.visibility2 = bwv[2].visibility;
 	        }
 	        if (length > 3) {
-	            this.binding3 = bwv[3].binding;
+	            this.provider3 = bwv[3].provider;
 	            this.keyId3 = bwv[3].getKeyId();
 	            this.visibility3 = bwv[3].visibility;
 	        }
 	        if (length > 4) {
-	            this.binding4 = bwv[4].binding;
+	            this.provider4 = bwv[4].provider;
 	            this.keyId4 = bwv[4].getKeyId();
 	            this.visibility4 = bwv[4].visibility;
 	        }
 	        if (length > 5) {
-	            this.binding5 = bwv[5].binding;
+	            this.provider5 = bwv[5].provider;
 	            this.keyId5 = bwv[5].getKeyId();
 	            this.visibility5 = bwv[5].visibility;
 	        }
 	        if (length > 6) {
-	            this.binding6 = bwv[6].binding;
+	            this.provider6 = bwv[6].provider;
 	            this.keyId6 = bwv[6].getKeyId();
 	            this.visibility6 = bwv[6].visibility;
 	        }
 	        if (length > 7) {
-	            this.binding7 = bwv[7].binding;
+	            this.provider7 = bwv[7].provider;
 	            this.keyId7 = bwv[7].getKeyId();
 	            this.visibility7 = bwv[7].visibility;
 	        }
 	        if (length > 8) {
-	            this.binding8 = bwv[8].binding;
+	            this.provider8 = bwv[8].provider;
 	            this.keyId8 = bwv[8].getKeyId();
 	            this.visibility8 = bwv[8].visibility;
 	        }
 	        if (length > 9) {
-	            this.binding9 = bwv[9].binding;
+	            this.provider9 = bwv[9].provider;
 	            this.keyId9 = bwv[9].getKeyId();
 	            this.visibility9 = bwv[9].visibility;
 	        }
 	    }
-	    ProtoInjectorInlineStrategy.prototype.getBindingAtIndex = function (index) {
+	    ProtoInjectorInlineStrategy.prototype.getProviderAtIndex = function (index) {
 	        if (index == 0)
-	            return this.binding0;
+	            return this.provider0;
 	        if (index == 1)
-	            return this.binding1;
+	            return this.provider1;
 	        if (index == 2)
-	            return this.binding2;
+	            return this.provider2;
 	        if (index == 3)
-	            return this.binding3;
+	            return this.provider3;
 	        if (index == 4)
-	            return this.binding4;
+	            return this.provider4;
 	        if (index == 5)
-	            return this.binding5;
+	            return this.provider5;
 	        if (index == 6)
-	            return this.binding6;
+	            return this.provider6;
 	        if (index == 7)
-	            return this.binding7;
+	            return this.provider7;
 	        if (index == 8)
-	            return this.binding8;
+	            return this.provider8;
 	        if (index == 9)
-	            return this.binding9;
+	            return this.provider9;
 	        throw new exceptions_1.OutOfBoundsError(index);
 	    };
 	    ProtoInjectorInlineStrategy.prototype.createInjectorStrategy = function (injector) {
@@ -16894,20 +18215,20 @@
 	var ProtoInjectorDynamicStrategy = (function () {
 	    function ProtoInjectorDynamicStrategy(protoInj, bwv) {
 	        var len = bwv.length;
-	        this.bindings = collection_1.ListWrapper.createFixedSize(len);
+	        this.providers = collection_1.ListWrapper.createFixedSize(len);
 	        this.keyIds = collection_1.ListWrapper.createFixedSize(len);
 	        this.visibilities = collection_1.ListWrapper.createFixedSize(len);
 	        for (var i = 0; i < len; i++) {
-	            this.bindings[i] = bwv[i].binding;
+	            this.providers[i] = bwv[i].provider;
 	            this.keyIds[i] = bwv[i].getKeyId();
 	            this.visibilities[i] = bwv[i].visibility;
 	        }
 	    }
-	    ProtoInjectorDynamicStrategy.prototype.getBindingAtIndex = function (index) {
-	        if (index < 0 || index >= this.bindings.length) {
+	    ProtoInjectorDynamicStrategy.prototype.getProviderAtIndex = function (index) {
+	        if (index < 0 || index >= this.providers.length) {
 	            throw new exceptions_1.OutOfBoundsError(index);
 	        }
-	        return this.bindings[index];
+	        return this.providers[index];
 	    };
 	    ProtoInjectorDynamicStrategy.prototype.createInjectorStrategy = function (ei) {
 	        return new InjectorDynamicStrategy(this, ei);
@@ -16917,12 +18238,12 @@
 	exports.ProtoInjectorDynamicStrategy = ProtoInjectorDynamicStrategy;
 	var ProtoInjector = (function () {
 	    function ProtoInjector(bwv) {
-	        this.numberOfBindings = bwv.length;
+	        this.numberOfProviders = bwv.length;
 	        this._strategy = bwv.length > _MAX_CONSTRUCTION_COUNTER ?
 	            new ProtoInjectorDynamicStrategy(this, bwv) :
 	            new ProtoInjectorInlineStrategy(this, bwv);
 	    }
-	    ProtoInjector.prototype.getBindingAtIndex = function (index) { return this._strategy.getBindingAtIndex(index); };
+	    ProtoInjector.prototype.getProviderAtIndex = function (index) { return this._strategy.getProviderAtIndex(index); };
 	    return ProtoInjector;
 	})();
 	exports.ProtoInjector = ProtoInjector;
@@ -16942,8 +18263,8 @@
 	        this.obj9 = exports.UNDEFINED;
 	    }
 	    InjectorInlineStrategy.prototype.resetConstructionCounter = function () { this.injector._constructionCounter = 0; };
-	    InjectorInlineStrategy.prototype.instantiateBinding = function (binding, visibility) {
-	        return this.injector._new(binding, visibility);
+	    InjectorInlineStrategy.prototype.instantiateProvider = function (provider, visibility) {
+	        return this.injector._new(provider, visibility);
 	    };
 	    InjectorInlineStrategy.prototype.attach = function (parent, isHost) {
 	        var inj = this.injector;
@@ -16955,61 +18276,61 @@
 	        var inj = this.injector;
 	        if (p.keyId0 === keyId && canSee(p.visibility0, visibility)) {
 	            if (this.obj0 === exports.UNDEFINED) {
-	                this.obj0 = inj._new(p.binding0, p.visibility0);
+	                this.obj0 = inj._new(p.provider0, p.visibility0);
 	            }
 	            return this.obj0;
 	        }
 	        if (p.keyId1 === keyId && canSee(p.visibility1, visibility)) {
 	            if (this.obj1 === exports.UNDEFINED) {
-	                this.obj1 = inj._new(p.binding1, p.visibility1);
+	                this.obj1 = inj._new(p.provider1, p.visibility1);
 	            }
 	            return this.obj1;
 	        }
 	        if (p.keyId2 === keyId && canSee(p.visibility2, visibility)) {
 	            if (this.obj2 === exports.UNDEFINED) {
-	                this.obj2 = inj._new(p.binding2, p.visibility2);
+	                this.obj2 = inj._new(p.provider2, p.visibility2);
 	            }
 	            return this.obj2;
 	        }
 	        if (p.keyId3 === keyId && canSee(p.visibility3, visibility)) {
 	            if (this.obj3 === exports.UNDEFINED) {
-	                this.obj3 = inj._new(p.binding3, p.visibility3);
+	                this.obj3 = inj._new(p.provider3, p.visibility3);
 	            }
 	            return this.obj3;
 	        }
 	        if (p.keyId4 === keyId && canSee(p.visibility4, visibility)) {
 	            if (this.obj4 === exports.UNDEFINED) {
-	                this.obj4 = inj._new(p.binding4, p.visibility4);
+	                this.obj4 = inj._new(p.provider4, p.visibility4);
 	            }
 	            return this.obj4;
 	        }
 	        if (p.keyId5 === keyId && canSee(p.visibility5, visibility)) {
 	            if (this.obj5 === exports.UNDEFINED) {
-	                this.obj5 = inj._new(p.binding5, p.visibility5);
+	                this.obj5 = inj._new(p.provider5, p.visibility5);
 	            }
 	            return this.obj5;
 	        }
 	        if (p.keyId6 === keyId && canSee(p.visibility6, visibility)) {
 	            if (this.obj6 === exports.UNDEFINED) {
-	                this.obj6 = inj._new(p.binding6, p.visibility6);
+	                this.obj6 = inj._new(p.provider6, p.visibility6);
 	            }
 	            return this.obj6;
 	        }
 	        if (p.keyId7 === keyId && canSee(p.visibility7, visibility)) {
 	            if (this.obj7 === exports.UNDEFINED) {
-	                this.obj7 = inj._new(p.binding7, p.visibility7);
+	                this.obj7 = inj._new(p.provider7, p.visibility7);
 	            }
 	            return this.obj7;
 	        }
 	        if (p.keyId8 === keyId && canSee(p.visibility8, visibility)) {
 	            if (this.obj8 === exports.UNDEFINED) {
-	                this.obj8 = inj._new(p.binding8, p.visibility8);
+	                this.obj8 = inj._new(p.provider8, p.visibility8);
 	            }
 	            return this.obj8;
 	        }
 	        if (p.keyId9 === keyId && canSee(p.visibility9, visibility)) {
 	            if (this.obj9 === exports.UNDEFINED) {
-	                this.obj9 = inj._new(p.binding9, p.visibility9);
+	                this.obj9 = inj._new(p.provider9, p.visibility9);
 	            }
 	            return this.obj9;
 	        }
@@ -17046,12 +18367,12 @@
 	    function InjectorDynamicStrategy(protoStrategy, injector) {
 	        this.protoStrategy = protoStrategy;
 	        this.injector = injector;
-	        this.objs = collection_1.ListWrapper.createFixedSize(protoStrategy.bindings.length);
+	        this.objs = collection_1.ListWrapper.createFixedSize(protoStrategy.providers.length);
 	        collection_1.ListWrapper.fill(this.objs, exports.UNDEFINED);
 	    }
 	    InjectorDynamicStrategy.prototype.resetConstructionCounter = function () { this.injector._constructionCounter = 0; };
-	    InjectorDynamicStrategy.prototype.instantiateBinding = function (binding, visibility) {
-	        return this.injector._new(binding, visibility);
+	    InjectorDynamicStrategy.prototype.instantiateProvider = function (provider, visibility) {
+	        return this.injector._new(provider, visibility);
 	    };
 	    InjectorDynamicStrategy.prototype.attach = function (parent, isHost) {
 	        var inj = this.injector;
@@ -17063,7 +18384,7 @@
 	        for (var i = 0; i < p.keyIds.length; i++) {
 	            if (p.keyIds[i] === keyId && canSee(p.visibilities[i], visibility)) {
 	                if (this.objs[i] === exports.UNDEFINED) {
-	                    this.objs[i] = this.injector._new(p.bindings[i], p.visibilities[i]);
+	                    this.objs[i] = this.injector._new(p.providers[i], p.visibilities[i]);
 	                }
 	                return this.objs[i];
 	            }
@@ -17080,16 +18401,16 @@
 	    return InjectorDynamicStrategy;
 	})();
 	exports.InjectorDynamicStrategy = InjectorDynamicStrategy;
-	var BindingWithVisibility = (function () {
-	    function BindingWithVisibility(binding, visibility) {
-	        this.binding = binding;
+	var ProviderWithVisibility = (function () {
+	    function ProviderWithVisibility(provider, visibility) {
+	        this.provider = provider;
 	        this.visibility = visibility;
 	    }
 	    ;
-	    BindingWithVisibility.prototype.getKeyId = function () { return this.binding.key.id; };
-	    return BindingWithVisibility;
+	    ProviderWithVisibility.prototype.getKeyId = function () { return this.provider.key.id; };
+	    return ProviderWithVisibility;
 	})();
-	exports.BindingWithVisibility = BindingWithVisibility;
+	exports.ProviderWithVisibility = ProviderWithVisibility;
 	/**
 	 * A dependency injection container used for instantiating objects and resolving dependencies.
 	 *
@@ -17130,19 +18451,21 @@
 	        if (_parent === void 0) { _parent = null; }
 	        if (_depProvider === void 0) { _depProvider = null; }
 	        if (_debugContext === void 0) { _debugContext = null; }
-	        this._proto = _proto;
-	        this._parent = _parent;
 	        this._depProvider = _depProvider;
 	        this._debugContext = _debugContext;
+	        /** @internal */
 	        this._isHost = false;
+	        /** @internal */
 	        this._constructionCounter = 0;
+	        this._proto = _proto;
+	        this._parent = _parent;
 	        this._strategy = _proto._strategy.createInjectorStrategy(this);
 	    }
 	    /**
-	     * Turns an array of binding definitions into an array of resolved bindings.
+	     * Turns an array of provider definitions into an array of resolved providers.
 	     *
 	     * A resolution is a process of flattening multiple nested arrays and converting individual
-	     * bindings into an array of {@link ResolvedBinding}s.
+	     * providers into an array of {@link ResolvedProvider}s.
 	     *
 	     * ### Example ([live demo](http://plnkr.co/edit/AiXTHi?p=preview))
 	     *
@@ -17156,29 +18479,29 @@
 	     *   constructor(public engine:Engine) {}
 	     * }
 	     *
-	     * var bindings = Injector.resolve([Car, [[Engine]]]);
+	     * var providers = Injector.resolve([Car, [[Engine]]]);
 	     *
-	     * expect(bindings.length).toEqual(2);
+	     * expect(providers.length).toEqual(2);
 	     *
-	     * expect(bindings[0] instanceof ResolvedBinding).toBe(true);
-	     * expect(bindings[0].key.displayName).toBe("Car");
-	     * expect(bindings[0].dependencies.length).toEqual(1);
-	     * expect(bindings[0].factory).toBeDefined();
+	     * expect(providers[0] instanceof ResolvedProvider).toBe(true);
+	     * expect(providers[0].key.displayName).toBe("Car");
+	     * expect(providers[0].dependencies.length).toEqual(1);
+	     * expect(providers[0].factory).toBeDefined();
 	     *
-	     * expect(bindings[1].key.displayName).toBe("Engine");
+	     * expect(providers[1].key.displayName).toBe("Engine");
 	     * });
 	     * ```
 	     *
-	     * See {@link fromResolvedBindings} for more info.
+	     * See {@link Injector#fromResolvedProviders} for more info.
 	     */
-	    Injector.resolve = function (bindings) {
-	        return binding_1.resolveBindings(bindings);
+	    Injector.resolve = function (providers) {
+	        return provider_1.resolveProviders(providers);
 	    };
 	    /**
-	     * Resolves an array of bindings and creates an injector from those bindings.
+	     * Resolves an array of providers and creates an injector from those providers.
 	     *
-	     * The passed-in bindings can be an array of `Type`, {@link Binding},
-	     * or a recursive array of more bindings.
+	     * The passed-in providers can be an array of `Type`, {@link Provider},
+	     * or a recursive array of more providers.
 	     *
 	     * ### Example ([live demo](http://plnkr.co/edit/ePOccA?p=preview))
 	     *
@@ -17196,16 +18519,16 @@
 	     * expect(injector.get(Car) instanceof Car).toBe(true);
 	     * ```
 	     *
-	     * This function is slower than the corresponding `fromResolvedBindings`
-	     * because it needs to resolve the passed-in bindings first.
-	     * See {@link resolve} and {@link fromResolvedBindings}.
+	     * This function is slower than the corresponding `fromResolvedProviders`
+	     * because it needs to resolve the passed-in providers first.
+	     * See {@link Injector#resolve} and {@link Injector#fromResolvedProviders}.
 	     */
-	    Injector.resolveAndCreate = function (bindings) {
-	        var resolvedBindings = Injector.resolve(bindings);
-	        return Injector.fromResolvedBindings(resolvedBindings);
+	    Injector.resolveAndCreate = function (providers) {
+	        var resolvedProviders = Injector.resolve(providers);
+	        return Injector.fromResolvedProviders(resolvedProviders);
 	    };
 	    /**
-	     * Creates an injector from previously resolved bindings.
+	     * Creates an injector from previously resolved providers.
 	     *
 	     * This API is the recommended way to construct injectors in performance-sensitive parts.
 	     *
@@ -17221,15 +18544,21 @@
 	     *   constructor(public engine:Engine) {}
 	     * }
 	     *
-	     * var bindings = Injector.resolve([Car, Engine]);
-	     * var injector = Injector.fromResolvedBindings(bindings);
+	     * var providers = Injector.resolve([Car, Engine]);
+	     * var injector = Injector.fromResolvedProviders(providers);
 	     * expect(injector.get(Car) instanceof Car).toBe(true);
 	     * ```
 	     */
-	    Injector.fromResolvedBindings = function (bindings) {
-	        var bd = bindings.map(function (b) { return new BindingWithVisibility(b, Visibility.Public); });
+	    Injector.fromResolvedProviders = function (providers) {
+	        var bd = providers.map(function (b) { return new ProviderWithVisibility(b, Visibility.Public); });
 	        var proto = new ProtoInjector(bd);
 	        return new Injector(proto, null, null);
+	    };
+	    /**
+	     * @deprecated
+	     */
+	    Injector.fromResolvedBindings = function (providers) {
+	        return Injector.fromResolvedProviders(providers);
 	    };
 	    /**
 	     * @internal
@@ -17237,13 +18566,13 @@
 	    Injector.prototype.debugContext = function () { return this._debugContext(); };
 	    /**
 	     * Retrieves an instance from the injector based on the provided token.
-	     * Throws {@link NoBindingError} if not found.
+	     * Throws {@link NoProviderError} if not found.
 	     *
 	     * ### Example ([live demo](http://plnkr.co/edit/HeXSHg?p=preview))
 	     *
 	     * ```typescript
 	     * var injector = Injector.resolveAndCreate([
-	     *   bind("validToken").toValue("Value")
+	     *   provide("validToken", {useValue: "Value"})
 	     * ]);
 	     * expect(injector.get("validToken")).toEqual("Value");
 	     * expect(() => injector.get("invalidToken")).toThrowError();
@@ -17267,7 +18596,7 @@
 	     *
 	     * ```typescript
 	     * var injector = Injector.resolveAndCreate([
-	     *   bind("validToken").toValue("Value")
+	     *   provide("validToken", {useValue: "Value"})
 	     * ]);
 	     * expect(injector.getOptional("validToken")).toEqual("Value");
 	     * expect(injector.getOptional("invalidToken")).toBe(null);
@@ -17317,38 +18646,38 @@
 	        configurable: true
 	    });
 	    /**
-	     * Resolves an array of bindings and creates a child injector from those bindings.
+	     * Resolves an array of providers and creates a child injector from those providers.
 	     *
 	     * <!-- TODO: Add a link to the section of the user guide talking about hierarchical injection.
 	     * -->
 	     *
-	     * The passed-in bindings can be an array of `Type`, {@link Binding},
-	     * or a recursive array of more bindings.
+	     * The passed-in providers can be an array of `Type`, {@link Provider},
+	     * or a recursive array of more providers.
 	     *
 	     * ### Example ([live demo](http://plnkr.co/edit/opB3T4?p=preview))
 	     *
 	     * ```typescript
-	     * class ParentBinding {}
-	     * class ChildBinding {}
+	     * class ParentProvider {}
+	     * class ChildProvider {}
 	     *
-	     * var parent = Injector.resolveAndCreate([ParentBinding]);
-	     * var child = parent.resolveAndCreateChild([ChildBinding]);
+	     * var parent = Injector.resolveAndCreate([ParentProvider]);
+	     * var child = parent.resolveAndCreateChild([ChildProvider]);
 	     *
-	     * expect(child.get(ParentBinding) instanceof ParentBinding).toBe(true);
-	     * expect(child.get(ChildBinding) instanceof ChildBinding).toBe(true);
-	     * expect(child.get(ParentBinding)).toBe(parent.get(ParentBinding));
+	     * expect(child.get(ParentProvider) instanceof ParentProvider).toBe(true);
+	     * expect(child.get(ChildProvider) instanceof ChildProvider).toBe(true);
+	     * expect(child.get(ParentProvider)).toBe(parent.get(ParentProvider));
 	     * ```
 	     *
 	     * This function is slower than the corresponding `createChildFromResolved`
-	     * because it needs to resolve the passed-in bindings first.
-	     * See {@link resolve} and {@link createChildFromResolved}.
+	     * because it needs to resolve the passed-in providers first.
+	     * See {@link Injector#resolve} and {@link Injector#createChildFromResolved}.
 	     */
-	    Injector.prototype.resolveAndCreateChild = function (bindings) {
-	        var resolvedBindings = Injector.resolve(bindings);
-	        return this.createChildFromResolved(resolvedBindings);
+	    Injector.prototype.resolveAndCreateChild = function (providers) {
+	        var resolvedProviders = Injector.resolve(providers);
+	        return this.createChildFromResolved(resolvedProviders);
 	    };
 	    /**
-	     * Creates a child injector from previously resolved bindings.
+	     * Creates a child injector from previously resolved providers.
 	     *
 	     * <!-- TODO: Add a link to the section of the user guide talking about hierarchical injection.
 	     * -->
@@ -17358,29 +18687,29 @@
 	     * ### Example ([live demo](http://plnkr.co/edit/VhyfjN?p=preview))
 	     *
 	     * ```typescript
-	     * class ParentBinding {}
-	     * class ChildBinding {}
+	     * class ParentProvider {}
+	     * class ChildProvider {}
 	     *
-	     * var parentBindings = Injector.resolve([ParentBinding]);
-	     * var childBindings = Injector.resolve([ChildBinding]);
+	     * var parentProviders = Injector.resolve([ParentProvider]);
+	     * var childProviders = Injector.resolve([ChildProvider]);
 	     *
-	     * var parent = Injector.fromResolvedBindings(parentBindings);
-	     * var child = parent.createChildFromResolved(childBindings);
+	     * var parent = Injector.fromResolvedProviders(parentProviders);
+	     * var child = parent.createChildFromResolved(childProviders);
 	     *
-	     * expect(child.get(ParentBinding) instanceof ParentBinding).toBe(true);
-	     * expect(child.get(ChildBinding) instanceof ChildBinding).toBe(true);
-	     * expect(child.get(ParentBinding)).toBe(parent.get(ParentBinding));
+	     * expect(child.get(ParentProvider) instanceof ParentProvider).toBe(true);
+	     * expect(child.get(ChildProvider) instanceof ChildProvider).toBe(true);
+	     * expect(child.get(ParentProvider)).toBe(parent.get(ParentProvider));
 	     * ```
 	     */
-	    Injector.prototype.createChildFromResolved = function (bindings) {
-	        var bd = bindings.map(function (b) { return new BindingWithVisibility(b, Visibility.Public); });
+	    Injector.prototype.createChildFromResolved = function (providers) {
+	        var bd = providers.map(function (b) { return new ProviderWithVisibility(b, Visibility.Public); });
 	        var proto = new ProtoInjector(bd);
 	        var inj = new Injector(proto, null, null);
 	        inj._parent = this;
 	        return inj;
 	    };
 	    /**
-	     * Resolves a binding and instantiates an object in the context of the injector.
+	     * Resolves a provider and instantiates an object in the context of the injector.
 	     *
 	     * The created object does not get cached by the injector.
 	     *
@@ -17403,11 +18732,11 @@
 	     * expect(car).not.toBe(injector.resolveAndInstantiate(Car));
 	     * ```
 	     */
-	    Injector.prototype.resolveAndInstantiate = function (binding) {
-	        return this.instantiateResolved(Injector.resolve([binding])[0]);
+	    Injector.prototype.resolveAndInstantiate = function (provider) {
+	        return this.instantiateResolved(Injector.resolve([provider])[0]);
 	    };
 	    /**
-	     * Instantiates an object using a resolved binding in the context of the injector.
+	     * Instantiates an object using a resolved provider in the context of the injector.
 	     *
 	     * The created object does not get cached by the injector.
 	     *
@@ -17424,63 +18753,64 @@
 	     * }
 	     *
 	     * var injector = Injector.resolveAndCreate([Engine]);
-	     * var carBinding = Injector.resolve([Car])[0];
-	     * var car = injector.instantiateResolved(carBinding);
+	     * var carProvider = Injector.resolve([Car])[0];
+	     * var car = injector.instantiateResolved(carProvider);
 	     * expect(car.engine).toBe(injector.get(Engine));
-	     * expect(car).not.toBe(injector.instantiateResolved(carBinding));
+	     * expect(car).not.toBe(injector.instantiateResolved(carProvider));
 	     * ```
 	     */
-	    Injector.prototype.instantiateResolved = function (binding) {
-	        return this._instantiateBinding(binding, Visibility.PublicAndPrivate);
+	    Injector.prototype.instantiateResolved = function (provider) {
+	        return this._instantiateProvider(provider, Visibility.PublicAndPrivate);
 	    };
-	    Injector.prototype._new = function (binding, visibility) {
+	    /** @internal */
+	    Injector.prototype._new = function (provider, visibility) {
 	        if (this._constructionCounter++ > this._strategy.getMaxNumberOfObjects()) {
-	            throw new exceptions_1.CyclicDependencyError(this, binding.key);
+	            throw new exceptions_1.CyclicDependencyError(this, provider.key);
 	        }
-	        return this._instantiateBinding(binding, visibility);
+	        return this._instantiateProvider(provider, visibility);
 	    };
-	    Injector.prototype._instantiateBinding = function (binding, visibility) {
-	        if (binding.multiBinding) {
-	            var res = collection_1.ListWrapper.createFixedSize(binding.resolvedFactories.length);
-	            for (var i = 0; i < binding.resolvedFactories.length; ++i) {
-	                res[i] = this._instantiate(binding, binding.resolvedFactories[i], visibility);
+	    Injector.prototype._instantiateProvider = function (provider, visibility) {
+	        if (provider.multiProvider) {
+	            var res = collection_1.ListWrapper.createFixedSize(provider.resolvedFactories.length);
+	            for (var i = 0; i < provider.resolvedFactories.length; ++i) {
+	                res[i] = this._instantiate(provider, provider.resolvedFactories[i], visibility);
 	            }
 	            return res;
 	        }
 	        else {
-	            return this._instantiate(binding, binding.resolvedFactories[0], visibility);
+	            return this._instantiate(provider, provider.resolvedFactories[0], visibility);
 	        }
 	    };
-	    Injector.prototype._instantiate = function (binding, resolvedFactory, visibility) {
+	    Injector.prototype._instantiate = function (provider, resolvedFactory, visibility) {
 	        var factory = resolvedFactory.factory;
 	        var deps = resolvedFactory.dependencies;
 	        var length = deps.length;
 	        var d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14, d15, d16, d17, d18, d19;
 	        try {
-	            d0 = length > 0 ? this._getByDependency(binding, deps[0], visibility) : null;
-	            d1 = length > 1 ? this._getByDependency(binding, deps[1], visibility) : null;
-	            d2 = length > 2 ? this._getByDependency(binding, deps[2], visibility) : null;
-	            d3 = length > 3 ? this._getByDependency(binding, deps[3], visibility) : null;
-	            d4 = length > 4 ? this._getByDependency(binding, deps[4], visibility) : null;
-	            d5 = length > 5 ? this._getByDependency(binding, deps[5], visibility) : null;
-	            d6 = length > 6 ? this._getByDependency(binding, deps[6], visibility) : null;
-	            d7 = length > 7 ? this._getByDependency(binding, deps[7], visibility) : null;
-	            d8 = length > 8 ? this._getByDependency(binding, deps[8], visibility) : null;
-	            d9 = length > 9 ? this._getByDependency(binding, deps[9], visibility) : null;
-	            d10 = length > 10 ? this._getByDependency(binding, deps[10], visibility) : null;
-	            d11 = length > 11 ? this._getByDependency(binding, deps[11], visibility) : null;
-	            d12 = length > 12 ? this._getByDependency(binding, deps[12], visibility) : null;
-	            d13 = length > 13 ? this._getByDependency(binding, deps[13], visibility) : null;
-	            d14 = length > 14 ? this._getByDependency(binding, deps[14], visibility) : null;
-	            d15 = length > 15 ? this._getByDependency(binding, deps[15], visibility) : null;
-	            d16 = length > 16 ? this._getByDependency(binding, deps[16], visibility) : null;
-	            d17 = length > 17 ? this._getByDependency(binding, deps[17], visibility) : null;
-	            d18 = length > 18 ? this._getByDependency(binding, deps[18], visibility) : null;
-	            d19 = length > 19 ? this._getByDependency(binding, deps[19], visibility) : null;
+	            d0 = length > 0 ? this._getByDependency(provider, deps[0], visibility) : null;
+	            d1 = length > 1 ? this._getByDependency(provider, deps[1], visibility) : null;
+	            d2 = length > 2 ? this._getByDependency(provider, deps[2], visibility) : null;
+	            d3 = length > 3 ? this._getByDependency(provider, deps[3], visibility) : null;
+	            d4 = length > 4 ? this._getByDependency(provider, deps[4], visibility) : null;
+	            d5 = length > 5 ? this._getByDependency(provider, deps[5], visibility) : null;
+	            d6 = length > 6 ? this._getByDependency(provider, deps[6], visibility) : null;
+	            d7 = length > 7 ? this._getByDependency(provider, deps[7], visibility) : null;
+	            d8 = length > 8 ? this._getByDependency(provider, deps[8], visibility) : null;
+	            d9 = length > 9 ? this._getByDependency(provider, deps[9], visibility) : null;
+	            d10 = length > 10 ? this._getByDependency(provider, deps[10], visibility) : null;
+	            d11 = length > 11 ? this._getByDependency(provider, deps[11], visibility) : null;
+	            d12 = length > 12 ? this._getByDependency(provider, deps[12], visibility) : null;
+	            d13 = length > 13 ? this._getByDependency(provider, deps[13], visibility) : null;
+	            d14 = length > 14 ? this._getByDependency(provider, deps[14], visibility) : null;
+	            d15 = length > 15 ? this._getByDependency(provider, deps[15], visibility) : null;
+	            d16 = length > 16 ? this._getByDependency(provider, deps[16], visibility) : null;
+	            d17 = length > 17 ? this._getByDependency(provider, deps[17], visibility) : null;
+	            d18 = length > 18 ? this._getByDependency(provider, deps[18], visibility) : null;
+	            d19 = length > 19 ? this._getByDependency(provider, deps[19], visibility) : null;
 	        }
 	        catch (e) {
-	            if (e instanceof exceptions_1.AbstractBindingError || e instanceof exceptions_1.InstantiationError) {
-	                e.addKey(this, binding.key);
+	            if (e instanceof exceptions_1.AbstractProviderError || e instanceof exceptions_1.InstantiationError) {
+	                e.addKey(this, provider.key);
 	            }
 	            throw e;
 	        }
@@ -17553,48 +18883,51 @@
 	            }
 	        }
 	        catch (e) {
-	            throw new exceptions_1.InstantiationError(this, e, e.stack, binding.key);
+	            throw new exceptions_1.InstantiationError(this, e, e.stack, provider.key);
 	        }
 	        return obj;
 	    };
-	    Injector.prototype._getByDependency = function (binding, dep, bindingVisibility) {
+	    Injector.prototype._getByDependency = function (provider, dep, providerVisibility) {
 	        var special = lang_1.isPresent(this._depProvider) ?
-	            this._depProvider.getDependency(this, binding, dep) :
+	            this._depProvider.getDependency(this, provider, dep) :
 	            exports.UNDEFINED;
 	        if (special !== exports.UNDEFINED) {
 	            return special;
 	        }
 	        else {
-	            return this._getByKey(dep.key, dep.lowerBoundVisibility, dep.upperBoundVisibility, dep.optional, bindingVisibility);
+	            return this._getByKey(dep.key, dep.lowerBoundVisibility, dep.upperBoundVisibility, dep.optional, providerVisibility);
 	        }
 	    };
-	    Injector.prototype._getByKey = function (key, lowerBoundVisibility, upperBoundVisibility, optional, bindingVisibility) {
+	    Injector.prototype._getByKey = function (key, lowerBoundVisibility, upperBoundVisibility, optional, providerVisibility) {
 	        if (key === INJECTOR_KEY) {
 	            return this;
 	        }
 	        if (upperBoundVisibility instanceof metadata_1.SelfMetadata) {
-	            return this._getByKeySelf(key, optional, bindingVisibility);
+	            return this._getByKeySelf(key, optional, providerVisibility);
 	        }
 	        else if (upperBoundVisibility instanceof metadata_1.HostMetadata) {
-	            return this._getByKeyHost(key, optional, bindingVisibility, lowerBoundVisibility);
+	            return this._getByKeyHost(key, optional, providerVisibility, lowerBoundVisibility);
 	        }
 	        else {
-	            return this._getByKeyDefault(key, optional, bindingVisibility, lowerBoundVisibility);
+	            return this._getByKeyDefault(key, optional, providerVisibility, lowerBoundVisibility);
 	        }
 	    };
+	    /** @internal */
 	    Injector.prototype._throwOrNull = function (key, optional) {
 	        if (optional) {
 	            return null;
 	        }
 	        else {
-	            throw new exceptions_1.NoBindingError(this, key);
+	            throw new exceptions_1.NoProviderError(this, key);
 	        }
 	    };
-	    Injector.prototype._getByKeySelf = function (key, optional, bindingVisibility) {
-	        var obj = this._strategy.getObjByKeyId(key.id, bindingVisibility);
+	    /** @internal */
+	    Injector.prototype._getByKeySelf = function (key, optional, providerVisibility) {
+	        var obj = this._strategy.getObjByKeyId(key.id, providerVisibility);
 	        return (obj !== exports.UNDEFINED) ? obj : this._throwOrNull(key, optional);
 	    };
-	    Injector.prototype._getByKeyHost = function (key, optional, bindingVisibility, lowerBoundVisibility) {
+	    /** @internal */
+	    Injector.prototype._getByKeyHost = function (key, optional, providerVisibility, lowerBoundVisibility) {
 	        var inj = this;
 	        if (lowerBoundVisibility instanceof metadata_1.SkipSelfMetadata) {
 	            if (inj._isHost) {
@@ -17605,7 +18938,7 @@
 	            }
 	        }
 	        while (inj != null) {
-	            var obj = inj._strategy.getObjByKeyId(key.id, bindingVisibility);
+	            var obj = inj._strategy.getObjByKeyId(key.id, providerVisibility);
 	            if (obj !== exports.UNDEFINED)
 	                return obj;
 	            if (lang_1.isPresent(inj._parent) && inj._isHost) {
@@ -17617,28 +18950,30 @@
 	        }
 	        return this._throwOrNull(key, optional);
 	    };
+	    /** @internal */
 	    Injector.prototype._getPrivateDependency = function (key, optional, inj) {
 	        var obj = inj._parent._strategy.getObjByKeyId(key.id, Visibility.Private);
 	        return (obj !== exports.UNDEFINED) ? obj : this._throwOrNull(key, optional);
 	    };
-	    Injector.prototype._getByKeyDefault = function (key, optional, bindingVisibility, lowerBoundVisibility) {
+	    /** @internal */
+	    Injector.prototype._getByKeyDefault = function (key, optional, providerVisibility, lowerBoundVisibility) {
 	        var inj = this;
 	        if (lowerBoundVisibility instanceof metadata_1.SkipSelfMetadata) {
-	            bindingVisibility = inj._isHost ? Visibility.PublicAndPrivate : Visibility.Public;
+	            providerVisibility = inj._isHost ? Visibility.PublicAndPrivate : Visibility.Public;
 	            inj = inj._parent;
 	        }
 	        while (inj != null) {
-	            var obj = inj._strategy.getObjByKeyId(key.id, bindingVisibility);
+	            var obj = inj._strategy.getObjByKeyId(key.id, providerVisibility);
 	            if (obj !== exports.UNDEFINED)
 	                return obj;
-	            bindingVisibility = inj._isHost ? Visibility.PublicAndPrivate : Visibility.Public;
+	            providerVisibility = inj._isHost ? Visibility.PublicAndPrivate : Visibility.Public;
 	            inj = inj._parent;
 	        }
 	        return this._throwOrNull(key, optional);
 	    };
 	    Object.defineProperty(Injector.prototype, "displayName", {
 	        get: function () {
-	            return "Injector(bindings: [" + _mapBindings(this, function (b) { return (" \"" + b.key.displayName + "\" "); }).join(", ") + "])";
+	            return "Injector(providers: [" + _mapProviders(this, function (b) { return (" \"" + b.key.displayName + "\" "); }).join(", ") + "])";
 	        },
 	        enumerable: true,
 	        configurable: true
@@ -17648,21 +18983,20 @@
 	})();
 	exports.Injector = Injector;
 	var INJECTOR_KEY = key_1.Key.get(Injector);
-	function _mapBindings(injector, fn) {
+	function _mapProviders(injector, fn) {
 	    var res = [];
-	    for (var i = 0; i < injector._proto.numberOfBindings; ++i) {
-	        res.push(fn(injector._proto.getBindingAtIndex(i)));
+	    for (var i = 0; i < injector._proto.numberOfProviders; ++i) {
+	        res.push(fn(injector._proto.getProviderAtIndex(i)));
 	    }
 	    return res;
 	}
 	//# sourceMappingURL=injector.js.map
 
 /***/ },
-/* 130 */
+/* 129 */
 /***/ function(module, exports) {
 
 	'use strict';/**
-	 * @internal
 	 * Type literals is a Dart-only feature. This is here only so we can x-compile
 	 * to multiple languages.
 	 */
@@ -17680,7 +19014,7 @@
 	//# sourceMappingURL=type_literal.js.map
 
 /***/ },
-/* 131 */
+/* 130 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -17701,23 +19035,61 @@
 	var render_1 = __webpack_require__(20);
 	var collection_1 = __webpack_require__(4);
 	/**
-	 * Adds and removes CSS classes based on an {expression} value.
+	 * The `NgClass` directive conditionally adds and removes CSS classes on an HTML element based on
+	 * an expression's evaluation result.
 	 *
-	 * The result of expression is used to add and remove CSS classes using the following logic,
-	 * based on expression's value type:
-	 * - {string} - all the CSS classes (space - separated) are added
-	 * - {Array} - all the CSS classes (Array elements) are added
-	 * - {Object} - each key corresponds to a CSS class name while values
-	 * are interpreted as {boolean} expression. If a given expression
-	 * evaluates to {true} a corresponding CSS class is added - otherwise
-	 * it is removed.
+	 * The result of an expression evaluation is interpreted differently depending on type of
+	 * the expression evaluation result:
+	 * - `string` - all the CSS classes listed in a string (space delimited) are added
+	 * - `Array` - all the CSS classes (Array elements) are added
+	 * - `Object` - each key corresponds to a CSS class name while values are interpreted as expressions
+	 * evaluating to `Boolean`. If a given expression evaluates to `true` a corresponding CSS class
+	 * is added - otherwise it is removed.
 	 *
-	 * # Example:
+	 * While the `NgClass` directive can interpret expressions evaluating to `string`, `Array`
+	 * or `Object`, the `Object`-based version is the most often used and has an advantage of keeping
+	 * all the CSS class names in a template.
+	 *
+	 * ### Example ([live demo](http://plnkr.co/edit/a4YdtmWywhJ33uqfpPPn?p=preview)):
 	 *
 	 * ```
-	 * <div class="message" [ng-class]="{error: errorCount > 0}">
-	 *     Please check errors.
-	 * </div>
+	 * import {Component, NgClass} from 'angular2/angular2';
+	 *
+	 * @Component({
+	 *   selector: 'toggle-button',
+	 *   inputs: ['isDisabled'],
+	 *   template: `
+	 *      <div class="button" [ng-class]="{active: isOn, disabled: isDisabled}"
+	 *          (click)="toggle(!isOn)">
+	 *          Click me!
+	 *      </div>`,
+	 *   styles: [`
+	 *     .button {
+	 *       width: 120px;
+	 *       border: medium solid black;
+	 *     }
+	 *
+	 *     .active {
+	 *       background-color: red;
+	 *    }
+	 *
+	 *     .disabled {
+	 *       color: gray;
+	 *       border: medium solid gray;
+	 *     }
+	 *   `]
+	 *   directives: [NgClass]
+	 * })
+	 * class ToggleButton {
+	 *   isOn = false;
+	 *   isDisabled = false;
+	 *
+	 *   toggle(newState) {
+	 *     if (!this.isDisabled) {
+	 *       this.isOn = newState;
+	 *     }
+	 *   }
+	 * }
 	 * ```
 	 */
 	var NgClass = (function () {
@@ -17829,7 +19201,7 @@
 	//# sourceMappingURL=ng_class.js.map
 
 /***/ },
-/* 132 */
+/* 131 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -17892,6 +19264,11 @@
 	                this._differ = this._iterableDiffers.find(value).create(this._cdr);
 	            }
 	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(NgFor.prototype, "ngForTemplate", {
+	        set: function (value) { this._templateRef = value; },
 	        enumerable: true,
 	        configurable: true
 	    });
@@ -17961,7 +19338,7 @@
 	        return tuples;
 	    };
 	    NgFor = __decorate([
-	        metadata_1.Directive({ selector: '[ng-for][ng-for-of]', inputs: ['ngForOf'] }), 
+	        metadata_1.Directive({ selector: '[ng-for][ng-for-of]', inputs: ['ngForOf', 'ngForTemplate'] }), 
 	        __metadata('design:paramtypes', [linker_1.ViewContainerRef, linker_1.TemplateRef, change_detection_1.IterableDiffers, change_detection_1.ChangeDetectorRef])
 	    ], NgFor);
 	    return NgFor;
@@ -17977,7 +19354,7 @@
 	//# sourceMappingURL=ng_for.js.map
 
 /***/ },
-/* 133 */
+/* 132 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -18046,7 +19423,7 @@
 	//# sourceMappingURL=ng_if.js.map
 
 /***/ },
-/* 134 */
+/* 133 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -18080,12 +19457,10 @@
 	 * ### Example ([live demo](http://plnkr.co/edit/YamGS6GkUh9GqWNQhCyM?p=preview)):
 	 *
 	 * ```
-	 * import {Component, View, NgStyle} from 'angular2/angular2';
+	 * import {Component, NgStyle} from 'angular2/angular2';
 	 *
 	 * @Component({
-	 *  selector: 'ng-style-example'
-	 * })
-	 * @View({
+	 *  selector: 'ng-style-example',
 	 *  template: `
 	 *    <h1 [ng-style]="{'font-style': style, 'font-size': size, 'font-weight': weight}">
 	 *      Change style of this text!
@@ -18160,7 +19535,7 @@
 	//# sourceMappingURL=ng_style.js.map
 
 /***/ },
-/* 135 */
+/* 134 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -18241,6 +19616,7 @@
 	        enumerable: true,
 	        configurable: true
 	    });
+	    /** @internal */
 	    NgSwitch.prototype._onWhenValueChanged = function (oldWhen, newWhen, view) {
 	        this._deregisterView(oldWhen, view);
 	        this._registerView(newWhen, view);
@@ -18262,6 +19638,7 @@
 	            this._activateViews(this._valueViews.get(_WHEN_DEFAULT));
 	        }
 	    };
+	    /** @internal */
 	    NgSwitch.prototype._emptyAllActiveViews = function () {
 	        var activeContainers = this._activeViews;
 	        for (var i = 0; i < activeContainers.length; i++) {
@@ -18269,6 +19646,7 @@
 	        }
 	        this._activeViews = [];
 	    };
+	    /** @internal */
 	    NgSwitch.prototype._activateViews = function (views) {
 	        // TODO(vicb): assert(this._activeViews.length === 0);
 	        if (lang_1.isPresent(views)) {
@@ -18278,6 +19656,7 @@
 	            this._activeViews = views;
 	        }
 	    };
+	    /** @internal */
 	    NgSwitch.prototype._registerView = function (value, view) {
 	        var views = this._valueViews.get(value);
 	        if (lang_1.isBlank(views)) {
@@ -18286,6 +19665,7 @@
 	        }
 	        views.push(view);
 	    };
+	    /** @internal */
 	    NgSwitch.prototype._deregisterView = function (value, view) {
 	        // `_WHEN_DEFAULT` is used a marker for non-registered whens
 	        if (value === _WHEN_DEFAULT)
@@ -18324,6 +19704,7 @@
 	    function NgSwitchWhen(viewContainer, templateRef, _switch) {
 	        this._switch = _switch;
 	        // `_WHEN_DEFAULT` is used as a marker for a not yet initialized value
+	        /** @internal */
 	        this._value = _WHEN_DEFAULT;
 	        this._view = new SwitchView(viewContainer, templateRef);
 	    }
@@ -18369,7 +19750,7 @@
 	//# sourceMappingURL=ng_switch.js.map
 
 /***/ },
-/* 136 */
+/* 135 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
@@ -18403,7 +19784,7 @@
 	 *   }
 	 * }
 	 *
-	 * bootstrap(MyApp, [bind(ExceptionHandler).toClass(MyExceptionHandler)])
+	 * bootstrap(MyApp, [provide(ExceptionHandler, {useClass: MyExceptionHandler})])
 	 *
 	 * ```
 	 */
@@ -18452,13 +19833,16 @@
 	        if (this._rethrowException)
 	            throw exception;
 	    };
+	    /** @internal */
 	    ExceptionHandler.prototype._extractMessage = function (exception) {
 	        return exception instanceof exceptions_1.WrappedException ? exception.wrapperMessage : exception.toString();
 	    };
+	    /** @internal */
 	    ExceptionHandler.prototype._longStackTrace = function (stackTrace) {
 	        return collection_1.isListLikeIterable(stackTrace) ? stackTrace.join("\n\n-----async gap-----\n") :
 	            stackTrace.toString();
 	    };
+	    /** @internal */
 	    ExceptionHandler.prototype._findContext = function (exception) {
 	        try {
 	            if (!(exception instanceof exceptions_1.WrappedException))
@@ -18471,6 +19855,7 @@
 	            return null;
 	        }
 	    };
+	    /** @internal */
 	    ExceptionHandler.prototype._findOriginalException = function (exception) {
 	        if (!(exception instanceof exceptions_1.WrappedException))
 	            return null;
@@ -18480,6 +19865,7 @@
 	        }
 	        return e;
 	    };
+	    /** @internal */
 	    ExceptionHandler.prototype._findOriginalStack = function (exception) {
 	        if (!(exception instanceof exceptions_1.WrappedException))
 	            return null;
@@ -18499,7 +19885,7 @@
 	//# sourceMappingURL=exception_handler.js.map
 
 /***/ },
-/* 137 */
+/* 136 */
 /***/ function(module, exports) {
 
 	'use strict';(function (NumberFormatStyle) {
@@ -18608,7 +19994,7 @@
 	//# sourceMappingURL=intl.js.map
 
 /***/ },
-/* 138 */
+/* 137 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
@@ -18617,7 +20003,7 @@
 	//# sourceMappingURL=math.js.map
 
 /***/ },
-/* 139 */
+/* 138 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';/**
@@ -18665,31 +20051,37 @@
 	var select_control_value_accessor_1 = __webpack_require__(46);
 	exports.NgSelectOption = select_control_value_accessor_1.NgSelectOption;
 	exports.SelectControlValueAccessor = select_control_value_accessor_1.SelectControlValueAccessor;
-	var directives_1 = __webpack_require__(296);
+	var directives_1 = __webpack_require__(295);
 	exports.FORM_DIRECTIVES = directives_1.FORM_DIRECTIVES;
 	var validators_1 = __webpack_require__(18);
 	exports.NG_VALIDATORS = validators_1.NG_VALIDATORS;
 	exports.Validators = validators_1.Validators;
 	var validators_2 = __webpack_require__(82);
-	exports.DefaultValidators = validators_2.DefaultValidators;
-	var form_builder_1 = __webpack_require__(140);
+	exports.RequiredValidator = validators_2.RequiredValidator;
+	exports.MinLengthValidator = validators_2.MinLengthValidator;
+	exports.MaxLengthValidator = validators_2.MaxLengthValidator;
+	var form_builder_1 = __webpack_require__(139);
 	exports.FormBuilder = form_builder_1.FormBuilder;
-	var form_builder_2 = __webpack_require__(140);
+	var form_builder_2 = __webpack_require__(139);
 	var lang_1 = __webpack_require__(1);
 	/**
-	 * Shorthand set of bindings used for building Angular forms.
+	 * Shorthand set of providers used for building Angular forms.
 	 *
 	 * ### Example:
 	 *
 	 * ```typescript
-	 * bootstrap(MyApp, [FORM_BINDINGS]);
+	 * bootstrap(MyApp, [FORM_PROVIDERS]);
 	 * ```
 	 */
-	exports.FORM_BINDINGS = lang_1.CONST_EXPR([form_builder_2.FormBuilder]);
+	exports.FORM_PROVIDERS = lang_1.CONST_EXPR([form_builder_2.FormBuilder]);
+	/**
+	 * @deprecated
+	 */
+	exports.FORM_BINDINGS = exports.FORM_PROVIDERS;
 	//# sourceMappingURL=forms.js.map
 
 /***/ },
-/* 140 */
+/* 139 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -18713,14 +20105,12 @@
 	 * # Example
 	 *
 	 * ```
-	 * import {Component, View, bootstrap} from 'angular2/angular2';
+	 * import {Component, bootstrap} from 'angular2/angular2';
 	 * import {FormBuilder, Validators, FORM_DIRECTIVES, ControlGroup} from 'angular2/core';
 	 *
 	 * @Component({
 	 *   selector: 'login-comp',
-	 *   viewBindings: [FormBuilder]
-	 * })
-	 * @View({
+	 *   viewProviders: [FormBuilder],
 	 *   template: `
 	 *     <form [control-group]="loginForm">
 	 *       Login <input control="login">
@@ -18802,6 +20192,7 @@
 	            return new modelModule.ControlArray(controls);
 	        }
 	    };
+	    /** @internal */
 	    FormBuilder.prototype._reduceControls = function (controlsConfig) {
 	        var _this = this;
 	        var controls = {};
@@ -18810,6 +20201,7 @@
 	        });
 	        return controls;
 	    };
+	    /** @internal */
 	    FormBuilder.prototype._createControl = function (controlConfig) {
 	        if (controlConfig instanceof modelModule.Control ||
 	            controlConfig instanceof modelModule.ControlGroup ||
@@ -18835,7 +20227,7 @@
 	//# sourceMappingURL=form_builder.js.map
 
 /***/ },
-/* 141 */
+/* 140 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -18896,6 +20288,7 @@
 	        if (changeDetector === void 0) { changeDetector = null; }
 	        if (enforceNoNewChanges === void 0) { enforceNoNewChanges = false; }
 	        _super.call(this);
+	        /** @internal */
 	        this._runningTick = false;
 	        this._changeDetectors = [];
 	        if (lang_1.isPresent(changeDetector)) {
@@ -18939,7 +20332,7 @@
 	//# sourceMappingURL=life_cycle.js.map
 
 /***/ },
-/* 142 */
+/* 141 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
@@ -18973,7 +20366,7 @@
 	//# sourceMappingURL=directive_lifecycle_reflector.js.map
 
 /***/ },
-/* 143 */
+/* 142 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -18986,20 +20379,20 @@
 	var async_1 = __webpack_require__(9);
 	var collection_1 = __webpack_require__(4);
 	var di_1 = __webpack_require__(3);
-	var injector_1 = __webpack_require__(129);
-	var binding_1 = __webpack_require__(43);
+	var injector_1 = __webpack_require__(128);
+	var provider_1 = __webpack_require__(43);
 	var di_2 = __webpack_require__(89);
 	var avmModule = __webpack_require__(35);
 	var view_container_ref_1 = __webpack_require__(86);
 	var element_ref_1 = __webpack_require__(83);
 	var template_ref_1 = __webpack_require__(84);
 	var directives_1 = __webpack_require__(36);
-	var directive_lifecycle_reflector_1 = __webpack_require__(142);
+	var directive_lifecycle_reflector_1 = __webpack_require__(141);
 	var change_detection_1 = __webpack_require__(10);
-	var query_list_1 = __webpack_require__(145);
+	var query_list_1 = __webpack_require__(144);
 	var reflection_1 = __webpack_require__(11);
-	var event_config_1 = __webpack_require__(299);
-	var pipe_binding_1 = __webpack_require__(153);
+	var event_config_1 = __webpack_require__(298);
+	var pipe_provider_1 = __webpack_require__(152);
 	var interfaces_1 = __webpack_require__(34);
 	var view_container_ref_2 = __webpack_require__(86);
 	var _staticKeys;
@@ -19046,6 +20439,7 @@
 	        this.queryDecorator = queryDecorator;
 	        this._verify();
 	    }
+	    /** @internal */
 	    DirectiveDependency.prototype._verify = function () {
 	        var count = 0;
 	        if (lang_1.isPresent(this.queryDecorator))
@@ -19068,21 +20462,21 @@
 	    return DirectiveDependency;
 	})(di_1.Dependency);
 	exports.DirectiveDependency = DirectiveDependency;
-	var DirectiveBinding = (function (_super) {
-	    __extends(DirectiveBinding, _super);
-	    function DirectiveBinding(key, factory, deps, metadata, bindings, viewBindings) {
-	        _super.call(this, key, [new binding_1.ResolvedFactory(factory, deps)], false);
+	var DirectiveProvider = (function (_super) {
+	    __extends(DirectiveProvider, _super);
+	    function DirectiveProvider(key, factory, deps, metadata, providers, viewProviders) {
+	        _super.call(this, key, [new provider_1.ResolvedFactory(factory, deps)], false);
 	        this.metadata = metadata;
-	        this.bindings = bindings;
-	        this.viewBindings = viewBindings;
+	        this.providers = providers;
+	        this.viewProviders = viewProviders;
 	        this.callOnDestroy = directive_lifecycle_reflector_1.hasLifecycleHook(interfaces_1.LifecycleHooks.OnDestroy, key.token);
 	    }
-	    Object.defineProperty(DirectiveBinding.prototype, "displayName", {
+	    Object.defineProperty(DirectiveProvider.prototype, "displayName", {
 	        get: function () { return this.key.displayName; },
 	        enumerable: true,
 	        configurable: true
 	    });
-	    Object.defineProperty(DirectiveBinding.prototype, "queries", {
+	    Object.defineProperty(DirectiveProvider.prototype, "queries", {
 	        get: function () {
 	            if (lang_1.isBlank(this.metadata.queries))
 	                return [];
@@ -19096,7 +20490,7 @@
 	        enumerable: true,
 	        configurable: true
 	    });
-	    Object.defineProperty(DirectiveBinding.prototype, "eventEmitters", {
+	    Object.defineProperty(DirectiveProvider.prototype, "eventEmitters", {
 	        get: function () {
 	            return lang_1.isPresent(this.metadata) && lang_1.isPresent(this.metadata.outputs) ? this.metadata.outputs :
 	                [];
@@ -19104,24 +20498,26 @@
 	        enumerable: true,
 	        configurable: true
 	    });
-	    DirectiveBinding.createFromBinding = function (binding, meta) {
+	    DirectiveProvider.createFromProvider = function (provider, meta) {
 	        if (lang_1.isBlank(meta)) {
 	            meta = new directives_1.DirectiveMetadata();
 	        }
-	        var rb = binding_1.resolveBinding(binding);
+	        var rb = provider_1.resolveProvider(provider);
 	        var rf = rb.resolvedFactories[0];
 	        var deps = rf.dependencies.map(DirectiveDependency.createFrom);
-	        var bindings = lang_1.isPresent(meta.bindings) ? meta.bindings : [];
-	        var viewBindigs = meta instanceof directives_1.ComponentMetadata && lang_1.isPresent(meta.viewBindings) ? meta.viewBindings : [];
-	        return new DirectiveBinding(rb.key, rf.factory, deps, meta, bindings, viewBindigs);
+	        var providers = lang_1.isPresent(meta.providers) ? meta.providers : [];
+	        var viewBindigs = meta instanceof directives_1.ComponentMetadata && lang_1.isPresent(meta.viewProviders) ?
+	            meta.viewProviders :
+	            [];
+	        return new DirectiveProvider(rb.key, rf.factory, deps, meta, providers, viewBindigs);
 	    };
-	    DirectiveBinding.createFromType = function (type, annotation) {
-	        var binding = new di_1.Binding(type, { toClass: type });
-	        return DirectiveBinding.createFromBinding(binding, annotation);
+	    DirectiveProvider.createFromType = function (type, annotation) {
+	        var provider = new di_1.Provider(type, { useClass: type });
+	        return DirectiveProvider.createFromProvider(provider, annotation);
 	    };
-	    return DirectiveBinding;
-	})(binding_1.ResolvedBinding_);
-	exports.DirectiveBinding = DirectiveBinding;
+	    return DirectiveProvider;
+	})(provider_1.ResolvedProvider_);
+	exports.DirectiveProvider = DirectiveProvider;
 	// TODO(rado): benchmark and consider rolling in as ElementInjector fields.
 	var PreBuiltObjects = (function () {
 	    function PreBuiltObjects(viewManager, view, elementRef, templateRef) {
@@ -19156,25 +20552,26 @@
 	})();
 	exports.EventEmitterAccessor = EventEmitterAccessor;
 	function _createEventEmitterAccessors(bwv) {
-	    var binding = bwv.binding;
-	    if (!(binding instanceof DirectiveBinding))
+	    var provider = bwv.provider;
+	    if (!(provider instanceof DirectiveProvider))
 	        return [];
-	    var db = binding;
+	    var db = provider;
 	    return db.eventEmitters.map(function (eventConfig) {
 	        var parsedEvent = event_config_1.EventConfig.parse(eventConfig);
 	        return new EventEmitterAccessor(parsedEvent.eventName, reflection_1.reflector.getter(parsedEvent.fieldName));
 	    });
 	}
-	function _createProtoQueryRefs(bindings) {
+	function _createProtoQueryRefs(providers) {
 	    var res = [];
-	    collection_1.ListWrapper.forEachWithIndex(bindings, function (b, i) {
-	        if (b.binding instanceof DirectiveBinding) {
+	    collection_1.ListWrapper.forEachWithIndex(providers, function (b, i) {
+	        if (b.provider instanceof DirectiveProvider) {
+	            var directiveProvider = b.provider;
 	            // field queries
-	            var queries = b.binding.queries;
+	            var queries = directiveProvider.queries;
 	            queries.forEach(function (q) { return res.push(new ProtoQueryRef(i, q.setter, q.metadata)); });
 	            // queries passed into the constructor.
 	            // TODO: remove this after constructor queries are no longer supported
-	            var deps = b.binding.resolvedFactories[0].dependencies;
+	            var deps = directiveProvider.resolvedFactory.dependencies;
 	            deps.forEach(function (d) {
 	                if (lang_1.isPresent(d.queryDecorator))
 	                    res.push(new ProtoQueryRef(i, null, d.queryDecorator));
@@ -19184,12 +20581,12 @@
 	    return res;
 	}
 	var ProtoElementInjector = (function () {
-	    function ProtoElementInjector(parent, index, bwv, distanceToParent, _firstBindingIsComponent, directiveVariableBindings) {
+	    function ProtoElementInjector(parent, index, bwv, distanceToParent, _firstProviderIsComponent, directiveVariableBindings) {
 	        this.parent = parent;
 	        this.index = index;
 	        this.distanceToParent = distanceToParent;
-	        this._firstBindingIsComponent = _firstBindingIsComponent;
 	        this.directiveVariableBindings = directiveVariableBindings;
+	        this._firstProviderIsComponent = _firstProviderIsComponent;
 	        var length = bwv.length;
 	        this.protoInjector = new injector_1.ProtoInjector(bwv);
 	        this.eventEmitterAccessors = collection_1.ListWrapper.createFixedSize(length);
@@ -19198,36 +20595,36 @@
 	        }
 	        this.protoQueryRefs = _createProtoQueryRefs(bwv);
 	    }
-	    ProtoElementInjector.create = function (parent, index, bindings, firstBindingIsComponent, distanceToParent, directiveVariableBindings) {
+	    ProtoElementInjector.create = function (parent, index, providers, firstProviderIsComponent, distanceToParent, directiveVariableBindings) {
 	        var bd = [];
-	        ProtoElementInjector._createDirectiveBindingWithVisibility(bindings, bd, firstBindingIsComponent);
-	        if (firstBindingIsComponent) {
-	            ProtoElementInjector._createViewBindingsWithVisibility(bindings, bd);
+	        ProtoElementInjector._createDirectiveProviderWithVisibility(providers, bd, firstProviderIsComponent);
+	        if (firstProviderIsComponent) {
+	            ProtoElementInjector._createViewProvidersWithVisibility(providers, bd);
 	        }
-	        ProtoElementInjector._createBindingsWithVisibility(bindings, bd);
-	        return new ProtoElementInjector(parent, index, bd, distanceToParent, firstBindingIsComponent, directiveVariableBindings);
+	        ProtoElementInjector._createProvidersWithVisibility(providers, bd);
+	        return new ProtoElementInjector(parent, index, bd, distanceToParent, firstProviderIsComponent, directiveVariableBindings);
 	    };
-	    ProtoElementInjector._createDirectiveBindingWithVisibility = function (dirBindings, bd, firstBindingIsComponent) {
-	        dirBindings.forEach(function (dirBinding) {
-	            bd.push(ProtoElementInjector._createBindingWithVisibility(firstBindingIsComponent, dirBinding, dirBindings, dirBinding));
+	    ProtoElementInjector._createDirectiveProviderWithVisibility = function (dirProviders, bd, firstProviderIsComponent) {
+	        dirProviders.forEach(function (dirProvider) {
+	            bd.push(ProtoElementInjector._createProviderWithVisibility(firstProviderIsComponent, dirProvider, dirProviders, dirProvider));
 	        });
 	    };
-	    ProtoElementInjector._createBindingsWithVisibility = function (dirBindings, bd) {
-	        var bindingsFromAllDirectives = [];
-	        dirBindings.forEach(function (dirBinding) {
-	            bindingsFromAllDirectives =
-	                collection_1.ListWrapper.concat(bindingsFromAllDirectives, dirBinding.bindings);
+	    ProtoElementInjector._createProvidersWithVisibility = function (dirProviders, bd) {
+	        var providersFromAllDirectives = [];
+	        dirProviders.forEach(function (dirProvider) {
+	            providersFromAllDirectives =
+	                collection_1.ListWrapper.concat(providersFromAllDirectives, dirProvider.providers);
 	        });
-	        var resolved = di_1.Injector.resolve(bindingsFromAllDirectives);
-	        resolved.forEach(function (b) { return bd.push(new injector_1.BindingWithVisibility(b, injector_1.Visibility.Public)); });
+	        var resolved = di_1.Injector.resolve(providersFromAllDirectives);
+	        resolved.forEach(function (b) { return bd.push(new injector_1.ProviderWithVisibility(b, injector_1.Visibility.Public)); });
 	    };
-	    ProtoElementInjector._createBindingWithVisibility = function (firstBindingIsComponent, dirBinding, dirBindings, binding) {
-	        var isComponent = firstBindingIsComponent && dirBindings[0] === dirBinding;
-	        return new injector_1.BindingWithVisibility(binding, isComponent ? injector_1.Visibility.PublicAndPrivate : injector_1.Visibility.Public);
+	    ProtoElementInjector._createProviderWithVisibility = function (firstProviderIsComponent, dirProvider, dirProviders, provider) {
+	        var isComponent = firstProviderIsComponent && dirProviders[0] === dirProvider;
+	        return new injector_1.ProviderWithVisibility(provider, isComponent ? injector_1.Visibility.PublicAndPrivate : injector_1.Visibility.Public);
 	    };
-	    ProtoElementInjector._createViewBindingsWithVisibility = function (dirBindings, bd) {
-	        var resolvedViewBindings = di_1.Injector.resolve(dirBindings[0].viewBindings);
-	        resolvedViewBindings.forEach(function (b) { return bd.push(new injector_1.BindingWithVisibility(b, injector_1.Visibility.Private)); });
+	    ProtoElementInjector._createViewProvidersWithVisibility = function (dirProviders, bd) {
+	        var resolvedViewProviders = di_1.Injector.resolve(dirProviders[0].viewProviders);
+	        resolvedViewProviders.forEach(function (b) { return bd.push(new injector_1.ProviderWithVisibility(b, injector_1.Visibility.Private)); });
 	    };
 	    ProtoElementInjector.prototype.instantiate = function (parent) {
 	        return new ElementInjector(this, parent);
@@ -19238,7 +20635,7 @@
 	        enumerable: true,
 	        configurable: true
 	    });
-	    ProtoElementInjector.prototype.getBindingAtIndex = function (index) { return this.protoInjector.getBindingAtIndex(index); };
+	    ProtoElementInjector.prototype.getProviderAtIndex = function (index) { return this.protoInjector.getProviderAtIndex(index); };
 	    return ProtoElementInjector;
 	})();
 	exports.ProtoElementInjector = ProtoElementInjector;
@@ -19255,8 +20652,8 @@
 	    function ElementInjector(_proto, parent) {
 	        var _this = this;
 	        _super.call(this, parent);
-	        this._proto = _proto;
 	        this._preBuiltObjects = null;
+	        this._proto = _proto;
 	        this._injector =
 	            new di_1.Injector(this._proto.protoInjector, null, this, function () { return _this._debugContext(); });
 	        // we couple ourselves to the injector strategy to avoid polymoprhic calls
@@ -19349,11 +20746,11 @@
 	    ElementInjector.prototype.getView = function () { return this._preBuiltObjects.view; };
 	    ElementInjector.prototype.directParent = function () { return this._proto.distanceToParent < 2 ? this.parent : null; };
 	    ElementInjector.prototype.isComponentKey = function (key) { return this._strategy.isComponentKey(key); };
-	    ElementInjector.prototype.getDependency = function (injector, binding, dep) {
+	    ElementInjector.prototype.getDependency = function (injector, provider, dep) {
 	        var key = dep.key;
-	        if (binding instanceof DirectiveBinding) {
+	        if (provider instanceof DirectiveProvider) {
 	            var dirDep = dep;
-	            var dirBin = binding;
+	            var dirProvider = provider;
 	            var staticKeys = StaticKeys.instance();
 	            if (key.id === staticKeys.viewManagerId)
 	                return this._preBuiltObjects.viewManager;
@@ -19364,7 +20761,7 @@
 	            if (dirDep.key.id === StaticKeys.instance().changeDetectorRefId) {
 	                // We provide the component's view change detector to components and
 	                // the surrounding component's change detector to directives.
-	                if (dirBin.metadata instanceof directives_1.ComponentMetadata) {
+	                if (dirProvider.metadata instanceof directives_1.ComponentMetadata) {
 	                    var componentView = this._preBuiltObjects.view.getNestedView(this._preBuiltObjects.elementRef.boundElementIndex);
 	                    return componentView.changeDetector.ref;
 	                }
@@ -19383,12 +20780,12 @@
 	                    if (dirDep.optional) {
 	                        return null;
 	                    }
-	                    throw new di_1.NoBindingError(null, dirDep.key);
+	                    throw new di_1.NoProviderError(null, dirDep.key);
 	                }
 	                return this._preBuiltObjects.templateRef;
 	            }
 	        }
-	        else if (binding instanceof pipe_binding_1.PipeBinding) {
+	        else if (provider instanceof pipe_provider_1.PipeProvider) {
 	            if (dep.key.id === StaticKeys.instance().changeDetectorRefId) {
 	                var componentView = this._preBuiltObjects.view.getNestedView(this._preBuiltObjects.elementRef.boundElementIndex);
 	                return componentView.changeDetector.ref;
@@ -19606,7 +21003,7 @@
 	    return DynamicQueryStrategy;
 	})();
 	/**
-	 * Strategy used by the `ElementInjector` when the number of bindings is 10 or less.
+	 * Strategy used by the `ElementInjector` when the number of providers is 10 or less.
 	 * In such a case, inlining fields is beneficial for performances.
 	 */
 	var ElementInjectorInlineStrategy = (function () {
@@ -19618,26 +21015,26 @@
 	        var i = this.injectorStrategy;
 	        var p = i.protoStrategy;
 	        i.resetConstructionCounter();
-	        if (p.binding0 instanceof DirectiveBinding && lang_1.isPresent(p.keyId0) && i.obj0 === injector_1.UNDEFINED)
-	            i.obj0 = i.instantiateBinding(p.binding0, p.visibility0);
-	        if (p.binding1 instanceof DirectiveBinding && lang_1.isPresent(p.keyId1) && i.obj1 === injector_1.UNDEFINED)
-	            i.obj1 = i.instantiateBinding(p.binding1, p.visibility1);
-	        if (p.binding2 instanceof DirectiveBinding && lang_1.isPresent(p.keyId2) && i.obj2 === injector_1.UNDEFINED)
-	            i.obj2 = i.instantiateBinding(p.binding2, p.visibility2);
-	        if (p.binding3 instanceof DirectiveBinding && lang_1.isPresent(p.keyId3) && i.obj3 === injector_1.UNDEFINED)
-	            i.obj3 = i.instantiateBinding(p.binding3, p.visibility3);
-	        if (p.binding4 instanceof DirectiveBinding && lang_1.isPresent(p.keyId4) && i.obj4 === injector_1.UNDEFINED)
-	            i.obj4 = i.instantiateBinding(p.binding4, p.visibility4);
-	        if (p.binding5 instanceof DirectiveBinding && lang_1.isPresent(p.keyId5) && i.obj5 === injector_1.UNDEFINED)
-	            i.obj5 = i.instantiateBinding(p.binding5, p.visibility5);
-	        if (p.binding6 instanceof DirectiveBinding && lang_1.isPresent(p.keyId6) && i.obj6 === injector_1.UNDEFINED)
-	            i.obj6 = i.instantiateBinding(p.binding6, p.visibility6);
-	        if (p.binding7 instanceof DirectiveBinding && lang_1.isPresent(p.keyId7) && i.obj7 === injector_1.UNDEFINED)
-	            i.obj7 = i.instantiateBinding(p.binding7, p.visibility7);
-	        if (p.binding8 instanceof DirectiveBinding && lang_1.isPresent(p.keyId8) && i.obj8 === injector_1.UNDEFINED)
-	            i.obj8 = i.instantiateBinding(p.binding8, p.visibility8);
-	        if (p.binding9 instanceof DirectiveBinding && lang_1.isPresent(p.keyId9) && i.obj9 === injector_1.UNDEFINED)
-	            i.obj9 = i.instantiateBinding(p.binding9, p.visibility9);
+	        if (p.provider0 instanceof DirectiveProvider && lang_1.isPresent(p.keyId0) && i.obj0 === injector_1.UNDEFINED)
+	            i.obj0 = i.instantiateProvider(p.provider0, p.visibility0);
+	        if (p.provider1 instanceof DirectiveProvider && lang_1.isPresent(p.keyId1) && i.obj1 === injector_1.UNDEFINED)
+	            i.obj1 = i.instantiateProvider(p.provider1, p.visibility1);
+	        if (p.provider2 instanceof DirectiveProvider && lang_1.isPresent(p.keyId2) && i.obj2 === injector_1.UNDEFINED)
+	            i.obj2 = i.instantiateProvider(p.provider2, p.visibility2);
+	        if (p.provider3 instanceof DirectiveProvider && lang_1.isPresent(p.keyId3) && i.obj3 === injector_1.UNDEFINED)
+	            i.obj3 = i.instantiateProvider(p.provider3, p.visibility3);
+	        if (p.provider4 instanceof DirectiveProvider && lang_1.isPresent(p.keyId4) && i.obj4 === injector_1.UNDEFINED)
+	            i.obj4 = i.instantiateProvider(p.provider4, p.visibility4);
+	        if (p.provider5 instanceof DirectiveProvider && lang_1.isPresent(p.keyId5) && i.obj5 === injector_1.UNDEFINED)
+	            i.obj5 = i.instantiateProvider(p.provider5, p.visibility5);
+	        if (p.provider6 instanceof DirectiveProvider && lang_1.isPresent(p.keyId6) && i.obj6 === injector_1.UNDEFINED)
+	            i.obj6 = i.instantiateProvider(p.provider6, p.visibility6);
+	        if (p.provider7 instanceof DirectiveProvider && lang_1.isPresent(p.keyId7) && i.obj7 === injector_1.UNDEFINED)
+	            i.obj7 = i.instantiateProvider(p.provider7, p.visibility7);
+	        if (p.provider8 instanceof DirectiveProvider && lang_1.isPresent(p.keyId8) && i.obj8 === injector_1.UNDEFINED)
+	            i.obj8 = i.instantiateProvider(p.provider8, p.visibility8);
+	        if (p.provider9 instanceof DirectiveProvider && lang_1.isPresent(p.keyId9) && i.obj9 === injector_1.UNDEFINED)
+	            i.obj9 = i.instantiateProvider(p.provider9, p.visibility9);
 	    };
 	    ElementInjectorInlineStrategy.prototype.dehydrate = function () {
 	        var i = this.injectorStrategy;
@@ -19655,100 +21052,110 @@
 	    ElementInjectorInlineStrategy.prototype.callOnDestroy = function () {
 	        var i = this.injectorStrategy;
 	        var p = i.protoStrategy;
-	        if (p.binding0 instanceof DirectiveBinding && p.binding0.callOnDestroy) {
+	        if (p.provider0 instanceof DirectiveProvider &&
+	            p.provider0.callOnDestroy) {
 	            i.obj0.onDestroy();
 	        }
-	        if (p.binding1 instanceof DirectiveBinding && p.binding1.callOnDestroy) {
+	        if (p.provider1 instanceof DirectiveProvider &&
+	            p.provider1.callOnDestroy) {
 	            i.obj1.onDestroy();
 	        }
-	        if (p.binding2 instanceof DirectiveBinding && p.binding2.callOnDestroy) {
+	        if (p.provider2 instanceof DirectiveProvider &&
+	            p.provider2.callOnDestroy) {
 	            i.obj2.onDestroy();
 	        }
-	        if (p.binding3 instanceof DirectiveBinding && p.binding3.callOnDestroy) {
+	        if (p.provider3 instanceof DirectiveProvider &&
+	            p.provider3.callOnDestroy) {
 	            i.obj3.onDestroy();
 	        }
-	        if (p.binding4 instanceof DirectiveBinding && p.binding4.callOnDestroy) {
+	        if (p.provider4 instanceof DirectiveProvider &&
+	            p.provider4.callOnDestroy) {
 	            i.obj4.onDestroy();
 	        }
-	        if (p.binding5 instanceof DirectiveBinding && p.binding5.callOnDestroy) {
+	        if (p.provider5 instanceof DirectiveProvider &&
+	            p.provider5.callOnDestroy) {
 	            i.obj5.onDestroy();
 	        }
-	        if (p.binding6 instanceof DirectiveBinding && p.binding6.callOnDestroy) {
+	        if (p.provider6 instanceof DirectiveProvider &&
+	            p.provider6.callOnDestroy) {
 	            i.obj6.onDestroy();
 	        }
-	        if (p.binding7 instanceof DirectiveBinding && p.binding7.callOnDestroy) {
+	        if (p.provider7 instanceof DirectiveProvider &&
+	            p.provider7.callOnDestroy) {
 	            i.obj7.onDestroy();
 	        }
-	        if (p.binding8 instanceof DirectiveBinding && p.binding8.callOnDestroy) {
+	        if (p.provider8 instanceof DirectiveProvider &&
+	            p.provider8.callOnDestroy) {
 	            i.obj8.onDestroy();
 	        }
-	        if (p.binding9 instanceof DirectiveBinding && p.binding9.callOnDestroy) {
+	        if (p.provider9 instanceof DirectiveProvider &&
+	            p.provider9.callOnDestroy) {
 	            i.obj9.onDestroy();
 	        }
 	    };
 	    ElementInjectorInlineStrategy.prototype.getComponent = function () { return this.injectorStrategy.obj0; };
 	    ElementInjectorInlineStrategy.prototype.isComponentKey = function (key) {
-	        return this._ei._proto._firstBindingIsComponent && lang_1.isPresent(key) &&
+	        return this._ei._proto._firstProviderIsComponent && lang_1.isPresent(key) &&
 	            key.id === this.injectorStrategy.protoStrategy.keyId0;
 	    };
 	    ElementInjectorInlineStrategy.prototype.addDirectivesMatchingQuery = function (query, list) {
 	        var i = this.injectorStrategy;
 	        var p = i.protoStrategy;
-	        if (lang_1.isPresent(p.binding0) && p.binding0.key.token === query.selector) {
+	        if (lang_1.isPresent(p.provider0) && p.provider0.key.token === query.selector) {
 	            if (i.obj0 === injector_1.UNDEFINED)
-	                i.obj0 = i.instantiateBinding(p.binding0, p.visibility0);
+	                i.obj0 = i.instantiateProvider(p.provider0, p.visibility0);
 	            list.push(i.obj0);
 	        }
-	        if (lang_1.isPresent(p.binding1) && p.binding1.key.token === query.selector) {
+	        if (lang_1.isPresent(p.provider1) && p.provider1.key.token === query.selector) {
 	            if (i.obj1 === injector_1.UNDEFINED)
-	                i.obj1 = i.instantiateBinding(p.binding1, p.visibility1);
+	                i.obj1 = i.instantiateProvider(p.provider1, p.visibility1);
 	            list.push(i.obj1);
 	        }
-	        if (lang_1.isPresent(p.binding2) && p.binding2.key.token === query.selector) {
+	        if (lang_1.isPresent(p.provider2) && p.provider2.key.token === query.selector) {
 	            if (i.obj2 === injector_1.UNDEFINED)
-	                i.obj2 = i.instantiateBinding(p.binding2, p.visibility2);
+	                i.obj2 = i.instantiateProvider(p.provider2, p.visibility2);
 	            list.push(i.obj2);
 	        }
-	        if (lang_1.isPresent(p.binding3) && p.binding3.key.token === query.selector) {
+	        if (lang_1.isPresent(p.provider3) && p.provider3.key.token === query.selector) {
 	            if (i.obj3 === injector_1.UNDEFINED)
-	                i.obj3 = i.instantiateBinding(p.binding3, p.visibility3);
+	                i.obj3 = i.instantiateProvider(p.provider3, p.visibility3);
 	            list.push(i.obj3);
 	        }
-	        if (lang_1.isPresent(p.binding4) && p.binding4.key.token === query.selector) {
+	        if (lang_1.isPresent(p.provider4) && p.provider4.key.token === query.selector) {
 	            if (i.obj4 === injector_1.UNDEFINED)
-	                i.obj4 = i.instantiateBinding(p.binding4, p.visibility4);
+	                i.obj4 = i.instantiateProvider(p.provider4, p.visibility4);
 	            list.push(i.obj4);
 	        }
-	        if (lang_1.isPresent(p.binding5) && p.binding5.key.token === query.selector) {
+	        if (lang_1.isPresent(p.provider5) && p.provider5.key.token === query.selector) {
 	            if (i.obj5 === injector_1.UNDEFINED)
-	                i.obj5 = i.instantiateBinding(p.binding5, p.visibility5);
+	                i.obj5 = i.instantiateProvider(p.provider5, p.visibility5);
 	            list.push(i.obj5);
 	        }
-	        if (lang_1.isPresent(p.binding6) && p.binding6.key.token === query.selector) {
+	        if (lang_1.isPresent(p.provider6) && p.provider6.key.token === query.selector) {
 	            if (i.obj6 === injector_1.UNDEFINED)
-	                i.obj6 = i.instantiateBinding(p.binding6, p.visibility6);
+	                i.obj6 = i.instantiateProvider(p.provider6, p.visibility6);
 	            list.push(i.obj6);
 	        }
-	        if (lang_1.isPresent(p.binding7) && p.binding7.key.token === query.selector) {
+	        if (lang_1.isPresent(p.provider7) && p.provider7.key.token === query.selector) {
 	            if (i.obj7 === injector_1.UNDEFINED)
-	                i.obj7 = i.instantiateBinding(p.binding7, p.visibility7);
+	                i.obj7 = i.instantiateProvider(p.provider7, p.visibility7);
 	            list.push(i.obj7);
 	        }
-	        if (lang_1.isPresent(p.binding8) && p.binding8.key.token === query.selector) {
+	        if (lang_1.isPresent(p.provider8) && p.provider8.key.token === query.selector) {
 	            if (i.obj8 === injector_1.UNDEFINED)
-	                i.obj8 = i.instantiateBinding(p.binding8, p.visibility8);
+	                i.obj8 = i.instantiateProvider(p.provider8, p.visibility8);
 	            list.push(i.obj8);
 	        }
-	        if (lang_1.isPresent(p.binding9) && p.binding9.key.token === query.selector) {
+	        if (lang_1.isPresent(p.provider9) && p.provider9.key.token === query.selector) {
 	            if (i.obj9 === injector_1.UNDEFINED)
-	                i.obj9 = i.instantiateBinding(p.binding9, p.visibility9);
+	                i.obj9 = i.instantiateProvider(p.provider9, p.visibility9);
 	            list.push(i.obj9);
 	        }
 	    };
 	    return ElementInjectorInlineStrategy;
 	})();
 	/**
-	 * Strategy used by the `ElementInjector` when the number of bindings is 10 or less.
+	 * Strategy used by the `ElementInjector` when the number of providers is 10 or less.
 	 * In such a case, inlining fields is beneficial for performances.
 	 */
 	var ElementInjectorDynamicStrategy = (function () {
@@ -19761,9 +21168,9 @@
 	        var p = inj.protoStrategy;
 	        inj.resetConstructionCounter();
 	        for (var i = 0; i < p.keyIds.length; i++) {
-	            if (p.bindings[i] instanceof DirectiveBinding && lang_1.isPresent(p.keyIds[i]) &&
+	            if (p.providers[i] instanceof DirectiveProvider && lang_1.isPresent(p.keyIds[i]) &&
 	                inj.objs[i] === injector_1.UNDEFINED) {
-	                inj.objs[i] = inj.instantiateBinding(p.bindings[i], p.visibilities[i]);
+	                inj.objs[i] = inj.instantiateProvider(p.providers[i], p.visibilities[i]);
 	            }
 	        }
 	    };
@@ -19774,9 +21181,9 @@
 	    ElementInjectorDynamicStrategy.prototype.callOnDestroy = function () {
 	        var ist = this.injectorStrategy;
 	        var p = ist.protoStrategy;
-	        for (var i = 0; i < p.bindings.length; i++) {
-	            if (p.bindings[i] instanceof DirectiveBinding &&
-	                p.bindings[i].callOnDestroy) {
+	        for (var i = 0; i < p.providers.length; i++) {
+	            if (p.providers[i] instanceof DirectiveProvider &&
+	                p.providers[i].callOnDestroy) {
 	                ist.objs[i].onDestroy();
 	            }
 	        }
@@ -19784,15 +21191,15 @@
 	    ElementInjectorDynamicStrategy.prototype.getComponent = function () { return this.injectorStrategy.objs[0]; };
 	    ElementInjectorDynamicStrategy.prototype.isComponentKey = function (key) {
 	        var p = this.injectorStrategy.protoStrategy;
-	        return this._ei._proto._firstBindingIsComponent && lang_1.isPresent(key) && key.id === p.keyIds[0];
+	        return this._ei._proto._firstProviderIsComponent && lang_1.isPresent(key) && key.id === p.keyIds[0];
 	    };
 	    ElementInjectorDynamicStrategy.prototype.addDirectivesMatchingQuery = function (query, list) {
 	        var ist = this.injectorStrategy;
 	        var p = ist.protoStrategy;
-	        for (var i = 0; i < p.bindings.length; i++) {
-	            if (p.bindings[i].key.token === query.selector) {
+	        for (var i = 0; i < p.providers.length; i++) {
+	            if (p.providers[i].key.token === query.selector) {
 	                if (ist.objs[i] === injector_1.UNDEFINED) {
-	                    ist.objs[i] = ist.instantiateBinding(p.bindings[i], p.visibilities[i]);
+	                    ist.objs[i] = ist.instantiateProvider(p.providers[i], p.visibilities[i]);
 	                }
 	                list.push(ist.objs[i]);
 	            }
@@ -19884,7 +21291,7 @@
 	    };
 	    QueryRef.prototype._visitInjector = function (inj, aggregator) {
 	        if (this.protoQueryRef.query.isVarBindingQuery) {
-	            this._aggregateVariableBindings(inj, aggregator);
+	            this._aggregateVariableBinding(inj, aggregator);
 	        }
 	        else {
 	            this._aggregateDirective(inj, aggregator);
@@ -19906,7 +21313,7 @@
 	                this._visitViewContainer(vc, aggregator);
 	        }
 	    };
-	    QueryRef.prototype._aggregateVariableBindings = function (inj, aggregator) {
+	    QueryRef.prototype._aggregateVariableBinding = function (inj, aggregator) {
 	        var vb = this.protoQueryRef.query.varBindings;
 	        for (var i = 0; i < vb.length; ++i) {
 	            if (inj.hasVariableBinding(vb[i])) {
@@ -19928,7 +21335,7 @@
 	//# sourceMappingURL=element_injector.js.map
 
 /***/ },
-/* 144 */
+/* 143 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -19982,7 +21389,7 @@
 	//# sourceMappingURL=pipe_resolver.js.map
 
 /***/ },
-/* 145 */
+/* 144 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var collection_1 = __webpack_require__(4);
@@ -20055,7 +21462,7 @@
 	//# sourceMappingURL=query_list.js.map
 
 /***/ },
-/* 146 */
+/* 145 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -20071,12 +21478,12 @@
 	};
 	var di_1 = __webpack_require__(3);
 	var collection_1 = __webpack_require__(4);
-	var eli = __webpack_require__(143);
+	var eli = __webpack_require__(142);
 	var lang_1 = __webpack_require__(1);
 	var viewModule = __webpack_require__(85);
 	var element_ref_1 = __webpack_require__(83);
 	var template_ref_1 = __webpack_require__(84);
-	var pipes_1 = __webpack_require__(154);
+	var pipes_1 = __webpack_require__(153);
 	var AppViewManagerUtils = (function () {
 	    function AppViewManagerUtils() {
 	    }
@@ -20195,7 +21602,7 @@
 	            inj.unlink();
 	        }
 	    };
-	    AppViewManagerUtils.prototype.hydrateViewInContainer = function (parentView, boundElementIndex, contextView, contextBoundElementIndex, index, imperativelyCreatedBindings) {
+	    AppViewManagerUtils.prototype.hydrateViewInContainer = function (parentView, boundElementIndex, contextView, contextBoundElementIndex, index, imperativelyCreatedProviders) {
 	        if (lang_1.isBlank(contextView)) {
 	            contextView = parentView;
 	            contextBoundElementIndex = boundElementIndex;
@@ -20203,11 +21610,12 @@
 	        var viewContainer = parentView.viewContainers[boundElementIndex];
 	        var view = viewContainer.views[index];
 	        var elementInjector = contextView.elementInjectors[contextBoundElementIndex];
-	        var injector = lang_1.isPresent(imperativelyCreatedBindings) ?
-	            di_1.Injector.fromResolvedBindings(imperativelyCreatedBindings) :
+	        var injector = lang_1.isPresent(imperativelyCreatedProviders) ?
+	            di_1.Injector.fromResolvedProviders(imperativelyCreatedProviders) :
 	            null;
 	        this._hydrateView(view, injector, elementInjector.getHost(), contextView.context, contextView.locals);
 	    };
+	    /** @internal */
 	    AppViewManagerUtils.prototype._hydrateView = function (initView, imperativelyCreatedInjector, hostElementInjector, context, parentLocals) {
 	        var viewIdx = initView.viewOffset;
 	        var endViewOffset = viewIdx + initView.proto.mergeInfo.viewCount - 1;
@@ -20246,9 +21654,10 @@
 	            }
 	        }
 	    };
+	    /** @internal */
 	    AppViewManagerUtils.prototype._populateViewLocals = function (view, elementInjector, boundElementIdx) {
 	        if (lang_1.isPresent(elementInjector.getDirectiveVariableBindings())) {
-	            collection_1.MapWrapper.forEach(elementInjector.getDirectiveVariableBindings(), function (directiveIndex, name) {
+	            elementInjector.getDirectiveVariableBindings().forEach(function (directiveIndex, name) {
 	                if (lang_1.isBlank(directiveIndex)) {
 	                    view.locals.set(name, view.elementRefs[boundElementIdx].nativeElement);
 	                }
@@ -20258,6 +21667,7 @@
 	            });
 	        }
 	    };
+	    /** @internal */
 	    AppViewManagerUtils.prototype._setUpEventEmitters = function (view, elementInjector, boundElementIndex) {
 	        var emitters = elementInjector.getEventEmitterAccessors();
 	        for (var directiveIndex = 0; directiveIndex < emitters.length; ++directiveIndex) {
@@ -20299,7 +21709,7 @@
 	//# sourceMappingURL=view_manager_utils.js.map
 
 /***/ },
-/* 147 */
+/* 146 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -20322,6 +21732,7 @@
 	exports.APP_VIEW_POOL_CAPACITY = lang_1.CONST_EXPR(new di_1.OpaqueToken('AppViewPool.viewPoolCapacity'));
 	var AppViewPool = (function () {
 	    function AppViewPool(poolCapacityPerProtoView) {
+	        /** @internal */
 	        this._pooledViewsPerProtoView = new collection_1.Map();
 	        this._poolCapacityPerProtoView = poolCapacityPerProtoView;
 	    }
@@ -20356,7 +21767,7 @@
 	//# sourceMappingURL=view_pool.js.map
 
 /***/ },
-/* 148 */
+/* 147 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -20410,9 +21821,7 @@
 	 * ```
 	 * import {Observable} from 'angular2/core';
 	 * @Component({
-	 *   selector: "task-cmp"
-	 * })
-	 * @View({
+	 *   selector: "task-cmp",
 	 *   template: "Time: {{ time | async }}"
 	 * })
 	 * class Task {
@@ -20425,12 +21834,16 @@
 	 */
 	var AsyncPipe = (function () {
 	    function AsyncPipe(_ref) {
-	        this._ref = _ref;
+	        /** @internal */
 	        this._latestValue = null;
+	        /** @internal */
 	        this._latestReturnedValue = null;
+	        /** @internal */
 	        this._subscription = null;
+	        /** @internal */
 	        this._obj = null;
 	        this._strategy = null;
+	        this._ref = _ref;
 	    }
 	    AsyncPipe.prototype.onDestroy = function () {
 	        if (lang_1.isPresent(this._subscription)) {
@@ -20456,6 +21869,7 @@
 	            return change_detection_1.WrappedValue.wrap(this._latestValue);
 	        }
 	    };
+	    /** @internal */
 	    AsyncPipe.prototype._subscribe = function (obj) {
 	        var _this = this;
 	        this._obj = obj;
@@ -20463,6 +21877,7 @@
 	        this._subscription =
 	            this._strategy.createSubscription(obj, function (value) { return _this._updateLatestValue(obj, value); });
 	    };
+	    /** @internal */
 	    AsyncPipe.prototype._selectStrategy = function (obj) {
 	        if (lang_1.isPromise(obj)) {
 	            return _promiseStrategy;
@@ -20474,6 +21889,7 @@
 	            throw new invalid_pipe_argument_exception_1.InvalidPipeArgumentException(AsyncPipe, obj);
 	        }
 	    };
+	    /** @internal */
 	    AsyncPipe.prototype._dispose = function () {
 	        this._strategy.dispose(this._subscription);
 	        this._latestValue = null;
@@ -20481,6 +21897,7 @@
 	        this._subscription = null;
 	        this._obj = null;
 	    };
+	    /** @internal */
 	    AsyncPipe.prototype._updateLatestValue = function (async, value) {
 	        if (async === this._obj) {
 	            this._latestValue = value;
@@ -20498,7 +21915,7 @@
 	//# sourceMappingURL=async_pipe.js.map
 
 /***/ },
-/* 149 */
+/* 148 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -20513,7 +21930,7 @@
 	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 	};
 	var lang_1 = __webpack_require__(1);
-	var intl_1 = __webpack_require__(137);
+	var intl_1 = __webpack_require__(136);
 	var di_1 = __webpack_require__(3);
 	var metadata_1 = __webpack_require__(7);
 	var collection_1 = __webpack_require__(4);
@@ -20618,7 +22035,7 @@
 	//# sourceMappingURL=date_pipe.js.map
 
 /***/ },
-/* 150 */
+/* 149 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -20644,9 +22061,7 @@
 	 *
 	 *  ```
 	 * @Component({
-	 *   selector: "user-cmp"
-	 * })
-	 * @View({
+	 *   selector: "user-cmp",
 	 *   template: "User: {{ user | json }}"
 	 * })
 	 * class Username {
@@ -20677,7 +22092,7 @@
 	//# sourceMappingURL=json_pipe.js.map
 
 /***/ },
-/* 151 */
+/* 150 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -20704,9 +22119,7 @@
 	 *
 	 *  ```
 	 * @Component({
-	 *   selector: "username-cmp"
-	 * })
-	 * @View({
+	 *   selector: "username-cmp",
 	 *   template: "Username: {{ user | lowercase }}"
 	 * })
 	 * class Username {
@@ -20739,7 +22152,7 @@
 	//# sourceMappingURL=lowercase_pipe.js.map
 
 /***/ },
-/* 152 */
+/* 151 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -20760,7 +22173,7 @@
 	};
 	var lang_1 = __webpack_require__(1);
 	var exceptions_1 = __webpack_require__(5);
-	var intl_1 = __webpack_require__(137);
+	var intl_1 = __webpack_require__(136);
 	var di_1 = __webpack_require__(3);
 	var metadata_1 = __webpack_require__(7);
 	var collection_1 = __webpack_require__(4);
@@ -20925,7 +22338,7 @@
 	//# sourceMappingURL=number_pipe.js.map
 
 /***/ },
-/* 153 */
+/* 152 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -20933,33 +22346,33 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var binding_1 = __webpack_require__(43);
+	var provider_1 = __webpack_require__(43);
 	var di_1 = __webpack_require__(3);
-	var PipeBinding = (function (_super) {
-	    __extends(PipeBinding, _super);
-	    function PipeBinding(name, pure, key, resolvedFactories, multiBinding) {
+	var PipeProvider = (function (_super) {
+	    __extends(PipeProvider, _super);
+	    function PipeProvider(name, pure, key, resolvedFactories, multiBinding) {
 	        _super.call(this, key, resolvedFactories, multiBinding);
 	        this.name = name;
 	        this.pure = pure;
 	    }
-	    PipeBinding.createFromType = function (type, metadata) {
-	        var binding = new di_1.Binding(type, { toClass: type });
-	        var rb = binding_1.resolveBinding(binding);
-	        return new PipeBinding(metadata.name, metadata.pure, rb.key, rb.resolvedFactories, rb.multiBinding);
+	    PipeProvider.createFromType = function (type, metadata) {
+	        var provider = new di_1.Provider(type, { useClass: type });
+	        var rb = provider_1.resolveProvider(provider);
+	        return new PipeProvider(metadata.name, metadata.pure, rb.key, rb.resolvedFactories, rb.multiProvider);
 	    };
-	    return PipeBinding;
-	})(binding_1.ResolvedBinding_);
-	exports.PipeBinding = PipeBinding;
-	//# sourceMappingURL=pipe_binding.js.map
+	    return PipeProvider;
+	})(provider_1.ResolvedProvider_);
+	exports.PipeProvider = PipeProvider;
+	//# sourceMappingURL=pipe_provider.js.map
 
 /***/ },
-/* 154 */
+/* 153 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
 	var exceptions_1 = __webpack_require__(5);
 	var collection_1 = __webpack_require__(4);
-	var cd = __webpack_require__(281);
+	var cd = __webpack_require__(280);
 	var ProtoPipes = (function () {
 	    function ProtoPipes(
 	        /**
@@ -20969,16 +22382,16 @@
 	        this.config = config;
 	        this.config = config;
 	    }
-	    ProtoPipes.fromBindings = function (bindings) {
+	    ProtoPipes.fromProviders = function (providers) {
 	        var config = {};
-	        bindings.forEach(function (b) { return config[b.name] = b; });
+	        providers.forEach(function (b) { return config[b.name] = b; });
 	        return new ProtoPipes(config);
 	    };
 	    ProtoPipes.prototype.get = function (name) {
-	        var binding = this.config[name];
-	        if (lang_1.isBlank(binding))
+	        var provider = this.config[name];
+	        if (lang_1.isBlank(provider))
 	            throw new exceptions_1.BaseException("Cannot find pipe '" + name + "'.");
-	        return binding;
+	        return provider;
 	    };
 	    return ProtoPipes;
 	})();
@@ -20987,6 +22400,7 @@
 	    function Pipes(proto, injector) {
 	        this.proto = proto;
 	        this.injector = injector;
+	        /** @internal */
 	        this._config = {};
 	    }
 	    Pipes.prototype.get = function (name) {
@@ -21007,7 +22421,7 @@
 	//# sourceMappingURL=pipes.js.map
 
 /***/ },
-/* 155 */
+/* 154 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -21117,7 +22531,7 @@
 	//# sourceMappingURL=slice_pipe.js.map
 
 /***/ },
-/* 156 */
+/* 155 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -21144,9 +22558,7 @@
 	 *
 	 *  ```
 	 * @Component({
-	 *   selector: "username-cmp"
-	 * })
-	 * @View({
+	 *   selector: "username-cmp",
 	 *   template: "Username: {{ user | uppercase }}"
 	 * })
 	 * class Username {
@@ -21179,7 +22591,7 @@
 	//# sourceMappingURL=uppercase_pipe.js.map
 
 /***/ },
-/* 157 */
+/* 156 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
@@ -21198,9 +22610,13 @@
 	exports.ReflectionInfo = ReflectionInfo;
 	var Reflector = (function () {
 	    function Reflector(reflectionCapabilities) {
+	        /** @internal */
 	        this._injectableInfo = new collection_1.Map();
+	        /** @internal */
 	        this._getters = new collection_1.Map();
+	        /** @internal */
 	        this._setters = new collection_1.Map();
+	        /** @internal */
 	        this._methods = new collection_1.Map();
 	        this._usedKeys = null;
 	        this.reflectionCapabilities = reflectionCapabilities;
@@ -21302,12 +22718,14 @@
 	            return this.reflectionCapabilities.method(name);
 	        }
 	    };
+	    /** @internal */
 	    Reflector.prototype._getReflectionInfo = function (typeOrFunc) {
 	        if (lang_1.isPresent(this._usedKeys)) {
 	            this._usedKeys.add(typeOrFunc);
 	        }
 	        return this._injectableInfo.get(typeOrFunc);
 	    };
+	    /** @internal */
 	    Reflector.prototype._containsReflectionInfo = function (typeOrFunc) { return this._injectableInfo.has(typeOrFunc); };
 	    Reflector.prototype.importUri = function (type) { return this.reflectionCapabilities.importUri(type); };
 	    return Reflector;
@@ -21319,7 +22737,7 @@
 	//# sourceMappingURL=reflector.js.map
 
 /***/ },
-/* 158 */
+/* 157 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';/**
@@ -21331,13 +22749,13 @@
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
 	__export(__webpack_require__(92));
-	__export(__webpack_require__(305));
+	__export(__webpack_require__(304));
 	__export(__webpack_require__(91));
 	__export(__webpack_require__(28));
 	//# sourceMappingURL=render.js.map
 
 /***/ },
-/* 159 */
+/* 158 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -21369,13 +22787,14 @@
 	exports.DefaultRenderFragmentRef = DefaultRenderFragmentRef;
 	var DefaultRenderView = (function (_super) {
 	    __extends(DefaultRenderView, _super);
-	    function DefaultRenderView(fragments, boundTextNodes, boundElements, nativeShadowRoots, globalEventAdders) {
+	    function DefaultRenderView(fragments, boundTextNodes, boundElements, nativeShadowRoots, globalEventAdders, rootContentInsertionPoints) {
 	        _super.call(this);
 	        this.fragments = fragments;
 	        this.boundTextNodes = boundTextNodes;
 	        this.boundElements = boundElements;
 	        this.nativeShadowRoots = nativeShadowRoots;
 	        this.globalEventAdders = globalEventAdders;
+	        this.rootContentInsertionPoints = rootContentInsertionPoints;
 	        this.hydrated = false;
 	        this.eventDispatcher = null;
 	        this.globalEventRemovers = null;
@@ -21415,6 +22834,7 @@
 	//# sourceMappingURL=view.js.map
 
 /***/ },
+/* 159 */,
 /* 160 */,
 /* 161 */,
 /* 162 */,
@@ -21505,8 +22925,7 @@
 /* 247 */,
 /* 248 */,
 /* 249 */,
-/* 250 */,
-/* 251 */
+/* 250 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -21522,7 +22941,7 @@
 
 
 /***/ },
-/* 252 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21602,7 +23021,7 @@
 
 
 /***/ },
-/* 253 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -21724,7 +23143,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 254 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -21766,31 +23185,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 255 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';/**
-	 * This file is only used for dart applications and for internal examples
-	 * that compile with both JavaScript and Dart.
-	 */
-	var bootstrap_1 = __webpack_require__(108);
-	exports.bootstrap = bootstrap_1.bootstrap;
-	//# sourceMappingURL=bootstrap.js.map
-
-/***/ },
-/* 256 */
-/***/ function(module, exports) {
-
-	'use strict';/**
-	 * @module
-	 * @description
-	 * Defines interfaces to be implemented by directives when they need to hook into the change
-	 * detection mechanism.
-	 */
-	//# sourceMappingURL=lifecycle_hooks.js.map
-
-/***/ },
-/* 257 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21801,11 +23196,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _Subscriber = __webpack_require__(102);
+	var _Subscriber = __webpack_require__(100);
 	
 	var _Subscriber2 = _interopRequireDefault(_Subscriber);
 	
-	var _utilSymbol_observable = __webpack_require__(260);
+	var _utilSymbol_observable = __webpack_require__(257);
 	
 	var _utilSymbol_observable2 = _interopRequireDefault(_utilSymbol_observable);
 	
@@ -21926,7 +23321,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 258 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21939,11 +23334,11 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _Observable2 = __webpack_require__(257);
+	var _Observable2 = __webpack_require__(254);
 	
 	var _Observable3 = _interopRequireDefault(_Observable2);
 	
-	var _Subscriber = __webpack_require__(102);
+	var _Subscriber = __webpack_require__(100);
 	
 	var _Subscriber2 = _interopRequireDefault(_Subscriber);
 	
@@ -21951,7 +23346,7 @@
 	
 	var _Subscription2 = _interopRequireDefault(_Subscription);
 	
-	var _subjectsSubjectSubscription = __webpack_require__(259);
+	var _subjectsSubjectSubscription = __webpack_require__(256);
 	
 	var _subjectsSubjectSubscription2 = _interopRequireDefault(_subjectsSubjectSubscription);
 	
@@ -22147,7 +23542,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 259 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22200,14 +23595,14 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 260 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _root = __webpack_require__(262);
+	var _root = __webpack_require__(259);
 	
 	if (!_root.root.Symbol) {
 	    _root.root.Symbol = {};
@@ -22223,7 +23618,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 261 */
+/* 258 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -22236,7 +23631,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 262 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module, global) {'use strict';
@@ -22258,10 +23653,10 @@
 	if (freeGlobal && (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal)) {
 	    exports.root = root = freeGlobal;
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(251)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(250)(module), (function() { return this; }())))
 
 /***/ },
-/* 263 */
+/* 260 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -22276,7 +23671,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 264 */
+/* 261 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -22299,7 +23694,31 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 265 */
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';/**
+	 * This file is only used for dart applications and for internal examples
+	 * that compile with both JavaScript and Dart.
+	 */
+	var bootstrap_1 = __webpack_require__(107);
+	exports.bootstrap = bootstrap_1.bootstrap;
+	//# sourceMappingURL=bootstrap.js.map
+
+/***/ },
+/* 263 */
+/***/ function(module, exports) {
+
+	'use strict';/**
+	 * @module
+	 * @description
+	 * Defines interfaces to be implemented by directives when they need to hook into the change
+	 * detection mechanism.
+	 */
+	//# sourceMappingURL=lifecycle_hooks.js.map
+
+/***/ },
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var profile_1 = __webpack_require__(27);
@@ -22310,7 +23729,7 @@
 	//# sourceMappingURL=profile.js.map
 
 /***/ },
-/* 266 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';function __export(m) {
@@ -22326,11 +23745,11 @@
 	//# sourceMappingURL=render.js.map
 
 /***/ },
-/* 267 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
-	var math_1 = __webpack_require__(138);
+	var math_1 = __webpack_require__(137);
 	var util_1 = __webpack_require__(93);
 	var collection_1 = __webpack_require__(4);
 	var dom_adapter_1 = __webpack_require__(8);
@@ -22513,11 +23932,11 @@
 	//# sourceMappingURL=animation.js.map
 
 /***/ },
-/* 268 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';var css_animation_options_1 = __webpack_require__(269);
-	var animation_1 = __webpack_require__(267);
+	'use strict';var css_animation_options_1 = __webpack_require__(268);
+	var animation_1 = __webpack_require__(266);
 	var CssAnimationBuilder = (function () {
 	    /**
 	     * Accepts public properties for CssAnimationBuilder
@@ -22604,7 +24023,7 @@
 	//# sourceMappingURL=css_animation_builder.js.map
 
 /***/ },
-/* 269 */
+/* 268 */
 /***/ function(module, exports) {
 
 	'use strict';var CssAnimationOptions = (function () {
@@ -22622,7 +24041,7 @@
 	//# sourceMappingURL=css_animation_options.js.map
 
 /***/ },
-/* 270 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
@@ -22692,11 +24111,11 @@
 	//# sourceMappingURL=coalesce.js.map
 
 /***/ },
-/* 271 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
-	var codegen_facade_1 = __webpack_require__(113);
+	var codegen_facade_1 = __webpack_require__(112);
 	var proto_record_1 = __webpack_require__(39);
 	var constants_1 = __webpack_require__(17);
 	var exceptions_1 = __webpack_require__(5);
@@ -22786,6 +24205,7 @@
 	        }
 	        return getLocalName(protoRec.selfIndex) + " = " + rhs + ";";
 	    };
+	    /** @internal */
 	    CodegenLogicUtil.prototype._observe = function (exp, rec) {
 	        // This is an experimental feature. Works only in Dart.
 	        if (this._changeDetection === constants_1.ChangeDetectionStrategy.OnPushObserve) {
@@ -22812,6 +24232,7 @@
 	        });
 	        return "[" + bs.join(", ") + "]";
 	    };
+	    /** @internal */
 	    CodegenLogicUtil.prototype._genInterpolation = function (protoRec) {
 	        var iVals = [];
 	        for (var i = 0; i < protoRec.args.length; ++i) {
@@ -22882,7 +24303,7 @@
 	//# sourceMappingURL=codegen_logic_util.js.map
 
 /***/ },
-/* 272 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
@@ -22920,6 +24341,7 @@
 	        this._eventBindings = _eventBindings;
 	        this._directiveRecords = _directiveRecords;
 	        this._utilName = _utilName;
+	        /** @internal */
 	        this._sanitizedEventNames = new collection_1.Map();
 	        this._sanitizedNames = collection_1.ListWrapper.createFixedSize(this._records.length + 1);
 	        this._sanitizedNames[exports.CONTEXT_INDEX] = _CONTEXT_ACCESSOR;
@@ -22935,6 +24357,7 @@
 	            this._sanitizedEventNames.set(eb, names);
 	        }
 	    }
+	    /** @internal */
 	    CodegenNameUtil.prototype._addFieldPrefix = function (name) { return "" + _FIELD_PREFIX + name; };
 	    CodegenNameUtil.prototype.getDispatcherName = function () { return this._addFieldPrefix(_DISPATCHER_ACCESSOR); };
 	    CodegenNameUtil.prototype.getPipesAccessorName = function () { return this._addFieldPrefix(_PIPES_ACCESSOR); };
@@ -22946,7 +24369,7 @@
 	    CodegenNameUtil.prototype.getPropertyBindingIndex = function () { return this._addFieldPrefix(_PROP_BINDING_INDEX); };
 	    CodegenNameUtil.prototype.getLocalName = function (idx) { return "l_" + this._sanitizedNames[idx]; };
 	    CodegenNameUtil.prototype.getEventLocalName = function (eb, idx) {
-	        return "l_" + collection_1.MapWrapper.get(this._sanitizedEventNames, eb)[idx];
+	        return "l_" + this._sanitizedEventNames.get(eb)[idx];
 	    };
 	    CodegenNameUtil.prototype.getChangeName = function (idx) { return "c_" + this._sanitizedNames[idx]; };
 	    /**
@@ -22980,7 +24403,7 @@
 	    CodegenNameUtil.prototype.genInitEventLocals = function () {
 	        var _this = this;
 	        var res = [(this.getLocalName(exports.CONTEXT_INDEX) + " = " + this.getFieldName(exports.CONTEXT_INDEX))];
-	        collection_1.MapWrapper.forEach(this._sanitizedEventNames, function (names, eb) {
+	        this._sanitizedEventNames.forEach(function (names, eb) {
 	            for (var i = 0; i < names.length; ++i) {
 	                if (i !== exports.CONTEXT_INDEX) {
 	                    res.push("" + _this.getEventLocalName(eb, i));
@@ -23048,7 +24471,7 @@
 	//# sourceMappingURL=codegen_name_util.js.map
 
 /***/ },
-/* 273 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -23207,6 +24630,8 @@
 	     * currentKey, and clear all of the queues (additions, moves, removals).
 	     * Set the previousIndexes of moved and added items to their currentIndexes
 	     * Reset the list of additions, moves and removals
+	     *
+	     * @internal
 	     */
 	    DefaultIterableDiffer.prototype._reset = function () {
 	        if (this.isDirty) {
@@ -23234,6 +24659,8 @@
 	     *   item.
 	     * - `item` is the current item in the collection
 	     * - `index` is the position of the item in the collection
+	     *
+	     * @internal
 	     */
 	    DefaultIterableDiffer.prototype._mismatch = function (record, item, index) {
 	        // The previous record after which we will append the current one.
@@ -23290,6 +24717,8 @@
 	     * at the end. Which will show up as the two 'a's switching position. This is incorrect, since a
 	     * better way to think of it is as insert of 'b' rather then switch 'a' with 'b' and then add 'a'
 	     * at the end.
+	     *
+	     * @internal
 	     */
 	    DefaultIterableDiffer.prototype._verifyReinsertion = function (record, item, index) {
 	        var reinsertRecord = this._unlinkedRecords === null ? null : this._unlinkedRecords.get(item);
@@ -23306,6 +24735,8 @@
 	     * Get rid of any excess {@link CollectionChangeRecord}s from the previous collection
 	     *
 	     * - `record` The first excess {@link CollectionChangeRecord}.
+	     *
+	     * @internal
 	     */
 	    DefaultIterableDiffer.prototype._truncate = function (record) {
 	        // Anything after that needs to be removed;
@@ -23330,6 +24761,7 @@
 	            this._removalsTail._nextRemoved = null;
 	        }
 	    };
+	    /** @internal */
 	    DefaultIterableDiffer.prototype._reinsertAfter = function (record, prevRecord, index) {
 	        if (this._unlinkedRecords !== null) {
 	            this._unlinkedRecords.remove(record);
@@ -23352,12 +24784,14 @@
 	        this._addToMoves(record, index);
 	        return record;
 	    };
+	    /** @internal */
 	    DefaultIterableDiffer.prototype._moveAfter = function (record, prevRecord, index) {
 	        this._unlink(record);
 	        this._insertAfter(record, prevRecord, index);
 	        this._addToMoves(record, index);
 	        return record;
 	    };
+	    /** @internal */
 	    DefaultIterableDiffer.prototype._addAfter = function (record, prevRecord, index) {
 	        this._insertAfter(record, prevRecord, index);
 	        if (this._additionsTail === null) {
@@ -23373,6 +24807,7 @@
 	        }
 	        return record;
 	    };
+	    /** @internal */
 	    DefaultIterableDiffer.prototype._insertAfter = function (record, prevRecord, index) {
 	        // todo(vicb)
 	        // assert(record != prevRecord);
@@ -23403,9 +24838,11 @@
 	        record.currentIndex = index;
 	        return record;
 	    };
+	    /** @internal */
 	    DefaultIterableDiffer.prototype._remove = function (record) {
 	        return this._addToRemovals(this._unlink(record));
 	    };
+	    /** @internal */
 	    DefaultIterableDiffer.prototype._unlink = function (record) {
 	        if (this._linkedRecords !== null) {
 	            this._linkedRecords.remove(record);
@@ -23429,6 +24866,7 @@
 	        }
 	        return record;
 	    };
+	    /** @internal */
 	    DefaultIterableDiffer.prototype._addToMoves = function (record, toIndex) {
 	        // todo(vicb)
 	        // assert(record._nextMoved === null);
@@ -23447,6 +24885,7 @@
 	        }
 	        return record;
 	    };
+	    /** @internal */
 	    DefaultIterableDiffer.prototype._addToRemovals = function (record) {
 	        if (this._unlinkedRecords === null) {
 	            this._unlinkedRecords = new _DuplicateMap();
@@ -23503,14 +24942,23 @@
 	        this.item = item;
 	        this.currentIndex = null;
 	        this.previousIndex = null;
+	        /** @internal */
 	        this._nextPrevious = null;
+	        /** @internal */
 	        this._prev = null;
+	        /** @internal */
 	        this._next = null;
+	        /** @internal */
 	        this._prevDup = null;
+	        /** @internal */
 	        this._nextDup = null;
+	        /** @internal */
 	        this._prevRemoved = null;
+	        /** @internal */
 	        this._nextRemoved = null;
+	        /** @internal */
 	        this._nextAdded = null;
+	        /** @internal */
 	        this._nextMoved = null;
 	    }
 	    CollectionChangeRecord.prototype.toString = function () {
@@ -23525,7 +24973,9 @@
 	// A linked list of CollectionChangeRecords with the same CollectionChangeRecord.item
 	var _DuplicateItemRecordList = (function () {
 	    function _DuplicateItemRecordList() {
+	        /** @internal */
 	        this._head = null;
+	        /** @internal */
 	        this._tail = null;
 	    }
 	    /**
@@ -23632,12 +25082,12 @@
 	        var recordList = this.map.get(key);
 	        // Remove the list of duplicates when it gets empty
 	        if (recordList.remove(record)) {
-	            collection_1.MapWrapper.delete(this.map, key);
+	            this.map.delete(key);
 	        }
 	        return record;
 	    };
 	    Object.defineProperty(_DuplicateMap.prototype, "isEmpty", {
-	        get: function () { return collection_1.MapWrapper.size(this.map) === 0; },
+	        get: function () { return this.map.size === 0; },
 	        enumerable: true,
 	        configurable: true
 	    });
@@ -23648,7 +25098,7 @@
 	//# sourceMappingURL=default_iterable_differ.js.map
 
 /***/ },
-/* 274 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -23794,6 +25244,7 @@
 	        this._truncate(lastOldSeqRecord, oldSeqRecord);
 	        return this.isDirty;
 	    };
+	    /** @internal */
 	    DefaultKeyValueDiffer.prototype._reset = function () {
 	        if (this.isDirty) {
 	            var record;
@@ -23837,6 +25288,7 @@
 	            this._removalsHead = this._removalsTail = null;
 	        }
 	    };
+	    /** @internal */
 	    DefaultKeyValueDiffer.prototype._truncate = function (lastRecord, record) {
 	        while (record !== null) {
 	            if (lastRecord === null) {
@@ -23858,13 +25310,15 @@
 	        for (var rec = this._removalsHead; rec !== null; rec = rec._nextRemoved) {
 	            rec.previousValue = rec.currentValue;
 	            rec.currentValue = null;
-	            collection_1.MapWrapper.delete(this._records, rec.key);
+	            this._records.delete(rec.key);
 	        }
 	    };
+	    /** @internal */
 	    DefaultKeyValueDiffer.prototype._isInRemovals = function (record) {
 	        return record === this._removalsHead || record._nextRemoved !== null ||
 	            record._prevRemoved !== null;
 	    };
+	    /** @internal */
 	    DefaultKeyValueDiffer.prototype._addToRemovals = function (record) {
 	        // todo(vicb) assert
 	        // assert(record._next == null);
@@ -23881,6 +25335,7 @@
 	            this._removalsTail = record;
 	        }
 	    };
+	    /** @internal */
 	    DefaultKeyValueDiffer.prototype._removeFromSeq = function (prev, record) {
 	        var next = record._next;
 	        if (prev === null) {
@@ -23895,6 +25350,7 @@
 	        //  return true;
 	        //})());
 	    };
+	    /** @internal */
 	    DefaultKeyValueDiffer.prototype._removeFromRemovals = function (record) {
 	        // todo(vicb) assert
 	        // assert(record._next == null);
@@ -23916,6 +25372,7 @@
 	        }
 	        record._prevRemoved = record._nextRemoved = null;
 	    };
+	    /** @internal */
 	    DefaultKeyValueDiffer.prototype._addToAdditions = function (record) {
 	        // todo(vicb): assert
 	        // assert(record._next == null);
@@ -23931,6 +25388,7 @@
 	            this._additionsTail = record;
 	        }
 	    };
+	    /** @internal */
 	    DefaultKeyValueDiffer.prototype._addToChanges = function (record) {
 	        // todo(vicb) assert
 	        // assert(record._nextAdded == null);
@@ -23971,9 +25429,10 @@
 	            "additions: " + additions.join(', ') + "\n" + "changes: " + changes.join(', ') + "\n" +
 	            "removals: " + removals.join(', ') + "\n";
 	    };
+	    /** @internal */
 	    DefaultKeyValueDiffer.prototype._forEach = function (obj, fn) {
 	        if (obj instanceof Map) {
-	            collection_1.MapWrapper.forEach(obj, fn);
+	            obj.forEach(fn);
 	        }
 	        else {
 	            collection_1.StringMapWrapper.forEach(obj, fn);
@@ -23987,11 +25446,17 @@
 	        this.key = key;
 	        this.previousValue = null;
 	        this.currentValue = null;
+	        /** @internal */
 	        this._nextPrevious = null;
+	        /** @internal */
 	        this._next = null;
+	        /** @internal */
 	        this._nextAdded = null;
+	        /** @internal */
 	        this._nextRemoved = null;
+	        /** @internal */
 	        this._prevRemoved = null;
+	        /** @internal */
 	        this._nextChanged = null;
 	    }
 	    KVChangeRecord.prototype.toString = function () {
@@ -24006,7 +25471,7 @@
 	//# sourceMappingURL=default_keyvalue_differ.js.map
 
 /***/ },
-/* 275 */
+/* 274 */
 /***/ function(module, exports) {
 
 	'use strict';var EventBinding = (function () {
@@ -24022,10 +25487,10 @@
 	//# sourceMappingURL=event_binding.js.map
 
 /***/ },
-/* 276 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';var change_detection_jit_generator_1 = __webpack_require__(111);
+	'use strict';var change_detection_jit_generator_1 = __webpack_require__(110);
 	var JitProtoChangeDetector = (function () {
 	    function JitProtoChangeDetector(definition) {
 	        this.definition = definition;
@@ -24033,6 +25498,7 @@
 	    }
 	    JitProtoChangeDetector.isSupported = function () { return true; };
 	    JitProtoChangeDetector.prototype.instantiate = function (dispatcher) { return this._factory(dispatcher); };
+	    /** @internal */
 	    JitProtoChangeDetector.prototype._createFactory = function (definition) {
 	        return new change_detection_jit_generator_1.ChangeDetectorJITGenerator(definition, 'util', 'AbstractChangeDetector').generate();
 	    };
@@ -24042,7 +25508,7 @@
 	//# sourceMappingURL=jit_proto_change_detector.js.map
 
 /***/ },
-/* 277 */
+/* 276 */
 /***/ function(module, exports) {
 
 	'use strict';function isObservable(value) {
@@ -24052,15 +25518,12 @@
 	//# sourceMappingURL=observable_facade.js.map
 
 /***/ },
-/* 278 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
 	var exceptions_1 = __webpack_require__(5);
 	var collection_1 = __webpack_require__(4);
-	/**
-	 * @internal
-	 */
 	var Locals = (function () {
 	    function Locals(parent, current) {
 	        this.parent = parent;
@@ -24102,7 +25565,7 @@
 	//# sourceMappingURL=locals.js.map
 
 /***/ },
-/* 279 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -24125,7 +25588,7 @@
 	var lang_1 = __webpack_require__(1);
 	var exceptions_1 = __webpack_require__(5);
 	var collection_1 = __webpack_require__(4);
-	var lexer_1 = __webpack_require__(118);
+	var lexer_1 = __webpack_require__(117);
 	var reflection_1 = __webpack_require__(11);
 	var ast_1 = __webpack_require__(61);
 	var _implicitReceiver = new ast_1.ImplicitReceiver();
@@ -24139,7 +25602,7 @@
 	    return ParseException;
 	})(exceptions_1.BaseException);
 	var Parser = (function () {
-	    function Parser(_lexer, providedReflector) {
+	    function Parser(/** @internal */ _lexer, providedReflector) {
 	        if (providedReflector === void 0) { providedReflector = null; }
 	        this._lexer = _lexer;
 	        this._reflector = lang_1.isPresent(providedReflector) ? providedReflector : reflection_1.reflector;
@@ -24751,7 +26214,7 @@
 	//# sourceMappingURL=parser.js.map
 
 /***/ },
-/* 280 */
+/* 279 */
 /***/ function(module, exports) {
 
 	'use strict';function implementsOnDestroy(pipe) {
@@ -24761,7 +26224,7 @@
 	//# sourceMappingURL=pipe_lifecycle_reflector.js.map
 
 /***/ },
-/* 281 */
+/* 280 */
 /***/ function(module, exports) {
 
 	'use strict';var SelectedPipe = (function () {
@@ -24775,7 +26238,7 @@
 	//# sourceMappingURL=pipes.js.map
 
 /***/ },
-/* 282 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -24820,7 +26283,7 @@
 	//# sourceMappingURL=anchor_based_app_root_url.js.map
 
 /***/ },
-/* 283 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var collection_1 = __webpack_require__(4);
@@ -24983,10 +26446,10 @@
 	//# sourceMappingURL=change_definition_factory.js.map
 
 /***/ },
-/* 284 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';var runtime_compiler_1 = __webpack_require__(121);
+	'use strict';var runtime_compiler_1 = __webpack_require__(120);
 	var template_compiler_1 = __webpack_require__(69);
 	exports.TemplateCompiler = template_compiler_1.TemplateCompiler;
 	var directive_metadata_1 = __webpack_require__(40);
@@ -24998,24 +26461,24 @@
 	exports.SourceWithImports = source_module_1.SourceWithImports;
 	var lang_1 = __webpack_require__(1);
 	var di_1 = __webpack_require__(3);
-	var template_parser_1 = __webpack_require__(126);
+	var template_parser_1 = __webpack_require__(125);
 	var html_parser_1 = __webpack_require__(65);
-	var template_normalizer_1 = __webpack_require__(125);
-	var runtime_metadata_1 = __webpack_require__(122);
-	var change_detector_compiler_1 = __webpack_require__(120);
+	var template_normalizer_1 = __webpack_require__(124);
+	var runtime_metadata_1 = __webpack_require__(121);
+	var change_detector_compiler_1 = __webpack_require__(119);
 	var style_compiler_1 = __webpack_require__(67);
 	var command_compiler_1 = __webpack_require__(63);
 	var template_compiler_2 = __webpack_require__(69);
 	var change_detection_1 = __webpack_require__(10);
 	var compiler_1 = __webpack_require__(25);
-	var runtime_compiler_2 = __webpack_require__(121);
+	var runtime_compiler_2 = __webpack_require__(120);
 	var element_schema_registry_1 = __webpack_require__(66);
-	var dom_element_schema_registry_1 = __webpack_require__(285);
+	var dom_element_schema_registry_1 = __webpack_require__(284);
 	var url_resolver_1 = __webpack_require__(41);
 	var app_root_url_1 = __webpack_require__(62);
-	var anchor_based_app_root_url_1 = __webpack_require__(282);
+	var anchor_based_app_root_url_1 = __webpack_require__(281);
 	var change_detection_2 = __webpack_require__(10);
-	function compilerBindings() {
+	function compilerProviders() {
 	    return [
 	        change_detection_2.Lexer,
 	        change_detection_2.Parser,
@@ -25026,23 +26489,24 @@
 	        style_compiler_1.StyleCompiler,
 	        command_compiler_1.CommandCompiler,
 	        change_detector_compiler_1.ChangeDetectionCompiler,
-	        di_1.bind(change_detection_1.ChangeDetectorGenConfig)
-	            .toValue(new change_detection_1.ChangeDetectorGenConfig(lang_1.assertionsEnabled(), lang_1.assertionsEnabled(), false, true)),
+	        di_1.provide(change_detection_1.ChangeDetectorGenConfig, {
+	            useValue: new change_detection_1.ChangeDetectorGenConfig(lang_1.assertionsEnabled(), lang_1.assertionsEnabled(), false, true)
+	        }),
 	        template_compiler_2.TemplateCompiler,
-	        di_1.bind(runtime_compiler_2.RuntimeCompiler).toClass(runtime_compiler_1.RuntimeCompiler_),
-	        di_1.bind(compiler_1.Compiler).toAlias(runtime_compiler_2.RuntimeCompiler),
+	        di_1.provide(runtime_compiler_2.RuntimeCompiler, { useClass: runtime_compiler_1.RuntimeCompiler_ }),
+	        di_1.provide(compiler_1.Compiler, { useExisting: runtime_compiler_2.RuntimeCompiler }),
 	        dom_element_schema_registry_1.DomElementSchemaRegistry,
-	        di_1.bind(element_schema_registry_1.ElementSchemaRegistry).toAlias(dom_element_schema_registry_1.DomElementSchemaRegistry),
+	        di_1.provide(element_schema_registry_1.ElementSchemaRegistry, { useExisting: dom_element_schema_registry_1.DomElementSchemaRegistry }),
 	        anchor_based_app_root_url_1.AnchorBasedAppRootUrl,
-	        di_1.bind(app_root_url_1.AppRootUrl).toAlias(anchor_based_app_root_url_1.AnchorBasedAppRootUrl),
+	        di_1.provide(app_root_url_1.AppRootUrl, { useExisting: anchor_based_app_root_url_1.AnchorBasedAppRootUrl }),
 	        url_resolver_1.UrlResolver
 	    ];
 	}
-	exports.compilerBindings = compilerBindings;
+	exports.compilerProviders = compilerProviders;
 	//# sourceMappingURL=compiler.js.map
 
 /***/ },
-/* 285 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -25105,7 +26569,7 @@
 	//# sourceMappingURL=dom_element_schema_registry.js.map
 
 /***/ },
-/* 286 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var dom_adapter_1 = __webpack_require__(8);
@@ -25261,6 +26725,7 @@
 	        cssText = this._insertDirectives(cssText);
 	        return this._scopeCssText(cssText, selector, hostSelector);
 	    };
+	    /** @internal */
 	    ShadowCss.prototype._insertDirectives = function (cssText) {
 	        cssText = this._insertPolyfillDirectivesInCssText(cssText);
 	        return this._insertPolyfillRulesInCssText(cssText);
@@ -25279,6 +26744,7 @@
 	     * scopeName menu-item {
 	     *
 	    **/
+	    /** @internal */
 	    ShadowCss.prototype._insertPolyfillDirectivesInCssText = function (cssText) {
 	        // Difference with webcomponents.js: does not handle comments
 	        return lang_1.StringWrapper.replaceAllMapped(cssText, _cssContentNextSelectorRe, function (m) { return m[1] + '{'; });
@@ -25298,6 +26764,7 @@
 	     * scopeName menu-item {...}
 	     *
 	    **/
+	    /** @internal */
 	    ShadowCss.prototype._insertPolyfillRulesInCssText = function (cssText) {
 	        // Difference with webcomponents.js: does not handle comments
 	        return lang_1.StringWrapper.replaceAllMapped(cssText, _cssContentRuleRe, function (m) {
@@ -25315,6 +26782,7 @@
 	     *
 	     *  scopeName .foo { ... }
 	    */
+	    /** @internal */
 	    ShadowCss.prototype._scopeCssText = function (cssText, scopeSelector, hostSelector) {
 	        var _this = this;
 	        var unscoped = this._extractUnscopedRulesFromCssText(cssText);
@@ -25343,6 +26811,7 @@
 	     * menu-item {...}
 	     *
 	    **/
+	    /** @internal */
 	    ShadowCss.prototype._extractUnscopedRulesFromCssText = function (cssText) {
 	        // Difference with webcomponents.js: does not handle comments
 	        var r = '', m;
@@ -25362,6 +26831,7 @@
 	     *
 	     * scopeName.foo > .bar
 	    */
+	    /** @internal */
 	    ShadowCss.prototype._convertColonHost = function (cssText) {
 	        return this._convertColonRule(cssText, _cssColonHostRe, this._colonHostPartReplacer);
 	    };
@@ -25380,9 +26850,11 @@
 	     *
 	     * scopeName.foo .bar { ... }
 	    */
+	    /** @internal */
 	    ShadowCss.prototype._convertColonHostContext = function (cssText) {
 	        return this._convertColonRule(cssText, _cssColonHostContextRe, this._colonHostContextPartReplacer);
 	    };
+	    /** @internal */
 	    ShadowCss.prototype._convertColonRule = function (cssText, regExp, partReplacer) {
 	        // p1 = :host, p2 = contents of (), p3 rest of rule
 	        return lang_1.StringWrapper.replaceAllMapped(cssText, regExp, function (m) {
@@ -25402,6 +26874,7 @@
 	            }
 	        });
 	    };
+	    /** @internal */
 	    ShadowCss.prototype._colonHostContextPartReplacer = function (host, part, suffix) {
 	        if (lang_1.StringWrapper.contains(part, _polyfillHost)) {
 	            return this._colonHostPartReplacer(host, part, suffix);
@@ -25410,6 +26883,7 @@
 	            return host + part + suffix + ', ' + part + ' ' + host + suffix;
 	        }
 	    };
+	    /** @internal */
 	    ShadowCss.prototype._colonHostPartReplacer = function (host, part, suffix) {
 	        return host + lang_1.StringWrapper.replace(part, _polyfillHost, '') + suffix;
 	    };
@@ -25417,6 +26891,7 @@
 	     * Convert combinators like ::shadow and pseudo-elements like ::content
 	     * by replacing with space.
 	    */
+	    /** @internal */
 	    ShadowCss.prototype._convertShadowDOMSelectors = function (cssText) {
 	        for (var i = 0; i < _shadowDOMSelectorsRe.length; i++) {
 	            cssText = lang_1.StringWrapper.replaceAll(cssText, _shadowDOMSelectorsRe[i], ' ');
@@ -25424,6 +26899,7 @@
 	        return cssText;
 	    };
 	    // change a selector like 'div' to 'name div'
+	    /** @internal */
 	    ShadowCss.prototype._scopeRules = function (cssRules, scopeSelector, hostSelector) {
 	        var cssText = '';
 	        if (lang_1.isPresent(cssRules)) {
@@ -25460,6 +26936,7 @@
 	        }
 	        return cssText;
 	    };
+	    /** @internal */
 	    ShadowCss.prototype._ieSafeCssTextFromKeyFrameRule = function (rule) {
 	        var cssText = '@keyframes ' + rule.name + ' {';
 	        for (var i = 0; i < rule.cssRules.length; i++) {
@@ -25469,6 +26946,7 @@
 	        cssText += ' }';
 	        return cssText;
 	    };
+	    /** @internal */
 	    ShadowCss.prototype._scopeSelector = function (selector, scopeSelector, hostSelector, strict) {
 	        var r = [], parts = selector.split(',');
 	        for (var i = 0; i < parts.length; i++) {
@@ -25483,10 +26961,12 @@
 	        }
 	        return r.join(', ');
 	    };
+	    /** @internal */
 	    ShadowCss.prototype._selectorNeedsScoping = function (selector, scopeSelector) {
 	        var re = this._makeScopeMatcher(scopeSelector);
 	        return !lang_1.isPresent(lang_1.RegExpWrapper.firstMatch(re, selector));
 	    };
+	    /** @internal */
 	    ShadowCss.prototype._makeScopeMatcher = function (scopeSelector) {
 	        var lre = /\[/g;
 	        var rre = /\]/g;
@@ -25494,11 +26974,13 @@
 	        scopeSelector = lang_1.StringWrapper.replaceAll(scopeSelector, rre, '\\]');
 	        return lang_1.RegExpWrapper.create('^(' + scopeSelector + ')' + _selectorReSuffix, 'm');
 	    };
+	    /** @internal */
 	    ShadowCss.prototype._applySelectorScope = function (selector, scopeSelector, hostSelector) {
 	        // Difference from webcomponentsjs: scopeSelector could not be an array
 	        return this._applySimpleSelectorScope(selector, scopeSelector, hostSelector);
 	    };
 	    // scope via name and [is=name]
+	    /** @internal */
 	    ShadowCss.prototype._applySimpleSelectorScope = function (selector, scopeSelector, hostSelector) {
 	        if (lang_1.isPresent(lang_1.RegExpWrapper.firstMatch(_polyfillHostRe, selector))) {
 	            var replaceBy = this.strictStyling ? "[" + hostSelector + "]" : scopeSelector;
@@ -25511,6 +26993,7 @@
 	    };
 	    // return a selector with [name] suffix on each simple selector
 	    // e.g. .foo.bar > .zot becomes .foo[name].bar[name] > .zot[name]
+	    /** @internal */
 	    ShadowCss.prototype._applyStrictSelectorScope = function (selector, scopeSelector) {
 	        var isRe = /\[is=([^\]]*)\]/g;
 	        scopeSelector = lang_1.StringWrapper.replaceAllMapped(scopeSelector, isRe, function (m) { return m[1]; });
@@ -25535,11 +27018,13 @@
 	        }
 	        return scoped;
 	    };
+	    /** @internal */
 	    ShadowCss.prototype._insertPolyfillHostInCssText = function (selector) {
 	        selector = lang_1.StringWrapper.replaceAll(selector, _colonHostContextRe, _polyfillHostContext);
 	        selector = lang_1.StringWrapper.replaceAll(selector, _colonHostRe, _polyfillHost);
 	        return selector;
 	    };
+	    /** @internal */
 	    ShadowCss.prototype._propertiesFromRule = function (rule) {
 	        var cssText = rule.style.cssText;
 	        // TODO(sorvell): Safari cssom incorrectly removes quotes from the content
@@ -25611,7 +27096,7 @@
 	//# sourceMappingURL=shadow_css.js.map
 
 /***/ },
-/* 287 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -25677,22 +27162,23 @@
 	//# sourceMappingURL=xhr_impl.js.map
 
 /***/ },
-/* 288 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';var debug_element_1 = __webpack_require__(128);
+	'use strict';var debug_element_1 = __webpack_require__(127);
 	exports.DebugElement = debug_element_1.DebugElement;
 	exports.asNativeElements = debug_element_1.asNativeElements;
 	exports.By = debug_element_1.By;
 	exports.Scope = debug_element_1.Scope;
 	exports.inspectElement = debug_element_1.inspectElement;
-	var debug_element_view_listener_1 = __webpack_require__(289);
+	var debug_element_view_listener_1 = __webpack_require__(288);
 	exports.inspectNativeElement = debug_element_view_listener_1.inspectNativeElement;
+	exports.ELEMENT_PROBE_PROVIDERS = debug_element_view_listener_1.ELEMENT_PROBE_PROVIDERS;
 	exports.ELEMENT_PROBE_BINDINGS = debug_element_view_listener_1.ELEMENT_PROBE_BINDINGS;
 	//# sourceMappingURL=debug.js.map
 
 /***/ },
-/* 289 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -25712,7 +27198,7 @@
 	var view_listener_1 = __webpack_require__(87);
 	var dom_adapter_1 = __webpack_require__(8);
 	var api_1 = __webpack_require__(28);
-	var debug_element_1 = __webpack_require__(128);
+	var debug_element_1 = __webpack_require__(127);
 	var NG_ID_PROPERTY = 'ngid';
 	var INSPECT_GLOBAL_NAME = 'ng.probe';
 	var NG_ID_SEPARATOR = '#';
@@ -25761,8 +27247,8 @@
 	    };
 	    DebugElementViewListener.prototype.viewDestroyed = function (view) {
 	        var viewId = _allIdsByView.get(view);
-	        collection_1.MapWrapper.delete(_allIdsByView, view);
-	        collection_1.MapWrapper.delete(_allViewsById, viewId);
+	        _allIdsByView.delete(view);
+	        _allViewsById.delete(viewId);
 	    };
 	    DebugElementViewListener = __decorate([
 	        di_1.Injectable(), 
@@ -25771,14 +27257,15 @@
 	    return DebugElementViewListener;
 	})();
 	exports.DebugElementViewListener = DebugElementViewListener;
-	exports.ELEMENT_PROBE_BINDINGS = lang_1.CONST_EXPR([
+	exports.ELEMENT_PROBE_PROVIDERS = lang_1.CONST_EXPR([
 	    DebugElementViewListener,
-	    lang_1.CONST_EXPR(new di_1.Binding(view_listener_1.AppViewListener, { toAlias: DebugElementViewListener })),
+	    lang_1.CONST_EXPR(new di_1.Provider(view_listener_1.AppViewListener, { useExisting: DebugElementViewListener })),
 	]);
+	exports.ELEMENT_PROBE_BINDINGS = exports.ELEMENT_PROBE_PROVIDERS;
 	//# sourceMappingURL=debug_element_view_listener.js.map
 
 /***/ },
-/* 290 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -25794,22 +27281,22 @@
 	};
 	var lang_1 = __webpack_require__(1);
 	/**
-	 * Creates a token that can be used in a DI Binding.
+	 * Creates a token that can be used in a DI Provider.
 	 *
 	 * ### Example ([live demo](http://plnkr.co/edit/Ys9ezXpj2Mnoy3Uc8KBp?p=preview))
 	 *
 	 * ```typescript
-	 * var t = new OpaqueToken("binding");
+	 * var t = new OpaqueToken("value");
 	 *
 	 * var injector = Injector.resolveAndCreate([
-	 *   bind(t).toValue("bindingValue")
+	 *   provide(t, {useValue: "providedValue"})
 	 * ]);
 	 *
 	 * expect(injector.get(t)).toEqual("bindingValue");
 	 * ```
 	 *
 	 * Using an `OpaqueToken` is preferable to using strings as tokens because of possible collisions
-	 * caused by multiple bindings using the same string as two different tokens.
+	 * caused by multiple providers using the same string as two different tokens.
 	 *
 	 * Using an `OpaqueToken` is preferable to using an `Object` as tokens because it provides better
 	 * error messages.
@@ -25829,7 +27316,7 @@
 	//# sourceMappingURL=opaque_token.js.map
 
 /***/ },
-/* 291 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';/**
@@ -25841,24 +27328,24 @@
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
 	var lang_1 = __webpack_require__(1);
-	var ng_class_1 = __webpack_require__(131);
-	var ng_for_1 = __webpack_require__(132);
-	var ng_if_1 = __webpack_require__(133);
-	var ng_style_1 = __webpack_require__(134);
-	var ng_switch_1 = __webpack_require__(135);
-	var ng_class_2 = __webpack_require__(131);
+	var ng_class_1 = __webpack_require__(130);
+	var ng_for_1 = __webpack_require__(131);
+	var ng_if_1 = __webpack_require__(132);
+	var ng_style_1 = __webpack_require__(133);
+	var ng_switch_1 = __webpack_require__(134);
+	var ng_class_2 = __webpack_require__(130);
 	exports.NgClass = ng_class_2.NgClass;
-	var ng_for_2 = __webpack_require__(132);
+	var ng_for_2 = __webpack_require__(131);
 	exports.NgFor = ng_for_2.NgFor;
-	var ng_if_2 = __webpack_require__(133);
+	var ng_if_2 = __webpack_require__(132);
 	exports.NgIf = ng_if_2.NgIf;
-	var ng_style_2 = __webpack_require__(134);
+	var ng_style_2 = __webpack_require__(133);
 	exports.NgStyle = ng_style_2.NgStyle;
-	var ng_switch_2 = __webpack_require__(135);
+	var ng_switch_2 = __webpack_require__(134);
 	exports.NgSwitch = ng_switch_2.NgSwitch;
 	exports.NgSwitchWhen = ng_switch_2.NgSwitchWhen;
 	exports.NgSwitchDefault = ng_switch_2.NgSwitchDefault;
-	__export(__webpack_require__(292));
+	__export(__webpack_require__(291));
 	/**
 	 * A collection of Angular core directives that are likely to be used in each and every Angular
 	 * application.
@@ -25875,9 +27362,7 @@
 	 * import {OtherDirective} from './myDirectives';
 	 *
 	 * @Component({
-	 *  selector: 'my-component'
-	 * })
-	 * @View({
+	 *   selector: 'my-component',
 	 *   templateUrl: 'myComponent.html',
 	 *   directives: [NgClass, NgIf, NgFor, NgSwitch, NgSwitchWhen, NgSwitchDefault, OtherDirective]
 	 * })
@@ -25892,9 +27377,7 @@
 	 * import {OtherDirective} from './myDirectives';
 	 *
 	 * @Component({
-	 *  selector: 'my-component'
-	 * })
-	 * @View({
+	 *   selector: 'my-component',
 	 *   templateUrl: 'myComponent.html',
 	 *   directives: [CORE_DIRECTIVES, OtherDirective]
 	 * })
@@ -25907,14 +27390,14 @@
 	//# sourceMappingURL=directives.js.map
 
 /***/ },
-/* 292 */
+/* 291 */
 /***/ function(module, exports) {
 
 	'use strict';// TS does not have Observables
 	//# sourceMappingURL=observable_list_diff.js.map
 
 /***/ },
-/* 293 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -25925,7 +27408,7 @@
 	var collection_1 = __webpack_require__(4);
 	var lang_1 = __webpack_require__(1);
 	var dom_adapter_1 = __webpack_require__(8);
-	var generic_browser_adapter_1 = __webpack_require__(294);
+	var generic_browser_adapter_1 = __webpack_require__(293);
 	var _attrToPropMap = {
 	    'class': 'className',
 	    'innerHtml': 'innerHTML',
@@ -26296,7 +27779,7 @@
 	//# sourceMappingURL=browser_adapter.js.map
 
 /***/ },
-/* 294 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -26396,7 +27879,7 @@
 	//# sourceMappingURL=generic_browser_adapter.js.map
 
 /***/ },
-/* 295 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';// Public API for Facade
@@ -26410,7 +27893,7 @@
 	//# sourceMappingURL=facade.js.map
 
 /***/ },
-/* 296 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
@@ -26447,7 +27930,9 @@
 	exports.SelectControlValueAccessor = select_control_value_accessor_2.SelectControlValueAccessor;
 	exports.NgSelectOption = select_control_value_accessor_2.NgSelectOption;
 	var validators_2 = __webpack_require__(82);
-	exports.DefaultValidators = validators_2.DefaultValidators;
+	exports.RequiredValidator = validators_2.RequiredValidator;
+	exports.MinLengthValidator = validators_2.MinLengthValidator;
+	exports.MaxLengthValidator = validators_2.MaxLengthValidator;
 	var ng_control_status_2 = __webpack_require__(77);
 	exports.NgControlStatus = ng_control_status_2.NgControlStatus;
 	/**
@@ -26459,11 +27944,9 @@
 	 * ### Example:
 	 *
 	 * ```typescript
-	 * @View({
-	 *   directives: [FORM_DIRECTIVES]
-	 * })
 	 * @Component({
-	 *   selector: 'my-app'
+	 *   selector: 'my-app',
+	 *   directives: [FORM_DIRECTIVES]
 	 * })
 	 * class MyApp {}
 	 * ```
@@ -26480,21 +27963,23 @@
 	    checkbox_value_accessor_1.CheckboxControlValueAccessor,
 	    select_control_value_accessor_1.SelectControlValueAccessor,
 	    ng_control_status_1.NgControlStatus,
-	    validators_1.DefaultValidators
+	    validators_1.RequiredValidator,
+	    validators_1.MinLengthValidator,
+	    validators_1.MaxLengthValidator
 	]);
 	//# sourceMappingURL=directives.js.map
 
 /***/ },
-/* 297 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';// Public API for LifeCycle
-	var life_cycle_1 = __webpack_require__(141);
+	var life_cycle_1 = __webpack_require__(140);
 	exports.LifeCycle = life_cycle_1.LifeCycle;
 	//# sourceMappingURL=lifecycle.js.map
 
 /***/ },
-/* 298 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
@@ -26517,7 +28002,7 @@
 	//# sourceMappingURL=element_binder.js.map
 
 /***/ },
-/* 299 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
@@ -26549,16 +28034,16 @@
 	//# sourceMappingURL=event_config.js.map
 
 /***/ },
-/* 300 */
+/* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';var async_pipe_1 = __webpack_require__(148);
-	var uppercase_pipe_1 = __webpack_require__(156);
-	var lowercase_pipe_1 = __webpack_require__(151);
-	var json_pipe_1 = __webpack_require__(150);
-	var slice_pipe_1 = __webpack_require__(155);
-	var date_pipe_1 = __webpack_require__(149);
-	var number_pipe_1 = __webpack_require__(152);
+	'use strict';var async_pipe_1 = __webpack_require__(147);
+	var uppercase_pipe_1 = __webpack_require__(155);
+	var lowercase_pipe_1 = __webpack_require__(150);
+	var json_pipe_1 = __webpack_require__(149);
+	var slice_pipe_1 = __webpack_require__(154);
+	var date_pipe_1 = __webpack_require__(148);
+	var number_pipe_1 = __webpack_require__(151);
 	var lang_1 = __webpack_require__(1);
 	var di_1 = __webpack_require__(3);
 	var DEFAULT_PIPES_LIST = lang_1.CONST_EXPR([
@@ -26573,21 +28058,22 @@
 	    date_pipe_1.DatePipe
 	]);
 	exports.DEFAULT_PIPES_TOKEN = lang_1.CONST_EXPR(new di_1.OpaqueToken("Default Pipes"));
-	exports.DEFAULT_PIPES = lang_1.CONST_EXPR(new di_1.Binding(exports.DEFAULT_PIPES_TOKEN, { toValue: DEFAULT_PIPES_LIST }));
+	exports.DEFAULT_PIPES = lang_1.CONST_EXPR(new di_1.Provider(exports.DEFAULT_PIPES_TOKEN, { useValue: DEFAULT_PIPES_LIST }));
 	//# sourceMappingURL=default_pipes.js.map
 
 /***/ },
-/* 301 */
+/* 300 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var di_1 = __webpack_require__(3);
 	var exceptions_1 = __webpack_require__(5);
 	var dom_adapter_1 = __webpack_require__(8);
-	exports.EXCEPTION_BINDING = di_1.bind(exceptions_1.ExceptionHandler).toFactory(function () { return new exceptions_1.ExceptionHandler(dom_adapter_1.DOM, false); }, []);
+	exports.EXCEPTION_PROVIDER = di_1.provide(exceptions_1.ExceptionHandler, { useFactory: function () { return new exceptions_1.ExceptionHandler(dom_adapter_1.DOM, false); }, deps: [] });
+	exports.EXCEPTION_BINDING = exports.EXCEPTION_PROVIDER;
 	//# sourceMappingURL=platform_bindings.js.map
 
 /***/ },
-/* 302 */
+/* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
@@ -26626,7 +28112,7 @@
 	//# sourceMappingURL=wtf_impl.js.map
 
 /***/ },
-/* 303 */
+/* 302 */
 /***/ function(module, exports) {
 
 	'use strict';/**
@@ -26637,7 +28123,7 @@
 	//# sourceMappingURL=wtf_init.js.map
 
 /***/ },
-/* 304 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
@@ -26718,6 +28204,7 @@
 	        ;
 	        throw new Error("Cannot create a factory for '" + lang_1.stringify(t) + "' because its constructor has more than 20 arguments");
 	    };
+	    /** @internal */
 	    ReflectionCapabilities.prototype._zipTypesAndAnnotaions = function (paramTypes, paramAnnotations) {
 	        var result;
 	        if (typeof paramTypes === 'undefined') {
@@ -26810,7 +28297,7 @@
 	//# sourceMappingURL=reflection_capabilities.js.map
 
 /***/ },
-/* 305 */
+/* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -26833,7 +28320,7 @@
 	    return function (target, key) { decorator(target, key, paramIndex); }
 	};
 	var di_1 = __webpack_require__(3);
-	var animation_builder_1 = __webpack_require__(103);
+	var animation_builder_1 = __webpack_require__(102);
 	var lang_1 = __webpack_require__(1);
 	var exceptions_1 = __webpack_require__(5);
 	var dom_adapter_1 = __webpack_require__(8);
@@ -26842,8 +28329,8 @@
 	var profile_1 = __webpack_require__(27);
 	var api_1 = __webpack_require__(28);
 	var dom_tokens_1 = __webpack_require__(91);
-	var view_factory_1 = __webpack_require__(309);
-	var view_1 = __webpack_require__(159);
+	var view_factory_1 = __webpack_require__(308);
+	var view_1 = __webpack_require__(158);
 	var util_1 = __webpack_require__(93);
 	var DomRenderer = (function (_super) {
 	    __extends(DomRenderer, _super);
@@ -26948,8 +28435,11 @@
 	        this._animate = _animate;
 	        this._componentCmds = new Map();
 	        this._nativeShadowStyles = new Map();
+	        /** @internal */
 	        this._createRootHostViewScope = profile_1.wtfCreateScope('DomRenderer#createRootHostView()');
+	        /** @internal */
 	        this._createViewScope = profile_1.wtfCreateScope('DomRenderer#createView()');
+	        /** @internal */
 	        this._detachFragmentScope = profile_1.wtfCreateScope('DomRenderer#detachFragment()');
 	        this._document = document;
 	    }
@@ -27039,6 +28529,9 @@
 	            dom_adapter_1.DOM.setAttribute(node, attrNameAndValues[attrIdx], attrNameAndValues[attrIdx + 1]);
 	        }
 	    };
+	    DomRenderer_.prototype.createRootContentInsertionPoint = function () {
+	        return dom_adapter_1.DOM.createComment('root-content-insertion-point');
+	    };
 	    DomRenderer_.prototype.createShadowRoot = function (host, templateId) {
 	        var sr = dom_adapter_1.DOM.createShadowRoot(host);
 	        var styles = this._nativeShadowStyles.get(templateId);
@@ -27095,7 +28588,7 @@
 	//# sourceMappingURL=dom_renderer.js.map
 
 /***/ },
-/* 306 */
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -27157,11 +28650,10 @@
 	//# sourceMappingURL=hammer_common.js.map
 
 /***/ },
-/* 307 */
+/* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';/// <reference path="../../../../../typings/hammerjs/hammerjs.d.ts"/>
-	var __extends = (this && this.__extends) || function (d, b) {
+	'use strict';var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -27177,7 +28669,7 @@
 	var __metadata = (this && this.__metadata) || function (k, v) {
 	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 	};
-	var hammer_common_1 = __webpack_require__(306);
+	var hammer_common_1 = __webpack_require__(305);
 	var lang_1 = __webpack_require__(1);
 	var exceptions_1 = __webpack_require__(5);
 	var di_1 = __webpack_require__(3);
@@ -27215,7 +28707,7 @@
 	//# sourceMappingURL=hammer_gestures.js.map
 
 /***/ },
-/* 308 */
+/* 307 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var __extends = (this && this.__extends) || function (d, b) {
@@ -27334,11 +28826,11 @@
 	//# sourceMappingURL=key_events.js.map
 
 /***/ },
-/* 309 */
+/* 308 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var lang_1 = __webpack_require__(1);
-	var view_1 = __webpack_require__(159);
+	var view_1 = __webpack_require__(158);
 	function createRenderView(fragmentCmds, inplaceElement, nodeFactory) {
 	    var view;
 	    var eventDispatcher = function (boundElementIndex, eventName, event) {
@@ -27350,7 +28842,7 @@
 	    for (var i = 0; i < context.fragments.length; i++) {
 	        fragments.push(new view_1.DefaultRenderFragmentRef(context.fragments[i]));
 	    }
-	    view = new view_1.DefaultRenderView(fragments, context.boundTextNodes, context.boundElements, context.nativeShadowRoots, context.globalEventAdders);
+	    view = new view_1.DefaultRenderView(fragments, context.boundTextNodes, context.boundElements, context.nativeShadowRoots, context.globalEventAdders, context.rootContentInsertionPoints);
 	    return view;
 	}
 	exports.createRenderView = createRenderView;
@@ -27365,6 +28857,9 @@
 	        this.boundTextNodes = [];
 	        this.nativeShadowRoots = [];
 	        this.fragments = [];
+	        this.rootContentInsertionPoints = [];
+	        this.componentCount = 0;
+	        this.isHost = lang_1.isPresent((_inplaceElement));
 	    }
 	    BuildContext.prototype.build = function (fragmentCmds) {
 	        this.enqueueFragmentBuilder(null, fragmentCmds);
@@ -27379,6 +28874,7 @@
 	        }
 	    };
 	    BuildContext.prototype.enqueueComponentBuilder = function (component) {
+	        this.componentCount++;
 	        this._builders.push(new RenderViewBuilder(component, null, this.factory.resolveComponentTemplate(component.cmd.templateId)));
 	    };
 	    BuildContext.prototype.enqueueFragmentBuilder = function (parentComponent, commands) {
@@ -27437,10 +28933,22 @@
 	    };
 	    RenderViewBuilder.prototype.visitNgContent = function (cmd, context) {
 	        if (lang_1.isPresent(this.parentComponent)) {
-	            var projectedNodes = this.parentComponent.project(cmd.index);
-	            for (var i = 0; i < projectedNodes.length; i++) {
-	                var node = projectedNodes[i];
-	                this._addChild(node, cmd.ngContentIndex, context);
+	            if (this.parentComponent.isRoot) {
+	                var insertionPoint = context.factory.createRootContentInsertionPoint();
+	                if (this.parent instanceof Component) {
+	                    context.factory.appendChild(this.parent.shadowRoot, insertionPoint);
+	                }
+	                else {
+	                    context.factory.appendChild(this.parent, insertionPoint);
+	                }
+	                context.rootContentInsertionPoints.push(insertionPoint);
+	            }
+	            else {
+	                var projectedNodes = this.parentComponent.project(cmd.index);
+	                for (var i = 0; i < projectedNodes.length; i++) {
+	                    var node = projectedNodes[i];
+	                    this._addChild(node, cmd.ngContentIndex, context);
+	                }
 	            }
 	        }
 	        return null;
@@ -27460,7 +28968,8 @@
 	            root = context.factory.createShadowRoot(el, cmd.templateId);
 	            context.nativeShadowRoots.push(root);
 	        }
-	        var component = new Component(el, root, cmd);
+	        var isRoot = context.componentCount === 0 && context.isHost;
+	        var component = new Component(el, root, cmd, isRoot);
 	        context.enqueueComponentBuilder(component);
 	        this.parentStack.push(component);
 	        return null;
@@ -27517,10 +29026,11 @@
 	    return RenderViewBuilder;
 	})();
 	var Component = (function () {
-	    function Component(hostElement, shadowRoot, cmd) {
+	    function Component(hostElement, shadowRoot, cmd, isRoot) {
 	        this.hostElement = hostElement;
 	        this.shadowRoot = shadowRoot;
 	        this.cmd = cmd;
+	        this.isRoot = isRoot;
 	        this.contentNodesByNgContentIndex = [];
 	    }
 	    Component.prototype.addContentNode = function (ngContentIndex, node, context) {
@@ -27551,7 +29061,7 @@
 	//# sourceMappingURL=view_factory.js.map
 
 /***/ },
-/* 310 */
+/* 309 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';// Public API for Services
@@ -27559,12 +29069,12 @@
 	exports.AppRootUrl = app_root_url_1.AppRootUrl;
 	var url_resolver_1 = __webpack_require__(41);
 	exports.UrlResolver = url_resolver_1.UrlResolver;
-	var title_1 = __webpack_require__(311);
+	var title_1 = __webpack_require__(310);
 	exports.Title = title_1.Title;
 	//# sourceMappingURL=services.js.map
 
 /***/ },
-/* 311 */
+/* 310 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var dom_adapter_1 = __webpack_require__(8);
@@ -27595,7 +29105,7 @@
 	//# sourceMappingURL=title.js.map
 
 /***/ },
-/* 312 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';var testability_1 = __webpack_require__(94);
@@ -27606,8 +29116,11 @@
 	    }
 	    PublicTestability.prototype.isStable = function () { return this._testability.isStable(); };
 	    PublicTestability.prototype.whenStable = function (callback) { this._testability.whenStable(callback); };
-	    PublicTestability.prototype.findBindings = function (using, binding, exactMatch) {
-	        return this._testability.findBindings(using, binding, exactMatch);
+	    PublicTestability.prototype.findBindings = function (using, provider, exactMatch) {
+	        return this.findProviders(using, provider, exactMatch);
+	    };
+	    PublicTestability.prototype.findProviders = function (using, provider, exactMatch) {
+	        return this._testability.findBindings(using, provider, exactMatch);
 	    };
 	    return PublicTestability;
 	})();
@@ -27635,7 +29148,7 @@
 	//# sourceMappingURL=browser_testability.js.map
 
 /***/ },
-/* 313 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';// Public API for util
@@ -27644,7 +29157,7 @@
 	//# sourceMappingURL=util.js.map
 
 /***/ },
-/* 314 */
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';// Public API for Zone
@@ -27653,7 +29166,7 @@
 	//# sourceMappingURL=zone.js.map
 
 /***/ },
-/* 315 */
+/* 314 */
 /***/ function(module, exports) {
 
 	'use strict';// Note: This class is only here so that we can reference it from TypeScript code.
@@ -27673,6 +29186,7 @@
 	//# sourceMappingURL=change_detector_codegen.js.map
 
 /***/ },
+/* 315 */,
 /* 316 */,
 /* 317 */,
 /* 318 */,
@@ -27703,8 +29217,7 @@
 /* 343 */,
 /* 344 */,
 /* 345 */,
-/* 346 */,
-/* 347 */
+/* 346 */
 /***/ function(module, exports) {
 
 	/*! *****************************************************************************
@@ -28671,11 +30184,11 @@
 	//# sourceMappingURL=Reflect.js.map
 
 /***/ },
+/* 347 */,
 /* 348 */,
 /* 349 */,
 /* 350 */,
-/* 351 */,
-/* 352 */
+/* 351 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -28813,7 +30326,7 @@
 	// Root zone ID === 1
 	Zone.nextId = 1;
 	
-	Zone.bindPromiseFn = __webpack_require__(253).bindPromiseFn;
+	Zone.bindPromiseFn = __webpack_require__(252).bindPromiseFn;
 	
 	module.exports = {
 	  Zone: Zone
@@ -28822,21 +30335,21 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 353 */
+/* 352 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 	
-	var fnPatch = __webpack_require__(356);
-	var promisePatch = __webpack_require__(253);
-	var mutationObserverPatch = __webpack_require__(358);
-	var definePropertyPatch = __webpack_require__(252);
-	var registerElementPatch = __webpack_require__(360);
-	var webSocketPatch = __webpack_require__(254);
-	var eventTargetPatch = __webpack_require__(354);
-	var propertyDescriptorPatch = __webpack_require__(359);
-	var geolocationPatch = __webpack_require__(357);
-	var fileReaderPatch = __webpack_require__(355);
+	var fnPatch = __webpack_require__(355);
+	var promisePatch = __webpack_require__(252);
+	var mutationObserverPatch = __webpack_require__(357);
+	var definePropertyPatch = __webpack_require__(251);
+	var registerElementPatch = __webpack_require__(359);
+	var webSocketPatch = __webpack_require__(253);
+	var eventTargetPatch = __webpack_require__(353);
+	var propertyDescriptorPatch = __webpack_require__(358);
+	var geolocationPatch = __webpack_require__(356);
+	var fileReaderPatch = __webpack_require__(354);
 	
 	function apply() {
 	  fnPatch.patchSetClearFunction(global, [
@@ -28881,7 +30394,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 354 */
+/* 353 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -28944,7 +30457,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 355 */
+/* 354 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28960,7 +30473,7 @@
 	};
 
 /***/ },
-/* 356 */
+/* 355 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -29084,7 +30597,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 357 */
+/* 356 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -29107,7 +30620,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 358 */
+/* 357 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -29183,12 +30696,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 359 */
+/* 358 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 	
-	var webSocketPatch = __webpack_require__(254);
+	var webSocketPatch = __webpack_require__(253);
 	var utils = __webpack_require__(16);
 	var keys = __webpack_require__(37);
 	
@@ -29269,12 +30782,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 360 */
+/* 359 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 	
-	var _redefineProperty = __webpack_require__(252)._redefineProperty;
+	var _redefineProperty = __webpack_require__(251)._redefineProperty;
 	var utils = __webpack_require__(16);
 	
 	function apply() {
@@ -29318,13 +30831,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 361 */
+/* 360 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 	
-	var core = __webpack_require__(352);
-	var browserPatch = __webpack_require__(353);
+	var core = __webpack_require__(351);
+	var browserPatch = __webpack_require__(352);
 	
 	global.zone = new core.Zone();
 	
