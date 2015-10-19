@@ -2,7 +2,7 @@
 
 import {Component, View, CORE_DIRECTIVES} from 'angular2/angular2';
 
-import {tabs} from 'ng2-bootstrap';
+import {tabs} from 'ng2-bootstrap/ng2-bootstrap';
 import {SingleDemo} from './select/single-demo';
 import {MultipleDemo} from './select/multiple-demo';
 import {ChildrenDemo} from './select/children-demo';
@@ -84,7 +84,7 @@ tabDesc.forEach(desc => {
 export class SelectSection {
   private currentHeading:string = 'Single';
 
-  private select(e) {
+  private select(e:any) {
     if (e.heading) {
       this.currentHeading = e.heading;
     }

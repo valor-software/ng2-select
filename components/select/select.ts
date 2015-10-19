@@ -90,7 +90,7 @@ let optionsTemplate = `
     ${optionsTemplate}
 </div>
 
-<div tabindex="0"
+  <div tabindex="0"
      *ng-if="multiple === true"
      (keyup)="mainClick($event)"
      (focus)="focusToInput('')"
@@ -294,8 +294,8 @@ export class Select implements OnInit, OnDestroy {
   }
 
   public doEvent(type:string, value:any) {
-    if (this[type] && value) {
-      this[type].next(value);
+    if ((<any>this)[type] && value) {
+      (<any>this)[type].next(value);
     }
   }
 
@@ -430,7 +430,6 @@ export class Select implements OnInit, OnDestroy {
     return this.activeOption.text === value.text;
   }
 }
-
 
 export module Select {
 

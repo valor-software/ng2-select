@@ -53,7 +53,7 @@ var config = {
       'angular2/angular2',
       'angular2/core'
     ],
-    'angular2-select': ['components'],
+    'angular2-select': ['ng2-select'],
     'angular2-select-demo': 'demo'
   },
 
@@ -105,26 +105,12 @@ var config = {
       {
         test: /\.ts$/,
         loader: 'ts',
-        query: {
-          ignoreDiagnostics: [
-            6053,
-            // TS2305 -> Module 'ng' has no exported member
-            2305,
-            // TS2307 ->  Cannot find external module
-            2307,
-            // TS2300 -> Duplicate identifier
-            2300,
-            // TS2309 -> An export assignment cannot be used in a module with other exported elements.
-            2309
-          ]
-        },
         exclude: [
           /\.min\.js$/,
           /\.spec\.ts$/,
           /\.e2e\.ts$/,
           /web_modules/,
-          /test/,
-          /node_modules/
+          /test/
         ]
       }
     ],

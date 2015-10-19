@@ -14,7 +14,7 @@ export class SelectItem {
       this.text = source.text;
 
       if (source.children && source.text) {
-        this.children = source.children.map(c => {
+        this.children = source.children.map((c:any) => {
           let r:SelectItem = new SelectItem(c);
           r.parent = this;
           return r;

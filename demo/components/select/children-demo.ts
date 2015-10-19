@@ -5,9 +5,9 @@ import {
   CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass
 } from 'angular2/angular2';
 
-import {ButtonCheckbox} from 'ng2-bootstrap';
+import {ButtonCheckbox} from 'ng2-bootstrap/ng2-bootstrap';
 
-import {select} from '../../../components/index';
+import {select} from '../../../ng2-select';
 
 // webpack html imports
 let template = require('./children-demo.html');

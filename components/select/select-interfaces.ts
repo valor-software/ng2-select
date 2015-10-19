@@ -1,7 +1,7 @@
 export interface IOptionsBehavior {
-  first();
-  last();
-  prev();
-  next();
-  filter(query:RegExp);
+  first():any;
+  last():any;
+  prev():any;
+  next():any;
+  filter(query:RegExp):any;
 }

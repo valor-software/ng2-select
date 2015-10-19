@@ -16,7 +16,7 @@ export class HightlightPipe {
       value;
   }
 
-  private escapeRegexp(queryToEscape) {
+  private escapeRegexp(queryToEscape:string) {
     return queryToEscape.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
   }
 }
