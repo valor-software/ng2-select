@@ -1,14 +1,13 @@
 import {Component} from 'angular2/core';
 import {CORE_DIRECTIVES} from 'angular2/common';
 
-import {tabs} from 'ng2-bootstrap/ng2-bootstrap';
+import {TAB_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 
 import {SingleDemo} from './select/single-demo';
 import {MultipleDemo} from './select/multiple-demo';
 import {ChildrenDemo} from './select/children-demo';
 
 let name = 'Select';
-let src = 'https://github.com/valor-software/ng2-select/blob/master/components/select/select.ts';
 // webpack html imports
 let doc = require('../../components/select/readme.md');
 
@@ -33,29 +32,33 @@ let tabDesc:Array<any> = [
 let tabsContent:string = ``;
 tabDesc.forEach(desc => {
   tabsContent += `
-          <tab heading="${desc.heading}" (select)="select($event)">
+  <div *ngIf="currentHeading === '${desc.heading}'">
+    <${desc.heading.toLowerCase()}-demo>
+    </${desc.heading.toLowerCase()}-demo>
+  </div>
+<pre>{{ currentHeading }}</pre>
+<tab heading="${desc.heading}" (select)="select_zzz($event)">
+  <div class="card card-block panel panel-default panel-body">
+    <br>
+
+    <div class="row" style="margin: 0px;">
+      <tabset>
+        <tab heading="Markup">
           <div class="card card-block panel panel-default panel-body">
-
-            <${desc.heading.toLowerCase()}-demo *ng-if="currentHeading === '${desc.heading}'"></${desc.heading.toLowerCase()}-demo>
-
-            <br>
-
-            <div class="row" style="margin: 0px;">
-              <tabset>
-                <tab heading="Markup">
-                  <div class="card card-block panel panel-default panel-body">
-                    <pre class="language-html"><code class="language-html" ng-non-bindable>${desc.html}</code></pre>
-                  </div>
-                </tab>
-                <tab heading="TypeScript">
-                  <div class="card card-block panel panel-default panel-body">
-                    <pre class="language-typescript"><code class="language-typescript" ng-non-bindable>${desc.ts}</code></pre>
-                  </div>
-                </tab>
-              </tabset>
-            </div>
+            <pre class="language-html"><code class="language-html" ngNonBindable>${desc.html}</code></pre>
           </div>
         </tab>
+        <tab heading="TypeScript">
+          <div class="card card-block panel panel-default panel-body">
+            <pre class="language-typescript">
+              <code class="language-typescript" ngNonBindable>${desc.ts}</code>
+            </pre>
+          </div>
+        </tab>
+      </tabset>
+    </div>
+  </div>
+</tab>
   `;
 });
 
@@ -77,12 +80,12 @@ tabDesc.forEach(desc => {
     </div>
   </section>
   `,
-  directives: [SingleDemo, MultipleDemo, ChildrenDemo, tabs, CORE_DIRECTIVES]
+  directives: [SingleDemo, MultipleDemo, ChildrenDemo, TAB_DIRECTIVES, CORE_DIRECTIVES]
 })
 export class SelectSection {
-  private currentHeading:string = 'Single';
+  public currentHeading:string = 'Single';
 
-  private select(e:any) {
+  public select_zzz(e:any) {
     if (e.heading) {
       this.currentHeading = e.heading;
     }

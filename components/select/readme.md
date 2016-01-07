@@ -1,6 +1,6 @@
 ### Usage
 ```typescript
-import {select} from 'ng2-select';
+import {SELECT_DIRECTIVES} from 'ng2-select/ng2-select';
 ```
 
 ### Annotations

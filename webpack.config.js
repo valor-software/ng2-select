@@ -48,10 +48,10 @@ var config = {
   entry: {
     angular2: [
       // Angular 2 Deps
-      'zone.js',
+      'zone.js/dist/zone-microtask',
       'reflect-metadata',
-      'angular2/angular2',
-      'angular2/core'
+      'angular2/core',
+      'angular2/common'
     ],
     'angular2-select': ['ng2-select'],
     'angular2-select-demo': 'demo'
