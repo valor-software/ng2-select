@@ -1,44 +1,38 @@
-import {
-  Component, View, OnInit, OnDestroy,
-  Directive, ViewEncapsulation, Self,
-  EventEmitter, ElementRef, ComponentRef,
-  Pipe, CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass, NgStyle,
-  bind, forwardRef, ResolvedBinding, Injector
-} from 'angular2/angular2';
-
+import {COMMON_DIRECTIVES} from 'angular2/common';
+import {Component, Input, Output, EventEmitter, ElementRef} from 'angular2/core';
 import {SelectItem} from './select-item';
 import {HightlightPipe} from './select-pipes';
 import {IOptionsBehavior} from './select-interfaces';
 
 let optionsTemplate = `
-    <ul *ng-if="optionsOpened && options && options.length > 0 && !itemObjects[0].hasChildren()"
+    <ul *ngIf="optionsOpened && options && options.length > 0 && !itemObjects[0].hasChildren()"
         class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
       <li class="ui-select-choices-group">
-        <div *ng-for="#o of options"
+        <div *ngFor="#o of options"
              class="ui-select-choices-row"
              (mouseenter)="selectActive(o)"
              (click)="selectMatch(o, $event)"
-             [ng-class]="{'active': isActive(o)}">
+             [ngClass]="{'active': isActive(o)}">
           <a href="javascript:void(0)" class="ui-select-choices-row-inner">
-            <div [inner-html]="o.text | hightlight:inputValue"></div>
+            <div [innerHtml]="o.text | hightlight:inputValue"></div>
           </a>
         </div>
       </li>
     </ul>
 
-    <ul *ng-if="optionsOpened && options && options.length > 0 && itemObjects[0].hasChildren()"
+    <ul *ngIf="optionsOpened && options && options.length > 0 && itemObjects[0].hasChildren()"
         class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
-      <li *ng-for="#c of options; #index=index" class="ui-select-choices-group">
-        <div class="divider" *ng-if="index > 0"></div>
+      <li *ngFor="#c of options; #index=index" class="ui-select-choices-group">
+        <div class="divider" *ngIf="index > 0"></div>
         <div class="ui-select-choices-group-label dropdown-header">{{c.text}}</div>
 
-        <div *ng-for="#o of c.children"
+        <div *ngFor="#o of c.children"
              class="ui-select-choices-row"
              (mouseenter)="selectActive(o)"
              (click)="selectMatch(o, $event)"
-             [ng-class]="{'active': isActive(o)}">
+             [ngClass]="{'active': isActive(o)}">
           <a href="javascript:void(0)" class="ui-select-choices-row-inner">
-            <div [inner-html]="o.text | hightlight:inputValue"></div>
+            <div [innerHtml]="o.text | hightlight:inputValue"></div>
           </a>
         </div>
       </li>
@@ -47,34 +41,24 @@ let optionsTemplate = `
 
 @Component({
   selector: 'ng2-select',
-  properties: [
-    'allowClear',
-    'placeholder',
-    'initData:data',
-    'items',
-    'disabled',
-    'multiple'],
-  events: ['selected', 'removed', 'typed', 'data']
-})
-@View({
   template: `
   <div tabindex="0"
-     *ng-if="multiple === false"
+     *ngIf="multiple === false"
      (keyup)="mainClick($event)"
      class="ui-select-container ui-select-bootstrap dropdown open">
-    <div [ng-class]="{'ui-disabled': disabled}"></div>
+    <div [ngClass]="{'ui-disabled': disabled}"></div>
     <div class="ui-select-match"
-         *ng-if="!inputMode">
+         *ngIf="!inputMode">
       <span tabindex="-1"
           class="btn btn-default btn-secondary form-control ui-select-toggle"
           (^click)="matchClick()"
           style="outline: 0;">
-        <span *ng-if="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
-        <span *ng-if="active.length > 0" class="ui-select-match-text pull-left"
-              [ng-class]="{'ui-select-allow-clear': allowClear && active.length > 0}">{{active[0].text}}</span>
+        <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
+        <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
+              [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}">{{active[0].text}}</span>
         <i class="dropdown-toggle pull-right"></i>
         <i class="caret pull-right"></i>
-        <a *ng-if="allowClear && active.length>0" style="margin-right: 10px; padding: 0;"
+        <a *ngIf="allowClear && active.length>0" style="margin-right: 10px; padding: 0;"
           (click)="remove(activeOption)" class="btn btn-xs btn-link pull-right">
           <i class="glyphicon glyphicon-remove"></i>
         </a>
@@ -85,23 +69,23 @@ let optionsTemplate = `
            (keyup)="inputEvent($event, true)"
            [disabled]="disabled"
            class="form-control ui-select-search"
-           *ng-if="inputMode"
+           *ngIf="inputMode"
            placeholder="{{active.length <= 0 ? placeholder : ''}}">
-    ${optionsTemplate}
-</div>
+      ${optionsTemplate}
+  </div>
 
   <div tabindex="0"
-     *ng-if="multiple === true"
+     *ngIf="multiple === true"
      (keyup)="mainClick($event)"
      (focus)="focusToInput('')"
      class="ui-select-container ui-select-multiple ui-select-bootstrap dropdown form-control open">
-    <div [ng-class]="{'ui-disabled': disabled}"></div>
+    <div [ngClass]="{'ui-disabled': disabled}"></div>
     <span class="ui-select-match">
-        <span *ng-for="#a of active">
+        <span *ngFor="#a of active">
             <span class="ui-select-match-item btn btn-default btn-secondary btn-xs"
                   tabindex="-1"
                   type="button"
-                  [ng-class]="{'btn-default': true}">
+                  [ngClass]="{'btn-default': true}">
                <a class="close ui-select-match-close"
                   (click)="remove(a)">&nbsp;&times;</a>
                <span>{{a.text}}</span>
@@ -121,32 +105,42 @@ let optionsTemplate = `
            placeholder="{{active.length <= 0 ? placeholder : ''}}"
            role="combobox">
     ${optionsTemplate}
-</div>
+  </div>
   `,
-  directives: [CORE_DIRECTIVES, FORM_DIRECTIVES],
+  directives: [COMMON_DIRECTIVES],
   pipes: [HightlightPipe]
 })
-export class Select implements OnInit, OnDestroy {
-  public multiple:boolean = false;
-  public options:Array<SelectItem> = [];
-  public itemObjects:Array<SelectItem> = [];
-  public active:Array<SelectItem> = [];
-  public activeOption:SelectItem;
+export class Select {
+  @Input() allowClear: boolean = false;
+  @Input() placeholder: string = '';
+  @Input() initData: Array<any> = [];
+  @Input() multiple: boolean = false;
+  @Input() set items(value: Array<any>) {
+    this._items = value;
+    this.itemObjects = this._items.map((item: any) => new SelectItem(item));
+  }
+  @Input() set disabled(value: boolean) {
+    this._disabled = value;
+    if (this.disabled === true) {
+      this.hideOptions();
+    }
+  }
+  @Output() data: EventEmitter<any> = new EventEmitter();
+  @Output() selected: EventEmitter<any> = new EventEmitter();
+  @Output() removed: EventEmitter<any> = new EventEmitter();
+  @Output() typed: EventEmitter<any> = new EventEmitter();
 
-  private data:EventEmitter = new EventEmitter();
-  private selected:EventEmitter = new EventEmitter();
-  private removed:EventEmitter = new EventEmitter();
-  private typed:EventEmitter = new EventEmitter();
-  private allowClear:boolean = false;
-  private placeholder:string = '';
-  private initData:Array<any> = [];
-  private _items:Array<any> = [];
-  private offSideClickHandler:any;
-  private inputMode:boolean = false;
-  private optionsOpened:boolean = false;
-  private behavior:IOptionsBehavior;
-  private _disabled:boolean = false;
-  private inputValue:string = '';
+  public options: Array<SelectItem> = [];
+  public itemObjects: Array<SelectItem> = [];
+  public active: Array<SelectItem> = [];
+  public activeOption: SelectItem;
+  private offSideClickHandler: any;
+  private inputMode: boolean = false;
+  private optionsOpened: boolean = false;
+  private behavior: IOptionsBehavior;
+  private inputValue: string = '';
+  private _items: Array<any> = [];
+  private _disabled: boolean = false;
 
   constructor(public element:ElementRef) {
   }
@@ -216,28 +210,7 @@ export class Select implements OnInit, OnDestroy {
     this.optionsOpened = true;
   }
 
-  private get items():Array<any> {
-    return this._items;
-  }
-
-  private set items(value:Array<any>) {
-    this._items = value;
-    this.itemObjects = this._items.map((item:any) => new SelectItem(item));
-  }
-
-  public get disabled():boolean {
-    return this._disabled;
-  }
-
-  public set disabled(value:boolean) {
-    this._disabled = value;
-
-    if (this.disabled === true) {
-      this.hideOptions();
-    }
-  }
-
-  onInit() {
+  ngOnInit() {
     this.behavior = this.itemObjects[0].hasChildren() ?
       new Select.ChildrenBehavior(this) : new Select.GenericBehavior(this);
     this.offSideClickHandler = this.getOffSideClickHandler(this);
@@ -249,7 +222,7 @@ export class Select implements OnInit, OnDestroy {
     }
   }
 
-  onDestroy() {
+  ngOnDestroy() {
     document.removeEventListener('click', this.offSideClickHandler);
     this.offSideClickHandler = null;
   }
