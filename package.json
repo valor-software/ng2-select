@@ -58,6 +58,6 @@
     "ts-loader": "0.7.2",
     "typescript": "1.7.5",
     "webpack": "1.12.2",
-    "webpack-dev-server": "1.12.1"
+    "webpack-dev-server": "1.14.1"
   }
 }
