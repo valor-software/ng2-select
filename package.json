@@ -41,7 +41,7 @@
     "file-loader": "0.8.4",
     "gulp": "3.9.0",
     "gulp-clean": "0.3.1",
-    "gulp-eslint": "1.0.0",
+    "gulp-eslint": "1.1.1",
     "gulp-size": "2.0.0",
     "gulp-tsc": "1.1.1",
     "gulp-tslint": "4.3.0",
