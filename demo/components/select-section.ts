@@ -1,8 +1,8 @@
-/// <reference path="../../tsd.d.ts" />
-
-import {Component, View, CORE_DIRECTIVES} from 'angular2/angular2';
+import {Component} from 'angular2/core';
+import {CORE_DIRECTIVES} from 'angular2/common';
 
 import {tabs} from 'ng2-bootstrap/ng2-bootstrap';
+
 import {SingleDemo} from './select/single-demo';
 import {MultipleDemo} from './select/multiple-demo';
 import {ChildrenDemo} from './select/children-demo';
@@ -60,9 +60,7 @@ tabDesc.forEach(desc => {
 });
 
 @Component({
-  selector: 'select-section'
-})
-@View({
+  selector: 'select-section',
   template: `
   <section id="${name.toLowerCase()}">
     <div class="row">

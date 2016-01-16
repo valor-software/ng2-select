@@ -90,7 +90,7 @@ var config = {
   module: {
     loaders: [
       // support markdown
-      {test: /\.md$/, loader: 'html!markdown'},
+      {test: /\.md$/, loader: 'html?minimize=false!markdown'},
 
       // Support for *.json files.
       {test: /\.json$/, loader: 'json'},

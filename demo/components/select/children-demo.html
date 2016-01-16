@@ -1,12 +1,12 @@
 <div class="selectivity-input example-input" style="width: 300px; margin-bottom: 20px;">
     <h3>Select a city by country</h3>
-    <ng2-select [allow-clear]="true"
+    <ng-select [allow-clear]="true"
                 [items]="items"
                 [disabled]="disabled"
                 (data)="refreshValue($event)"
                 (selected)="selected($event)"
                 (removed)="removed($event)"
-                [placeholder]="'No city selected'"></ng2-select>
+                [placeholder]="'No city selected'"></ng-select>
     <p><pre>{{value.text}}</pre></p>
     <div>
         <button type="button" class="btn btn-primary"

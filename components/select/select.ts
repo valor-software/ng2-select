@@ -1,42 +1,41 @@
 import {
-  Component, View, OnInit, OnDestroy,
-  Directive, ViewEncapsulation, Self,
-  EventEmitter, ElementRef, ComponentRef,
-  Pipe, CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass, NgStyle,
+  Component, OnInit, OnDestroy,
+  EventEmitter, ElementRef, Pipe,
   bind, forwardRef, ResolvedBinding, Injector
-} from 'angular2/angular2';
+} from 'angular2/core';
+import {CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass, NgStyle} from 'angular2/common';
 
 import {SelectItem} from './select-item';
 import {HightlightPipe} from './select-pipes';
 import {IOptionsBehavior} from './select-interfaces';
 
 let optionsTemplate = `
-    <ul *ng-if="optionsOpened && options && options.length > 0 && !itemObjects[0].hasChildren()"
+    <ul *ngIf="optionsOpened && options && options.length > 0 && !itemObjects[0].hasChildren()"
         class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
       <li class="ui-select-choices-group">
-        <div *ng-for="#o of options"
+        <div *ngFor="#o of options"
              class="ui-select-choices-row"
+             [ngClass]="{'active': isActive(o)}"
              (mouseenter)="selectActive(o)"
-             (click)="selectMatch(o, $event)"
-             [ng-class]="{'active': isActive(o)}">
+             (click)="selectMatch(o, $event)">
           <a href="javascript:void(0)" class="ui-select-choices-row-inner">
-            <div [inner-html]="o.text | hightlight:inputValue"></div>
+            <div [innerHtml]="o.text | hightlight:inputValue"></div>
           </a>
         </div>
       </li>
     </ul>
 
-    <ul *ng-if="optionsOpened && options && options.length > 0 && itemObjects[0].hasChildren()"
+    <ul *ngIf="optionsOpened && options && options.length > 0 && itemObjects[0].hasChildren()"
         class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
-      <li *ng-for="#c of options; #index=index" class="ui-select-choices-group">
-        <div class="divider" *ng-if="index > 0"></div>
+      <li *ngFor="#c of options; #index=index" class="ui-select-choices-group">
+        <div class="divider" *ngIf="index > 0"></div>
         <div class="ui-select-choices-group-label dropdown-header">{{c.text}}</div>
 
-        <div *ng-for="#o of c.children"
+        <div *ngFor="#o of c.children"
              class="ui-select-choices-row"
+             [class.active]="isActive(o)"
              (mouseenter)="selectActive(o)"
-             (click)="selectMatch(o, $event)"
-             [ng-class]="{'active': isActive(o)}">
+             (click)="selectMatch(o, $event)">
           <a href="javascript:void(0)" class="ui-select-choices-row-inner">
             <div [inner-html]="o.text | hightlight:inputValue"></div>
           </a>
@@ -46,7 +45,7 @@ let optionsTemplate = `
 `;
 
 @Component({
-  selector: 'ng2-select',
+  selector: 'ng-select',
   properties: [
     'allowClear',
     'placeholder',
@@ -54,9 +53,7 @@ let optionsTemplate = `
     'items',
     'disabled',
     'multiple'],
-  events: ['selected', 'removed', 'typed', 'data']
-})
-@View({
+  events: ['selected', 'removed', 'typed', 'data'],
   template: `
   <div tabindex="0"
      *ng-if="multiple === false"
@@ -133,10 +130,10 @@ export class Select implements OnInit, OnDestroy {
   public active:Array<SelectItem> = [];
   public activeOption:SelectItem;
 
-  private data:EventEmitter = new EventEmitter();
-  private selected:EventEmitter = new EventEmitter();
-  private removed:EventEmitter = new EventEmitter();
-  private typed:EventEmitter = new EventEmitter();
+  private data:EventEmitter<any> = new EventEmitter();
+  private selected:EventEmitter<any> = new EventEmitter();
+  private removed:EventEmitter<any> = new EventEmitter();
+  private typed:EventEmitter<any> = new EventEmitter();
   private allowClear:boolean = false;
   private placeholder:string = '';
   private initData:Array<any> = [];
@@ -237,7 +234,7 @@ export class Select implements OnInit, OnDestroy {
     }
   }
 
-  onInit() {
+  ngOnInit() {
     this.behavior = this.itemObjects[0].hasChildren() ?
       new Select.ChildrenBehavior(this) : new Select.GenericBehavior(this);
     this.offSideClickHandler = this.getOffSideClickHandler(this);
@@ -249,7 +246,7 @@ export class Select implements OnInit, OnDestroy {
     }
   }
 
-  onDestroy() {
+  ngOnDestroy() {
     document.removeEventListener('click', this.offSideClickHandler);
     this.offSideClickHandler = null;
   }
@@ -623,4 +620,4 @@ export module Select {
   }
 }
 
-export const select:Array<any> = [Select];
+export const SELECT_DIRECTIVES:Array<any> = [Select];
