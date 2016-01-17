@@ -1,10 +1,10 @@
 {
   "name": "ng2-select",
-  "version": "0.44.0",
-  "description": "angular2 select component",
+  "version": "1.0.0-beta.0",
+  "description": "Angular2 based replacement for select boxes",
   "scripts": {
     "deploy": "NODE_ENV=production webpack -p --progress --color --optimize-minimize --optimize-dedupe --optimize-occurence-order",
-    "prepublish": "gulp clean",
+    "prepublish": "gulp clean && tsc",
     "dev": "webpack-dev-server --hot --inline --colors --display-error-details --display-cached",
     "start": "npm run dev",
     "test": "gulp lint"
@@ -27,37 +27,51 @@
     "url": "https://github.com/valor-software/ng2-select/issues"
   },
   "homepage": "https://github.com/valor-software/ng2-select#readme",
-  "dependencies": {
-    "angular2": "2.0.0-alpha.44",
-    "reflect-metadata": "0.1.2",
-    "zone.js": "0.5.8"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "bootstrap": "3.3.5",
-    "clean-webpack-plugin": "0.1.3",
+    "angular2": "2.0.0-beta.1",
+    "bootstrap": "3.3.6",
+    "clean-webpack-plugin": "0.1.6",
     "compression-webpack-plugin": "0.2.0",
+    "es6-shim": "0.33.13",
     "eslint": "1.10.3",
     "exports-loader": "0.6.2",
-    "file-loader": "0.8.4",
+    "file-loader": "0.8.5",
     "gulp": "3.9.0",
     "gulp-clean": "0.3.1",
     "gulp-eslint": "1.1.1",
     "gulp-size": "2.0.0",
-    "gulp-tsc": "1.1.1",
-    "gulp-tslint": "4.3.0",
-    "html-loader": "0.3.0",
+    "gulp-tsc": "1.1.4",
+    "gulp-tslint": "4.2.2",
+    "html-loader": "0.4.0",
     "markdown-loader": "0.1.7",
     "marked": "0.3.5",
     "moment": "2.11.1",
-    "ng2-bootstrap": "0.44.3",
-    "pre-commit": "1.1.1",
+    "ng2-bootstrap": "1.0.0-beta.2",
+    "pre-commit": "1.1.2",
     "prismjs": "valorkin/prism",
     "prismjs-loader": "0.0.2",
     "raw-loader": "0.5.1",
+    "reflect-metadata": "0.1.2",
     "require-dir": "0.3.0",
+    "rxjs": "5.0.0-beta.0",
     "ts-loader": "0.7.2",
+    "tslint": "3.2.1",
     "typescript": "1.7.5",
-    "webpack": "1.12.2",
-    "webpack-dev-server": "1.14.1"
-  }
+    "webpack": "1.12.10",
+    "webpack-dev-server": "1.14.0",
+    "zone.js": "0.5.10"
+  },
+  "contributors": [
+    {
+      "name": "Vyacheslav Chub",
+      "email": "vyacheslav.chub@valor-software.com",
+      "url": "https://github.com/buchslava"
+    },
+    {
+      "name": "Dmitriy Shekhovtsov",
+      "email": "valorkin@gmail.com",
+      "url": "https://github.com/valorkin"
+    }
+  ]
 }

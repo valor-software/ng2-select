@@ -1,25 +1,14 @@
-/// <reference path="../tsd.d.ts" />
-import {Component, View, bootstrap, NgClass} from 'angular2/angular2';
-
-import {Ng2SelectConfig, Ng2SelectTheme} from '../ng2-select';
-
-let w:any = window;
-if (w && w.__theme === 'bs4') {
-  Ng2SelectConfig.theme = Ng2SelectTheme.BS4;
-}
-
+import {bootstrap} from 'angular2/bootstrap';
+import {Component} from 'angular2/core';
+import {NgClass} from 'angular2/common';
 
 import {SelectSection} from './components/select-section';
 
 let gettingStarted = require('./getting-started.md');
 
 @Component({
-  selector: 'app'
-})
-@View({
+  selector: 'app',
   template: `
-  <!--<demo-header>Loading header</demo-header>-->
-
   <main class="bd-pageheader">
     <div class="container">
       <h1>ng2-select</h1>
@@ -33,21 +22,11 @@ let gettingStarted = require('./getting-started.md');
   </main>
 
   <div class="container">
-    <div class="col-md-12 card card-block panel panel-default">
-      <selection>
-          <h1>ng2-select available with:
-          <a class="btn btn-default btn-secondary btn-lg" [ng-class]="{active: isBs3}" href="./">Bootstrap 3</a>
-          <a class="btn btn-default btn-secondary btn-lg" [ng-class]="{active: !isBs3}" href="./index-bs4.html">Bootstrap 4</a>
-          </h1>
-      </selection>
-    </div>
-    <br>
     <section id="getting-started">${gettingStarted}</section>
 
     <select-section class="col-md-12"></select-section>
   </div>
 
-  </div>
   <footer class="footer">
     <div class="container">
       <p class="text-muted text-center"><a href="https://github.com/valor-software/ng2-select">ng2-select</a> is maintained by <a href="https://github.com/valor-software">valor-software</a>.</p>
@@ -60,7 +39,6 @@ let gettingStarted = require('./getting-started.md');
   ]
 })
 export class Demo {
-  private isBs3:boolean = Ng2SelectConfig.theme === Ng2SelectTheme.BS3;
 }
 
 bootstrap(Demo);

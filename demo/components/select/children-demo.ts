@@ -1,23 +1,16 @@
-/// <reference path="../../../tsd.d.ts" />
-
-import {
-  Component, View,
-  CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass
-} from 'angular2/angular2';
-
+import {Component} from 'angular2/core';
+import {CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass} from 'angular2/common';
 import {ButtonCheckbox} from 'ng2-bootstrap/ng2-bootstrap';
 
-import {select} from '../../../ng2-select';
+import {SELECT_DIRECTIVES} from '../../../ng2-select';
 
 // webpack html imports
 let template = require('./children-demo.html');
 
 @Component({
-  selector: 'children-demo'
-})
-@View({
+  selector: 'children-demo',
   template: template,
-  directives: [select, NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES, ButtonCheckbox]
+  directives: [SELECT_DIRECTIVES, NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES, ButtonCheckbox]
 })
 export class ChildrenDemo {
   private value:any = {};

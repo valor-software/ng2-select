@@ -4,7 +4,4 @@ build
 gulp-tasks
 logs
 
-tsd.d.ts
-typings
-
 webpack.config.js
