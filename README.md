@@ -1,4 +1,11 @@
-# ng2-select
+# ng2-select [![npm version](https://badge.fury.io/js/ng2-select.svg)](http://badge.fury.io/js/ng2-select) [![npm downloads](https://img.shields.io/npm/dm/ng2-select.svg)](https://npmjs.org/ng2-select)
+
+Follow me at [twitter](https://twitter.com/valorkin) to be notified about new releases.
+
+[![Code Climate](https://codeclimate.com/github/valor-software/ng2-select/badges/gpa.svg)](https://codeclimate.com/github/valor-software/ng2-select)
+[![Join the chat at https://gitter.im/valor-software/ng2-bootstrap](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/valor-software/ng2-bootstrap?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![devDependency Status](https://david-dm.org/valor-software/ng2-select/dev-status.svg)](https://david-dm.org/valor-software/ng2-select#info=devDependencies)
+[![Throughput Graph](https://graphs.waffle.io/valor-software/ng2-select/throughput.svg)](https://waffle.io/valor-software/ng2-select/metrics)
 
 Native Select Angular2 component
 
@@ -7,8 +14,6 @@ Native Select Angular2 component
 1. A recommended way to install ***ng2-select*** is through [npm](https://www.npmjs.com/search?q=ng2-select) package manager using the following command:
 
   `npm i ng2-select --save`
-
-  Alternatively, you can [download it in a ZIP file](https://github.com/valor-software/ng2-select/archive/master.zip).
 
 2. Include `ng2-select.css` in your project
 
