@@ -41,7 +41,7 @@ let optionsTemplate = `
              class="ui-select-choices-row"
              [class.active]="isActive(o)"
              (mouseenter)="selectActive(o)"
-             (click)="selectMatch(o, $event)">
+             (click)="selectMatch(o, $event)"
              [ngClass]="{'active': isActive(o)}">
           <a href="javascript:void(0)" class="ui-select-choices-row-inner">
             <div [innerHtml]="o.text | hightlight:inputValue"></div>
