@@ -514,7 +514,7 @@ export class GenericBehavior extends Behavior implements IOptionsBehavior {
 
   public filter(query:RegExp) {
     let options = this.actor.itemObjects
-      .filter(option => option.text.match(query) &&
+      .filter(option => this.stripTags(option.text).match(query) &&
       (this.actor.multiple === false ||
       (this.actor.multiple === true &&
       this.actor.active.indexOf(option) < 0)));
@@ -524,6 +524,12 @@ export class GenericBehavior extends Behavior implements IOptionsBehavior {
       this.actor.activeOption = this.actor.options[0];
       super.ensureHighlightVisible();
     }
+  }
+
+  private stripTags(input:string) {
+    let tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
+        commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+    return input.replace(commentsAndPhpTags, '').replace(tags, '');
   }
 }
 
