@@ -602,7 +602,7 @@ export class ChildrenBehavior extends Behavior implements IOptionsBehavior {
     let startPos = 0;
 
     for (let si of this.actor.itemObjects) {
-      let children:Array<SelectItem> = si.children.filter(option => option.text.match(query) );
+      let children:Array<SelectItem> = si.children.filter(option => query.test(option.text));
       startPos = si.fillChildrenHash(optionsMap, startPos);
 
       if (children.length > 0) {
