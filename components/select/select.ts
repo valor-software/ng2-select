@@ -514,7 +514,7 @@ export class GenericBehavior extends Behavior implements IOptionsBehavior {
 
   public filter(query:RegExp) {
     let options = this.actor.itemObjects
-      .filter(option => query.test(option.text) &&
+      .filter(option => option.text.match(query) &&
       (this.actor.multiple === false ||
       (this.actor.multiple === true &&
       this.actor.active.indexOf(option) < 0)));
@@ -596,7 +596,7 @@ export class ChildrenBehavior extends Behavior implements IOptionsBehavior {
     let startPos = 0;
 
     for (let si of this.actor.itemObjects) {
-      let children:Array<SelectItem> = si.children.filter(option => query.test(option.text));
+      let children:Array<SelectItem> = si.children.filter(option => option.text.match(query) );
       startPos = si.fillChildrenHash(optionsMap, startPos);
 
       if (children.length > 0) {
