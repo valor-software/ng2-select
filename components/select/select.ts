@@ -12,7 +12,10 @@ import {
   NgStyle
 } from 'angular2/common';
 import {SelectItem} from './select-item';
-import {HightlightPipe} from './select-pipes';
+import {
+  HightlightPipe,
+  stripTags
+} from './select-pipes';
 import {IOptionsBehavior} from './select-interfaces';
 
 let optionsTemplate = `
@@ -68,7 +71,8 @@ let optionsTemplate = `
           style="outline: 0;">
         <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
         <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
-              [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}">{{active[0].text}}</span>
+              [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
+              [innerHTML]="active[0].text"></span>
         <i class="dropdown-toggle pull-right"></i>
         <i class="caret pull-right"></i>
         <a *ngIf="allowClear && active.length>0" style="margin-right: 10px; padding: 0;"
@@ -170,8 +174,10 @@ export class Select {
   private focusToInput(value:string = '') {
     setTimeout(() => {
       let el = this.element.nativeElement.querySelector('div.ui-select-container > input');
-      el.focus();
-      el.value = value;
+      if (el) {
+        el.focus();
+        el.value = value;
+      }
     }, 0);
   }
 
@@ -413,6 +419,7 @@ export class Select {
     if (this.multiple === true) {
       this.focusToInput('');
     } else {
+      this.focusToInput( stripTags(value.text) );
       this.element.nativeElement.querySelector('.ui-select-container').focus();
     }
   }
@@ -514,7 +521,7 @@ export class GenericBehavior extends Behavior implements IOptionsBehavior {
 
   public filter(query:RegExp) {
     let options = this.actor.itemObjects
-      .filter(option => this.stripTags(option.text).match(query) &&
+      .filter(option => stripTags(option.text).match(query) &&
       (this.actor.multiple === false ||
       (this.actor.multiple === true &&
       this.actor.active.indexOf(option) < 0)));
@@ -526,11 +533,6 @@ export class GenericBehavior extends Behavior implements IOptionsBehavior {
     }
   }
 
-  private stripTags(input:string) {
-    let tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
-        commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
-    return input.replace(commentsAndPhpTags, '').replace(tags, '');
-  }
 }
 
 export class ChildrenBehavior extends Behavior implements IOptionsBehavior {
@@ -620,3 +622,5 @@ export class ChildrenBehavior extends Behavior implements IOptionsBehavior {
     }
   }
 }
+
+
