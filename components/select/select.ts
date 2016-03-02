@@ -371,7 +371,10 @@ export class Select {
 
     // enter
     if (!isUpMode && e.keyCode === 13) {
-      this.selectActiveMatch();
+      if (this.active.indexOf(this.activeOption) == -1) {
+        this.selectActiveMatch();
+        this.behavior.next();
+      }
       e.preventDefault();
       return;
     }
