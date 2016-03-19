@@ -78,7 +78,7 @@ let optionsTemplate = `
       </span>
     </div>
     <input type="text" autocomplete="false" tabindex="-1"
-           (keydown)="inputEvent($event)"
+           (keypress)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
            [disabled]="disabled"
            class="form-control ui-select-search"
@@ -106,7 +106,7 @@ let optionsTemplate = `
         </span>
     </span>
     <input type="text"
-           (keydown)="inputEvent($event)"
+           (keypress)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
            (click)="matchClick($event)"
            [disabled]="disabled"
@@ -126,10 +126,20 @@ export class Select {
   allowClear:boolean = false;
   @Input()
   placeholder:string = '';
-  @Input()
-  initData:Array<any> = [];
+  @Input() set initData(value:Array<any>) {
+    if(Array.isArray(value)) {
+      this._initData = value;
+      this.active = this._initData.map(d => new SelectItem(d));
+      this.data.emit(this.active);
+    }
+  }
+
   @Input()
   multiple:boolean = false;
+  @Input()
+  tagging:boolean = false;
+  @Input()
+  taggingTokens:string[] = ['SPACE', 'ENTER'];
 
   @Input() set items(value:Array<any>) {
     this._items = value;
@@ -161,8 +171,19 @@ export class Select {
   private optionsOpened:boolean = false;
   private behavior:IOptionsBehavior;
   private inputValue:string = '';
+  private _initData:Array<any> = [];
   private _items:Array<any> = [];
   private _disabled:boolean = false;
+
+  private static KEYMAP:any = {
+    91: "COMMAND",
+    8: "BACKSPACE",
+    9: "TAB",
+    13: "ENTER",
+    27: "ESC",
+    188: ",",
+    32: "SPACE"
+  };
 
   constructor(public element:ElementRef) {
   }
@@ -214,6 +235,11 @@ export class Select {
     let value = String
       .fromCharCode(96 <= e.keyCode && e.keyCode <= 105 ? e.keyCode - 48 : e.keyCode)
       .toLowerCase();
+
+    if (this.tagging && this.taggingTokens.indexOf(',') != -1 && value == '¼') {
+      value = '';
+    }
+
     this.focusToInput(value);
     this.open();
     e.srcElement.value = value;
@@ -238,8 +264,8 @@ export class Select {
     this.offSideClickHandler = this.getOffSideClickHandler(this);
     document.addEventListener('click', this.offSideClickHandler);
 
-    if (this.initData) {
-      this.active = this.initData.map(d => new SelectItem(d));
+    if (this._initData && this._initData.length > 0) {
+      this.active = this._initData.map(d => new SelectItem(d));
       this.data.emit(this.active);
     }
   }
@@ -367,6 +393,35 @@ export class Select {
       this.behavior.next();
       e.preventDefault();
       return;
+    }
+
+    var char = e.key || String.fromCharCode(e.charCode);
+    var keyCode = e.charCode;
+
+    var val:string = e.srcElement.value
+      .replace(Select.KEYMAP[keyCode], '')
+      .replace(char, '')
+      .trim();
+    if (!isUpMode && this.tagging && val.length > 0) {
+      var tagged = false;
+      this.taggingTokens.forEach(token => {
+        if (token === Select.KEYMAP[keyCode] || token === char) {
+          tagged = true;
+        }
+      });
+
+      if (tagged) {
+        this.itemObjects.push(new SelectItem(val));
+        this.options = this.itemObjects;
+        this.activeOption = this.itemObjects[this.itemObjects.length - 1];
+        this._items.push(val);
+
+        this.selectActiveMatch();
+        this.open();
+
+        e.preventDefault();
+        return;
+      }
     }
 
     // enter

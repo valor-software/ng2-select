@@ -8,7 +8,7 @@
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "listFiles": false,
     "noLib": false
   },
@@ -16,6 +16,7 @@
     "node_modules"
   ],
   "files": [
+    "./typings/main.d.ts",
     "./ng2-select.ts"
   ]
 }
