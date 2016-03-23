@@ -180,7 +180,9 @@ export class Select {
       return;
     }
 
-    this.inputMode = !this.inputMode;
+    if (e) {
+      this.inputMode = !this.inputMode;
+    }
     if (this.inputMode === true && ((this.multiple === true && e) || this.multiple === false)) {
       this.focusToInput();
       this.open();
@@ -398,6 +400,7 @@ export class Select {
 
     if (this.options.length <= 0) {
       return;
+
     }
 
     if (this.multiple === true) {
