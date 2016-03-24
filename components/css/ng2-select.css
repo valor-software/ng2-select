@@ -115,6 +115,8 @@ body > .select2-container.open {
 
 .ui-select-bootstrap .ui-select-toggle {
   position: relative;
+  /* Allows the caret to not overlap placeholder text */
+  padding-right: 25px;
 }
 
 .ui-select-bootstrap .ui-select-toggle > .caret {
