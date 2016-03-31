@@ -44,7 +44,6 @@ var Select = (function () {
             if (Array.isArray(value)) {
                 this._initData = value;
                 this.active = this._initData.map(function (d) { return new select_item_1.SelectItem(d); });
-                this.data.emit(this.active);
             }
         },
         enumerable: true,

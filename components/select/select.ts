@@ -130,7 +130,7 @@ export class Select {
     if(Array.isArray(value)) {
       this._initData = value;
       this.active = this._initData.map(d => new SelectItem(d));
-      this.data.emit(this.active);
+      //this.data.emit(this.active);
     }
   }
 
