@@ -6,6 +6,7 @@ import {TAB_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 import {SingleDemo} from './select/single-demo';
 import {MultipleDemo} from './select/multiple-demo';
 import {ChildrenDemo} from './select/children-demo';
+import {RichDemo} from './select/rich-demo';
 
 let name = 'Select';
 // webpack html imports
@@ -26,6 +27,11 @@ let tabDesc:Array<any> = [
     heading: 'Children',
     ts: require('!!prismjs?lang=typescript!./select/children-demo.ts'),
     html: require('!!prismjs?lang=markup!./select/children-demo.html')
+  },
+  {
+    heading: 'Rich',
+    ts: require('!!prismjs?lang=typescript!./select/rich-demo.ts'),
+    html: require('!!prismjs?lang=markup!./select/rich-demo.html')
   }
 ];
 
@@ -80,7 +86,7 @@ tabDesc.forEach(desc => {
     </div>
   </section>
   `,
-  directives: [SingleDemo, MultipleDemo, ChildrenDemo, TAB_DIRECTIVES, CORE_DIRECTIVES]
+  directives: [SingleDemo, MultipleDemo, ChildrenDemo, RichDemo, TAB_DIRECTIVES, CORE_DIRECTIVES]
 })
 export class SelectSection {
   public currentHeading:string = 'Single';
