@@ -144,6 +144,9 @@ export class Select {
   @Input() set items(value:Array<any>) {
     this._items = value;
     this.itemObjects = this._items.map((item:any) => new SelectItem(item));
+    if(this.optionsOpened) {//redraw items list
+      this.open();
+    }
   }
 
   @Input() set disabled(value:boolean) {

@@ -53,6 +53,9 @@ var Select = (function () {
         set: function (value) {
             this._items = value;
             this.itemObjects = this._items.map(function (item) { return new select_item_1.SelectItem(item); });
+            if (this.optionsOpened) {
+                this.open();
+            }
         },
         enumerable: true,
         configurable: true
