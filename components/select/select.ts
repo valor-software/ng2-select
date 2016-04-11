@@ -235,17 +235,18 @@ export class Select {
     }
 
     this.inputMode = true;
-    let value = String
-      .fromCharCode(96 <= e.keyCode && e.keyCode <= 105 ? e.keyCode - 48 : e.keyCode)
-      .toLowerCase();
+    //let value = String
+    //  .fromCharCode(96 <= e.keyCode && e.keyCode <= 105 ? e.keyCode - 48 : e.keyCode)
+    //  .toLowerCase();
+    //
+    //if (this.tagging && this.taggingTokens.indexOf(',') != -1 && value == '¼') {
+    //  value = '';
+    //}
 
-    if (this.tagging && this.taggingTokens.indexOf(',') != -1 && value == '¼') {
-      value = '';
-    }
-
-    this.focusToInput(value);
+    //this.focusToInput(value);
+    this.focusToInput(e.srcElement.value);
     this.open();
-    e.srcElement.value = value;
+    //e.srcElement.value = value;
     this.inputEvent(e);
   }
 

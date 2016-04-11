@@ -109,15 +109,8 @@ var Select = (function () {
             return;
         }
         this.inputMode = true;
-        var value = String
-            .fromCharCode(96 <= e.keyCode && e.keyCode <= 105 ? e.keyCode - 48 : e.keyCode)
-            .toLowerCase();
-        if (this.tagging && this.taggingTokens.indexOf(',') != -1 && value == '¼') {
-            value = '';
-        }
-        this.focusToInput(value);
+        this.focusToInput(e.srcElement.value);
         this.open();
-        e.srcElement.value = value;
         this.inputEvent(e);
     };
     Select.prototype.open = function () {
