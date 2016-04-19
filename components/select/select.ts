@@ -12,6 +12,8 @@ import {
   NgStyle
 } from 'angular2/common';
 import {SelectItem} from './select-item';
+import {OffClickDirective} from './off-click';
+
 import {
   HightlightPipe,
   stripTags
@@ -19,7 +21,7 @@ import {
 import {IOptionsBehavior} from './select-interfaces';
 
 let optionsTemplate = `
-    <ul *ngIf="optionsOpened && options && options.length > 0 && !itemObjects[0].hasChildren()"
+    <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
         class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
       <li class="ui-select-choices-group">
         <div *ngFor="#o of options"
@@ -34,7 +36,7 @@ let optionsTemplate = `
       </li>
     </ul>
 
-    <ul *ngIf="optionsOpened && options && options.length > 0 && itemObjects[0].hasChildren()"
+    <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
         class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
       <li *ngFor="#c of options; #index=index" class="ui-select-choices-group">
         <div class="divider" *ngIf="index > 0"></div>
@@ -56,18 +58,20 @@ let optionsTemplate = `
 
 @Component({
   selector: 'ng-select',
+  directives: [OffClickDirective],
   pipes: [HightlightPipe],
   template: `
   <div tabindex="0"
      *ngIf="multiple === false"
      (keyup)="mainClick($event)"
+     [offClick]="clickedOutside"
      class="ui-select-container ui-select-bootstrap dropdown open">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <div class="ui-select-match"
          *ngIf="!inputMode">
       <span tabindex="-1"
           class="btn btn-default btn-secondary form-control ui-select-toggle"
-          (^click)="matchClick()"
+          (click)="matchClick($event)"
           style="outline: 0;">
         <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
         <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
@@ -160,7 +164,6 @@ export class Select {
   public itemObjects:Array<SelectItem> = [];
   public active:Array<SelectItem> = [];
   public activeOption:SelectItem;
-  private offSideClickHandler:any;
   private inputMode:boolean = false;
   private optionsOpened:boolean = false;
   private behavior:IOptionsBehavior;
@@ -169,6 +172,7 @@ export class Select {
   private _disabled:boolean = false;
 
   constructor(public element:ElementRef) {
+    this.clickedOutside = this.clickedOutside.bind(this);
   }
 
   private focusToInput(value:string = '') {
@@ -239,10 +243,8 @@ export class Select {
   }
 
   ngOnInit() {
-    this.behavior = this.itemObjects[0].hasChildren() ?
+    this.behavior = (this.firstItemHasChildren) ?
       new ChildrenBehavior(this) : new GenericBehavior(this);
-    this.offSideClickHandler = this.getOffSideClickHandler(this);
-    document.addEventListener('click', this.offSideClickHandler);
 
     if (this.initData) {
       this.active = this.initData.map(d => new SelectItem(d));
@@ -250,30 +252,13 @@ export class Select {
     }
   }
 
-  ngOnDestroy() {
-    document.removeEventListener('click', this.offSideClickHandler);
-    this.offSideClickHandler = null;
+  clickedOutside()  {
+    this.inputMode = false;
+    this.optionsOpened = false
   }
 
-  private getOffSideClickHandler(context:any) {
-    return function (e:any) {
-      if (e.target && e.target.nodeName === 'INPUT'
-        && e.target.className && e.target.className.indexOf('ui-select') >= 0) {
-        return;
-      }
-
-      if (srcElement.contains(context.element.nativeElement) 
-      && e.srcElement && e.srcElement.className &&
-        e.srcElement.className.indexOf('ui-select') >= 0) {
-        if (e.target.nodeName !== 'INPUT') {
-          context.matchClick(null);
-        }
-        return;
-      }
-
-      context.inputMode = false;
-      context.optionsOpened = false;
-    };
+  get firstItemHasChildren() {
+    return this.itemObjects[0] && this.itemObjects[0].hasChildren();
   }
 
   public remove(item:SelectItem) {

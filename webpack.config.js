@@ -105,18 +105,19 @@ var config = {
       {
         test: /\.ts$/,
         loader: 'ts',
-        exclude: [
-          /\.min\.js$/,
-          /\.spec\.ts$/,
-          /\.e2e\.ts$/,
-          /web_modules/,
-          /test/
-        ]
+        query: {
+          compilerOptions: {
+            removeComments: true,
+            noEmitHelpers: false
+          }
+        },
+        exclude: [/\.(spec|e2e)\.ts$/]
       }
     ],
     noParse: [
       /rtts_assert\/src\/rtts_assert/,
-      /reflect-metadata/
+      /reflect-metadata/,
+      /zone\.js\/dist\/zone-microtask/
     ]
   },
 
