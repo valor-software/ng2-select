@@ -21,3 +21,7 @@ ng2-select.js.map
 ng2-select.d.ts
 
 /logs
+
+/typings/
+
+/coverage/
