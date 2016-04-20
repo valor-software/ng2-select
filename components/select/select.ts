@@ -19,7 +19,8 @@ import {
 import {IOptionsBehavior} from './select-interfaces';
 
 let optionsTemplate = `
-    <ul *ngIf="optionsOpened && options && options.length > 0 && !itemObjects[0].hasChildren()"
+    <button *ngIf="isOpen()" class="ui-select-close-button" (click)="close()">X</button>
+    <ul *ngIf="isOpen() && !itemObjects[0].hasChildren()"
         class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
       <li class="ui-select-choices-group">
         <div *ngFor="#o of options"
@@ -34,7 +35,7 @@ let optionsTemplate = `
       </li>
     </ul>
 
-    <ul *ngIf="optionsOpened && options && options.length > 0 && itemObjects[0].hasChildren()"
+    <ul *ngIf="isOpen() && itemObjects[0].hasChildren()"
         class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
       <li *ngFor="#c of options; #index=index" class="ui-select-choices-group">
         <div class="divider" *ngIf="index > 0"></div>
@@ -262,7 +263,7 @@ export class Select {
         return;
       }
 
-      if (srcElement.contains(context.element.nativeElement) 
+      if (context.element.nativeElement.contains(e.srcElement)
       && e.srcElement && e.srcElement.className &&
         e.srcElement.className.indexOf('ui-select') >= 0) {
         if (e.target.nodeName !== 'INPUT') {
@@ -274,6 +275,15 @@ export class Select {
       context.inputMode = false;
       context.optionsOpened = false;
     };
+  }
+
+  private close() {
+    this.inputMode = false;
+    this.optionsOpened = false;
+  }
+
+  private isOpen(): boolean {
+    return this.optionsOpened && this.options && this.options.length > 0;
   }
 
   public remove(item:SelectItem) {
@@ -378,7 +388,7 @@ export class Select {
 
     // enter
     if (!isUpMode && e.keyCode === 13) {
-      if (this.active.indexOf(this.activeOption) == -1) {
+      if (this.active.indexOf(this.activeOption) === -1) {
         this.selectActiveMatch();
         this.behavior.next();
       }
