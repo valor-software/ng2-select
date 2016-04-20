@@ -115,6 +115,8 @@ body > .select2-container.open {
 
 .ui-select-bootstrap .ui-select-toggle {
   position: relative;
+  /* Allows the caret to not overlap placeholder text */
+  padding-right: 25px;
 }
 
 .ui-select-bootstrap .ui-select-toggle > .caret {
@@ -270,4 +272,28 @@ body > .ui-select-bootstrap.open {
 /* Handle up direction Bootstrap */
 .ui-select-container[theme="bootstrap"].direction-up .ui-select-dropdown {
     box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.25);
+}
+
+.ui-select-container {
+  display: table;
+}
+
+.form-inline .input-group .form-control.ui-select-search, .ui-select-match, .form-inline .input-group .form-control.ui-select-toggle {
+  width: 100%;
+}
+
+.ui-select-multiple .ui-select-search {
+  width: auto;
+}
+
+.ui-select-close-button {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  border: none;
+  position: absolute;
+  background: transparent;
+  font-weight: bold;
+  z-index: 4;
+  font-size: 14px;
 }
