@@ -17,6 +17,7 @@ import {
   stripTags
 } from './select-pipes';
 import {IOptionsBehavior} from './select-interfaces';
+import {escapeRegexp} from './common';
 
 let optionsTemplate = `
     <ul *ngIf="optionsOpened && options && options.length > 0 && !itemObjects[0].hasChildren()"
@@ -388,7 +389,7 @@ export class Select {
 
     if (e.srcElement) {
       this.inputValue = e.srcElement.value;
-      this.behavior.filter(new RegExp(this.inputValue, 'ig'));
+      this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
       this.doEvent('typed', this.inputValue);
     }
   }
