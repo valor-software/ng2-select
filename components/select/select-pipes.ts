@@ -2,9 +2,9 @@ import {Pipe} from 'angular2/core';
 import {escapeRegexp} from './common';
 
 @Pipe({
-  name: 'hightlight'
+  name: 'highlight'
 })
-export class HightlightPipe {
+export class HighlightPipe {
   transform(value:string, args:any[]) {
     if (args.length < 1) {
       return value;
