@@ -13,7 +13,7 @@ import {
 } from 'angular2/common';
 import {SelectItem} from './select-item';
 import {
-  HightlightPipe,
+  HighlightPipe,
   stripTags
 } from './select-pipes';
 import {IOptionsBehavior} from './select-interfaces';
@@ -29,7 +29,7 @@ let optionsTemplate = `
              (mouseenter)="selectActive(o)"
              (click)="selectMatch(o, $event)">
           <a href="javascript:void(0)" class="ui-select-choices-row-inner">
-            <div [innerHtml]="o.text | hightlight:inputValue"></div>
+            <div [innerHtml]="o.text | highlight:inputValue"></div>
           </a>
         </div>
       </li>
@@ -48,7 +48,7 @@ let optionsTemplate = `
              (click)="selectMatch(o, $event)"
              [ngClass]="{'active': isActive(o)}">
           <a href="javascript:void(0)" class="ui-select-choices-row-inner">
-            <div [innerHtml]="o.text | hightlight:inputValue"></div>
+            <div [innerHtml]="o.text | highlight:inputValue"></div>
           </a>
         </div>
       </li>
@@ -57,7 +57,7 @@ let optionsTemplate = `
 
 @Component({
   selector: 'ng-select',
-  pipes: [HightlightPipe],
+  pipes: [HighlightPipe],
   template: `
   <div tabindex="0"
      *ngIf="multiple === false"
