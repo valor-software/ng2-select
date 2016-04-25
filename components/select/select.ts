@@ -137,24 +137,10 @@ export class Select {
   initData:Array<any> = [];
   @Input()
   multiple:boolean = false;
-  
-  //Default properties set in the SelectItem constructor
-  @Input()
-  textProperty: string = 'text';
-  @Input()
-  idProperty: string = 'id';
-  @Input()
-  childrenProperty: string = 'children';
 
   @Input() set items(value:Array<any>) {
     this._items = value;
-    this.itemObjects = this._items.map((item: any) => { return this.createSelectItem(item); });
-  }
-
-  //Using a method on the Select class forces TypeScript to store a reference to 'this' within the scope
-  //which allows us to access the specified properties for the SelectItem constructor. 
-  createSelectItem(item: any): SelectItem {
-    return new SelectItem(item, this.idProperty, this.textProperty, this.childrenProperty);
+    this.itemObjects = this._items.map((item:any) => new SelectItem(item));
   }
 
   @Input() set disabled(value:boolean) {
@@ -267,7 +253,7 @@ export class Select {
   private populateOptions() {
     this.options = this.itemObjects
       .filter(option => (this.multiple === false ||
-      this.multiple === true && !this.active.find(o => option.id  === o.id)));
+      this.multiple === true && !this.active.find(o => option.text === o.text)));
   }
 
   ngOnInit() {
@@ -277,7 +263,7 @@ export class Select {
     document.addEventListener('click', this.offSideClickHandler);
 
     if (this.initData) {
-      this.active = this.initData.map(d => { return this.createSelectItem(d); });
+      this.active = this.initData.map(d => new SelectItem(d));
       this.data.emit(this.active);
     }
   }
@@ -468,7 +454,7 @@ export class Select {
   }
 
   private isActive(value:SelectItem):boolean {
-    return this.activeOption.id  === value.id;
+    return this.activeOption.text === value.text;
   }
 }
 
@@ -661,5 +647,6 @@ export class ChildrenBehavior extends Behavior implements IOptionsBehavior {
     }
   }
 }
+
 
 
