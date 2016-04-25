@@ -39,6 +39,9 @@ Follow me [![twitter](https://img.shields.io/twitter/follow/valorkin.svg?style=s
   - `disabled` (`?boolean=false`) - When `true`, it specifies that the component should be disabled.
   - `multiple` - (`?boolean=false`) - Mode of this component. If set `true` user can select more than one option.
   This option only applies to single-value inputs, as multiple-value inputs don't have the search input in the dropdown to begin with.
+  - `textProperty` - (`?string='text'`) - the property on your input objects to use for display and filtering purposes.
+  - `idProperty` - (`?string='id'`) - the property on your input objects to use for identification purposes.
+  - `childrenProperty` - (`?string='children'`) - the property on your input objects to use for nested children. 
 
 ### Events
 

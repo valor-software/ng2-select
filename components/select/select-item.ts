@@ -4,22 +4,24 @@ export class SelectItem {
   public children:Array<SelectItem>;
   public parent:SelectItem;
 
-  constructor(source:any) {
-    if (typeof source === 'string') {
-      this.id = this.text = source;
-    }
+  constructor(source:any, idProperty: string, textProperty: string, childrenProperty: string) {
+    if (source) {
+      if (typeof source === 'string') {
+        this.id = this.text = source;
+      }
 
-    if (typeof source === 'object') {
-      this.id = source.id || source.text;
-      this.text = source.text;
+      if (typeof source === 'object') {
+        this.id = source[idProperty] || source[textProperty];
+        this.text = source[textProperty];
 
-      if (source.children && source.text) {
-        this.children = source.children.map((c:any) => {
-          let r:SelectItem = new SelectItem(c);
-          r.parent = this;
-          return r;
-        });
-        this.text = source.text;
+        if (source[childrenProperty] && source[textProperty]) {
+          this.children = source[childrenProperty].map((c: any) => {
+            let r: SelectItem = new SelectItem(c, idProperty, textProperty, '');
+            r.parent = this;
+            return r;
+          });
+          this.text = source[textProperty];
+        }
       }
     }
   }
@@ -38,7 +40,7 @@ export class SelectItem {
   }
 
   public getSimilar():SelectItem {
-    let r:SelectItem = new SelectItem(false);
+    let r:SelectItem = new SelectItem(null, '', '', '');
     r.id = this.id;
     r.text = this.text;
     r.parent = this.parent;
