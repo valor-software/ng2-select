@@ -1,8 +1,4 @@
-import {
-    Component,
-    OnInit,
-    ViewEncapsulation
-} from 'angular2/core';
+import {Component, OnInit, ViewEncapsulation} from 'angular2/core';
 import {CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass} from 'angular2/common';
 import {ButtonCheckbox} from 'ng2-bootstrap/ng2-bootstrap';
 
@@ -67,11 +63,11 @@ export class RichDemo implements OnInit {
   private disabled:boolean = false;
   private items:Array<any> = [];
 
-  ngOnInit() {
-    COLORS.forEach( c => {
+  public ngOnInit():any {
+    COLORS.forEach((color: {name:string, hex:string}) => {
       this.items.push( {
-        id  : c.hex,
-        text: `<colorbox style='background-color:${c.hex};'></colorbox>${c.name} (${c.hex})`
+        id  : color.hex,
+        text: `<colorbox style='background-color:${color.hex};'></colorbox>${color.name} (${color.hex})`
       });
     });
   }
@@ -85,19 +81,19 @@ export class RichDemo implements OnInit {
     this.disabled = this._disabledV === '1';
   }
 
-  private selected(value:any) {
+  public selected(value:any):void {
     console.log('Selected value is: ', value);
   }
 
-  private removed(value:any) {
+  public removed(value:any):void {
     console.log('Removed value is: ', value);
   }
 
-  private typed(value:any) {
+  public typed(value:any):void {
     console.log('New search input: ', value);
   }
 
-  private refreshValue(value:any) {
+  public refreshValue(value:any):void {
     this.value = value;
   }
 }

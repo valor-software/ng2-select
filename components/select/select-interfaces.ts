@@ -1,4 +1,4 @@
-export interface IOptionsBehavior {
+export interface OptionsBehavior {
   first():any;
   last():any;
   prev():any;

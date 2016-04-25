@@ -1,22 +1,7 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  ElementRef
-} from 'angular2/core';
-import {
-  CORE_DIRECTIVES,
-  FORM_DIRECTIVES,
-  NgClass,
-  NgStyle
-} from 'angular2/common';
+import {Component, Input, Output, EventEmitter, ElementRef, OnInit, OnDestroy} from 'angular2/core';
 import {SelectItem} from './select-item';
-import {
-  HightlightPipe,
-  stripTags
-} from './select-pipes';
-import {IOptionsBehavior} from './select-interfaces';
+import {HighlightPipe, stripTags} from './select-pipes';
+import {OptionsBehavior} from './select-interfaces';
 import {escapeRegexp} from './common';
 
 let optionsTemplate = `
@@ -29,7 +14,7 @@ let optionsTemplate = `
              (mouseenter)="selectActive(o)"
              (click)="selectMatch(o, $event)">
           <a href="javascript:void(0)" class="ui-select-choices-row-inner">
-            <div [innerHtml]="o.text | hightlight:inputValue"></div>
+            <div [innerHtml]="o.text | highlight:inputValue"></div>
           </a>
         </div>
       </li>
@@ -48,16 +33,15 @@ let optionsTemplate = `
              (click)="selectMatch(o, $event)"
              [ngClass]="{'active': isActive(o)}">
           <a href="javascript:void(0)" class="ui-select-choices-row-inner">
-            <div [innerHtml]="o.text | hightlight:inputValue"></div>
+            <div [innerHtml]="o.text | highlight:inputValue"></div>
           </a>
         </div>
       </li>
     </ul>
 `;
-
 @Component({
   selector: 'ng-select',
-  pipes: [HightlightPipe],
+  pipes: [HighlightPipe],
   template: `
   <div tabindex="0"
      *ngIf="multiple === false"
@@ -126,53 +110,212 @@ let optionsTemplate = `
   </div>
   `
 })
-export class Select {
-  @Input()
-  allowClear:boolean = false;
-  @Input()
-  placeholder:string = '';
-  @Input()
-  initData:Array<any> = [];
-  @Input()
-  multiple:boolean = false;
+export class Select implements OnInit, OnDestroy {
+  @Input() public allowClear:boolean = false;
+  @Input() public placeholder:string = '';
+  @Input() public initData:Array<any> = [];
+  @Input() public multiple:boolean = false;
 
-  @Input() set items(value:Array<any>) {
+  @Input()
+  public set items(value:Array<any>) {
     this._items = value;
     this.itemObjects = this._items.map((item:any) => new SelectItem(item));
   }
 
-  @Input() set disabled(value:boolean) {
+  @Input()
+  public set disabled(value:boolean) {
     this._disabled = value;
     if (this._disabled === true) {
       this.hideOptions();
     }
   }
 
-  @Output()
-  data:EventEmitter<any> = new EventEmitter();
-  @Output()
-  selected:EventEmitter<any> = new EventEmitter();
-  @Output()
-  removed:EventEmitter<any> = new EventEmitter();
-  @Output()
-  typed:EventEmitter<any> = new EventEmitter();
+  @Output() public data:EventEmitter<any> = new EventEmitter();
+  @Output() public selected:EventEmitter<any> = new EventEmitter();
+  @Output() public removed:EventEmitter<any> = new EventEmitter();
+  @Output() public typed:EventEmitter<any> = new EventEmitter();
 
   public options:Array<SelectItem> = [];
   public itemObjects:Array<SelectItem> = [];
   public active:Array<SelectItem> = [];
   public activeOption:SelectItem;
+  public element:ElementRef;
+
   private offSideClickHandler:any;
   private inputMode:boolean = false;
   private optionsOpened:boolean = false;
-  private behavior:IOptionsBehavior;
+  private behavior:OptionsBehavior;
   private inputValue:string = '';
   private _items:Array<any> = [];
   private _disabled:boolean = false;
 
-  constructor(public element:ElementRef) {
+  public constructor(element:ElementRef) {
+    this.element = element;
   }
 
-  private focusToInput(value:string = '') {
+  public inputEvent(e:any, isUpMode:boolean = false):void {
+    // tab
+    if (e.keyCode === 9) {
+      return;
+    }
+    if (isUpMode && (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 38 ||
+      e.keyCode === 40 || e.keyCode === 13)) {
+      e.preventDefault();
+      return;
+    }
+    // backspace
+    if (!isUpMode && e.keyCode === 8) {
+      let el:any = this.element.nativeElement
+        .querySelector('div.ui-select-container > input');
+      if (!el.value || el.value.length <= 0) {
+        if (this.active.length > 0) {
+          this.remove(this.active[this.active.length - 1]);
+        }
+        e.preventDefault();
+      }
+    }
+    // esc
+    if (!isUpMode && e.keyCode === 27) {
+      this.hideOptions();
+      this.element.nativeElement.children[0].focus();
+      e.preventDefault();
+      return;
+    }
+    // del
+    if (!isUpMode && e.keyCode === 46) {
+      if (this.active.length > 0) {
+        this.remove(this.active[this.active.length - 1]);
+      }
+      e.preventDefault();
+    }
+    // left
+    if (!isUpMode && e.keyCode === 37 && this._items.length > 0) {
+      this.behavior.first();
+      e.preventDefault();
+      return;
+    }
+    // right
+    if (!isUpMode && e.keyCode === 39 && this._items.length > 0) {
+      this.behavior.last();
+      e.preventDefault();
+      return;
+    }
+    // up
+    if (!isUpMode && e.keyCode === 38) {
+      this.behavior.prev();
+      e.preventDefault();
+      return;
+    }
+    // down
+    if (!isUpMode && e.keyCode === 40) {
+      this.behavior.next();
+      e.preventDefault();
+      return;
+    }
+    // enter
+    if (!isUpMode && e.keyCode === 13) {
+      if (this.active.indexOf(this.activeOption) === -1) {
+        this.selectActiveMatch();
+        this.behavior.next();
+      }
+      e.preventDefault();
+      return;
+    }
+    if (e.srcElement) {
+      this.inputValue = e.srcElement.value;
+      this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
+      this.doEvent('typed', this.inputValue);
+    }
+  }
+
+  public ngOnInit():any {
+    this.behavior = this.itemObjects[0].hasChildren() ?
+      new ChildrenBehavior(this) : new GenericBehavior(this);
+    this.offSideClickHandler = this.getOffSideClickHandler(this);
+    document.addEventListener('click', this.offSideClickHandler);
+    if (this.initData) {
+      this.active = this.initData.map((data:any) => new SelectItem(data));
+      this.data.emit(this.active);
+    }
+  }
+
+  public ngOnDestroy():any {
+    document.removeEventListener('click', this.offSideClickHandler);
+    this.offSideClickHandler = void 0;
+  }
+
+  public remove(item:SelectItem):void {
+    if (this._disabled === true) {
+      return;
+    }
+    if (this.multiple === true && this.active) {
+      let index = this.active.indexOf(item);
+      this.active.splice(index, 1);
+      this.data.next(this.active);
+      this.doEvent('removed', item);
+    }
+    if (this.multiple === false) {
+      this.active = [];
+      this.data.next(this.active);
+      this.doEvent('removed', item);
+    }
+  }
+
+  public doEvent(type:string, value:any):void {
+    if ((this as any)[type] && value) {
+      (this as any)[type].next(value);
+    }
+  }
+
+  protected matchClick(e:any):void {
+    if (this._disabled === true) {
+      return;
+    }
+    this.inputMode = !this.inputMode;
+    if (this.inputMode === true && ((this.multiple === true && e) || this.multiple === false)) {
+      this.focusToInput();
+      this.open();
+    }
+  }
+
+  protected  mainClick(event:any):void {
+    if (this.inputMode === true || this._disabled === true) {
+      return;
+    }
+    if (event.keyCode === 46) {
+      event.preventDefault();
+      this.inputEvent(event);
+      return;
+    }
+    if (event.keyCode === 8) {
+      event.preventDefault();
+      this.inputEvent(event, true);
+      return;
+    }
+    if (event.keyCode === 9 || event.keyCode === 13 ||
+      event.keyCode === 27 || (event.keyCode >= 37 && event.keyCode <= 40)) {
+      event.preventDefault();
+      return;
+    }
+    this.inputMode = true;
+    let value = String
+      .fromCharCode(96 <= event.keyCode && event.keyCode <= 105 ? event.keyCode - 48 : event.keyCode)
+      .toLowerCase();
+    this.focusToInput(value);
+    this.open();
+    event.srcElement.value = value;
+    this.inputEvent(event);
+  }
+
+  protected  selectActive(value:SelectItem):void {
+    this.activeOption = value;
+  }
+
+  protected  isActive(value:SelectItem):boolean {
+    return this.activeOption.text === value.text;
+  }
+
+  private focusToInput(value:string = ''):void {
     setTimeout(() => {
       let el = this.element.nativeElement.querySelector('div.ui-select-container > input');
       if (el) {
@@ -182,92 +325,30 @@ export class Select {
     }, 0);
   }
 
-  private matchClick(e:any) {
-    if (this._disabled === true) {
-      return;
-    }
-
-    this.inputMode = !this.inputMode;
-    if (this.inputMode === true && ((this.multiple === true && e) || this.multiple === false)) {
-      this.focusToInput();
-      this.open();
-    }
-  }
-
-  private mainClick(e:any) {
-    if (this.inputMode === true || this._disabled === true) {
-      return;
-    }
-
-    if (e.keyCode === 46) {
-      e.preventDefault();
-      this.inputEvent(e);
-      return;
-    }
-
-    if (e.keyCode === 8) {
-      e.preventDefault();
-      this.inputEvent(e, true);
-      return;
-    }
-
-    if (e.keyCode === 9 || e.keyCode === 13 ||
-      e.keyCode === 27 || (e.keyCode >= 37 && e.keyCode <= 40)) {
-      e.preventDefault();
-      return;
-    }
-
-    this.inputMode = true;
-    let value = String
-      .fromCharCode(96 <= e.keyCode && e.keyCode <= 105 ? e.keyCode - 48 : e.keyCode)
-      .toLowerCase();
-    this.focusToInput(value);
-    this.open();
-    e.srcElement.value = value;
-    this.inputEvent(e);
-  }
-
-  private open() {
+  private open():void {
     this.options = this.itemObjects
-      .filter(option => (this.multiple === false ||
-      this.multiple === true && !this.active.find(o => option.text === o.text)));
+      .filter((option: SelectItem) => (this.multiple === false ||
+      this.multiple === true &&
+      !this.active.find((o:SelectItem) => option.text === o.text)));
 
     if (this.options.length > 0) {
       this.behavior.first();
     }
-
     this.optionsOpened = true;
   }
 
-  ngOnInit() {
-    this.behavior = this.itemObjects[0].hasChildren() ?
-      new ChildrenBehavior(this) : new GenericBehavior(this);
-    this.offSideClickHandler = this.getOffSideClickHandler(this);
-    document.addEventListener('click', this.offSideClickHandler);
-
-    if (this.initData) {
-      this.active = this.initData.map(d => new SelectItem(d));
-      this.data.emit(this.active);
-    }
-  }
-
-  ngOnDestroy() {
-    document.removeEventListener('click', this.offSideClickHandler);
-    this.offSideClickHandler = null;
-  }
-
-  private getOffSideClickHandler(context:any) {
-    return function (e:any) {
+  private getOffSideClickHandler(context:any):Function {
+    return function (e:any):void {
       if (e.target && e.target.nodeName === 'INPUT'
         && e.target.className && e.target.className.indexOf('ui-select') >= 0) {
         return;
       }
 
       if (e.srcElement.contains(context.element.nativeElement)
-      && e.srcElement && e.srcElement.className &&
+        && e.srcElement && e.srcElement.className &&
         e.srcElement.className.indexOf('ui-select') >= 0) {
         if (e.target.nodeName !== 'INPUT') {
-          context.matchClick(null);
+          context.matchClick(void 0);
         }
         return;
       }
@@ -277,281 +358,150 @@ export class Select {
     };
   }
 
-  public remove(item:SelectItem) {
-    if (this._disabled === true) {
-      return;
-    }
-
-    if (this.multiple === true && this.active) {
-      let index = this.active.indexOf(item);
-      this.active.splice(index, 1);
-      this.data.next(this.active);
-      this.doEvent('removed', item);
-    }
-
-    if (this.multiple === false) {
-      this.active = [];
-      this.data.next(this.active);
-      this.doEvent('removed', item);
-    }
-  }
-
-  public doEvent(type:string, value:any) {
-    if ((<any>this)[type] && value) {
-      (<any>this)[type].next(value);
-    }
-  }
-
-  private hideOptions() {
+  private hideOptions():void {
     this.inputMode = false;
     this.optionsOpened = false;
   }
 
-  public inputEvent(e:any, isUpMode:boolean = false) {
-    // tab
-    if (e.keyCode === 9) {
-      return;
-    }
-
-    if (isUpMode && (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 38 ||
-      e.keyCode === 40 || e.keyCode === 13)) {
-      e.preventDefault();
-      return;
-    }
-
-    // backspace
-    if (!isUpMode && e.keyCode === 8) {
-      let el:any = this.element.nativeElement
-        .querySelector('div.ui-select-container > input');
-
-      if (!el.value || el.value.length <= 0) {
-        if (this.active.length > 0) {
-          this.remove(this.active[this.active.length - 1]);
-        }
-
-        e.preventDefault();
-      }
-    }
-
-    // esc
-    if (!isUpMode && e.keyCode === 27) {
-      this.hideOptions();
-      this.element.nativeElement.children[0].focus();
-      e.preventDefault();
-      return;
-    }
-
-    // del
-    if (!isUpMode && e.keyCode === 46) {
-      if (this.active.length > 0) {
-        this.remove(this.active[this.active.length - 1]);
-      }
-      e.preventDefault();
-    }
-
-    // left
-    if (!isUpMode && e.keyCode === 37 && this._items.length > 0) {
-      this.behavior.first();
-      e.preventDefault();
-      return;
-    }
-
-    // right
-    if (!isUpMode && e.keyCode === 39 && this._items.length > 0) {
-      this.behavior.last();
-      e.preventDefault();
-      return;
-    }
-
-    // up
-    if (!isUpMode && e.keyCode === 38) {
-      this.behavior.prev();
-      e.preventDefault();
-      return;
-    }
-
-    // down
-    if (!isUpMode && e.keyCode === 40) {
-      this.behavior.next();
-      e.preventDefault();
-      return;
-    }
-
-    // enter
-    if (!isUpMode && e.keyCode === 13) {
-      if (this.active.indexOf(this.activeOption) == -1) {
-        this.selectActiveMatch();
-        this.behavior.next();
-      }
-      e.preventDefault();
-      return;
-    }
-
-    if (e.srcElement) {
-      this.inputValue = e.srcElement.value;
-      this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
-      this.doEvent('typed', this.inputValue);
-    }
-  }
-
-  private selectActiveMatch() {
+  private selectActiveMatch():void {
     this.selectMatch(this.activeOption);
   }
 
-  private selectMatch(value:SelectItem, e:Event = null) {
+  private selectMatch(value:SelectItem, e:Event = void 0):void {
     if (e) {
       e.stopPropagation();
       e.preventDefault();
     }
-
     if (this.options.length <= 0) {
       return;
     }
-
     if (this.multiple === true) {
       this.active.push(value);
       this.data.next(this.active);
     }
-
     if (this.multiple === false) {
       this.active[0] = value;
       this.data.next(this.active[0]);
     }
-
     this.doEvent('selected', value);
     this.hideOptions();
-
     if (this.multiple === true) {
       this.focusToInput('');
     } else {
-      this.focusToInput( stripTags(value.text) );
+      this.focusToInput(stripTags(value.text));
       this.element.nativeElement.querySelector('.ui-select-container').focus();
     }
-  }
-
-  private selectActive(value:SelectItem) {
-    this.activeOption = value;
-  }
-
-  private isActive(value:SelectItem):boolean {
-    return this.activeOption.text === value.text;
   }
 }
 
 export class Behavior {
   public optionsMap:Map<string, number> = new Map<string, number>();
 
-  constructor(public actor:Select) {
+  public actor: Select;
+  public constructor(actor:Select) {
+    this.actor = actor;
   }
 
-  private getActiveIndex(optionsMap:Map<string, number> = null):number {
-    let ai = this.actor.options.indexOf(this.actor.activeOption);
-
-    if (ai < 0 && optionsMap !== null) {
-      ai = optionsMap.get(this.actor.activeOption.id);
-    }
-
-    return ai;
-  }
-
-  public fillOptionsMap() {
+  public fillOptionsMap():void {
     this.optionsMap.clear();
     let startPos = 0;
-    this.actor.itemObjects.map(i => {
-      startPos = i.fillChildrenHash(this.optionsMap, startPos);
-    });
+    this.actor.itemObjects
+      .map((item:SelectItem) => {
+        startPos = item.fillChildrenHash(this.optionsMap, startPos);
+      });
   }
 
-  public ensureHighlightVisible(optionsMap:Map<string, number> = null) {
+  public ensureHighlightVisible(optionsMap:Map<string, number> = void 0):void {
     let container = this.actor.element.nativeElement.querySelector('.ui-select-choices-content');
-
     if (!container) {
       return;
     }
-
     let choices = container.querySelectorAll('.ui-select-choices-row');
     if (choices.length < 1) {
       return;
     }
-
     let activeIndex = this.getActiveIndex(optionsMap);
     if (activeIndex < 0) {
       return;
     }
-
     let highlighted:any = choices[activeIndex];
     if (!highlighted) {
       return;
     }
-
     let posY:number = highlighted.offsetTop + highlighted.clientHeight - container.scrollTop;
     let height:number = container.offsetHeight;
-
     if (posY > height) {
       container.scrollTop += posY - height;
     } else if (posY < highlighted.clientHeight) {
       container.scrollTop -= highlighted.clientHeight - posY;
     }
   }
+
+  private getActiveIndex(optionsMap:Map<string, number> = void 0):number {
+    let ai = this.actor.options.indexOf(this.actor.activeOption);
+    if (ai < 0 && optionsMap !== void 0) {
+      ai = optionsMap.get(this.actor.activeOption.id);
+    }
+    return ai;
+  }
 }
 
-export class GenericBehavior extends Behavior implements IOptionsBehavior {
-  constructor(public actor:Select) {
+export class GenericBehavior extends Behavior implements OptionsBehavior {
+  public constructor(actor:Select) {
     super(actor);
   }
 
-  public first() {
+  public first():void {
     this.actor.activeOption = this.actor.options[0];
     super.ensureHighlightVisible();
   }
 
-  public last() {
+  public last():void {
     this.actor.activeOption = this.actor.options[this.actor.options.length - 1];
     super.ensureHighlightVisible();
   }
 
-  public prev() {
+  public prev():void {
     let index = this.actor.options.indexOf(this.actor.activeOption);
     this.actor.activeOption = this.actor
       .options[index - 1 < 0 ? this.actor.options.length - 1 : index - 1];
     super.ensureHighlightVisible();
   }
 
-  public next() {
+  public next():void {
     let index = this.actor.options.indexOf(this.actor.activeOption);
     this.actor.activeOption = this.actor
       .options[index + 1 > this.actor.options.length - 1 ? 0 : index + 1];
     super.ensureHighlightVisible();
   }
 
-  public filter(query:RegExp) {
+  public filter(query:RegExp):void {
     let options = this.actor.itemObjects
-      .filter(option => stripTags(option.text).match(query) &&
-      (this.actor.multiple === false ||
-      (this.actor.multiple === true &&
-      this.actor.active.indexOf(option) < 0)));
+      .filter((option:SelectItem) => {
+        return stripTags(option.text).match(query) &&
+          (this.actor.multiple === false ||
+          (this.actor.multiple === true && this.actor.active.indexOf(option) < 0));
+      });
     this.actor.options = options;
-
     if (this.actor.options.length > 0) {
       this.actor.activeOption = this.actor.options[0];
       super.ensureHighlightVisible();
     }
   }
-
 }
 
-export class ChildrenBehavior extends Behavior implements IOptionsBehavior {
-  constructor(public actor:Select) {
+export class ChildrenBehavior extends Behavior implements OptionsBehavior {
+  public constructor(actor:Select) {
     super(actor);
   }
 
-  public first() {
+  public first():void {
     this.actor.activeOption = this.actor.options[0].children[0];
     this.fillOptionsMap();
     this.ensureHighlightVisible(this.optionsMap);
   }
 
-  public last() {
+  public last():void {
     this.actor.activeOption =
       this.actor
         .options[this.actor.options.length - 1]
@@ -560,13 +510,12 @@ export class ChildrenBehavior extends Behavior implements IOptionsBehavior {
     this.ensureHighlightVisible(this.optionsMap);
   }
 
-  public prev() {
+  public prev():void {
     let indexParent = this.actor.options
-      .findIndex(a => this.actor.activeOption.parent && this.actor.activeOption.parent.id === a.id);
+      .findIndex((option:SelectItem) => this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id);
     let index = this.actor.options[indexParent].children
-      .findIndex(a => this.actor.activeOption && this.actor.activeOption.id === a.id);
+      .findIndex((option:SelectItem) => this.actor.activeOption && this.actor.activeOption.id === option.id);
     this.actor.activeOption = this.actor.options[indexParent].children[index - 1];
-
     if (!this.actor.activeOption) {
       if (this.actor.options[indexParent - 1]) {
         this.actor.activeOption = this.actor
@@ -574,58 +523,48 @@ export class ChildrenBehavior extends Behavior implements IOptionsBehavior {
           .children[this.actor.options[indexParent - 1].children.length - 1];
       }
     }
-
     if (!this.actor.activeOption) {
       this.last();
     }
-
     this.fillOptionsMap();
     this.ensureHighlightVisible(this.optionsMap);
   }
 
-  public next() {
+  public next():void {
     let indexParent = this.actor.options
-      .findIndex(a => this.actor.activeOption.parent && this.actor.activeOption.parent.id === a.id);
+      .findIndex((option:SelectItem) => this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id);
     let index = this.actor.options[indexParent].children
-      .findIndex(a => this.actor.activeOption && this.actor.activeOption.id === a.id);
+      .findIndex((option:SelectItem) => this.actor.activeOption && this.actor.activeOption.id === option.id);
     this.actor.activeOption = this.actor.options[indexParent].children[index + 1];
     if (!this.actor.activeOption) {
       if (this.actor.options[indexParent + 1]) {
         this.actor.activeOption = this.actor.options[indexParent + 1].children[0];
       }
     }
-
     if (!this.actor.activeOption) {
       this.first();
     }
-
     this.fillOptionsMap();
     this.ensureHighlightVisible(this.optionsMap);
   }
 
-  public filter(query:RegExp) {
+  public filter(query:RegExp):void {
     let options:Array<SelectItem> = [];
     let optionsMap:Map<string, number> = new Map<string, number>();
     let startPos = 0;
-
     for (let si of this.actor.itemObjects) {
-      let children:Array<SelectItem> = si.children.filter(option => query.test(option.text));
+      let children:Array<SelectItem> = si.children.filter((option:SelectItem) => query.test(option.text));
       startPos = si.fillChildrenHash(optionsMap, startPos);
-
       if (children.length > 0) {
         let newSi = si.getSimilar();
         newSi.children = children;
         options.push(newSi);
       }
     }
-
     this.actor.options = options;
-
     if (this.actor.options.length > 0) {
       this.actor.activeOption = this.actor.options[0].children[0];
       super.ensureHighlightVisible(optionsMap);
     }
   }
 }
-
-

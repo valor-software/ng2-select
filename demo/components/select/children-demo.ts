@@ -13,10 +13,7 @@ let template = require('./children-demo.html');
   directives: [SELECT_DIRECTIVES, NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES, ButtonCheckbox]
 })
 export class ChildrenDemo {
-  private value:any = {};
-  private _disabledV:string = '0';
-  private disabled:boolean = false;
-  private items:Array<any> = [
+  public items:Array<any> = [
     {
       text: 'Austria',
       children: [
@@ -192,6 +189,9 @@ export class ChildrenDemo {
       ]
     }
   ];
+  private value:any = {};
+  private _disabledV:string = '0';
+  private disabled:boolean = false;
 
   private get disabledV():string {
     return this._disabledV;
@@ -202,15 +202,15 @@ export class ChildrenDemo {
     this.disabled = this._disabledV === '1';
   }
 
-  private selected(value:any) {
+  public selected(value:any):void {
     console.log('Selected value is: ', value);
   }
 
-  private removed(value:any) {
+  public removed(value:any):void {
     console.log('Removed value is: ', value);
   }
 
-  private refreshValue(value:any) {
+  public refreshValue(value:any):void {
     this.value = value;
   }
 }
