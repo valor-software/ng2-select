@@ -1,25 +1,22 @@
-import {Directive, Host, HostListener, Input} from 'angular2/core';
+import {Directive, HostListener, Input, OnInit, OnDestroy} from 'angular2/core';
 
 @Directive({
   selector: '[offClick]'
 })
 
-export class OffClickDirective {
+export class OffClickDirective implements OnInit, OnDestroy {
   /* tslint:disable */
-  @Input('offClick') offClickHandler: any;
+  @Input('offClick') public offClickHandler: any;
   /* tslint:enable */
-  @HostListener('click', ['$event']) onClick($event : MouseEvent) {
+  @HostListener('click', ['$event']) public onClick($event: MouseEvent): void {
     $event.stopPropagation();
   }
 
-  constructor() {
-  }
-
-  ngOnInit() {
+  public ngOnInit(): any {
     setTimeout(() => {document.addEventListener('click', this.offClickHandler);}, 0);
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy(): any {
     document.removeEventListener('click', this.offClickHandler);
   }
 

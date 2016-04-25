@@ -1,8 +1,9 @@
-import {Component, Input, Output, EventEmitter, ElementRef, OnInit, OnDestroy} from 'angular2/core';
+import {Component, Input, Output, EventEmitter, ElementRef, OnInit} from 'angular2/core';
 import {SelectItem} from './select-item';
 import {HighlightPipe, stripTags} from './select-pipes';
 import {OptionsBehavior} from './select-interfaces';
 import {escapeRegexp} from './common';
+import {OffClickDirective} from './off-click';
 
 let optionsTemplate = `
     <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
@@ -112,7 +113,7 @@ let optionsTemplate = `
   </div>
   `
 })
-export class Select implements OnInit, OnDestroy {
+export class Select implements OnInit {
   @Input() public allowClear:boolean = false;
   @Input() public placeholder:string = '';
   @Input() public initData:Array<any> = [];
@@ -233,8 +234,6 @@ export class Select implements OnInit, OnDestroy {
   public ngOnInit():any {
     this.behavior = (this.firstItemHasChildren) ?
       new ChildrenBehavior(this) : new GenericBehavior(this);
-    this.offSideClickHandler = this.getOffSideClickHandler(this);
-    document.addEventListener('click', this.offSideClickHandler);
     if (this.initData) {
       this.active = this.initData.map((data:any) => new SelectItem(data));
       this.data.emit(this.active);
@@ -262,6 +261,15 @@ export class Select implements OnInit, OnDestroy {
     if ((this as any)[type] && value) {
       (this as any)[type].next(value);
     }
+  }
+
+  public clickedOutside():void  {
+    this.inputMode = false;
+    this.optionsOpened = false;
+  }
+
+  public get firstItemHasChildren():boolean {
+    return this.itemObjects[0] && this.itemObjects[0].hasChildren();
   }
 
   protected matchClick(e:any):void {
@@ -332,28 +340,6 @@ export class Select implements OnInit, OnDestroy {
       this.behavior.first();
     }
     this.optionsOpened = true;
-  }
-
-
-  private getOffSideClickHandler(context:any):Function {
-    return function (e:any):void {
-      if (e.target && e.target.nodeName === 'INPUT'
-        && e.target.className && e.target.className.indexOf('ui-select') >= 0) {
-        return;
-      }
-
-      if (e.srcElement.contains(context.element.nativeElement)
-        && e.srcElement && e.srcElement.className &&
-        e.srcElement.className.indexOf('ui-select') >= 0) {
-        if (e.target.nodeName !== 'INPUT') {
-          context.matchClick(void 0);
-        }
-        return;
-      }
-
-      context.inputMode = false;
-      context.optionsOpened = false;
-    };
   }
 
   private hideOptions():void {
