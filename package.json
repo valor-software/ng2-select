@@ -55,6 +55,7 @@
     "awesome-typescript-loader": "^0.17.0-rc.6",
     "bootstrap": "3.3.6",
     "clean-webpack-plugin": "0.1.8",
+    "codecov": "1.0.1",
     "codelyzer": "0.0.15",
     "compression-webpack-plugin": "0.3.1",
     "conventional-changelog-cli": "1.1.1",
