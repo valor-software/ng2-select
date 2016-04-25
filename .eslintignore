@@ -1,0 +1,28 @@
+test.bundle.js
+karma.conf.js
+gulpfile.js
+
+.idea/
+gulp-tasks/
+logs/
+
+# typings
+typings/
+node_modules/
+
+# testing
+karma.conf.js
+test.bundle.js
+coverage/
+
+demo/
+demo-build/
+
+/demo/**/*.js
+/components/**/*.js
+ng2-select.js
+
+logs/
+bundles/
+
+
