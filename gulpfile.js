@@ -1,4 +1,6 @@
-var gulp = require('gulp');
+'use strict';
+
+const gulp = require('gulp');
 
 gulp.paths = {
   tssrc: [
@@ -11,6 +13,6 @@ gulp.paths = {
 
 require('require-dir')('./gulp-tasks');
 
-gulp.task('default', function () {
+gulp.task('default', () => {
   gulp.start('lint');
 });

@@ -36,7 +36,7 @@ let tabDesc:Array<any> = [
 ];
 
 let tabsContent:string = ``;
-tabDesc.forEach(desc => {
+tabDesc.forEach((desc:any) => {
   tabsContent += `
   <div *ngIf="currentHeading === '${desc.heading}'">
     <${desc.heading.toLowerCase()}-demo>
@@ -91,7 +91,7 @@ tabDesc.forEach(desc => {
 export class SelectSection {
   public currentHeading:string = 'Single';
 
-  public select_zzz(e:any) {
+  public select_zzz(e:any):void {
     if (e.heading) {
       this.currentHeading = e.heading;
     }
