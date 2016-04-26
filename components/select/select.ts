@@ -1,11 +1,12 @@
-import {Component, Input, Output, EventEmitter, ElementRef, OnInit, OnDestroy} from 'angular2/core';
+import {Component, Input, Output, EventEmitter, ElementRef, OnInit} from 'angular2/core';
 import {SelectItem} from './select-item';
 import {HighlightPipe, stripTags} from './select-pipes';
 import {OptionsBehavior} from './select-interfaces';
 import {escapeRegexp} from './common';
+import {OffClickDirective} from './off-click';
 
 let optionsTemplate = `
-    <ul *ngIf="optionsOpened && options && options.length > 0 && !itemObjects[0].hasChildren()"
+    <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
         class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
       <li class="ui-select-choices-group">
         <div *ngFor="#o of options"
@@ -20,7 +21,7 @@ let optionsTemplate = `
       </li>
     </ul>
 
-    <ul *ngIf="optionsOpened && options && options.length > 0 && itemObjects[0].hasChildren()"
+    <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
         class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
       <li *ngFor="#c of options; #index=index" class="ui-select-choices-group">
         <div class="divider" *ngIf="index > 0"></div>
@@ -41,18 +42,20 @@ let optionsTemplate = `
 `;
 @Component({
   selector: 'ng-select',
+  directives: [OffClickDirective],
   pipes: [HighlightPipe],
   template: `
   <div tabindex="0"
      *ngIf="multiple === false"
      (keyup)="mainClick($event)"
+     [offClick]="clickedOutside"
      class="ui-select-container ui-select-bootstrap dropdown open">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <div class="ui-select-match"
          *ngIf="!inputMode">
       <span tabindex="-1"
           class="btn btn-default btn-secondary form-control ui-select-toggle"
-          (^click)="matchClick()"
+          (click)="matchClick($event)"
           style="outline: 0;">
         <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
         <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
@@ -110,7 +113,7 @@ let optionsTemplate = `
   </div>
   `
 })
-export class Select implements OnInit, OnDestroy {
+export class Select implements OnInit {
   @Input() public allowClear:boolean = false;
   @Input() public placeholder:string = '';
   @Input() public initData:Array<any> = [];
@@ -141,7 +144,6 @@ export class Select implements OnInit, OnDestroy {
   public activeOption:SelectItem;
   public element:ElementRef;
 
-  private offSideClickHandler:any;
   private inputMode:boolean = false;
   private optionsOpened:boolean = false;
   private behavior:OptionsBehavior;
@@ -151,6 +153,7 @@ export class Select implements OnInit, OnDestroy {
 
   public constructor(element:ElementRef) {
     this.element = element;
+    this.clickedOutside = this.clickedOutside.bind(this);
   }
 
   public inputEvent(e:any, isUpMode:boolean = false):void {
@@ -229,19 +232,12 @@ export class Select implements OnInit, OnDestroy {
   }
 
   public ngOnInit():any {
-    this.behavior = this.itemObjects[0].hasChildren() ?
+    this.behavior = (this.firstItemHasChildren) ?
       new ChildrenBehavior(this) : new GenericBehavior(this);
-    this.offSideClickHandler = this.getOffSideClickHandler(this);
-    document.addEventListener('click', this.offSideClickHandler);
     if (this.initData) {
       this.active = this.initData.map((data:any) => new SelectItem(data));
       this.data.emit(this.active);
     }
-  }
-
-  public ngOnDestroy():any {
-    document.removeEventListener('click', this.offSideClickHandler);
-    this.offSideClickHandler = void 0;
   }
 
   public remove(item:SelectItem):void {
@@ -265,6 +261,15 @@ export class Select implements OnInit, OnDestroy {
     if ((this as any)[type] && value) {
       (this as any)[type].next(value);
     }
+  }
+
+  public clickedOutside():void  {
+    this.inputMode = false;
+    this.optionsOpened = false;
+  }
+
+  public get firstItemHasChildren():boolean {
+    return this.itemObjects[0] && this.itemObjects[0].hasChildren();
   }
 
   protected matchClick(e:any):void {
@@ -335,27 +340,6 @@ export class Select implements OnInit, OnDestroy {
       this.behavior.first();
     }
     this.optionsOpened = true;
-  }
-
-  private getOffSideClickHandler(context:any):Function {
-    return function (e:any):void {
-      if (e.target && e.target.nodeName === 'INPUT'
-        && e.target.className && e.target.className.indexOf('ui-select') >= 0) {
-        return;
-      }
-
-      if (e.srcElement.contains(context.element.nativeElement)
-        && e.srcElement && e.srcElement.className &&
-        e.srcElement.className.indexOf('ui-select') >= 0) {
-        if (e.target.nodeName !== 'INPUT') {
-          context.matchClick(void 0);
-        }
-        return;
-      }
-
-      context.inputMode = false;
-      context.optionsOpened = false;
-    };
   }
 
   private hideOptions():void {
