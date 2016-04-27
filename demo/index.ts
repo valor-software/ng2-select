@@ -2,7 +2,7 @@ import {bootstrap} from 'angular2/platform/browser';
 import {Component} from 'angular2/core';
 import {NgClass} from 'angular2/common';
 
-import {SelectSection} from './components/select-section';
+import {SelectSectionComponent} from './components/select-section';
 
 let gettingStarted = require('./getting-started.md');
 
@@ -35,10 +35,10 @@ let gettingStarted = require('./getting-started.md');
   `,
   directives: [
     NgClass,
-    SelectSection
+    SelectSectionComponent
   ]
 })
-export class Demo {
+export class DemoComponent {
 }
 
-bootstrap(Demo);
+bootstrap(DemoComponent);

@@ -57,7 +57,7 @@ let template = require('./rich-demo.html');
   directives: [SELECT_DIRECTIVES, NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES, ButtonCheckbox],
   encapsulation: ViewEncapsulation.None  // Enable dynamic HTML styles
 })
-export class RichDemo implements OnInit {
+export class RichDemoComponent implements OnInit {
   private value:any = {};
   private _disabledV:string = '0';
   private disabled:boolean = false;

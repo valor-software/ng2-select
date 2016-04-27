@@ -1,2 +1,2 @@
-import {Select} from './select/select';
-export const SELECT_DIRECTIVES:Array<any> = [Select];
+import {SelectComponent} from './select/select';
+export const SELECT_DIRECTIVES:Array<any> = [SelectComponent];

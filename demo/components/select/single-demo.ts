@@ -12,7 +12,7 @@ let template = require('./single-demo.html');
   template: template,
   directives: [SELECT_DIRECTIVES, NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES, ButtonCheckbox]
 })
-export class SingleDemo {
+export class SingleDemoComponent {
   public items:Array<string> = ['Amsterdam', 'Antwerp', 'Athens', 'Barcelona',
     'Berlin', 'Birmingham', 'Bradford', 'Bremen', 'Brussels', 'Bucharest',
     'Budapest', 'Cologne', 'Copenhagen', 'Dortmund', 'Dresden', 'Dublin',

@@ -3,10 +3,10 @@ import {CORE_DIRECTIVES} from 'angular2/common';
 
 import {TAB_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 
-import {SingleDemo} from './select/single-demo';
-import {MultipleDemo} from './select/multiple-demo';
-import {ChildrenDemo} from './select/children-demo';
-import {RichDemo} from './select/rich-demo';
+import {SingleDemoComponent} from './select/single-demo';
+import {MultipleDemoComponent} from './select/multiple-demo';
+import {ChildrenDemoComponent} from './select/children-demo';
+import {RichDemoComponent} from './select/rich-demo';
 
 let name = 'Select';
 // webpack html imports
@@ -86,9 +86,9 @@ tabDesc.forEach((desc:any) => {
     </div>
   </section>
   `,
-  directives: [SingleDemo, MultipleDemo, ChildrenDemo, RichDemo, TAB_DIRECTIVES, CORE_DIRECTIVES]
+  directives: [SingleDemoComponent, MultipleDemoComponent, ChildrenDemoComponent, RichDemoComponent, TAB_DIRECTIVES, CORE_DIRECTIVES]
 })
-export class SelectSection {
+export class SelectSectionComponent {
   public currentHeading:string = 'Single';
 
   public select_zzz(e:any):void {

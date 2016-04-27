@@ -113,7 +113,7 @@ let optionsTemplate = `
   </div>
   `
 })
-export class Select implements OnInit {
+export class SelectComponent implements OnInit {
   @Input() public allowClear:boolean = false;
   @Input() public placeholder:string = '';
   @Input() public initData:Array<any> = [];
@@ -381,8 +381,8 @@ export class Select implements OnInit {
 export class Behavior {
   public optionsMap:Map<string, number> = new Map<string, number>();
 
-  public actor: Select;
-  public constructor(actor:Select) {
+  public actor: SelectComponent;
+  public constructor(actor:SelectComponent) {
     this.actor = actor;
   }
 
@@ -431,7 +431,7 @@ export class Behavior {
 }
 
 export class GenericBehavior extends Behavior implements OptionsBehavior {
-  public constructor(actor:Select) {
+  public constructor(actor:SelectComponent) {
     super(actor);
   }
 
@@ -475,7 +475,7 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
 }
 
 export class ChildrenBehavior extends Behavior implements OptionsBehavior {
-  public constructor(actor:Select) {
+  public constructor(actor:SelectComponent) {
     super(actor);
   }
 

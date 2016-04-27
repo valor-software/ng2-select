@@ -12,7 +12,7 @@ let template = require('./children-demo.html');
   template: template,
   directives: [SELECT_DIRECTIVES, NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES, ButtonCheckbox]
 })
-export class ChildrenDemo {
+export class ChildrenDemoComponent {
   public items:Array<any> = [
     {
       text: 'Austria',
