@@ -1,5 +1,5 @@
-import {Component, OnInit, ViewEncapsulation} from 'angular2/core';
-import {CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass} from 'angular2/common';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass} from '@angular/common';
 import {ButtonCheckbox} from 'ng2-bootstrap/ng2-bootstrap';
 
 import {SELECT_DIRECTIVES} from '../../../ng2-select';
