@@ -1,4 +1,4 @@
-import {it, expect} from 'angular2/testing';
+import {it, expect} from '@angular/core/testing';
 
 describe('TEST', () => {
   it('true is true', () => {

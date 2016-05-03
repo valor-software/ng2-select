@@ -47,11 +47,14 @@
   },
   "homepage": "https://github.com/valor-software/ng2-select#readme",
   "peerDependencies": {
-    "angular2": "2.0.0-beta.15"
+    "@angular/core": "2.0.0-rc.0"
   },
   "dependencies": {},
   "devDependencies": {
-    "angular2": "2.0.0-beta.15",
+    "@angular/core": "2.0.0-rc.0",
+    "@angular/common": "2.0.0-rc.0",
+    "@angular/platform-browser-dynamic": "2.0.0-rc.0",
+    "@angular/compiler": "2.0.0-rc.0",
     "awesome-typescript-loader": "^0.17.0-rc.6",
     "bootstrap": "3.3.6",
     "clean-webpack-plugin": "0.1.9",
@@ -97,7 +100,7 @@
     "raw-loader": "0.5.1",
     "reflect-metadata": "0.1.2",
     "require-dir": "0.3.0",
-    "rxjs": "5.0.0-beta.2",
+    "rxjs": "5.0.0-beta.6",
     "source-map-loader": "^0.1.5",
     "systemjs-builder": "0.15.15",
     "ts-helpers": "^1.1.0",
