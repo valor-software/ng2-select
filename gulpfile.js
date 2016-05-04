@@ -3,26 +3,13 @@ var gulp = require('gulp');
 gulp.paths = {
   tssrc: [
     '**/*.ts',
+    '!**/*.d.ts',
     '!node_modules/**/*',
-    '!dist/**/*',
-    '!typings/**/*',
-    '!**/*.{ts,coffee}.js'],
-  jssrc: [
-    '*.js',
-    'gulp-tasks/*.js',
-    '!ng2-select.js',
-    '!angular2-select.js',
-    '!node_modules',
-    '!**/*.{ts,coffee}.js']
+    '!bundles/**/*',
+    '!typings/**/*']
 };
 
 require('require-dir')('./gulp-tasks');
-
-var clean = require('gulp-clean');
-gulp.task('clean', function () {
-  return gulp.src('dist', {read: false})
-    .pipe(clean());
-});
 
 gulp.task('default', function () {
   gulp.start('lint');

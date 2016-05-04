@@ -1,11 +1,11 @@
 {
-  "version": "1.7.5",
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "sourceMap": true,
+    "moduleResolution": "node",
+    "sourceMap": false,
     "declaration": true,
-    "removeComments": true,
+    "removeComments": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noImplicitAny": true,
@@ -16,6 +16,7 @@
     "node_modules"
   ],
   "files": [
+    "./typings/browser.d.ts",
     "./ng2-select.ts"
   ]
 }
