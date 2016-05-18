@@ -1,6 +1,6 @@
-import {bootstrap} from 'angular2/platform/browser';
-import {Component} from 'angular2/core';
-import {NgClass} from 'angular2/common';
+import {bootstrapStatic} from '@angular/platform-browser';
+import {Component} from '@angular/core';
+import {NgClass} from '@angular/common';
 
 import {SelectSectionComponent} from './components/select-section';
 
@@ -41,4 +41,4 @@ let gettingStarted = require('./getting-started.md');
 export class DemoComponent {
 }
 
-bootstrap(DemoComponent);
+bootstrapStatic(DemoComponent);

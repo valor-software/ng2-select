@@ -1,4 +1,4 @@
-import {Directive, HostListener, Input, OnInit, OnDestroy} from 'angular2/core';
+import {Directive, HostListener, Input, OnInit, OnDestroy} from '@angular/core';
 
 @Directive({
   selector: '[offClick]'

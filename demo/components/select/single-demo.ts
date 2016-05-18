@@ -1,6 +1,6 @@
-import {Component} from 'angular2/core';
-import {CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass} from 'angular2/common';
-import {ButtonCheckbox} from 'ng2-bootstrap/ng2-bootstrap';
+import {Component} from '@angular/core';
+import {CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass} from '@angular/common';
+import {BUTTON_DIRECTIVES } from 'ng2-bootstrap/ng2-bootstrap';
 
 import {SELECT_DIRECTIVES} from '../../../ng2-select';
 
@@ -10,7 +10,7 @@ let template = require('./single-demo.html');
 @Component({
   selector: 'single-demo',
   template: template,
-  directives: [SELECT_DIRECTIVES, NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES, ButtonCheckbox]
+  directives: [SELECT_DIRECTIVES, NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES, BUTTON_DIRECTIVES ]
 })
 export class SingleDemoComponent {
   public items:Array<string> = ['Amsterdam', 'Antwerp', 'Athens', 'Barcelona',

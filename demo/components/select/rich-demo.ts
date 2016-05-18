@@ -1,6 +1,6 @@
-import {Component, OnInit, ViewEncapsulation} from 'angular2/core';
-import {CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass} from 'angular2/common';
-import {ButtonCheckbox} from 'ng2-bootstrap/ng2-bootstrap';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass} from '@angular/common';
+import {BUTTON_DIRECTIVES } from 'ng2-bootstrap/ng2-bootstrap';
 
 import {SELECT_DIRECTIVES} from '../../../ng2-select';
 
@@ -54,7 +54,7 @@ let template = require('./rich-demo.html');
   selector: 'rich-demo',
   template: template,
   styles: [`colorbox,.colorbox { display:inline-block; height:14px; width:14px;margin-right:4px; border:1px solid #000;}`],
-  directives: [SELECT_DIRECTIVES, NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES, ButtonCheckbox],
+  directives: [SELECT_DIRECTIVES, NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES, BUTTON_DIRECTIVES ],
   encapsulation: ViewEncapsulation.None  // Enable dynamic HTML styles
 })
 export class RichDemoComponent implements OnInit {
