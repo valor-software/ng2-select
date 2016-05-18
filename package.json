@@ -1,6 +1,6 @@
 {
   "name": "ng2-select",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Angular2 based replacement for select boxes",
   "scripts": {
     "flow.install:typings": "./node_modules/.bin/typings install",
