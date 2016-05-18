@@ -1,4 +1,4 @@
-import {bootstrapStatic} from '@angular/platform-browser';
+import {bootstrap} from '@angular/platform-browser-dynamic';
 import {Component} from '@angular/core';
 import {NgClass} from '@angular/common';
 
@@ -41,4 +41,4 @@ let gettingStarted = require('./getting-started.md');
 export class DemoComponent {
 }
 
-bootstrapStatic(DemoComponent);
+bootstrap(DemoComponent);

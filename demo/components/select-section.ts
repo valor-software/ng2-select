@@ -38,11 +38,10 @@ let tabDesc:Array<any> = [
 let tabsContent:string = ``;
 tabDesc.forEach((desc:any) => {
   tabsContent += `
-  <div *ngIf="currentHeading === '${desc.heading}'">
-    <${desc.heading.toLowerCase()}-demo>
-    </${desc.heading.toLowerCase()}-demo>
-  </div>
-<pre>{{ currentHeading }}</pre>
+<div *ngIf="currentHeading === '${desc.heading}'">
+  <${desc.heading.toLowerCase()}-demo>
+  </${desc.heading.toLowerCase()}-demo>
+</div>
 <tab heading="${desc.heading}" (select)="select_zzz($event)">
   <div class="card card-block panel panel-default panel-body">
     <br>

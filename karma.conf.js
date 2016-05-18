@@ -3,7 +3,7 @@
 const path = require('path');
 const cwd = process.cwd();
 
-module.exports = function (config) {
+module.exports = config => {
   config.set({
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
@@ -27,41 +27,14 @@ module.exports = function (config) {
     },
 
     webpack: {
-      // Do not change, leave as is or it wont work.
-      // See: https://github.com/webpack/karma-webpack#source-maps
-      devtool: 'inline-source-map',
       resolve: {
-        root: [root('components')],
+        root: [path.resolve(cwd)],
+        modulesDirectories: ['node_modules', 'demo', 'components', 'test', '.'],
         extensions: ['', '.ts', '.js', '.css']
       },
       module: {
-        preLoaders: [
-          {
-            test: /\.ts$/,
-            loader: 'tslint-loader',
-            exclude: [
-              root('node_modules')
-            ]
-          },
-          {
-            test: /\.js$/,
-            loader: 'source-map-loader',
-            exclude: [
-              root('node_modules/rxjs')
-            ]
-          }
-        ],
         loaders: [
-          {
-            test: /\.ts$/,
-            loader: 'awesome-typescript-loader',
-            query: {
-              'compilerOptions': {
-                'removeComments': true,
-              }
-            },
-            exclude: [/\.e2e\.ts$/]
-          }
+          {test: /\.ts$/, loader: 'ts-loader', exclude: [/node_modules/]}
         ],
         postLoaders: [
           // instrument only testing sources with Istanbul
@@ -76,25 +49,10 @@ module.exports = function (config) {
           }
         ]
       },
-      tslint: {
-        emitErrors: false,
-        failOnHint: false,
-        resourcePath: 'components'
-      },
       stats: {
         colors: true,
         reasons: true
       },
-
-      node: {
-        global: 'window',
-        process: false,
-        crypto: 'empty',
-        module: false,
-        clearImmediate: false,
-        setImmediate: false
-      },
-
       watch: true,
       debug: true
     },
@@ -138,7 +96,6 @@ module.exports = function (config) {
   });
 };
 
-function root(args) {
-  args = Array.prototype.slice.call(arguments, 0);
-  return path.join.apply(path, [__dirname].concat(args));
+function root(partialPath) {
+  return path.join(__dirname, partialPath);
 }

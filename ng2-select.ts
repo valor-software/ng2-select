@@ -7,4 +7,4 @@ export default {
   directives: [
     SELECT_DIRECTIVES
   ]
-}
+};

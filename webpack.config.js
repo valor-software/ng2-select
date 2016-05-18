@@ -48,12 +48,12 @@ const config = {
   entry: {
     angular2: [
       // Angular 2 Deps
-      'core-js/es6',
-      'core-js/es7/reflect',
+      'es6-shim',
+      'es6-promise',
       'zone.js',
-      'angular2/common',
-      'angular2/core',
-      'ts-helpers'
+      'reflect-metadata',
+      '@angular/common',
+      '@angular/core'
     ],
     'angular2-select': ['ng2-select'],
     'angular2-select-demo': 'demo'

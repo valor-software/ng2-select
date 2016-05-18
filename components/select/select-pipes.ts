@@ -1,9 +1,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {escapeRegexp} from './common';
 
-@Pipe({
-  name: 'highlight'
-})
+@Pipe({name: 'highlight'})
 export class HighlightPipe implements PipeTransform {
   public transform(value:string, args:any[]):any {
     if (args.length < 1) {
@@ -31,7 +29,7 @@ export class HighlightPipe implements PipeTransform {
 }
 
 export function stripTags(input:string):string {
-  let tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
-      commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+  let tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
+  let commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
   return input.replace(commentsAndPhpTags, '').replace(tags, '');
 }
