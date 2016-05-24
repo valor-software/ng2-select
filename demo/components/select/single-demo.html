@@ -7,7 +7,9 @@
               (selected)="selected($event)"
               (removed)="removed($event)"
               (typed)="typed($event)"
-              placeholder="No city selected">
+              placeholder="No city selected"
+              [selectIds]="idToSelect"
+              >
   </ng-select>
   <p></p>
   <pre>{{value.text}}</pre>
@@ -17,5 +19,10 @@
             btnCheckboxTrue="1" btnCheckboxFalse="0">
       {{disabled === '1' ? 'Enable' : 'Disable'}}
     </button>
+    <button type="button" class="btn btn-primary"
+            (click)="idToSelect='Athens'">
+      Select Athens
+    </button>
+
   </div>
 </div>

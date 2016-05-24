@@ -38,6 +38,7 @@ Follow me [![twitter](https://img.shields.io/twitter/follow/valorkin.svg?style=s
   - `placeholder` (`?string=''`) - Placeholder text to display when the element has no focus and selected items.
   - `disabled` (`?boolean=false`) - When `true`, it specifies that the component should be disabled.
   - `multiple` - (`?boolean=false`) - Mode of this component. If set `true` user can select more than one option.
+  - `selectedIds` - (`Array<string> or string`) - The Id (or array of ids for multiple) of the item(s) to be selected programmatically. The component will detect changes to the input and update the selection accordingly
   This option only applies to single-value inputs, as multiple-value inputs don't have the search input in the dropdown to begin with.
 
 ### Events

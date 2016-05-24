@@ -27,6 +27,7 @@ export class SingleDemoComponent {
   private value:any = {};
   private _disabledV:string = '0';
   private disabled:boolean = false;
+  private idToSelect:string;
 
   private get disabledV():string {
     return this._disabledV;
@@ -38,6 +39,7 @@ export class SingleDemoComponent {
   }
 
   public selected(value:any):void {
+    this.idToSelect=null;
     console.log('Selected value is: ', value);
   }
 
