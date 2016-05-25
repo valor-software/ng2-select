@@ -5,16 +5,87 @@ import {OptionsBehavior} from './select-interfaces';
 import {escapeRegexp} from './common';
 import {OffClickDirective} from './off-click';
 
+let styles = `
+.ui-select-toggle {
+  position: relative;
+
+  /* hardcoded, should use variable from bootstrap */
+  padding: 0.375rem 0.75rem;
+}
+
+/* Fix Bootstrap dropdown position when inside a input-group */
+.input-group > .dropdown {
+  /* Instead of relative */
+  position: static;
+}
+
+.ui-select-match > .btn {
+  /* Instead of center because of .btn */
+  text-align: left !important;
+}
+
+.ui-select-match > .caret {
+  position: absolute;
+  top: 45%;
+  right: 15px;
+}
+
+.ui-disabled {
+  background-color: #eceeef;
+  border-radius: 4px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  opacity: 0.6;
+  top: 0;
+  left: 0;
+  cursor: not-allowed;
+}
+
+.ui-select-choices {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  overflow-x: hidden;
+  margin-top: 0;
+}
+
+.ui-select-multiple .ui-select-choices {
+  margin-top: 1px;
+}
+
+.ui-select-multiple {
+  height: auto;
+  padding: 3px 3px 0 3px;
+}
+
+.ui-select-multiple input.ui-select-search {
+  background-color: transparent !important; /* To prevent double background when disabled */
+  border: none;
+  outline: none;
+  height: 1.9em;
+  margin-bottom: 3px;
+
+  /* hardcoded, should use variable from bootstrap, but must be adjusted because... reasons */
+  padding: 0.375rem 0.55rem;
+}
+
+.ui-select-multiple .ui-select-match-item {
+  outline: 0;
+  margin: 0 3px 3px 0;
+}
+`;
+
 let optionsTemplate = `
     <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
-        class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
-      <li class="ui-select-choices-group">
-        <div *ngFor="let o of options"
-             class="ui-select-choices-row"
+        class="ui-select-choices dropdown-menu" role="menu">
+      <li *ngFor="let o of options" role="menuitem">
+        <div class="ui-select-choices-row"
              [class.active]="isActive(o)"
              (mouseenter)="selectActive(o)"
              (click)="selectMatch(o, $event)">
-          <a href="javascript:void(0)" class="ui-select-choices-row-inner">
+          <a href="javascript:void(0)" class="dropdown-item">
             <div [innerHtml]="o.text | highlight:inputValue"></div>
           </a>
         </div>
@@ -22,10 +93,10 @@ let optionsTemplate = `
     </ul>
 
     <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
-        class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
-      <li *ngFor="let c of options; let index=index" class="ui-select-choices-group">
-        <div class="divider" *ngIf="index > 0"></div>
-        <div class="ui-select-choices-group-label dropdown-header">{{c.text}}</div>
+        class="ui-select-choices dropdown-menu" role="menu">
+      <li *ngFor="let c of options; let index=index" role="menuitem">
+        <div class="divider dropdown-divider" *ngIf="index > 0"></div>
+        <div class="dropdown-header">{{c.text}}</div>
 
         <div *ngFor="let o of c.children"
              class="ui-select-choices-row"
@@ -33,23 +104,25 @@ let optionsTemplate = `
              (mouseenter)="selectActive(o)"
              (click)="selectMatch(o, $event)"
              [ngClass]="{'active': isActive(o)}">
-          <a href="javascript:void(0)" class="ui-select-choices-row-inner">
+          <a href="javascript:void(0)" class="dropdown-item">
             <div [innerHtml]="o.text | highlight:inputValue"></div>
           </a>
         </div>
       </li>
     </ul>
 `;
+
 @Component({
   selector: 'ng-select',
   directives: [OffClickDirective],
   pipes: [HighlightPipe],
+  styles: [styles],
   template: `
   <div tabindex="0"
      *ngIf="multiple === false"
      (keyup)="mainClick($event)"
      [offClick]="clickedOutside"
-     class="ui-select-container ui-select-bootstrap dropdown open">
+     class="ui-select-container dropdown open">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <div class="ui-select-match"
          *ngIf="!inputMode">
@@ -64,8 +137,8 @@ let optionsTemplate = `
         <i class="dropdown-toggle pull-right"></i>
         <i class="caret pull-right"></i>
         <a *ngIf="allowClear && active.length>0" style="margin-right: 10px; padding: 0;"
-          (click)="remove(activeOption)" class="btn btn-xs btn-link pull-right">
-          <i class="glyphicon glyphicon-remove"></i>
+          (click)="remove(activeOption)" class="close pull-right">
+          &times;
         </a>
       </span>
     </div>
@@ -83,16 +156,17 @@ let optionsTemplate = `
      *ngIf="multiple === true"
      (keyup)="mainClick($event)"
      (focus)="focusToInput('')"
-     class="ui-select-container ui-select-multiple ui-select-bootstrap dropdown form-control open">
+     class="ui-select-container ui-select-multiple dropdown form-control open">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <span class="ui-select-match">
         <span *ngFor="let a of active">
-            <span class="ui-select-match-item btn btn-default btn-secondary btn-xs"
+            <span class="ui-select-match-item btn btn-default btn-secondary btn-sm"
                   tabindex="-1"
                   type="button"
                   [ngClass]="{'btn-default': true}">
-               <a class="close ui-select-match-close"
-                  (click)="remove(a)">&nbsp;&times;</a>
+               <a class="close"
+                  style="margin-left: 10px; padding: 0;"
+                  (click)="remove(a)">&times;</a>
                <span>{{a.text}}</span>
            </span>
         </span>
@@ -106,7 +180,7 @@ let optionsTemplate = `
            autocorrect="off"
            autocapitalize="off"
            spellcheck="false"
-           class="ui-select-search input-xs"
+           class="form-control ui-select-search"
            placeholder="{{active.length <= 0 ? placeholder : ''}}"
            role="combobox">
     ${optionsTemplate}
