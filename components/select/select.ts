@@ -464,7 +464,7 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
       .filter((option:SelectItem) => {
         return stripTags(option.text).match(query) &&
           (this.actor.multiple === false ||
-          (this.actor.multiple === true && this.actor.active.map(item => item.id).indexOf(option.id) < 0));
+          (this.actor.multiple === true && this.actor.active.map((item: SelectItem) => item.id).indexOf(option.id) < 0));
       });
     this.actor.options = options;
     if (this.actor.options.length > 0) {
