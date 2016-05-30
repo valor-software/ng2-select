@@ -190,13 +190,15 @@ let optionsTemplate = `
 export class SelectComponent implements OnInit {
   @Input() public allowClear:boolean = false;
   @Input() public placeholder:string = '';
+  @Input() public idField:string = 'id';
+  @Input() public textField:string = 'text';
   @Input() public initData:Array<any> = [];
   @Input() public multiple:boolean = false;
 
   @Input()
   public set items(value:Array<any>) {
     this._items = value;
-    this.itemObjects = this._items.map((item:any) => new SelectItem(item));
+    this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField]})));
   }
 
   @Input()
@@ -309,7 +311,7 @@ export class SelectComponent implements OnInit {
     this.behavior = (this.firstItemHasChildren) ?
       new ChildrenBehavior(this) : new GenericBehavior(this);
     if (this.initData) {
-      this.active = this.initData.map((data:any) => new SelectItem(data));
+      this.active = this.initData.map((data:any) => (typeof data === 'string' ? new SelectItem(data) : new SelectItem({id: data[this.idField], text: data[this.textField]})));
       this.data.emit(this.active);
     }
   }
