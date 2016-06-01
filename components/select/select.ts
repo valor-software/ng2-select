@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, ElementRef, OnInit} from '@angular/core';
+import {Component, Input, Output, EventEmitter, ElementRef, OnInit, OnChanges} from '@angular/core';
 import {SelectItem} from './select-item';
 import {HighlightPipe, stripTags} from './select-pipes';
 import {OptionsBehavior} from './select-interfaces';
@@ -187,7 +187,7 @@ let optionsTemplate = `
   </div>
   `
 })
-export class SelectComponent implements OnInit {
+export class SelectComponent implements OnInit, OnChanges {
   @Input() public allowClear:boolean = false;
   @Input() public placeholder:string = '';
   @Input() public idField:string = 'id';
@@ -311,8 +311,13 @@ export class SelectComponent implements OnInit {
     this.behavior = (this.firstItemHasChildren) ?
       new ChildrenBehavior(this) : new GenericBehavior(this);
     if (this.initData) {
-      this.active = this.initData.map((data:any) => (typeof data === 'string' ? new SelectItem(data) : new SelectItem({id: data[this.idField], text: data[this.textField]})));
-      this.data.emit(this.active);
+      this.updateInitData();
+    }
+  }
+
+  ngOnChanges(changes:{}):any {
+    if (changes['initData'] && changes['initData'].currentValue) {
+      this.updateInitData();
     }
   }
 
@@ -451,6 +456,11 @@ export class SelectComponent implements OnInit {
       this.focusToInput(stripTags(value.text));
       this.element.nativeElement.querySelector('.ui-select-container').focus();
     }
+  }
+
+  private updateInitData() {
+    this.active = this.initData.map((data:any) => (typeof data === 'string' ? new SelectItem(data) : new SelectItem({id: data[this.idField], text: data[this.textField]})));
+    this.data.emit(this.active);
   }
 }
 
