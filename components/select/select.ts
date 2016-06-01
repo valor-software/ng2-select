@@ -458,7 +458,7 @@ export class SelectComponent implements OnInit, OnChanges {
     }
   }
 
-  private updateInitData(): void {
+  private updateInitData():void {
     this.active = this.initData.map((data:any) => (typeof data === 'string' ? new SelectItem(data) : new SelectItem({id: data[this.idField], text: data[this.textField]})));
     this.data.emit(this.active);
   }
