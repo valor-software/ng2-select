@@ -123,7 +123,7 @@ let optionsTemplate = `
      (keyup)="mainClick($event)"
      [offClick]="clickedOutside"
      class="ui-select-container dropdown open">
-    <div [ngClass]="{'ui-disabled': _disabled}"></div>
+    <div [ngClass]="{'ui-disabled': disabled}"></div>
     <div class="ui-select-match"
          *ngIf="!inputMode">
       <span tabindex="-1"
@@ -145,7 +145,7 @@ let optionsTemplate = `
     <input type="text" autocomplete="false" tabindex="-1"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
-           [disabled]="_disabled"
+           [disabled]="disabled"
            class="form-control ui-select-search"
            *ngIf="inputMode"
            placeholder="{{active.length <= 0 ? placeholder : ''}}">
@@ -157,7 +157,7 @@ let optionsTemplate = `
      (keyup)="mainClick($event)"
      (focus)="focusToInput('')"
      class="ui-select-container ui-select-multiple dropdown form-control open">
-    <div [ngClass]="{'ui-disabled': _disabled}"></div>
+    <div [ngClass]="{'ui-disabled': disabled}"></div>
     <span class="ui-select-match">
         <span *ngFor="let a of active">
             <span class="ui-select-match-item btn btn-default btn-secondary btn-sm"
@@ -175,7 +175,7 @@ let optionsTemplate = `
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
            (click)="matchClick($event)"
-           [disabled]="_disabled"
+           [disabled]="disabled"
            autocomplete="false"
            autocorrect="off"
            autocapitalize="off"
@@ -207,6 +207,9 @@ export class SelectComponent implements OnInit {
     if (this._disabled === true) {
       this.hideOptions();
     }
+  }
+  public get disabled(): boolean {
+    return this._disabled;
   }
 
   @Output() public data:EventEmitter<any> = new EventEmitter();
