@@ -13,30 +13,32 @@ import {
 } from 'angular2/common';
 import {SelectItem} from './select-item';
 import {
-  HightlightPipe,
+  HighlightPipe,
   stripTags
 } from './select-pipes';
 import {IOptionsBehavior} from './select-interfaces';
+import {escapeRegexp} from './common';
 
 let optionsTemplate = `
-    <ul *ngIf="optionsOpened && options && options.length > 0 && !itemObjects[0].hasChildren()"
+    <ul *ngIf="optionsOpened && !itemObjects[0].hasChildren()"
         class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
-      <li class="ui-select-choices-group">
+      <li class="ui-select-choices-group" *ngIf="options && options.length > 0">
         <div *ngFor="#o of options"
              class="ui-select-choices-row"
              [class.active]="isActive(o)"
              (mouseenter)="selectActive(o)"
              (click)="selectMatch(o, $event)">
           <a href="javascript:void(0)" class="ui-select-choices-row-inner">
-            <div [innerHtml]="o.text | hightlight:inputValue"></div>
+            <div [innerHtml]="o.text | highlight:inputValue"></div>
           </a>
         </div>
       </li>
+      <li *ngIf="!options || options.length === 0" class="disabled" (click)="noMatchClick($event)"><a href="javascript:void(0)">No matches found</a></li>
     </ul>
 
-    <ul *ngIf="optionsOpened && options && options.length > 0 && itemObjects[0].hasChildren()"
+    <ul *ngIf="optionsOpened && itemObjects[0].hasChildren()"
         class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu">
-      <li *ngFor="#c of options; #index=index" class="ui-select-choices-group">
+      <li *ngFor="#c of options; #index=index" class="ui-select-choices-group" *ngIf="options && options.length > 0">
         <div class="divider" *ngIf="index > 0"></div>
         <div class="ui-select-choices-group-label dropdown-header">{{c.text}}</div>
 
@@ -47,16 +49,17 @@ let optionsTemplate = `
              (click)="selectMatch(o, $event)"
              [ngClass]="{'active': isActive(o)}">
           <a href="javascript:void(0)" class="ui-select-choices-row-inner">
-            <div [innerHtml]="o.text | hightlight:inputValue"></div>
+            <div [innerHtml]="o.text | highlight:inputValue"></div>
           </a>
         </div>
       </li>
+      <li *ngIf="!options || options.length === 0" class="disabled" (click)="noMatchClick($event)"><a href="javascript:void(0)">No matches found</a></li>
     </ul>
 `;
 
 @Component({
-  selector: 'ng-select',
-  pipes: [HightlightPipe],
+  selector: 'ng2-select',
+  pipes: [HighlightPipe],
   template: `
   <div tabindex="0"
      *ngIf="multiple === false"
@@ -181,6 +184,14 @@ export class Select {
     }, 0);
   }
 
+  private noMatchClick(e: any) {
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+      this.focusToInput(this.inputValue);
+    }
+  }
+  
   private matchClick(e:any) {
     if (this._disabled === true) {
       return;
@@ -227,15 +238,22 @@ export class Select {
   }
 
   private open() {
-    this.options = this.itemObjects
-      .filter(option => (this.multiple === false ||
-      this.multiple === true && !this.active.find(o => option.text === o.text)));
+    if (this.optionsOpened)
+          return;
+          
+    this.populateOptions();
 
     if (this.options.length > 0) {
       this.behavior.first();
     }
 
     this.optionsOpened = true;
+  }
+  
+  private populateOptions() {
+    this.options = this.itemObjects
+      .filter(option => (this.multiple === false ||
+      this.multiple === true && !this.active.find(o => option.text === o.text)));
   }
 
   ngOnInit() {
@@ -262,7 +280,7 @@ export class Select {
         return;
       }
 
-      if (e.srcElement.contains(context.element.nativeElement)
+      if (context.element.nativeElement.contains(e.srcElement)
       && e.srcElement && e.srcElement.className &&
         e.srcElement.className.indexOf('ui-select') >= 0) {
         if (e.target.nodeName !== 'INPUT') {
@@ -388,13 +406,14 @@ export class Select {
 
     if (e.srcElement) {
       this.inputValue = e.srcElement.value;
-      this.behavior.filter(new RegExp(this.inputValue, 'ig'));
+      this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
       this.doEvent('typed', this.inputValue);
     }
   }
 
   private selectActiveMatch() {
-    this.selectMatch(this.activeOption);
+    if (this.options && this.options.length > 0)
+      this.selectMatch(this.activeOption);
   }
 
   private selectMatch(value:SelectItem, e:Event = null) {
@@ -404,7 +423,7 @@ export class Select {
     }
 
     if (this.options.length <= 0) {
-      return;
+      this.populateOptions(); //load options, if they aren't yet populated
     }
 
     if (this.multiple === true) {
@@ -419,9 +438,11 @@ export class Select {
 
     this.doEvent('selected', value);
     this.hideOptions();
+    this.inputValue = ''; //clear highlight pipe match
 
     if (this.multiple === true) {
       this.focusToInput('');
+      this.open(); 
     } else {
       this.focusToInput( stripTags(value.text) );
       this.element.nativeElement.querySelector('.ui-select-container').focus();
@@ -626,5 +647,6 @@ export class ChildrenBehavior extends Behavior implements IOptionsBehavior {
     }
   }
 }
+
 
 

@@ -1,9 +1,10 @@
 import {Pipe} from 'angular2/core';
+import {escapeRegexp} from './common';
 
 @Pipe({
-  name: 'hightlight'
+  name: 'highlight'
 })
-export class HightlightPipe {
+export class HighlightPipe {
   transform(value:string, args:any[]) {
     if (args.length < 1) {
       return value;
@@ -18,7 +19,7 @@ export class HightlightPipe {
         // Replace tags with token
         let tmpValue = value.replace( tagRE, '$!$');
         // Replace search words
-        value = tmpValue.replace(new RegExp(this.escapeRegexp(query), 'gi'), '<strong>$&</strong>');
+        value = tmpValue.replace(new RegExp(escapeRegexp(query), 'gi'), '<strong>$&</strong>');
         // Reinsert HTML
         for (let i = 0; value.indexOf('$!$') > -1; i++) {
           value = value.replace('$!$', tagList[i]);
@@ -27,9 +28,6 @@ export class HightlightPipe {
     return value;
   }
 
-  private escapeRegexp(queryToEscape:string) {
-    return queryToEscape.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
-  }
 }
 
 export function stripTags(input:string) {
