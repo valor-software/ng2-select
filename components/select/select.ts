@@ -197,8 +197,9 @@ export class SelectComponent implements OnInit {
 
   @Input()
   public set items(value:Array<any>) {
-    this._items = value;
+    this._items = value || [];
     this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField]})));
+    this.refreshOptions();
   }
 
   @Input()
@@ -246,6 +247,7 @@ export class SelectComponent implements OnInit {
     if (!isUpMode && e.keyCode === 8) {
       let el:any = this.element.nativeElement
         .querySelector('div.ui-select-container > input');
+
       if (!el.value || el.value.length <= 0) {
         if (this.active.length > 0) {
           this.remove(this.active[this.active.length - 1]);
@@ -334,7 +336,7 @@ export class SelectComponent implements OnInit {
   }
 
   public doEvent(type:string, value:any):void {
-    if ((this as any)[type] && value) {
+    if ((this as any)[type]) {
       (this as any)[type].next(value);
     }
   }
@@ -359,7 +361,7 @@ export class SelectComponent implements OnInit {
     }
   }
 
-  protected  mainClick(event:any):void {
+  protected mainClick(event:any):void {
     if (this.inputMode === true || this._disabled === true) {
       return;
     }
@@ -388,11 +390,11 @@ export class SelectComponent implements OnInit {
     this.inputEvent(event);
   }
 
-  protected  selectActive(value:SelectItem):void {
+  protected selectActive(value:SelectItem):void {
     this.activeOption = value;
   }
 
-  protected  isActive(value:SelectItem):boolean {
+  protected isActive(value:SelectItem):boolean {
     return this.activeOption.text === value.text;
   }
 
@@ -407,6 +409,11 @@ export class SelectComponent implements OnInit {
   }
 
   private open():void {
+    this.refreshOptions();
+    this.optionsOpened = true;
+  }
+
+  private refreshOptions():void {
     this.options = this.itemObjects
       .filter((option: SelectItem) => (this.multiple === false ||
       this.multiple === true &&
@@ -415,7 +422,6 @@ export class SelectComponent implements OnInit {
     if (this.options.length > 0) {
       this.behavior.first();
     }
-    this.optionsOpened = true;
   }
 
   private hideOptions():void {
