@@ -194,7 +194,6 @@ export class SelectComponent implements OnInit {
   @Input() public textField:string = 'text';
   @Input() public initData:Array<any> = [];
   @Input() public multiple:boolean = false;
-  @Input() public enableAutocomplete:boolean = true;
 
   @Input()
   public set items(value:Array<any>) {
