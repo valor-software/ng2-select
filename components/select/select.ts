@@ -194,6 +194,7 @@ export class SelectComponent implements OnInit {
   @Input() public textField:string = 'text';
   @Input() public initData:Array<any> = [];
   @Input() public multiple:boolean = false;
+  @Input() public enableAutocomplete:boolean = true;
 
   @Input()
   public set items(value:Array<any>) {
@@ -300,7 +301,7 @@ export class SelectComponent implements OnInit {
       e.preventDefault();
       return;
     }
-    if (e.srcElement) {
+    if (e.srcElement && e.srcElement.value) {
       this.inputValue = e.srcElement.value;
       this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
       this.doEvent('typed', this.inputValue);
