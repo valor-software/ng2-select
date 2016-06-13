@@ -117,6 +117,7 @@ let optionsTemplate = `
   directives: [OffClickDirective],
   pipes: [HighlightPipe],
   styles: [styles],
+  host: { '(document:click)': 'checkOutsideClicked($event)'},
   template: `
   <div tabindex="0"
      *ngIf="multiple === false"
@@ -504,6 +505,12 @@ export class Behavior {
     }
     return ai;
   }
+  
+  private checkOutsideClicked(event) {		
+		if(event.target !== this.element.nativeElement && !this.element.nativeElement.contains(event.target) && this.optionsOpened) {
+			this.hideOptions();
+		}
+	}
 }
 
 export class GenericBehavior extends Behavior implements OptionsBehavior {
