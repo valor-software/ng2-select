@@ -3,7 +3,6 @@ import {SelectItem} from './select-item';
 import {HighlightPipe, stripTags} from './select-pipes';
 import {OptionsBehavior} from './select-interfaces';
 import {escapeRegexp} from './common';
-import {OffClickDirective} from './off-click';
 
 let styles = `
 .ui-select-toggle {
@@ -114,7 +113,7 @@ let optionsTemplate = `
 
 @Component({
   selector: 'ng-select',
-  directives: [OffClickDirective],
+  directives: [],
   pipes: [HighlightPipe],
   styles: [styles],
   host: { '(document:click)': 'checkOutsideClicked($event)'},
@@ -122,7 +121,6 @@ let optionsTemplate = `
   <div tabindex="0"
      *ngIf="multiple === false"
      (keyup)="mainClick($event)"
-     [offClick]="clickedOutside"
      class="ui-select-container dropdown open">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <div class="ui-select-match"
@@ -230,7 +228,6 @@ export class SelectComponent implements OnInit {
 
   public constructor(element:ElementRef) {
     this.element = element;
-    this.clickedOutside = this.clickedOutside.bind(this);
   }
 
   public inputEvent(e:any, isUpMode:boolean = false):void {
@@ -338,11 +335,6 @@ export class SelectComponent implements OnInit {
     if ((this as any)[type] && value) {
       (this as any)[type].next(value);
     }
-  }
-
-  public clickedOutside():void  {
-    this.inputMode = false;
-    this.optionsOpened = false;
   }
 
   public get firstItemHasChildren():boolean {
