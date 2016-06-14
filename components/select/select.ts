@@ -301,8 +301,6 @@ export class SelectComponent implements OnInit {
       e.preventDefault();
       return;
     }
-    //console.log("this.inputValue", this.inputValue);
-    //console.log("e.srcElement.value", e.srcElement.value);
     if (e.srcElement && e.srcElement.value) {
       this.inputValue = e.srcElement.value;
       this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
@@ -367,16 +365,9 @@ export class SelectComponent implements OnInit {
         this.open();
       }
     }
-    //if (this.autocomplete === false) {
-    //
-    //  }
-    //} else {
-    //  this.open();
-    //}
   }
 
   protected  mainClick(event:any):void {
-    //if ((this.inputMode === true && this.autocomplete === true) || this._disabled === true) {
     if (this.inputMode === true || this._disabled === true) {
       return;
     }
@@ -395,8 +386,10 @@ export class SelectComponent implements OnInit {
       event.preventDefault();
       return;
     }
-    //this.inputMode = this.autocomplete;
-    this.inputMode = true;
+    this.multiple ? this.inputMode = true : this.inputMode = this.autocomplete;
+    if (this.autocomplete === false && this.multiple === false) {
+      return;
+    }
     let value = String
       .fromCharCode(96 <= event.keyCode && event.keyCode <= 105 ? event.keyCode - 48 : event.keyCode)
       .toLowerCase();
