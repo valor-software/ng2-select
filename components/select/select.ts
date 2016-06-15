@@ -384,7 +384,7 @@ export class SelectComponent implements OnInit {
       .toLowerCase();
     this.focusToInput(value);
     this.open();
-    event.srcElement.value = value;
+    event.target.value = value;
     this.inputEvent(event);
   }
 
