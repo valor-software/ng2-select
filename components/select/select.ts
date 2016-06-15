@@ -129,6 +129,8 @@ let optionsTemplate = `
       <span tabindex="-1"
           class="btn btn-default btn-secondary form-control ui-select-toggle"
           (click)="matchClick($event)"
+          (keydown)="inputEvent($event)"
+          (keyup)="inputEvent($event, true)"
           style="outline: 0;">
         <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
         <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
@@ -483,7 +485,7 @@ export class Behavior {
   }
 
   public ensureHighlightVisible(optionsMap:Map<string, number> = void 0):void {
-    let container = this.actor.element.nativeElement.querySelector('.ui-select-choices-content');
+    let container = this.actor.element.nativeElement.querySelector('.ui-select-choices');
     if (!container) {
       return;
     }
