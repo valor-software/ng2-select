@@ -129,6 +129,8 @@ let optionsTemplate = `
       <span tabindex="-1"
           class="btn btn-default btn-secondary form-control ui-select-toggle"
           (click)="matchClick($event)"
+          (keydown)="inputEvent($event)"
+          (keyup)="inputEvent($event, true)"
           style="outline: 0;">
         <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
         <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
@@ -142,7 +144,7 @@ let optionsTemplate = `
         </a>
       </span>
     </div>
-    <input type="text" autocomplete="false" tabindex="-1"
+    <input type="text" autocomplete="off" tabindex="-1"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
            [disabled]="disabled"
@@ -176,7 +178,7 @@ let optionsTemplate = `
            (keyup)="inputEvent($event, true)"
            (click)="matchClick($event)"
            [disabled]="disabled"
-           autocomplete="false"
+           autocomplete="off"
            autocorrect="off"
            autocapitalize="off"
            spellcheck="false"
@@ -194,6 +196,7 @@ export class SelectComponent implements OnInit {
   @Input() public textField:string = 'text';
   @Input() public initData:Array<any> = [];
   @Input() public multiple:boolean = false;
+  @Input() public autocomplete:boolean = false;
 
   @Input()
   public set items(value:Array<any>) {
@@ -226,6 +229,8 @@ export class SelectComponent implements OnInit {
   private inputValue:string = '';
   private _items:Array<any> = [];
   private _disabled:boolean = false;
+  private searchText:string = '';
+  private searchTimeout:number = 0;
 
   public constructor(element:ElementRef) {
     this.element = element;
@@ -300,7 +305,7 @@ export class SelectComponent implements OnInit {
       e.preventDefault();
       return;
     }
-    if (e.srcElement) {
+    if (e.srcElement && e.srcElement.value) {
       this.inputValue = e.srcElement.value;
       this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
       this.doEvent('typed', this.inputValue);
@@ -352,10 +357,17 @@ export class SelectComponent implements OnInit {
     if (this._disabled === true) {
       return;
     }
-    this.inputMode = !this.inputMode;
-    if (this.inputMode === true && ((this.multiple === true && e) || this.multiple === false)) {
-      this.focusToInput();
-      this.open();
+    if (this.autocomplete === true) {
+      this.inputMode = !this.inputMode;
+      if (this.inputMode === true && ((this.multiple === true && e) || this.multiple === false)) {
+        this.focusToInput();
+        this.open();
+      }
+    } else {
+      if ((this.multiple === true && e) || this.multiple === false) {
+        this.focusToInput();
+        this.open();
+      }
     }
   }
 
@@ -378,7 +390,26 @@ export class SelectComponent implements OnInit {
       event.preventDefault();
       return;
     }
-    this.inputMode = true;
+    this.multiple ? this.inputMode = true : this.inputMode = this.autocomplete;
+    if (this.autocomplete === false && this.multiple === false) {
+      let keyCode = event.keyCode;
+      if ((keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
+        clearTimeout(this.searchTimeout);
+        this.searchText += event.key;
+        let opt = this.options.find(el => {
+          let text = el.text.toLowerCase();
+          return text.startsWith(this.searchText.toLowerCase());
+        });
+        if (opt) {
+          this.activeOption = opt;
+          this.behavior.updateHighlighted();
+        }
+        this.searchTimeout = setTimeout(() => {
+          this.searchText = "";
+        }, 1000);
+      }
+      return;
+    }
     let value = String
       .fromCharCode(96 <= event.keyCode && event.keyCode <= 105 ? event.keyCode - 48 : event.keyCode)
       .toLowerCase();
@@ -472,7 +503,7 @@ export class Behavior {
   }
 
   public ensureHighlightVisible(optionsMap:Map<string, number> = void 0):void {
-    let container = this.actor.element.nativeElement.querySelector('.ui-select-choices-content');
+    let container = this.actor.element.nativeElement.querySelector('.ui-select-choices');
     if (!container) {
       return;
     }
@@ -532,6 +563,10 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
     let index = this.actor.options.indexOf(this.actor.activeOption);
     this.actor.activeOption = this.actor
       .options[index + 1 > this.actor.options.length - 1 ? 0 : index + 1];
+    super.ensureHighlightVisible();
+  }
+
+  public updateHighlighted():void {
     super.ensureHighlightVisible();
   }
 
@@ -606,6 +641,10 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
     }
     this.fillOptionsMap();
     this.ensureHighlightVisible(this.optionsMap);
+  }
+
+  public updateHighlighted():void {
+    super.ensureHighlightVisible();
   }
 
   public filter(query:RegExp):void {
