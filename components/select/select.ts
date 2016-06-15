@@ -229,6 +229,8 @@ export class SelectComponent implements OnInit {
   private inputValue:string = '';
   private _items:Array<any> = [];
   private _disabled:boolean = false;
+  private searchText:string = '';
+  private searchTimeout:number = 0;
 
   public constructor(element:ElementRef) {
     this.element = element;
@@ -390,6 +392,22 @@ export class SelectComponent implements OnInit {
     }
     this.multiple ? this.inputMode = true : this.inputMode = this.autocomplete;
     if (this.autocomplete === false && this.multiple === false) {
+      let keyCode = event.keyCode;
+      if ((keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
+        clearTimeout(this.searchTimeout);
+        this.searchText += event.key;
+        let opt = this.options.find(el => {
+          let text = el.text.toLowerCase();
+          return text.startsWith(this.searchText.toLowerCase());
+        });
+        if (opt) {
+          this.activeOption = opt;
+          this.behavior.updateHighlighted();
+        }
+        this.searchTimeout = setTimeout(() => {
+          this.searchText = "";
+        }, 1000);
+      }
       return;
     }
     let value = String
@@ -548,6 +566,10 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
     super.ensureHighlightVisible();
   }
 
+  public updateHighlighted():void {
+    super.ensureHighlightVisible();
+  }
+
   public filter(query:RegExp):void {
     let options = this.actor.itemObjects
       .filter((option:SelectItem) => {
@@ -619,6 +641,10 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
     }
     this.fillOptionsMap();
     this.ensureHighlightVisible(this.optionsMap);
+  }
+
+  public updateHighlighted():void {
+    super.ensureHighlightVisible();
   }
 
   public filter(query:RegExp):void {

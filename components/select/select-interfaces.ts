@@ -3,5 +3,6 @@ export interface OptionsBehavior {
   last():any;
   prev():any;
   next():any;
+  updateHighlighted():any;
   filter(query:RegExp):any;
 }
