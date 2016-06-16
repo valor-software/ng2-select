@@ -224,6 +224,10 @@ export class SelectComponent implements OnInit {
         this._data = [foundItem];
       }
     }
+    
+    if (this._data != []) {
+		 this.doEvent('selected', this.multiple ? this._data : this._data[0]);
+	  } 
   }
   
   public get data() {
