@@ -343,7 +343,7 @@ export class SelectComponent implements OnInit {
       return;
     }
     if (this.multiple === true && this._data) {
-      let index = this.active.indexOf(item);
+      let index = this._data.indexOf(item);
       this._data.splice(index, 1);
       this.dataChange.next(this._data);
       this.doEvent('removed', item);
