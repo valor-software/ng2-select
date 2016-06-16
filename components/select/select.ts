@@ -199,6 +199,7 @@ export class SelectComponent implements OnInit {
   public set items(value:Array<any>) {
     this._items = value;
     this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField]})));
+    this._data = [];
   }
 
   @Input()
