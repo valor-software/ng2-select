@@ -130,13 +130,13 @@ let optionsTemplate = `
           class="btn btn-default btn-secondary form-control ui-select-toggle"
           (click)="matchClick($event)"
           style="outline: 0;">
-        <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
-        <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
-              [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
-              [innerHTML]="active[0].text"></span>
+        <span *ngIf="_data.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
+        <span *ngIf="_data.length > 0" class="ui-select-match-text pull-left"
+              [ngClass]="{'ui-select-allow-clear': allowClear && _data.length > 0}"
+              [innerHTML]="_data[0].text"></span>
         <i class="dropdown-toggle pull-right"></i>
         <i class="caret pull-right"></i>
-        <a *ngIf="allowClear && active.length>0" style="margin-right: 10px; padding: 0;"
+        <a *ngIf="allowClear && _data.length>0" style="margin-right: 10px; padding: 0;"
           (click)="remove(activeOption)" class="close pull-right">
           &times;
         </a>
@@ -148,7 +148,7 @@ let optionsTemplate = `
            [disabled]="disabled"
            class="form-control ui-select-search"
            *ngIf="inputMode"
-           placeholder="{{active.length <= 0 ? placeholder : ''}}">
+           placeholder="{{_data.length <= 0 ? placeholder : ''}}">
       ${optionsTemplate}
   </div>
 
@@ -159,7 +159,7 @@ let optionsTemplate = `
      class="ui-select-container ui-select-multiple dropdown form-control open">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <span class="ui-select-match">
-        <span *ngFor="let a of active">
+        <span *ngFor="let a of _data">
             <span class="ui-select-match-item btn btn-default btn-secondary btn-sm"
                   tabindex="-1"
                   type="button"
@@ -181,7 +181,7 @@ let optionsTemplate = `
            autocapitalize="off"
            spellcheck="false"
            class="form-control ui-select-search"
-           placeholder="{{active.length <= 0 ? placeholder : ''}}"
+           placeholder="{{_data.length <= 0 ? placeholder : ''}}"
            role="combobox">
     ${optionsTemplate}
   </div>
@@ -199,6 +199,7 @@ export class SelectComponent implements OnInit {
   public set items(value:Array<any>) {
     this._items = value;
     this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField]})));
+    this.data = [];
   }
 
   @Input()
@@ -208,15 +209,44 @@ export class SelectComponent implements OnInit {
       this.hideOptions();
     }
   }
-
-  @Output() public data:EventEmitter<any> = new EventEmitter();
+  
+  @Input()
+  public set data(value:any) {
+    if (!value) {
+      this._data = [];
+      return;
+    }
+    
+    if (this.multiple === true) {
+     this._data = value.map((data:any) => ( this.findSelectItem(data)));
+    } else {
+      var foundItem = this.findSelectItem(value);
+      if(foundItem) {
+        this._data = [foundItem];
+      }
+    }
+    
+    if (this._data != []) {
+		 this.doEvent('selected', this.multiple ? this._data : this._data[0]);
+	  } 
+  }
+  
+  public get data() {
+    return this._data;
+  }
+  
+  private findSelectItem(value: any) {
+    return this.itemObjects.find((o:SelectItem) => o.id === value) || 
+                 this.itemObjects.find((o:SelectItem) => o.text === value);
+  }
+  
+  @Output() public dataChange:EventEmitter<any> = new EventEmitter();
   @Output() public selected:EventEmitter<any> = new EventEmitter();
   @Output() public removed:EventEmitter<any> = new EventEmitter();
   @Output() public typed:EventEmitter<any> = new EventEmitter();
 
   public options:Array<SelectItem> = [];
   public itemObjects:Array<SelectItem> = [];
-  public active:Array<SelectItem> = [];
   public activeOption:SelectItem;
   public element:ElementRef;
 
@@ -226,6 +256,7 @@ export class SelectComponent implements OnInit {
   private inputValue:string = '';
   private _items:Array<any> = [];
   private _disabled:boolean = false;
+  private _data:Array<SelectItem> = [];
 
   public constructor(element:ElementRef) {
     this.element = element;
@@ -247,8 +278,8 @@ export class SelectComponent implements OnInit {
       let el:any = this.element.nativeElement
         .querySelector('div.ui-select-container > input');
       if (!el.value || el.value.length <= 0) {
-        if (this.active.length > 0) {
-          this.remove(this.active[this.active.length - 1]);
+        if (this._data.length > 0) {
+          this.remove(this._data[this._data.length - 1]);
         }
         e.preventDefault();
       }
@@ -262,8 +293,8 @@ export class SelectComponent implements OnInit {
     }
     // del
     if (!isUpMode && e.keyCode === 46) {
-      if (this.active.length > 0) {
-        this.remove(this.active[this.active.length - 1]);
+      if (this._data.length > 0) {
+        this.remove(this._data[this._data.length - 1]);
       }
       e.preventDefault();
     }
@@ -293,7 +324,7 @@ export class SelectComponent implements OnInit {
     }
     // enter
     if (!isUpMode && e.keyCode === 13) {
-      if (this.active.indexOf(this.activeOption) === -1) {
+      if (this._data.indexOf(this.activeOption) === -1) {
         this.selectActiveMatch();
         this.behavior.next();
       }
@@ -310,25 +341,21 @@ export class SelectComponent implements OnInit {
   public ngOnInit():any {
     this.behavior = (this.firstItemHasChildren) ?
       new ChildrenBehavior(this) : new GenericBehavior(this);
-    if (this.initData) {
-      this.active = this.initData.map((data:any) => (typeof data === 'string' ? new SelectItem(data) : new SelectItem({id: data[this.idField], text: data[this.textField]})));
-      this.data.emit(this.active);
-    }
   }
 
   public remove(item:SelectItem):void {
     if (this._disabled === true) {
       return;
     }
-    if (this.multiple === true && this.active) {
-      let index = this.active.indexOf(item);
-      this.active.splice(index, 1);
-      this.data.next(this.active);
+    if (this.multiple === true && this._data) {
+      let index = this._data.indexOf(item);
+      this._data.splice(index, 1);
+      this.dataChange.next(this._data);
       this.doEvent('removed', item);
     }
     if (this.multiple === false) {
-      this.active = [];
-      this.data.next(this.active);
+      this._data = [];
+      this.dataChange.next(this._data);
       this.doEvent('removed', item);
     }
   }
@@ -410,7 +437,7 @@ export class SelectComponent implements OnInit {
     this.options = this.itemObjects
       .filter((option: SelectItem) => (this.multiple === false ||
       this.multiple === true &&
-      !this.active.find((o:SelectItem) => option.text === o.text)));
+      !this._data.find((o:SelectItem) => option.text === o.text)));
 
     if (this.options.length > 0) {
       this.behavior.first();
@@ -436,12 +463,12 @@ export class SelectComponent implements OnInit {
       return;
     }
     if (this.multiple === true) {
-      this.active.push(value);
-      this.data.next(this.active);
+      this._data.push(value);
+      this.dataChange.next(this._data);
     }
     if (this.multiple === false) {
-      this.active[0] = value;
-      this.data.next(this.active[0]);
+      this._data[0] = value;
+      this.dataChange.next(this._data[0]);
     }
     this.doEvent('selected', value);
     this.hideOptions();
@@ -540,7 +567,7 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
       .filter((option:SelectItem) => {
         return stripTags(option.text).match(query) &&
           (this.actor.multiple === false ||
-          (this.actor.multiple === true && this.actor.active.map((item: SelectItem) => item.id).indexOf(option.id) < 0));
+          (this.actor.multiple === true && this.actor.data.map((item: SelectItem) => item.id).indexOf(option.id) < 0));
       });
     this.actor.options = options;
     if (this.actor.options.length > 0) {
