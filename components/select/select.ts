@@ -300,8 +300,9 @@ export class SelectComponent implements OnInit {
       e.preventDefault();
       return;
     }
-    if (e.srcElement) {
-      this.inputValue = e.srcElement.value;
+    let target = e.target || e.srcElement;
+    if (target && target.value) {
+      this.inputValue = target.value;
       this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
       this.doEvent('typed', this.inputValue);
     }
@@ -384,7 +385,8 @@ export class SelectComponent implements OnInit {
       .toLowerCase();
     this.focusToInput(value);
     this.open();
-    event.srcElement.value = value;
+    let target = event.target || event.srcElement;
+    target.value = value;
     this.inputEvent(event);
   }
 
