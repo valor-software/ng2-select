@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, ElementRef, OnInit} from '@angular/core';
+import {Component, Input, Output, EventEmitter, ElementRef, OnInit, SimpleChange, OnChanges} from '@angular/core';
 import {SelectItem} from './select-item';
 import {HighlightPipe, stripTags} from './select-pipes';
 import {OptionsBehavior} from './select-interfaces';
@@ -187,7 +187,7 @@ let optionsTemplate = `
   </div>
   `
 })
-export class SelectComponent implements OnInit {
+export class SelectComponent implements OnInit,OnChanges {
   @Input() public allowClear:boolean = false;
   @Input() public placeholder:string = '';
   @Input() public idField:string = 'id';
@@ -216,7 +216,51 @@ export class SelectComponent implements OnInit {
       this.hideOptions();
     }
   }
+  @Input()
+  public set selectIds(itemId:string){
+  }
 
+
+
+
+  ngOnChanges(changes: {[key: string]: SimpleChange}){
+    let selectedIdChange=  changes['selectIds'];
+
+    if(selectedIdChange) {
+      let inputId = selectedIdChange.currentValue;
+
+      if (inputId== null) {
+        // return;
+      }
+      let itemIds:string[];
+      if(typeof inputId === 'string'){
+        itemIds=[inputId];
+      }else{
+        itemIds=inputId;
+      }
+
+
+      if (itemIds && this.itemObjects != null) {
+        
+        this.active=[];
+
+        itemIds.forEach(id =>{
+          let itemToSelect = this.itemObjects.find(item=>item.id == id);
+          if (itemToSelect != null) {
+
+            if (this.multiple === true) {
+              this.active.push(itemToSelect);
+              this.data.next(this.active);
+            }
+            if (this.multiple === false) {
+              this.active[0] = itemToSelect;
+              this.data.next(this.active[0]);
+            }
+          }
+        });
+      }
+    }
+  }
   @Output() public data:EventEmitter<any> = new EventEmitter();
   @Output() public selected:EventEmitter<any> = new EventEmitter();
   @Output() public removed:EventEmitter<any> = new EventEmitter();

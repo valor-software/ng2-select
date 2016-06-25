@@ -7,7 +7,10 @@
               (data)="refreshValue($event)"
               (selected)="selected($event)"
               (removed)="removed($event)"
-              placeholder="No city selected"></ng-select>
+              placeholder="No city selected"
+             [selectIds]="idsToSelect"
+
+  ></ng-select>
   <pre>{{itemsToString(value)}}</pre>
   <div>
     <button type="button" class="btn btn-primary"
@@ -15,5 +18,10 @@
             btnCheckboxTrue="1" btnCheckboxFalse="0">
       {{disabled === '1' ? 'Enable' : 'Disable'}}
     </button>
+    <button type="button" class="btn btn-primary"
+            (click)="idsToSelect=['Paris','London']">
+      Select London and Paris
+    </button>
+
   </div>
 </div>

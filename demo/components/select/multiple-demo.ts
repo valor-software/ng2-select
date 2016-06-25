@@ -26,6 +26,7 @@ export class MultipleDemoComponent {
   private value:any = ['Athens'];
   private _disabledV:string = '0';
   private disabled:boolean = false;
+  private idsToSelect:string[];
 
   private get disabledV():string {
     return this._disabledV;
@@ -37,6 +38,7 @@ export class MultipleDemoComponent {
   }
 
   public selected(value:any):void {
+    this.idsToSelect=null;
     console.log('Selected value is: ', value);
   }
 
