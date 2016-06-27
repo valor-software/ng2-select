@@ -192,7 +192,6 @@ export class SelectComponent implements OnInit {
   @Input() public placeholder:string = '';
   @Input() public idField:string = 'id';
   @Input() public textField:string = 'text';
-  @Input() public initData:Array<any> = [];
   @Input() public multiple:boolean = false;
 
   @Input()
@@ -217,6 +216,23 @@ export class SelectComponent implements OnInit {
     }
   }
 
+  @Input()
+  public set active(selectedItems:Array<any>) {
+    if (!selectedItems || selectedItems.length === 0) {
+      this._active = [];
+    } else {
+      let areItemsStrings = typeof selectedItems[0] === 'string';
+
+      this._active = selectedItems.map((item:any) => {
+        let data = areItemsStrings
+          ? item
+          : { id: item[this.idField], text: item[this.textField] };
+
+        return new SelectItem(data);
+      });
+    }
+  }
+
   @Output() public data:EventEmitter<any> = new EventEmitter();
   @Output() public selected:EventEmitter<any> = new EventEmitter();
   @Output() public removed:EventEmitter<any> = new EventEmitter();
@@ -224,9 +240,12 @@ export class SelectComponent implements OnInit {
 
   public options:Array<SelectItem> = [];
   public itemObjects:Array<SelectItem> = [];
-  public active:Array<SelectItem> = [];
   public activeOption:SelectItem;
   public element:ElementRef;
+
+  public get active():Array<any> {
+    return this._active;
+  }
 
   private inputMode:boolean = false;
   private optionsOpened:boolean = false;
@@ -234,6 +253,7 @@ export class SelectComponent implements OnInit {
   private inputValue:string = '';
   private _items:Array<any> = [];
   private _disabled:boolean = false;
+  private _active:Array<SelectItem> = [];
 
   public constructor(element:ElementRef) {
     this.element = element;
@@ -319,10 +339,6 @@ export class SelectComponent implements OnInit {
   public ngOnInit():any {
     this.behavior = (this.firstItemHasChildren) ?
       new ChildrenBehavior(this) : new GenericBehavior(this);
-    if (this.initData) {
-      this.active = this.initData.map((data:any) => (typeof data === 'string' ? new SelectItem(data) : new SelectItem({id: data[this.idField], text: data[this.textField]})));
-      this.data.emit(this.active);
-    }
   }
 
   public remove(item:SelectItem):void {

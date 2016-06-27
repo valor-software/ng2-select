@@ -32,7 +32,7 @@ Follow me [![twitter](https://img.shields.io/twitter/follow/valorkin.svg?style=s
   Items may be nested by adding a `children` property to any item, whose value should be another array of items. Items that have children may omit having an ID.
   If `items` are specified, all items are expected to be available locally and all selection operations operate on this local array only.
   If omitted, items are not available locally, and the `query` option should be provided to fetch data.
-  - `initData` (`?Array<any>`) - Initial selection data to set. This should be an object with `id` and `text` properties in the case of input type 'Single',
+  - `active` (`?Array<any>`) - selection data to set. This should be an object with `id` and `text` properties in the case of input type 'Single',
   or an array of such objects otherwise. This option is mutually exclusive with value.
   - `allowClear` (`?boolean=false`) (*not yet supported*) - Set to `true` to allow the selection to be cleared. This option only applies to single-value inputs.
   - `placeholder` (`?string=''`) - Placeholder text to display when the element has no focus and selected items.
