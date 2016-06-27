@@ -3,7 +3,6 @@ import {SelectItem} from './select-item';
 import {HighlightPipe, stripTags} from './select-pipes';
 import {OptionsBehavior} from './select-interfaces';
 import {escapeRegexp} from './common';
-import {OffClickDirective} from './off-click';
 
 let styles = `
 .ui-select-toggle {
@@ -114,18 +113,18 @@ let optionsTemplate = `
 
 @Component({
   selector: 'ng-select',
-  directives: [OffClickDirective],
+  directives: [],
   pipes: [HighlightPipe],
   styles: [styles],
+  host: { '(document:click)': 'checkOutsideClicked($event)'},
   template: `
   <div tabindex="0"
      *ngIf="multiple === false"
      (keyup)="mainClick($event)"
-     [offClick]="clickedOutside"
      class="ui-select-container dropdown open">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <div class="ui-select-match"
-         *ngIf="!inputMode">
+         [hidden]="inputMode">
       <span tabindex="-1"
           class="btn btn-default btn-secondary form-control ui-select-toggle"
           (click)="matchClick($event)"
@@ -257,7 +256,6 @@ export class SelectComponent implements OnInit {
 
   public constructor(element:ElementRef) {
     this.element = element;
-    this.clickedOutside = this.clickedOutside.bind(this);
   }
 
   public inputEvent(e:any, isUpMode:boolean = false):void {
@@ -362,11 +360,6 @@ export class SelectComponent implements OnInit {
     if ((this as any)[type] && value) {
       (this as any)[type].next(value);
     }
-  }
-
-  public clickedOutside():void  {
-    this.inputMode = false;
-    this.optionsOpened = false;
   }
 
   public get firstItemHasChildren():boolean {
@@ -530,6 +523,12 @@ export class Behavior {
     }
     return ai;
   }
+  
+  private checkOutsideClicked(event) {		
+		if(event.target !== this.element.nativeElement && !this.element.nativeElement.contains(event.target) && this.optionsOpened) {
+			this.hideOptions();
+		}
+	}
 }
 
 export class GenericBehavior extends Behavior implements OptionsBehavior {
