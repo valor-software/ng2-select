@@ -1,9 +1,19 @@
-import {Component, Input, Output, EventEmitter, ElementRef, OnInit} from '@angular/core';
+import {Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef, Provider} from '@angular/core';
+import {NG_VALUE_ACCESSOR} from '@angular/forms';
 import {SelectItem} from './select-item';
 import {HighlightPipe, stripTags} from './select-pipes';
 import {OptionsBehavior} from './select-interfaces';
 import {escapeRegexp} from './common';
 import {OffClickDirective} from './off-click';
+
+// Control Value accessor provider
+const NG2SELECT_CONTROL_VALUE_ACCESSOR = new Provider(
+  NG_VALUE_ACCESSOR,
+  {
+    useExisting: forwardRef(() => SelectComponent),
+    multi: true
+  }
+);
 
 let styles = `
 .ui-select-toggle {
@@ -114,6 +124,7 @@ let optionsTemplate = `
 
 @Component({
   selector: 'ng-select',
+  providers: [NG2SELECT_CONTROL_VALUE_ACCESSOR],
   directives: [OffClickDirective],
   pipes: [HighlightPipe],
   styles: [styles],
@@ -362,6 +373,11 @@ export class SelectComponent implements OnInit {
     if ((this as any)[type] && value) {
       (this as any)[type].next(value);
     }
+
+    if (type == 'selected' || type == 'removed') {
+      this.onChange(this.active);
+      this._onTouchedCallback();
+    }
   }
 
   public clickedOutside():void  {
@@ -478,6 +494,19 @@ export class SelectComponent implements OnInit {
       this.element.nativeElement.querySelector('.ui-select-container').focus();
     }
   }
+
+  /**
+   * Implements ControlValueAccessor
+   */
+  writeValue(value:any){
+    this.active = value;
+  }
+  onChange(_:any){}
+  onTouched(){}
+  registerOnChange(fn:any){this.onChange = fn;}
+  registerOnTouched(fn:any){this.onTouched = fn;}
+  _onChangeCallback(_:any){}
+  _onTouchedCallback(){}
 }
 
 export class Behavior {
