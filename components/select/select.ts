@@ -1,5 +1,5 @@
 import {Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef, Provider} from '@angular/core';
-import {NG_VALUE_ACCESSOR} from '@angular/forms';
+import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
 import {SelectItem} from './select-item';
 import {HighlightPipe, stripTags} from './select-pipes';
 import {OptionsBehavior} from './select-interfaces';
@@ -198,7 +198,7 @@ let optionsTemplate = `
   </div>
   `
 })
-export class SelectComponent implements OnInit {
+export class SelectComponent implements OnInit, ControlValueAccessor {
   @Input() public allowClear:boolean = false;
   @Input() public placeholder:string = '';
   @Input() public idField:string = 'id';
@@ -375,8 +375,8 @@ export class SelectComponent implements OnInit {
     }
 
     if (type == 'selected' || type == 'removed') {
-      this.onChange(this.active);
       this._onTouchedCallback();
+      this._onChangeCallback(this.active);
     }
   }
 
