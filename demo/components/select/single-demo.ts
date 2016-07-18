@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
-import {CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass} from '@angular/common';
-import {BUTTON_DIRECTIVES } from 'ng2-bootstrap/ng2-bootstrap';
+import { Component } from '@angular/core';
+import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass } from '@angular/common';
+import { BUTTON_DIRECTIVES } from 'ng2-bootstrap/ng2-bootstrap';
 
-import {SELECT_DIRECTIVES} from '../../../ng2-select';
+import { SELECT_DIRECTIVES } from '../../../ng2-select';
 
 // webpack html imports
 let template = require('./single-demo.html');

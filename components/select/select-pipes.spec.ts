@@ -1,6 +1,6 @@
-import {it, expect, describe, inject, beforeEachProviders} from '@angular/core/testing';
-import {ComponentFixture} from '@angular/compiler/testing';
-import {HighlightPipe} from './select-pipes';
+import { it, expect, describe, inject, beforeEachProviders } from '@angular/core/testing';
+import { ComponentFixture } from '@angular/compiler/testing';
+import { HighlightPipe } from './select-pipes';
 
 describe('Component: HighlightPipe', () => {
   beforeEachProviders(() => [
