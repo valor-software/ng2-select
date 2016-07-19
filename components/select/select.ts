@@ -215,6 +215,9 @@ export class SelectComponent implements OnInit {
       this.hideOptions();
     }
   }
+  public get disabled(): boolean {
+    return this._disabled;
+  }
 
   @Input()
   public set active(selectedItems:Array<any>) {
