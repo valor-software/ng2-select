@@ -1,8 +1,8 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass} from '@angular/common';
-import {BUTTON_DIRECTIVES } from 'ng2-bootstrap/ng2-bootstrap';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass } from '@angular/common';
+import { BUTTON_DIRECTIVES } from 'ng2-bootstrap/ng2-bootstrap';
 
-import {SELECT_DIRECTIVES} from '../../../ng2-select';
+import { SELECT_DIRECTIVES } from '../../../ng2-select';
 
 const COLORS = [
     { 'name': 'Blue 10',       'hex': '#C0E6FF' },

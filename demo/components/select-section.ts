@@ -1,12 +1,12 @@
-import {Component} from '@angular/core';
-import {CORE_DIRECTIVES} from '@angular/common';
+import { Component } from '@angular/core';
+import { CORE_DIRECTIVES } from '@angular/common';
 
-import {TAB_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
+import { TAB_DIRECTIVES } from 'ng2-bootstrap/ng2-bootstrap';
 
-import {SingleDemoComponent} from './select/single-demo';
-import {MultipleDemoComponent} from './select/multiple-demo';
-import {ChildrenDemoComponent} from './select/children-demo';
-import {RichDemoComponent} from './select/rich-demo';
+import { SingleDemoComponent } from './select/single-demo';
+import { MultipleDemoComponent } from './select/multiple-demo';
+import { ChildrenDemoComponent } from './select/children-demo';
+import { RichDemoComponent } from './select/rich-demo';
 
 let name = 'Select';
 // webpack html imports
