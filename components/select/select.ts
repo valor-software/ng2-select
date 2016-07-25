@@ -324,10 +324,8 @@ export class SelectComponent implements OnInit {
     }
     // enter
     if (!isUpMode && e.keyCode === 13) {
-      if (this.active.indexOf(this.activeOption) === -1) {
-        this.selectActiveMatch();
-        this.behavior.next();
-      }
+      this.selectActiveMatch();
+      this.behavior.next();
       e.preventDefault();
       return;
     }
