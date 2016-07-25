@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, ElementRef, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef, OnInit, Provider, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SelectItem } from './select-item';
 import { HighlightPipe, stripTags } from './select-pipes';
 import { OptionsBehavior } from './select-interfaces';
@@ -6,6 +7,7 @@ import { escapeRegexp } from './common';
 import { OffClickDirective } from './off-click';
 
 // Control Value accessor provider
+/* tslint:disable */
 const NG2SELECT_CONTROL_VALUE_ACCESSOR = new Provider(
   NG_VALUE_ACCESSOR,
   {
@@ -13,6 +15,7 @@ const NG2SELECT_CONTROL_VALUE_ACCESSOR = new Provider(
     multi: true
   }
 );
+/* tslint:enable */
 
 let styles = `
 .ui-select-toggle {
@@ -260,6 +263,9 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     return this._active;
   }
 
+  protected onChange:any = Function.prototype;
+  protected onTouched:any = Function.prototype;
+
   private inputMode:boolean = false;
   private optionsOpened:boolean = false;
   private behavior:OptionsBehavior;
@@ -376,9 +382,9 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       (this as any)[type].next(value);
     }
 
-    if (type == 'selected' || type == 'removed') {
-      this._onTouchedCallback();
-      this._onChangeCallback(this.active);
+    if (type === 'selected' || type === 'removed') {
+      this.onTouched();
+      this.onChange(this.active);
     }
   }
 
@@ -390,6 +396,18 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   public get firstItemHasChildren():boolean {
     return this.itemObjects[0] && this.itemObjects[0].hasChildren();
   }
+
+  /**
+   * Implements ControlValueAccessor
+   */
+  public writeValue(val:any):void {
+    this.active = val;
+    this.data.emit(this.active);
+  }
+
+  public registerOnChange(fn:(_:any) => {}):void {this.onChange = fn;}
+
+  public registerOnTouched(fn:() => {}):void {this.onTouched = fn;}
 
   protected matchClick(e:any):void {
     if (this._disabled === true) {
@@ -497,18 +515,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
   }
 
-  /**
-   * Implements ControlValueAccessor
-   */
-  writeValue(value:any){
-    this.active = value;
-  }
-  onChange(_:any){}
-  onTouched(){}
-  registerOnChange(fn:any){this.onChange = fn;}
-  registerOnTouched(fn:any){this.onTouched = fn;}
-  _onChangeCallback(_:any){}
-  _onTouchedCallback(){}
 }
 
 export class Behavior {
