@@ -1,10 +1,9 @@
-import {Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef, Provider} from '@angular/core';
-import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
-import {SelectItem} from './select-item';
-import {HighlightPipe, stripTags} from './select-pipes';
-import {OptionsBehavior} from './select-interfaces';
-import {escapeRegexp} from './common';
-import {OffClickDirective} from './off-click';
+import { Component, Input, Output, EventEmitter, ElementRef, OnInit } from '@angular/core';
+import { SelectItem } from './select-item';
+import { HighlightPipe, stripTags } from './select-pipes';
+import { OptionsBehavior } from './select-interfaces';
+import { escapeRegexp } from './common';
+import { OffClickDirective } from './off-click';
 
 // Control Value accessor provider
 const NG2SELECT_CONTROL_VALUE_ACCESSOR = new Provider(
@@ -225,6 +224,9 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     if (this._disabled === true) {
       this.hideOptions();
     }
+  }
+  public get disabled(): boolean {
+    return this._disabled;
   }
 
   @Input()

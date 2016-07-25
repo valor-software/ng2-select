@@ -1,13 +1,13 @@
-import {bootstrap} from '@angular/platform-browser-dynamic';
-import {Component} from '@angular/core';
-import {NgClass} from '@angular/common';
+import { bootstrap } from '@angular/platform-browser-dynamic';
+import { Component } from '@angular/core';
+import { NgClass } from '@angular/common';
 
-import {SelectSectionComponent} from './components/select-section';
+import { SelectSectionComponent } from './components/select-section';
 
 let gettingStarted = require('./getting-started.md');
 
 @Component({
-  selector: 'app',
+  selector: 'demo-app',
   template: `
   <main class="bd-pageheader">
     <div class="container">
