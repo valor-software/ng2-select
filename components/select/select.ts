@@ -382,8 +382,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       (this as any)[type].next(value);
     }
 
+    this.onTouched();
     if (type === 'selected' || type === 'removed') {
-      this.onTouched();
       this.onChange(this.active);
     }
   }
