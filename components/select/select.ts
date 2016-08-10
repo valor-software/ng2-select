@@ -192,6 +192,7 @@ export class SelectComponent implements OnInit {
   @Input() public placeholder:string = '';
   @Input() public idField:string = 'id';
   @Input() public textField:string = 'text';
+  @Input() public childrenField:string = 'children';
   @Input() public multiple:boolean = false;
 
   @Input()
@@ -204,7 +205,7 @@ export class SelectComponent implements OnInit {
           return item;
         }
       });
-      this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField]})));
+      this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField], children: item[this.childrenField]})));
     }
   }
 
