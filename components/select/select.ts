@@ -422,7 +422,7 @@ export class SelectComponent implements OnInit {
   }
 
   protected  isActive(value:SelectItem):boolean {
-    return this.activeOption.text === value.text;
+    return this.activeOption.id === value.id;
   }
 
   private focusToInput(value:string = ''):void {
