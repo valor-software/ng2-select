@@ -1,22 +1,30 @@
 import { Component, Input, Output, EventEmitter, ElementRef, OnInit } from '@angular/core';
-import { SelectItem } from './select-item';
 import { HighlightPipe, stripTags } from './select-pipes';
 import { OptionsBehavior } from './select-interfaces';
 import { escapeRegexp } from './common';
 import { OffClickDirective } from './off-click';
 
 let styles = `
+.ui-select-match {
+  padding: 0;
+}
+
 .ui-select-toggle {
   position: relative;
-
-  /* hardcoded, should use variable from bootstrap */
-  padding: 0.375rem 0.75rem;
+  border: 0;
+  outline: 0;
+  width: 100%;
+  height: 100%;
 }
 
 /* Fix Bootstrap dropdown position when inside a input-group */
+/*
+  TODO: this does not work with Angular2 css encapsulation!
+  (but this should really be fixed upstream in Bootstrap)
+*/
 .input-group > .dropdown {
   /* Instead of relative */
-  position: static;
+  position: static !important;
 }
 
 .ui-select-match > .btn {
@@ -57,55 +65,64 @@ let styles = `
 
 .ui-select-multiple {
   height: auto;
-  padding: 3px 3px 0 3px;
 }
 
 .ui-select-multiple input.ui-select-search {
   background-color: transparent !important; /* To prevent double background when disabled */
   border: none;
   outline: none;
-  height: 1.9em;
-  margin-bottom: 3px;
-
-  /* hardcoded, should use variable from bootstrap, but must be adjusted because... reasons */
-  padding: 0.375rem 0.55rem;
+  padding: 0;
 }
 
 .ui-select-multiple .ui-select-match-item {
   outline: 0;
-  margin: 0 3px 3px 0;
+  margin-bottom: 0.25rem;
 }
+
+.ui-select-match-item-close {
+  padding: 0;
+  line-height: 0.8;
+  overflow: hidden;
+}
+
+.ui-select-toggle .ui-select-match-item-close {
+  margin-right: 10px;
+}
+
+.ui-select-multiple .ui-select-match-item-close {
+  margin-left: 10px;
+}
+
 `;
 
 let optionsTemplate = `
     <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
-        class="ui-select-choices dropdown-menu" role="menu">
+        class="ui-select-choices" [ngClass]="dropdownMenuClass" role="menu">
       <li *ngFor="let o of options" role="menuitem">
         <div class="ui-select-choices-row"
-             [class.active]="isActive(o)"
+             [ngClass]="{dropdownItemActiveClass: isActive(o)}"
              (mouseenter)="selectActive(o)"
              (click)="selectMatch(o, $event)">
-          <a href="javascript:void(0)" class="dropdown-item">
-            <div [innerHtml]="o.text | highlight:inputValue"></div>
+          <a href="javascript:void(0)" [ngClass]="dropdownItemClass">
+            <div [innerHtml]="o[textField] | highlight:inputValue"></div>
           </a>
         </div>
       </li>
     </ul>
 
     <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
-        class="ui-select-choices dropdown-menu" role="menu">
+        class="ui-select-choices" [ngClass]="dropdownMenuClass" role="menu">
       <li *ngFor="let c of options; let index=index" role="menuitem">
-        <div class="divider dropdown-divider" *ngIf="index > 0"></div>
-        <div class="dropdown-header">{{c.text}}</div>
+        <div [ngClass]="dropdownDividerClass" *ngIf="index > 0"></div>
+        <div [ngClass]="dropdownHeaderClass">{{c[textField]}}</div>
 
-        <div *ngFor="let o of c.children"
+        <div *ngFor="let o of c[childrenField]"
              class="ui-select-choices-row"
-             [class.active]="isActive(o)"
+             [ngClass]="{dropdownItemActiveClass: isActive(o)}"
              (mouseenter)="selectActive(o)"
-             (click)="selectMatch(o, $event)"
-             [ngClass]="{'active': isActive(o)}">
-          <a href="javascript:void(0)" class="dropdown-item">
-            <div [innerHtml]="o.text | highlight:inputValue"></div>
+             (click)="selectMatch(o, $event)">
+          <a href="javascript:void(0)" [ngClass]="dropdownItemClass">
+            <div [innerHtml]="o[textField] | highlight:inputValue"></div>
           </a>
         </div>
       </li>
@@ -122,22 +139,25 @@ let optionsTemplate = `
      *ngIf="multiple === false"
      (keyup)="mainClick($event)"
      [offClick]="clickedOutside"
-     class="ui-select-container dropdown open">
+     class="ui-select-container"
+     [ngClass]="dropdownClass + ' ' + openClass">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <div class="ui-select-match"
-         *ngIf="!inputMode">
+        [ngClass]="inputClass"
+        *ngIf="!inputMode">
       <span tabindex="-1"
-          class="btn btn-default btn-secondary form-control ui-select-toggle"
-          (click)="matchClick($event)"
-          style="outline: 0;">
-        <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
-        <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
-              [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
-              [innerHTML]="active[0].text"></span>
-        <i class="dropdown-toggle pull-right"></i>
-        <i class="caret pull-right"></i>
-        <a *ngIf="allowClear && active.length>0" style="margin-right: 10px; padding: 0;"
-          (click)="remove(activeOption)" class="close pull-right">
+          class="ui-select-toggle"
+          [ngClass]="buttonClass"
+          (click)="matchClick($event)">
+        <span *ngIf="active.length <= 0" class="ui-select-placeholder" [ngClass]="placeholderTextClass">{{placeholder}}</span>
+        <span *ngIf="active.length > 0" class="ui-select-match-text"
+              [ngClass]="activeTextPositionClass + (allowClear && active.length > 0 ? ' ui-select-allow-clear' : '')"
+              [innerHTML]="active[0][textField]"></span>
+        <i [ngClass]="caretIconClass + ' ' + iconPositionClass" aria-hidden="true"></i>
+        <a *ngIf="allowClear && active.length>0"
+          [ngClass]="closeIconClass + ' ' + iconPositionClass"
+          class="ui-select-match-item-close"
+          (click)="remove(activeOption)">
           &times;
         </a>
       </span>
@@ -146,7 +166,8 @@ let optionsTemplate = `
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
            [disabled]="disabled"
-           class="form-control ui-select-search"
+           class="ui-select-search"
+           [ngClass]="inputClass"
            *ngIf="inputMode"
            placeholder="{{active.length <= 0 ? placeholder : ''}}">
       ${optionsTemplate}
@@ -156,21 +177,22 @@ let optionsTemplate = `
      *ngIf="multiple === true"
      (keyup)="mainClick($event)"
      (focus)="focusToInput('')"
-     class="ui-select-container ui-select-multiple dropdown form-control open">
+     class="ui-select-container ui-select-multiple"
+     [ngClass]="inputClass + ' ' + dropdownClass + ' ' + openClass">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
-    <span class="ui-select-match">
-        <span *ngFor="let a of active">
-            <span class="ui-select-match-item btn btn-default btn-secondary btn-sm"
-                  tabindex="-1"
-                  type="button"
-                  [ngClass]="{'btn-default': true}">
-               <a class="close"
-                  style="margin-left: 10px; padding: 0;"
-                  (click)="remove(a)">&times;</a>
-               <span>{{a.text}}</span>
-           </span>
+    <div class="ui-select-match" [ngClass]="multiButtonContainerClass">
+      <!--<span *ngFor="let a of active">-->
+        <span *ngFor="let a of active"
+              class="ui-select-match-item"
+              tabindex="-1"
+              [ngClass]="buttonClass">
+          <a [ngClass]="closeIconClass"
+            class="ui-select-match-item-close"
+            (click)="remove(a)">&times;</a>
+          <span>{{a[textField]}}</span>
         </span>
-    </span>
+      <!--</span>-->
+    </div>
     <input type="text"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
@@ -180,7 +202,8 @@ let optionsTemplate = `
            autocorrect="off"
            autocapitalize="off"
            spellcheck="false"
-           class="form-control ui-select-search"
+           class="ui-select-search"
+           [ngClass]="inputClass"
            placeholder="{{active.length <= 0 ? placeholder : ''}}"
            role="combobox">
     ${optionsTemplate}
@@ -188,24 +211,34 @@ let optionsTemplate = `
   `
 })
 export class SelectComponent implements OnInit {
+  @Input() public multiButtonContainerClass:string = 'btn-toolbar';
+  @Input() public dropdownClass:string = 'dropdown';
+  @Input() public dropdownMenuClass:string = 'dropdown-menu';
+  @Input() public dropdownItemClass:string = 'dropdown-item';
+  @Input() public dropdownItemActiveClass:string = 'active';
+  @Input() public dropdownDividerClass:string = 'divider dropdown-divider';
+  @Input() public dropdownHeaderClass:string = 'dropdown-header';
+  @Input() public openClass:string = 'open';
+  @Input() public caretIconClass:string = 'dropdown-toggle caret';
+  @Input() public closeIconClass:string = 'close';
+  @Input() public iconPositionClass:string = 'pull-right';
+  @Input() public placeholderTextClass:string = 'text-muted';
+  @Input() public activeTextPositionClass:string = 'pull-left';
+
   @Input() public allowClear:boolean = false;
   @Input() public placeholder:string = '';
   @Input() public idField:string = 'id';
   @Input() public textField:string = 'text';
+  @Input() public childrenField:string = 'children';
+  @Input() public parentField:string = 'parent';
   @Input() public multiple:boolean = false;
 
   @Input()
   public set items(value:Array<any>) {
-    if (!value) {
-      this._items = this.itemObjects = [];
-    } else {
-      this._items = value.filter((item:any) => {
-        if ((typeof item === 'string' && item) || (typeof item === 'object' && item && item.text && item.id)) {
-          return item;
-        }
-      });
-      this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField]})));
-    }
+    this._items = this._getValidatedArray(value);
+  }
+  public get items(): Array<any> {
+    return this._items;
   }
 
   @Input()
@@ -221,19 +254,7 @@ export class SelectComponent implements OnInit {
 
   @Input()
   public set active(selectedItems:Array<any>) {
-    if (!selectedItems || selectedItems.length === 0) {
-      this._active = [];
-    } else {
-      let areItemsStrings = typeof selectedItems[0] === 'string';
-
-      this._active = selectedItems.map((item:any) => {
-        let data = areItemsStrings
-          ? item
-          : { id: item[this.idField], text: item[this.textField] };
-
-        return new SelectItem(data);
-      });
-    }
+    this._active = this._getValidatedArray(selectedItems);
   }
 
   @Output() public data:EventEmitter<any> = new EventEmitter();
@@ -241,9 +262,8 @@ export class SelectComponent implements OnInit {
   @Output() public removed:EventEmitter<any> = new EventEmitter();
   @Output() public typed:EventEmitter<any> = new EventEmitter();
 
-  public options:Array<SelectItem> = [];
-  public itemObjects:Array<SelectItem> = [];
-  public activeOption:SelectItem;
+  public options:Array<any> = [];
+  public activeOption:any;
   public element:ElementRef;
 
   public get active():Array<any> {
@@ -256,11 +276,49 @@ export class SelectComponent implements OnInit {
   private inputValue:string = '';
   private _items:Array<any> = [];
   private _disabled:boolean = false;
-  private _active:Array<SelectItem> = [];
+  private _active:Array<any> = [];
 
   public constructor(element:ElementRef) {
     this.element = element;
     this.clickedOutside = this.clickedOutside.bind(this);
+  }
+
+  private _getValidatedArray(value:Array<any>):Array<any> {
+    if (!value || value.length === 0) {
+      return [];
+    }
+    else {
+      return value
+        .filter((item:any) => item) // makes sure item exists
+        .map((item:any) => {
+          let data:any = {};
+          if (typeof item === 'string') {
+            data[this.idField] = item;
+            data[this.textField] = item;
+          }
+          else if (typeof item === 'object' && item[this.textField] && item[this.idField]) {
+            data = this._addParent(item);
+          }
+
+          return data;
+        });
+    }
+  }
+
+  private _addParent(item:any):any {
+    let newItem:any = item;
+
+    if ((typeof item === 'object') && item && item[this.childrenField] && Array.isArray(item[this.childrenField])) {
+      newItem[this.childrenField] = this._getValidatedArray(item[this.childrenField]).map((c:any) => {
+        let p:any = {};
+        p[this.idField] = item[this.idField];
+        p[this.textField] = item[this.textField];
+        c[this.parentField] = p;
+        return c;
+      });
+    }
+
+    return newItem;
   }
 
   public inputEvent(e:any, isUpMode:boolean = false):void {
@@ -287,7 +345,7 @@ export class SelectComponent implements OnInit {
     // esc
     if (!isUpMode && e.keyCode === 27) {
       this.hideOptions();
-      this.element.nativeElement.children[0].focus();
+      this.element.nativeElement[this.childrenField][0].focus();
       e.preventDefault();
       return;
     }
@@ -344,7 +402,8 @@ export class SelectComponent implements OnInit {
       new ChildrenBehavior(this) : new GenericBehavior(this);
   }
 
-  public remove(item:SelectItem):void {
+  // public remove(item:SelectItem):void {
+  public remove(item:any):void {
     if (this._disabled === true) {
       return;
     }
@@ -373,7 +432,10 @@ export class SelectComponent implements OnInit {
   }
 
   public get firstItemHasChildren():boolean {
-    return this.itemObjects[0] && this.itemObjects[0].hasChildren();
+    return this._items[0] &&
+            this._items[0][this.childrenField] &&
+            Array.isArray(this._items[0][this.childrenField]) &&
+            this._items[0][this.childrenField].length > 0;
   }
 
   protected matchClick(e:any):void {
@@ -417,12 +479,12 @@ export class SelectComponent implements OnInit {
     this.inputEvent(event);
   }
 
-  protected  selectActive(value:SelectItem):void {
+  protected  selectActive(value:any):void {
     this.activeOption = value;
   }
 
-  protected  isActive(value:SelectItem):boolean {
-    return this.activeOption.text === value.text;
+  protected  isActive(value:any):boolean {
+    return this.activeOption[this.idField] === value[this.idField];
   }
 
   private focusToInput(value:string = ''):void {
@@ -436,10 +498,10 @@ export class SelectComponent implements OnInit {
   }
 
   private open():void {
-    this.options = this.itemObjects
-      .filter((option: SelectItem) => (this.multiple === false ||
+    this.options = this._items
+      .filter((option:any) => (this.multiple === false ||
       this.multiple === true &&
-      !this.active.find((o:SelectItem) => option.text === o.text)));
+      !this.active.find((o:any) => option[this.idField] === o[this.idField])));
 
     if (this.options.length > 0) {
       this.behavior.first();
@@ -456,7 +518,7 @@ export class SelectComponent implements OnInit {
     this.selectMatch(this.activeOption);
   }
 
-  private selectMatch(value:SelectItem, e:Event = void 0):void {
+  private selectMatch(value:any, e:Event = void 0):void {
     if (e) {
       e.stopPropagation();
       e.preventDefault();
@@ -477,7 +539,7 @@ export class SelectComponent implements OnInit {
     if (this.multiple === true) {
       this.focusToInput('');
     } else {
-      this.focusToInput(stripTags(value.text));
+      this.focusToInput(stripTags(value[this.textField]));
       this.element.nativeElement.querySelector('.ui-select-container').focus();
     }
   }
@@ -491,17 +553,25 @@ export class Behavior {
     this.actor = actor;
   }
 
+  protected fillChildrenHash(item:any, optionsMap:Map<string, number>, startIndex:number):number {
+    let i = startIndex;
+    item[this.actor.childrenField].map((child:any) => {
+      optionsMap.set(child[this.actor.idField], i++);
+    });
+    return i;
+  }
+
   public fillOptionsMap():void {
     this.optionsMap.clear();
     let startPos = 0;
-    this.actor.itemObjects
-      .map((item:SelectItem) => {
-        startPos = item.fillChildrenHash(this.optionsMap, startPos);
+    this.actor.items
+      .map((item:any) => {
+        startPos = this.fillChildrenHash(item, this.optionsMap, startPos);
       });
   }
 
   public ensureHighlightVisible(optionsMap:Map<string, number> = void 0):void {
-    let container = this.actor.element.nativeElement.querySelector('.ui-select-choices-content');
+    let container = this.actor.element.nativeElement.querySelector('.ui-select-choices');
     if (!container) {
       return;
     }
@@ -529,7 +599,7 @@ export class Behavior {
   private getActiveIndex(optionsMap:Map<string, number> = void 0):number {
     let ai = this.actor.options.indexOf(this.actor.activeOption);
     if (ai < 0 && optionsMap !== void 0) {
-      ai = optionsMap.get(this.actor.activeOption.id);
+      ai = optionsMap.get(this.actor.activeOption[this.actor.idField]);
     }
     return ai;
   }
@@ -565,11 +635,11 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
   }
 
   public filter(query:RegExp):void {
-    let options = this.actor.itemObjects
-      .filter((option:SelectItem) => {
-        return stripTags(option.text).match(query) &&
+    let options = this.actor.items
+      .filter((option:any) => {
+        return stripTags(option[this.actor.textField]).match(query) &&
           (this.actor.multiple === false ||
-          (this.actor.multiple === true && this.actor.active.map((item: SelectItem) => item.id).indexOf(option.id) < 0));
+          (this.actor.multiple === true && this.actor.active.map((item: any) => item[this.actor.idField]).indexOf(option[this.actor.idField]) < 0));
       });
     this.actor.options = options;
     if (this.actor.options.length > 0) {
@@ -585,7 +655,7 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
   }
 
   public first():void {
-    this.actor.activeOption = this.actor.options[0].children[0];
+    this.actor.activeOption = this.actor.options[0][this.actor.childrenField][0];
     this.fillOptionsMap();
     this.ensureHighlightVisible(this.optionsMap);
   }
@@ -594,22 +664,22 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
     this.actor.activeOption =
       this.actor
         .options[this.actor.options.length - 1]
-        .children[this.actor.options[this.actor.options.length - 1].children.length - 1];
+        [this.actor.childrenField][this.actor.options[this.actor.options.length - 1][this.actor.childrenField].length - 1];
     this.fillOptionsMap();
     this.ensureHighlightVisible(this.optionsMap);
   }
 
   public prev():void {
     let indexParent = this.actor.options
-      .findIndex((option:SelectItem) => this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id);
-    let index = this.actor.options[indexParent].children
-      .findIndex((option:SelectItem) => this.actor.activeOption && this.actor.activeOption.id === option.id);
-    this.actor.activeOption = this.actor.options[indexParent].children[index - 1];
+      .findIndex((option:any) => this.actor.activeOption[this.actor.parentField] && this.actor.activeOption[this.actor.parentField][this.actor.idField] === option[this.actor.idField]);
+    let index = this.actor.options[indexParent][this.actor.childrenField]
+      .findIndex((option:any) => this.actor.activeOption && this.actor.activeOption[this.actor.idField] === option[this.actor.idField]);
+    this.actor.activeOption = this.actor.options[indexParent][this.actor.childrenField][index - 1];
     if (!this.actor.activeOption) {
       if (this.actor.options[indexParent - 1]) {
         this.actor.activeOption = this.actor
           .options[indexParent - 1]
-          .children[this.actor.options[indexParent - 1].children.length - 1];
+          [this.actor.childrenField][this.actor.options[indexParent - 1][this.actor.childrenField].length - 1];
       }
     }
     if (!this.actor.activeOption) {
@@ -621,13 +691,13 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
 
   public next():void {
     let indexParent = this.actor.options
-      .findIndex((option:SelectItem) => this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id);
-    let index = this.actor.options[indexParent].children
-      .findIndex((option:SelectItem) => this.actor.activeOption && this.actor.activeOption.id === option.id);
-    this.actor.activeOption = this.actor.options[indexParent].children[index + 1];
+      .findIndex((option:any) => this.actor.activeOption[this.actor.parentField] && this.actor.activeOption[this.actor.parentField][this.actor.idField] === option[this.actor.idField]);
+    let index = this.actor.options[indexParent][this.actor.childrenField]
+      .findIndex((option:any) => this.actor.activeOption && this.actor.activeOption[this.actor.idField] === option[this.actor.idField]);
+    this.actor.activeOption = this.actor.options[indexParent][this.actor.childrenField][index + 1];
     if (!this.actor.activeOption) {
       if (this.actor.options[indexParent + 1]) {
-        this.actor.activeOption = this.actor.options[indexParent + 1].children[0];
+        this.actor.activeOption = this.actor.options[indexParent + 1][this.actor.childrenField][0];
       }
     }
     if (!this.actor.activeOption) {
@@ -637,22 +707,30 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
     this.ensureHighlightVisible(this.optionsMap);
   }
 
+  private _getSimilar(item:any):any {
+    let r:any = {};
+    r[this.actor.idField] = item[this.actor.idField];
+    r[this.actor.textField] = item[this.actor.textField];
+    r[this.actor.parentField] = item[this.actor.parentField];
+    return r;
+  }
+
   public filter(query:RegExp):void {
-    let options:Array<SelectItem> = [];
+    let options:Array<any> = [];
     let optionsMap:Map<string, number> = new Map<string, number>();
     let startPos = 0;
-    for (let si of this.actor.itemObjects) {
-      let children:Array<SelectItem> = si.children.filter((option:SelectItem) => query.test(option.text));
-      startPos = si.fillChildrenHash(optionsMap, startPos);
+    for (let si of this.actor.items) {
+      let children:Array<any> = si[this.actor.childrenField].filter((option:any) => query.test(option[this.actor.textField]));
+      startPos = this.fillChildrenHash(si, optionsMap, startPos);
       if (children.length > 0) {
         let newSi = si.getSimilar();
-        newSi.children = children;
+        newSi[this.actor.childrenField] = children;
         options.push(newSi);
       }
     }
     this.actor.options = options;
     if (this.actor.options.length > 0) {
-      this.actor.activeOption = this.actor.options[0].children[0];
+      this.actor.activeOption = this.actor.options[0][this.actor.childrenField][0];
       super.ensureHighlightVisible(optionsMap);
     }
   }
