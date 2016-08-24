@@ -181,17 +181,15 @@ let optionsTemplate = `
      [ngClass]="inputClass + ' ' + dropdownClass + ' ' + openClass">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <div class="ui-select-match" [ngClass]="multiButtonContainerClass">
-      <!--<span *ngFor="let a of active">-->
-        <span *ngFor="let a of active"
-              class="ui-select-match-item"
-              tabindex="-1"
-              [ngClass]="buttonClass">
-          <a [ngClass]="closeIconClass"
-            class="ui-select-match-item-close"
-            (click)="remove(a)">&times;</a>
-          <span>{{a[textField]}}</span>
-        </span>
-      <!--</span>-->
+      <span *ngFor="let a of active"
+            class="ui-select-match-item"
+            tabindex="-1"
+            [ngClass]="buttonClass">
+        <a [ngClass]="closeIconClass"
+          class="ui-select-match-item-close"
+          (click)="remove(a)">&times;</a>
+        <span>{{a[textField]}}</span>
+      </span>
     </div>
     <input type="text"
            (keydown)="inputEvent($event)"
