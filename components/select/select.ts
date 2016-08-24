@@ -212,6 +212,8 @@ let optionsTemplate = `
 })
 export class SelectComponent implements OnInit {
   @Input() public multiButtonContainerClass:string = 'btn-toolbar';
+  @Input() public buttonClass:string = 'btn btn-default btn-secondary';
+  @Input() public inputClass:string = 'form-control';
   @Input() public dropdownClass:string = 'dropdown';
   @Input() public dropdownMenuClass:string = 'dropdown-menu';
   @Input() public dropdownItemClass:string = 'dropdown-item';
