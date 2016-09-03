@@ -53,6 +53,7 @@ const config = {
       'zone.js',
       'reflect-metadata',
       '@angular/common',
+      '@angular/forms',
       '@angular/core'
     ],
     'angular2-select': ['ng2-select'],

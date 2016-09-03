@@ -42,6 +42,7 @@ function getSystemJsBundleConfig(cb) {
       typescript: path.resolve('node_modules/typescript/lib/typescript.js'),
       '@angular/core': path.resolve('node_modules/@angular/core/index.js'),
       '@angular/common': path.resolve('node_modules/@angular/common/index.js'),
+      '@angular/forms': path.resolve('node_modules/@angular/forms/index.js'),
       '@angular/compiler': path.resolve('node_modules/@angular/compiler/index.js'),
       '@angular/platform-browser': path.resolve('node_modules/@angular/platform-browser/index.js'),
       '@angular/platform-browser-dynamic': path.resolve('node_modules/@angular/platform-browser-dynamic/'),
@@ -52,7 +53,7 @@ function getSystemJsBundleConfig(cb) {
     }
   };
 
-  config.meta = ['@angular/common','@angular/compiler','@angular/core',
+  config.meta = ['@angular/common', '@angular/forms','@angular/compiler','@angular/core',
     '@angular/platform-browser','@angular/platform-browser-dynamic', 'rxjs'].reduce((memo, currentValue) => {
     memo[path.resolve(`node_modules/${currentValue}/*`)] = {build: false};
     return memo;
