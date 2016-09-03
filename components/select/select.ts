@@ -1,21 +1,10 @@
-import { Component, Input, Output, EventEmitter, ElementRef, OnInit, Provider, forwardRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SelectItem } from './select-item';
 import { HighlightPipe, stripTags } from './select-pipes';
 import { OptionsBehavior } from './select-interfaces';
 import { escapeRegexp } from './common';
 import { OffClickDirective } from './off-click';
-
-// Control Value accessor provider
-/* tslint:disable */
-const NG2SELECT_CONTROL_VALUE_ACCESSOR = new Provider(
-  NG_VALUE_ACCESSOR,
-  {
-    useExisting: forwardRef(() => SelectComponent),
-    multi: true
-  }
-);
-/* tslint:enable */
 
 let styles = `
 .ui-select-toggle {
@@ -126,7 +115,15 @@ let optionsTemplate = `
 
 @Component({
   selector: 'ng-select',
-  providers: [NG2SELECT_CONTROL_VALUE_ACCESSOR],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      /* tslint:disable */
+      useExisting: forwardRef(() => SelectComponent),
+      /* tslint:enable */
+      multi: true
+    }
+  ],
   directives: [OffClickDirective],
   pipes: [HighlightPipe],
   styles: [styles],
