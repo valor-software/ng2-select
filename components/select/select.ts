@@ -422,7 +422,7 @@ export class SelectComponent implements OnInit {
   }
 
   protected  isActive(value:SelectItem):boolean {
-    return this.activeOption.text === value.text;
+    return this.activeOption.id === value.id;
   }
 
   private focusToInput(value:string = ''):void {
@@ -439,7 +439,7 @@ export class SelectComponent implements OnInit {
     this.options = this.itemObjects
       .filter((option: SelectItem) => (this.multiple === false ||
       this.multiple === true &&
-      !this.active.find((o:SelectItem) => option.text === o.text)));
+      !this.active.find((o:SelectItem) => option.id === o.id)));
 
     if (this.options.length > 0) {
       this.behavior.first();
