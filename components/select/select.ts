@@ -283,49 +283,12 @@ export class SelectComponent implements OnInit {
     this.clickedOutside = this.clickedOutside.bind(this);
   }
 
-  private _getValidatedArray(value:Array<any>):Array<any> {
-    if (!value || value.length === 0) {
-      return [];
-    }
-    else {
-      return value
-        .filter((item:any) => item) // makes sure item exists
-        .map((item:any) => {
-          let data:any = {};
-          if (typeof item === 'string') {
-            data[this.idField] = item;
-            data[this.textField] = item;
-          }
-          else if (typeof item === 'object' && item[this.textField] && item[this.idField]) {
-            data = this._addParent(item);
-          }
-
-          return data;
-        });
-    }
-  }
-
-  private _addParent(item:any):any {
-    let newItem:any = item;
-
-    if ((typeof item === 'object') && item && item[this.childrenField] && Array.isArray(item[this.childrenField])) {
-      newItem[this.childrenField] = this._getValidatedArray(item[this.childrenField]).map((c:any) => {
-        let p:any = {};
-        p[this.idField] = item[this.idField];
-        p[this.textField] = item[this.textField];
-        c[this.parentField] = p;
-        return c;
-      });
-    }
-
-    return newItem;
-  }
-
   public inputEvent(e:any, isUpMode:boolean = false):void {
     // tab
     if (e.keyCode === 9) {
       return;
     }
+
     if (isUpMode && (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 38 ||
       e.keyCode === 40 || e.keyCode === 13)) {
       e.preventDefault();
@@ -335,6 +298,7 @@ export class SelectComponent implements OnInit {
     if (!isUpMode && e.keyCode === 8) {
       let el:any = this.element.nativeElement
         .querySelector('div.ui-select-container > input');
+
       if (!el.value || el.value.length <= 0) {
         if (this.active.length > 0) {
           this.remove(this.active[this.active.length - 1]);
@@ -485,6 +449,44 @@ export class SelectComponent implements OnInit {
 
   protected  isActive(value:any):boolean {
     return this.activeOption[this.idField] === value[this.idField];
+  }
+
+  private _getValidatedArray(value:Array<any>):Array<any> {
+    if (!value || value.length === 0) {
+      return [];
+    }
+    else {
+      return value
+        .filter((item:any) => item) // makes sure item exists
+        .map((item:any) => {
+          let data:any = {};
+          if (typeof item === 'string') {
+            data[this.idField] = item;
+            data[this.textField] = item;
+          }
+          else if (typeof item === 'object' && item[this.textField] && item[this.idField]) {
+            data = this._addParent(item);
+          }
+
+          return data;
+        });
+    }
+  }
+
+  private _addParent(item:any):any {
+    let newItem:any = item;
+
+    if ((typeof item === 'object') && item && item[this.childrenField] && Array.isArray(item[this.childrenField])) {
+      newItem[this.childrenField] = this._getValidatedArray(item[this.childrenField]).map((c:any) => {
+        let p:any = {};
+        p[this.idField] = item[this.idField];
+        p[this.textField] = item[this.textField];
+        c[this.parentField] = p;
+        return c;
+      });
+    }
+
+    return newItem;
   }
 
   private focusToInput(value:string = ''):void {
@@ -707,14 +709,6 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
     this.ensureHighlightVisible(this.optionsMap);
   }
 
-  private _getSimilar(item:any):any {
-    let r:any = {};
-    r[this.actor.idField] = item[this.actor.idField];
-    r[this.actor.textField] = item[this.actor.textField];
-    r[this.actor.parentField] = item[this.actor.parentField];
-    return r;
-  }
-
   public filter(query:RegExp):void {
     let options:Array<any> = [];
     let optionsMap:Map<string, number> = new Map<string, number>();
@@ -723,7 +717,7 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
       let children:Array<any> = si[this.actor.childrenField].filter((option:any) => query.test(option[this.actor.textField]));
       startPos = this.fillChildrenHash(si, optionsMap, startPos);
       if (children.length > 0) {
-        let newSi = si.getSimilar();
+        let newSi = this._getSimilar(si);
         newSi[this.actor.childrenField] = children;
         options.push(newSi);
       }
@@ -733,5 +727,13 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
       this.actor.activeOption = this.actor.options[0][this.actor.childrenField][0];
       super.ensureHighlightVisible(optionsMap);
     }
+  }
+
+  private _getSimilar(item:any):any {
+    let r:any = {};
+    r[this.actor.idField] = item[this.actor.idField];
+    r[this.actor.textField] = item[this.actor.textField];
+    r[this.actor.parentField] = item[this.actor.parentField];
+    return r;
   }
 }
