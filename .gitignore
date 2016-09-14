@@ -8,6 +8,7 @@ npm-debug.log
 
 # WebStorm
 .idea
+.vscode
 
 # ignore build and dist for now
 /bundles

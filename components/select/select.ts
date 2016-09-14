@@ -1,9 +1,8 @@
 import { Component, Input, Output, EventEmitter, ElementRef, OnInit } from '@angular/core';
 import { SelectItem } from './select-item';
-import { HighlightPipe, stripTags } from './select-pipes';
+import { stripTags } from './select-pipes';
 import { OptionsBehavior } from './select-interfaces';
 import { escapeRegexp } from './common';
-import { OffClickDirective } from './off-click';
 
 let styles = `
 .ui-select-toggle {
@@ -114,8 +113,6 @@ let optionsTemplate = `
 
 @Component({
   selector: 'ng-select',
-  directives: [OffClickDirective],
-  pipes: [HighlightPipe],
   styles: [styles],
   template: `
   <div tabindex="0"

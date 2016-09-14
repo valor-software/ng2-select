@@ -1,12 +1,4 @@
 import { Component } from '@angular/core';
-import { CORE_DIRECTIVES } from '@angular/common';
-
-import { TAB_DIRECTIVES } from 'ng2-bootstrap/ng2-bootstrap';
-
-import { SingleDemoComponent } from './select/single-demo';
-import { MultipleDemoComponent } from './select/multiple-demo';
-import { ChildrenDemoComponent } from './select/children-demo';
-import { RichDemoComponent } from './select/rich-demo';
 
 let name = 'Select';
 // webpack html imports
@@ -36,7 +28,7 @@ let tabDesc:Array<any> = [
 ];
 
 let tabsContent:string = ``;
-tabDesc.forEach((desc:any) => {
+tabDesc.forEach((desc:any, index:number) => {
   tabsContent += `
 <div *ngIf="currentHeading === '${desc.heading}'">
   <${desc.heading.toLowerCase()}-demo>
@@ -56,7 +48,7 @@ tabDesc.forEach((desc:any) => {
         <tab heading="TypeScript">
           <div class="card card-block panel panel-default panel-body">
             <pre class="language-typescript">
-              <code class="language-typescript" ngNonBindable>${desc.ts}</code>
+              <code class="language-typescript" [innerHTML]="tabDesc[${index}].ts"></code>
             </pre>
           </div>
         </tab>
@@ -70,25 +62,26 @@ tabDesc.forEach((desc:any) => {
 @Component({
   selector: 'select-section',
   template: `
-  <section id="${name.toLowerCase()}">
-    <div class="row">
-      <tabset>
-
-        ${tabsContent}
-
-      </tabset>
-    </div>
-
-    <div class="row">
-      <h2>API</h2>
-      <div class="card card-block panel panel-default panel-body">${doc}</div>
-    </div>
-  </section>
-  `,
-  directives: [SingleDemoComponent, MultipleDemoComponent, ChildrenDemoComponent, RichDemoComponent, TAB_DIRECTIVES, CORE_DIRECTIVES]
+    <section id="${name.toLowerCase()}">
+      <div class="row">
+        <tabset>
+  
+          ${tabsContent}
+  
+        </tabset>
+      </div>
+  
+      <div class="row">
+        <h2>API</h2>
+        <div class="card card-block panel panel-default panel-body" [innerHTML]="doc"></div>
+      </div>
+    </section>
+  `
 })
 export class SelectSectionComponent {
   public currentHeading:string = 'Single';
+  public tabDesc:any[] = tabDesc;
+  public doc:string = doc;
 
   public select_zzz(e:any):void {
     if (e.heading) {
