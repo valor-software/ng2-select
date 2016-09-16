@@ -197,11 +197,13 @@ export class SelectComponent implements OnInit {
       this._items = this.itemObjects = [];
     } else {
       this._items = value.filter((item:any) => {
-        if ((typeof item === 'string' && item) || (typeof item === 'object' && item && item.text && item.id)) {
+        // if ((typeof item === 'string' && item) || (typeof item === 'object' && item && item.text && item.id)) {
+        if ((typeof item === 'string') || (typeof item === 'object' && item.text)) {
           return item;
         }
       });
-      this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField]})));
+      // this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField]})));
+      this.itemObjects = this._items.map((item:any) => new SelectItem(item));
     }
   }
 
