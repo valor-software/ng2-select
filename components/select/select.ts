@@ -7,9 +7,6 @@ import { escapeRegexp } from './common';
 let styles = `
 .ui-select-toggle {
   position: relative;
-
-  /* hardcoded, should use variable from bootstrap */
-  padding: 0.375rem 0.75rem;
 }
 
 /* Fix Bootstrap dropdown position when inside a input-group */
@@ -53,26 +50,52 @@ let styles = `
 .ui-select-multiple .ui-select-choices {
   margin-top: 1px;
 }
+.ui-select-choices-row>a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+}
+.ui-select-choices-row.active>a {
+    color: #fff;
+    text-decoration: none;
+    outline: 0;
+    background-color: #428bca;
+}
 
 .ui-select-multiple {
   height: auto;
-  padding: 3px 3px 0 3px;
+  padding:3px 3px 0 3px;
 }
 
 .ui-select-multiple input.ui-select-search {
   background-color: transparent !important; /* To prevent double background when disabled */
   border: none;
   outline: none;
-  height: 1.9em;
+  box-shadow: none;
+  height: 1.6666em;
+  padding: 0;
   margin-bottom: 3px;
-
-  /* hardcoded, should use variable from bootstrap, but must be adjusted because... reasons */
-  padding: 0.375rem 0.55rem;
+  
+}
+.ui-select-match .close {
+    font-size: 1.6em;
+    line-height: 0.75;
 }
 
 .ui-select-multiple .ui-select-match-item {
   outline: 0;
   margin: 0 3px 3px 0;
+}
+.ui-select-toggle > .caret {
+    position: absolute;
+    height: 10px;
+    top: 50%;
+    right: 10px;
+    margin-top: -2px;
 }
 `;
 
@@ -133,7 +156,7 @@ let optionsTemplate = `
               [innerHTML]="active[0].text"></span>
         <i class="dropdown-toggle pull-right"></i>
         <i class="caret pull-right"></i>
-        <a *ngIf="allowClear && active.length>0" style="margin-right: 10px; padding: 0;"
+        <a *ngIf="allowClear && active.length>0" style="margin-right: 2px; padding: 0;"
           (click)="remove(activeOption)" class="close pull-right">
           &times;
         </a>
@@ -157,12 +180,12 @@ let optionsTemplate = `
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <span class="ui-select-match">
         <span *ngFor="let a of active">
-            <span class="ui-select-match-item btn btn-default btn-secondary btn-sm"
+            <span class="ui-select-match-item btn btn-default btn-secondary btn-xs"
                   tabindex="-1"
                   type="button"
                   [ngClass]="{'btn-default': true}">
                <a class="close"
-                  style="margin-left: 10px; padding: 0;"
+                  style="margin-left: 5px; padding: 0;"
                   (click)="remove(a)">&times;</a>
                <span>{{a.text}}</span>
            </span>
@@ -214,7 +237,8 @@ export class SelectComponent implements OnInit {
       this.hideOptions();
     }
   }
-  public get disabled(): boolean {
+
+  public get disabled():boolean {
     return this._disabled;
   }
 
@@ -228,7 +252,7 @@ export class SelectComponent implements OnInit {
       this._active = selectedItems.map((item:any) => {
         let data = areItemsStrings
           ? item
-          : { id: item[this.idField], text: item[this.textField] };
+          : {id: item[this.idField], text: item[this.textField]};
 
         return new SelectItem(data);
       });
@@ -366,7 +390,7 @@ export class SelectComponent implements OnInit {
     }
   }
 
-  public clickedOutside():void  {
+  public clickedOutside():void {
     this.inputMode = false;
     this.optionsOpened = false;
   }
@@ -436,9 +460,8 @@ export class SelectComponent implements OnInit {
 
   private open():void {
     this.options = this.itemObjects
-      .filter((option: SelectItem) => (this.multiple === false ||
-      this.multiple === true &&
-      !this.active.find((o:SelectItem) => option.text === o.text)));
+      .filter((option:SelectItem) => (this.multiple === false ||
+      this.multiple === true && !this.active.find((o:SelectItem) => option.text === o.text)));
 
     if (this.options.length > 0) {
       this.behavior.first();
@@ -485,7 +508,8 @@ export class SelectComponent implements OnInit {
 export class Behavior {
   public optionsMap:Map<string, number> = new Map<string, number>();
 
-  public actor: SelectComponent;
+  public actor:SelectComponent;
+
   public constructor(actor:SelectComponent) {
     this.actor = actor;
   }
@@ -568,7 +592,7 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
       .filter((option:SelectItem) => {
         return stripTags(option.text).match(query) &&
           (this.actor.multiple === false ||
-          (this.actor.multiple === true && this.actor.active.map((item: SelectItem) => item.id).indexOf(option.id) < 0));
+          (this.actor.multiple === true && this.actor.active.map((item:SelectItem) => item.id).indexOf(option.id) < 0));
       });
     this.actor.options = options;
     if (this.actor.options.length > 0) {
