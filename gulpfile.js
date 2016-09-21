@@ -1,16 +1,9 @@
-var gulp = require('gulp');
+'use strict';
 
-gulp.paths = {
-  tssrc: [
-    '**/*.ts',
-    '!**/*.d.ts',
-    '!node_modules/**/*',
-    '!bundles/**/*',
-    '!typings/**/*']
-};
+const gulp = require('gulp');
 
 require('require-dir')('./gulp-tasks');
 
-gulp.task('default', function () {
+gulp.task('default', () => {
   gulp.start('lint');
 });

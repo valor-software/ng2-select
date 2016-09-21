@@ -1,12 +1,4 @@
-import {Component} from 'angular2/core';
-import {CORE_DIRECTIVES} from 'angular2/common';
-
-import {TAB_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
-
-import {SingleDemo} from './select/single-demo';
-import {MultipleDemo} from './select/multiple-demo';
-import {ChildrenDemo} from './select/children-demo';
-import {RichDemo} from './select/rich-demo';
+import { Component } from '@angular/core';
 
 let name = 'Select';
 // webpack html imports
@@ -36,13 +28,12 @@ let tabDesc:Array<any> = [
 ];
 
 let tabsContent:string = ``;
-tabDesc.forEach(desc => {
+tabDesc.forEach((desc:any, index:number) => {
   tabsContent += `
-  <div *ngIf="currentHeading === '${desc.heading}'">
-    <${desc.heading.toLowerCase()}-demo>
-    </${desc.heading.toLowerCase()}-demo>
-  </div>
-<pre>{{ currentHeading }}</pre>
+<div *ngIf="currentHeading === '${desc.heading}'">
+  <${desc.heading.toLowerCase()}-demo>
+  </${desc.heading.toLowerCase()}-demo>
+</div>
 <tab heading="${desc.heading}" (select)="select_zzz($event)">
   <div class="card card-block panel panel-default panel-body">
     <br>
@@ -57,7 +48,7 @@ tabDesc.forEach(desc => {
         <tab heading="TypeScript">
           <div class="card card-block panel panel-default panel-body">
             <pre class="language-typescript">
-              <code class="language-typescript" ngNonBindable>${desc.ts}</code>
+              <code class="language-typescript" [innerHTML]="tabDesc[${index}].ts"></code>
             </pre>
           </div>
         </tab>
@@ -71,27 +62,28 @@ tabDesc.forEach(desc => {
 @Component({
   selector: 'select-section',
   template: `
-  <section id="${name.toLowerCase()}">
-    <div class="row">
-      <tabset>
-
-        ${tabsContent}
-
-      </tabset>
-    </div>
-
-    <div class="row">
-      <h2>API</h2>
-      <div class="card card-block panel panel-default panel-body">${doc}</div>
-    </div>
-  </section>
-  `,
-  directives: [SingleDemo, MultipleDemo, ChildrenDemo, RichDemo, TAB_DIRECTIVES, CORE_DIRECTIVES]
+    <section id="${name.toLowerCase()}">
+      <div class="row">
+        <tabset>
+  
+          ${tabsContent}
+  
+        </tabset>
+      </div>
+  
+      <div class="row">
+        <h2>API</h2>
+        <div class="card card-block panel panel-default panel-body" [innerHTML]="doc"></div>
+      </div>
+    </section>
+  `
 })
-export class SelectSection {
+export class SelectSectionComponent {
   public currentHeading:string = 'Single';
+  public tabDesc:any[] = tabDesc;
+  public doc:string = doc;
 
-  public select_zzz(e:any) {
+  public select_zzz(e:any):void {
     if (e.heading) {
       this.currentHeading = e.heading;
     }
