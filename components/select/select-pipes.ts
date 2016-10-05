@@ -3,12 +3,10 @@ import { escapeRegexp } from './common';
 
 @Pipe({name: 'highlight'})
 export class HighlightPipe implements PipeTransform {
-  public transform(value:string, args:any[]):any {
-    if (args.length < 1) {
+  public transform(value:string, query:string):any {
+    if (query.length < 1) {
       return value;
     }
-
-    let query = args[0];
 
     if ( query ) {
         let tagRE    = new RegExp('<[^<>]*>', 'ig');
