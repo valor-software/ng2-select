@@ -71,6 +71,7 @@ let styles = `
   background-color: transparent !important; /* To prevent double background when disabled */
   border: none;
   outline: none;
+  box-shadow: none;
   padding: 0;
 }
 
@@ -95,7 +96,10 @@ let styles = `
 
 
 /*
-TODO: check if any of these are needed or not
+TODO:
+Make sure nothing is needed in these blocks.
+Hardcoded css like these should be avoided, and instead be provided through Input() variables.
+This is what dropdownItemClass and dropdownItemActiveClass are for.
 
   .ui-select-choices-row>a {
       display: block;
@@ -111,38 +115,6 @@ TODO: check if any of these are needed or not
       text-decoration: none;
       outline: 0;
       background-color: #428bca;
-  }
-
-  .ui-select-multiple {
-    height: auto;
-    padding:3px 3px 0 3px;
-  }
-
-  .ui-select-multiple input.ui-select-search {
-    background-color: transparent !important; /* To prevent double background when disabled */
-    border: none;
-    outline: none;
-    box-shadow: none;
-    height: 1.6666em;
-    padding: 0;
-    margin-bottom: 3px;
-
-  }
-  .ui-select-match .close {
-      font-size: 1.6em;
-      line-height: 0.75;
-  }
-
-  .ui-select-multiple .ui-select-match-item {
-    outline: 0;
-    margin: 0 3px 3px 0;
-  }
-  .ui-select-toggle > .caret {
-      position: absolute;
-      height: 10px;
-      top: 50%;
-      right: 10px;
-      margin-top: -2px;
   }
 */
 `;
