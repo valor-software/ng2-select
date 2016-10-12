@@ -19,5 +19,4 @@ export class OffClickDirective implements OnInit, OnDestroy {
   public ngOnDestroy(): any {
     document.removeEventListener('click', this.offClickHandler);
   }
-
 }

@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter, ElementRef, OnInit } from '@angular/core';
-import { HighlightPipe, stripTags } from './select-pipes';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { stripTags } from './select-pipes';
 import { OptionsBehavior } from './select-interfaces';
 import { escapeRegexp } from './common';
-import { OffClickDirective } from './off-click';
 
 let styles = `
 .ui-select-match {
@@ -93,6 +93,58 @@ let styles = `
   margin-left: 10px;
 }
 
+
+/*
+TODO: check if any of these are needed or not
+
+  .ui-select-choices-row>a {
+      display: block;
+      padding: 3px 20px;
+      clear: both;
+      font-weight: 400;
+      line-height: 1.42857143;
+      color: #333;
+      white-space: nowrap;
+  }
+  .ui-select-choices-row.active>a {
+      color: #fff;
+      text-decoration: none;
+      outline: 0;
+      background-color: #428bca;
+  }
+
+  .ui-select-multiple {
+    height: auto;
+    padding:3px 3px 0 3px;
+  }
+
+  .ui-select-multiple input.ui-select-search {
+    background-color: transparent !important; /* To prevent double background when disabled */
+    border: none;
+    outline: none;
+    box-shadow: none;
+    height: 1.6666em;
+    padding: 0;
+    margin-bottom: 3px;
+
+  }
+  .ui-select-match .close {
+      font-size: 1.6em;
+      line-height: 0.75;
+  }
+
+  .ui-select-multiple .ui-select-match-item {
+    outline: 0;
+    margin: 0 3px 3px 0;
+  }
+  .ui-select-toggle > .caret {
+      position: absolute;
+      height: 10px;
+      top: 50%;
+      right: 10px;
+      margin-top: -2px;
+  }
+*/
 `;
 
 let optionsTemplate = `
@@ -104,7 +156,7 @@ let optionsTemplate = `
              (mouseenter)="selectActive(o)"
              (click)="selectMatch(o, $event)">
           <a href="javascript:void(0)" [ngClass]="dropdownItemClass">
-            <div [innerHtml]="o[textField] | highlight:inputValue"></div>
+            <div [innerHtml]="sanitize(o[textField] | highlight:inputValue)"></div>
           </a>
         </div>
       </li>
@@ -122,7 +174,7 @@ let optionsTemplate = `
              (mouseenter)="selectActive(o)"
              (click)="selectMatch(o, $event)">
           <a href="javascript:void(0)" [ngClass]="dropdownItemClass">
-            <div [innerHtml]="o[textField] | highlight:inputValue"></div>
+            <div [innerHtml]="sanitize(o[textField] | highlight:inputValue)"></div>
           </a>
         </div>
       </li>
@@ -131,8 +183,6 @@ let optionsTemplate = `
 
 @Component({
   selector: 'ng-select',
-  directives: [OffClickDirective],
-  pipes: [HighlightPipe],
   styles: [styles],
   template: `
   <div tabindex="0"
@@ -152,7 +202,7 @@ let optionsTemplate = `
         <span *ngIf="active.length <= 0" class="ui-select-placeholder" [ngClass]="placeholderTextClass">{{placeholder}}</span>
         <span *ngIf="active.length > 0" class="ui-select-match-text"
               [ngClass]="activeTextPositionClass + (allowClear && active.length > 0 ? ' ui-select-allow-clear' : '')"
-              [innerHTML]="active[0][textField]"></span>
+              [innerHTML]="sanitize(active[0][textField])"></span>
         <i [ngClass]="caretIconClass + ' ' + iconPositionClass" aria-hidden="true"></i>
         <a *ngIf="allowClear && active.length>0"
           [ngClass]="closeIconClass + ' ' + iconPositionClass"
@@ -170,7 +220,7 @@ let optionsTemplate = `
            [ngClass]="inputClass"
            *ngIf="inputMode"
            placeholder="{{active.length <= 0 ? placeholder : ''}}">
-      ${optionsTemplate}
+     ${optionsTemplate}
   </div>
 
   <div tabindex="0"
@@ -204,7 +254,7 @@ let optionsTemplate = `
            [ngClass]="inputClass"
            placeholder="{{active.length <= 0 ? placeholder : ''}}"
            role="combobox">
-    ${optionsTemplate}
+     ${optionsTemplate}
   </div>
   `
 })
@@ -248,7 +298,8 @@ export class SelectComponent implements OnInit {
       this.hideOptions();
     }
   }
-  public get disabled(): boolean {
+
+  public get disabled():boolean {
     return this._disabled;
   }
 
@@ -278,9 +329,13 @@ export class SelectComponent implements OnInit {
   private _disabled:boolean = false;
   private _active:Array<any> = [];
 
-  public constructor(element:ElementRef) {
+  public constructor(element:ElementRef, private sanitizer:DomSanitizer) {
     this.element = element;
     this.clickedOutside = this.clickedOutside.bind(this);
+  }
+
+  public sanitize(html:string):SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
   public inputEvent(e:any, isUpMode:boolean = false):void {
@@ -390,7 +445,7 @@ export class SelectComponent implements OnInit {
     }
   }
 
-  public clickedOutside():void  {
+  public clickedOutside():void {
     this.inputMode = false;
     this.optionsOpened = false;
   }
@@ -550,7 +605,8 @@ export class SelectComponent implements OnInit {
 export class Behavior {
   public optionsMap:Map<string, number> = new Map<string, number>();
 
-  public actor: SelectComponent;
+  public actor:SelectComponent;
+
   public constructor(actor:SelectComponent) {
     this.actor = actor;
   }
