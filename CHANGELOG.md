@@ -1,3 +1,28 @@
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/valor-software/ng2-select/compare/v1.0.3...v1.1.1) (2016-10-18)
+
+
+### Bug Fixes
+
+* firefox issue ([#273](https://github.com/valor-software/ng2-select/issues/273)) ([f83764f](https://github.com/valor-software/ng2-select/commit/f83764f))
+* **docs:** updated property name for active items ([#318](https://github.com/valor-software/ng2-select/issues/318)) ([d39def2](https://github.com/valor-software/ng2-select/commit/d39def2)), closes [#307](https://github.com/valor-software/ng2-select/issues/307)
+* **filter:** possible dupes in filter ([#212](https://github.com/valor-software/ng2-select/issues/212)) ([7f4e9f6](https://github.com/valor-software/ng2-select/commit/7f4e9f6))
+* **options:** fixed the disabled state ([#225](https://github.com/valor-software/ng2-select/issues/225)) ([388506f](https://github.com/valor-software/ng2-select/commit/388506f))
+* **README:** Update docs with correct selector ng-select ([#148](https://github.com/valor-software/ng2-select/issues/148)) ([8aee01c](https://github.com/valor-software/ng2-select/commit/8aee01c))
+* **select:**  issue [#437](https://github.com/valor-software/ng2-select/issues/437) ([#454](https://github.com/valor-software/ng2-select/issues/454)) ([926e14d](https://github.com/valor-software/ng2-select/commit/926e14d))
+* **select:** allow empty items ([2c090f3](https://github.com/valor-software/ng2-select/commit/2c090f3))
+
+
+### Features
+
+* **css:** removed most hardcoded css, instead rely on bootstrap css classes ([#214](https://github.com/valor-software/ng2-select/issues/214)) ([c178431](https://github.com/valor-software/ng2-select/commit/c178431))
+* **input:** Added selectable inputfields instead of forcing id and text. ([#213](https://github.com/valor-software/ng2-select/issues/213)) ([cf7f110](https://github.com/valor-software/ng2-select/commit/cf7f110))
+* programmatically select active items ([#223](https://github.com/valor-software/ng2-select/issues/223)) ([1ddbcd9](https://github.com/valor-software/ng2-select/commit/1ddbcd9))
+* **package:** update to angular 2.0.0 ([#412](https://github.com/valor-software/ng2-select/issues/412)) ([10aeaba](https://github.com/valor-software/ng2-select/commit/10aeaba))
+* **package:** updated to rc.4 and new forms ([#311](https://github.com/valor-software/ng2-select/issues/311)) ([5b992e9](https://github.com/valor-software/ng2-select/commit/5b992e9))
+
+
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/valor-software/ng2-select/compare/v1.0.3...v1.1.0) (2016-09-21)
 
