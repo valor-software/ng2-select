@@ -173,6 +173,7 @@ let styles = `
      *ngIf="multiple === true"
      (keyup)="mainClick($event)"
      (focus)="focusToInput('')"
+     [offClick]="clickedOutside"
      class="ui-select-container ui-select-multiple dropdown form-control open">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <span class="ui-select-match">
