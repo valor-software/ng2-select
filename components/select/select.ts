@@ -108,7 +108,8 @@ let styles = `
      *ngIf="multiple === false"
      (keyup)="mainClick($event)"
      [offClick]="clickedOutside"
-     class="ui-select-container dropdown open">
+     class="ui-select-container dropdown"
+     [ngClass]="{'open': optionsOpened && options && options.length > 0}">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <div class="ui-select-match"
          *ngIf="!inputMode">
@@ -135,7 +136,7 @@ let styles = `
            *ngIf="inputMode"
            placeholder="{{active.length <= 0 ? placeholder : ''}}">
      <!-- options template -->
-     <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
+     <ul *ngIf="!firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
         <li *ngFor="let o of options" role="menuitem">
           <div class="ui-select-choices-row"
@@ -149,7 +150,7 @@ let styles = `
         </li>
       </ul>
   
-      <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
+      <ul *ngIf="firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
         <li *ngFor="let c of options; let index=index" role="menuitem">
           <div class="divider dropdown-divider" *ngIf="index > 0"></div>
@@ -173,7 +174,8 @@ let styles = `
      *ngIf="multiple === true"
      (keyup)="mainClick($event)"
      (focus)="focusToInput('')"
-     class="ui-select-container ui-select-multiple dropdown form-control open">
+     class="ui-select-container ui-select-multiple dropdown form-control"
+     [ngClass]="{'open': optionsOpened && options && options.length > 0}">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <span class="ui-select-match">
         <span *ngFor="let a of active">
@@ -201,7 +203,7 @@ let styles = `
            placeholder="{{active.length <= 0 ? placeholder : ''}}"
            role="combobox">
      <!-- options template -->
-     <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
+     <ul *ngIf="!firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
         <li *ngFor="let o of options" role="menuitem">
           <div class="ui-select-choices-row"
@@ -215,7 +217,7 @@ let styles = `
         </li>
       </ul>
   
-      <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
+      <ul *ngIf="firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
         <li *ngFor="let c of options; let index=index" role="menuitem">
           <div class="divider dropdown-divider" *ngIf="index > 0"></div>
