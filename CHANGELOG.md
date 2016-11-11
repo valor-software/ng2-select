@@ -1,3 +1,13 @@
+<a name="1.1.2"></a>
+## [1.1.2](https://github.com/valor-software/ng2-select/compare/v1.1.1...v1.1.2) (2016-11-11)
+
+
+### Bug Fixes
+
+* **close:** dropdown by missclick ([#515](https://github.com/valor-software/ng2-select/issues/515)) ([43b4c10](https://github.com/valor-software/ng2-select/commit/43b4c10))
+
+
+
 <a name="1.1.1"></a>
 ## [1.1.1](https://github.com/valor-software/ng2-select/compare/v1.0.3...v1.1.1) (2016-10-18)
 
