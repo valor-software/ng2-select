@@ -13,12 +13,10 @@ module.exports = {
   spec: './spec-bundle.js',
   // webpack entry
   entry: {
-    polyfills: './demo/polyfills.ts',
-    vndr: './demo/vendor.ts',
-    main: './demo/index.ts'
+    main: ['./demo/polyfills.ts', './demo/vendor.ts', './demo/index.ts']
   },
   commonChunks: {
-    name: ['polyfills', 'vndr'].reverse()
+    name: ['main']
   },
   // webpack alias
   alias: {},
