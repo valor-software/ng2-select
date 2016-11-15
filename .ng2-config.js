@@ -14,11 +14,11 @@ module.exports = {
   // webpack entry
   entry: {
     polyfills: './demo/polyfills.ts',
-    vendor: './demo/vendor.ts',
+    vndr: './demo/vendor.ts',
     main: './demo/index.ts'
   },
   commonChunks: {
-    name: ['polyfills', 'vendor'].reverse()
+    name: ['polyfills', 'vndr'].reverse()
   },
   // webpack alias
   alias: {},
