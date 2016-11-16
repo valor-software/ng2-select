@@ -303,6 +303,7 @@ export class SelectComponent implements OnInit {
     return this._active;
   }
 
+  private isSelectedNow: boolean = false;
   private inputMode:boolean = false;
   private optionsOpened:boolean = false;
   private behavior:OptionsBehavior;
@@ -356,17 +357,17 @@ export class SelectComponent implements OnInit {
       e.preventDefault();
     }
     // left
-    if (!isUpMode && e.keyCode === 37 && this._items.length > 0) {
-      this.behavior.first();
-      e.preventDefault();
-      return;
-    }
+    // if (!isUpMode && e.keyCode === 37 && this._items.length > 0) {
+    //   this.behavior.first();
+    //   e.preventDefault();
+    //   return;
+    // }
     // right
-    if (!isUpMode && e.keyCode === 39 && this._items.length > 0) {
-      this.behavior.last();
-      e.preventDefault();
-      return;
-    }
+    // if (!isUpMode && e.keyCode === 39 && this._items.length > 0) {
+    //   this.behavior.last();
+    //   e.preventDefault();
+    //   return;
+    // }
     // up
     if (!isUpMode && e.keyCode === 38) {
       this.behavior.prev();
@@ -425,8 +426,11 @@ export class SelectComponent implements OnInit {
   }
 
   public clickedOutside():void {
-    this.inputMode = false;
-    this.optionsOpened = false;
+    if (!this.isSelectedNow) {
+      this.inputMode = false;
+      this.optionsOpened = false;
+    }
+    this.isSelectedNow = false;
   }
 
   public get firstItemHasChildren():boolean {
@@ -434,6 +438,7 @@ export class SelectComponent implements OnInit {
   }
 
   protected matchClick(e:any):void {
+    this.isSelectedNow = true;
     if (this._disabled === true) {
       return;
     }
