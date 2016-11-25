@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, ElementRef, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SelectItem } from './select-item';
 import { stripTags } from './select-pipes';
 import { OptionsBehavior } from './select-interfaces';
@@ -247,16 +248,15 @@ export class SelectComponent implements OnInit {
   @Input()
   public set items(value:Array<any>) {
     if (!value) {
-      this._items = this.itemObjects = [];
+      this._items = [];
+      this.itemObjects.next(this._items);
     } else {
       this._items = value.filter((item:any) => {
-        // if ((typeof item === 'string' && item) || (typeof item === 'object' && item && item.text && item.id)) {
         if ((typeof item === 'string') || (typeof item === 'object' && item.text)) {
           return item;
         }
       });
-      // this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField]})));
-      this.itemObjects = this._items.map((item:any) => new SelectItem(item));
+      this.itemObjects.next(this._items.map((item:any) => new SelectItem(item)));
     }
   }
 
@@ -295,7 +295,7 @@ export class SelectComponent implements OnInit {
   @Output() public typed:EventEmitter<any> = new EventEmitter();
 
   public options:Array<SelectItem> = [];
-  public itemObjects:Array<SelectItem> = [];
+  public itemObjects:BehaviorSubject<Array<SelectItem>> = new BehaviorSubject([]);
   public activeOption:SelectItem;
   public element:ElementRef;
 
@@ -399,6 +399,15 @@ export class SelectComponent implements OnInit {
   public ngOnInit():any {
     this.behavior = (this.firstItemHasChildren) ?
       new ChildrenBehavior(this) : new GenericBehavior(this);
+
+    this.itemObjects.subscribe((options:Array<SelectItem>) => {
+      this.options = options.filter((option:SelectItem) => (this.multiple === false ||
+      this.multiple === true && !this.active.find((o:SelectItem) => option.text === o.text)));
+
+      if (this.options.length > 0) {
+        this.behavior.first();
+      }
+    });
   }
 
   public remove(item:SelectItem):void {
@@ -430,7 +439,7 @@ export class SelectComponent implements OnInit {
   }
 
   public get firstItemHasChildren():boolean {
-    return this.itemObjects[0] && this.itemObjects[0].hasChildren();
+    return this.itemObjects.getValue()[0] && this.itemObjects.getValue()[0].hasChildren();
   }
 
   protected matchClick(e:any):void {
@@ -444,7 +453,7 @@ export class SelectComponent implements OnInit {
     }
   }
 
-  protected  mainClick(event:any):void {
+  protected mainClick(event:any):void {
     if (this.inputMode === true || this._disabled === true) {
       return;
     }
@@ -474,11 +483,11 @@ export class SelectComponent implements OnInit {
     this.inputEvent(event);
   }
 
-  protected  selectActive(value:SelectItem):void {
+  protected selectActive(value:SelectItem):void {
     this.activeOption = value;
   }
 
-  protected  isActive(value:SelectItem):boolean {
+  protected isActive(value:SelectItem):boolean {
     return this.activeOption.text === value.text;
   }
 
@@ -493,13 +502,6 @@ export class SelectComponent implements OnInit {
   }
 
   private open():void {
-    this.options = this.itemObjects
-      .filter((option:SelectItem) => (this.multiple === false ||
-      this.multiple === true && !this.active.find((o:SelectItem) => option.text === o.text)));
-
-    if (this.options.length > 0) {
-      this.behavior.first();
-    }
     this.optionsOpened = true;
   }
 
@@ -551,7 +553,7 @@ export class Behavior {
   public fillOptionsMap():void {
     this.optionsMap.clear();
     let startPos = 0;
-    this.actor.itemObjects
+    this.actor.itemObjects.getValue()
       .map((item:SelectItem) => {
         startPos = item.fillChildrenHash(this.optionsMap, startPos);
       });
@@ -622,7 +624,7 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
   }
 
   public filter(query:RegExp):void {
-    let options = this.actor.itemObjects
+    let options = this.actor.itemObjects.getValue()
       .filter((option:SelectItem) => {
         return stripTags(option.text).match(query) &&
           (this.actor.multiple === false ||
@@ -698,7 +700,7 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
     let options:Array<SelectItem> = [];
     let optionsMap:Map<string, number> = new Map<string, number>();
     let startPos = 0;
-    for (let si of this.actor.itemObjects) {
+    for (let si of this.actor.itemObjects.getValue()) {
       let children:Array<SelectItem> = si.children.filter((option:SelectItem) => query.test(option.text));
       startPos = si.fillChildrenHash(optionsMap, startPos);
       if (children.length > 0) {
