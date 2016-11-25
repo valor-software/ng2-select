@@ -1,8 +1,9 @@
 {
   "extends": "tslint-config-valorsoft",
-  "rulesDirectory": "./node_modules/codelyzer",
+  "rulesDirectory": ["./node_modules/codelyzer"],
   "rules": {
-    "component-selector-name": [false, ""],
-    "only-arrow-functions": false
+    "component-selector-name": [false, "kebab-case"],
+    "only-arrow-functions": [false],
+    "linebreak-style": []
   }
 }

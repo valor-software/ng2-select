@@ -58,7 +58,7 @@ function getSystemJsBundleConfig(cb) {
     return memo;
   }, {});
   config.meta.moment = {build: false};
-  return cb(null, config);
+  return cb(config, null);
 }
 
 function cleanBundlesFolder(cb) {
