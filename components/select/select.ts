@@ -9,6 +9,11 @@ let styles = `
   .ui-select-toggle {
     position: relative;
   }
+
+  /* Fix caret going into new line in Firefox */
+  .ui-select-placeholder {
+    float: left;
+  }
   
   /* Fix Bootstrap dropdown position when inside a input-group */
   .input-group > .dropdown {
