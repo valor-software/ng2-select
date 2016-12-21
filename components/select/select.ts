@@ -198,6 +198,7 @@ let styles = `
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
            (click)="matchClick($event)"
+           (blur)="doEvent('blur')"
            [disabled]="disabled"
            autocomplete="false"
            autocorrect="off"
@@ -298,6 +299,7 @@ export class SelectComponent implements OnInit {
   @Output() public selected:EventEmitter<any> = new EventEmitter();
   @Output() public removed:EventEmitter<any> = new EventEmitter();
   @Output() public typed:EventEmitter<any> = new EventEmitter();
+  @Output() public blur:EventEmitter<any> = new EventEmitter();
 
   public options:Array<SelectItem> = [];
   public itemObjects:Array<SelectItem> = [];
