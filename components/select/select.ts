@@ -98,30 +98,6 @@ let styles = `
 .ui-select-multiple .ui-select-match-item-close {
   margin-left: 10px;
 }
-
-
-/*
-TODO:
-Make sure nothing is needed in these blocks.
-Hardcoded css like these should be avoided, and instead be provided through Input() variables.
-This is what dropdownItemClass and dropdownItemActiveClass are for.
-
-  .ui-select-choices-row>a {
-      display: block;
-      padding: 3px 20px;
-      clear: both;
-      font-weight: 400;
-      line-height: 1.42857143;
-      color: #333;
-      white-space: nowrap;
-  }
-  .ui-select-choices-row.active>a {
-      color: #fff;
-      text-decoration: none;
-      outline: 0;
-      background-color: #428bca;
-  }
-*/
 `;
 
 @Component({
