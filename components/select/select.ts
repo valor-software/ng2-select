@@ -17,6 +17,11 @@ let styles = `
   height: 100%;
 }
 
+/* Fix caret going into new line in Firefox */
+.ui-select-placeholder {
+  float: left;
+}
+
 /* Fix Bootstrap dropdown position when inside a input-group */
 /*
   TODO: this does not work with Angular2 css encapsulation!
@@ -119,40 +124,6 @@ This is what dropdownItemClass and dropdownItemActiveClass are for.
 */
 `;
 
-let optionsTemplate = `
-    <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
-        class="ui-select-choices" [ngClass]="dropdownMenuClass" role="menu">
-      <li *ngFor="let o of options" role="menuitem">
-        <div class="ui-select-choices-row"
-             [ngClass]="{dropdownItemActiveClass: isActive(o)}"
-             (mouseenter)="selectActive(o)"
-             (click)="selectMatch(o, $event)">
-          <a href="javascript:void(0)" [ngClass]="dropdownItemClass">
-            <div [innerHtml]="sanitize(o[textField] | highlight:inputValue)"></div>
-          </a>
-        </div>
-      </li>
-    </ul>
-
-    <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
-        class="ui-select-choices" [ngClass]="dropdownMenuClass" role="menu">
-      <li *ngFor="let c of options; let index=index" role="menuitem">
-        <div [ngClass]="dropdownDividerClass" *ngIf="index > 0"></div>
-        <div [ngClass]="dropdownHeaderClass">{{c[textField]}}</div>
-
-        <div *ngFor="let o of c[childrenField]"
-             class="ui-select-choices-row"
-             [ngClass]="{dropdownItemActiveClass: isActive(o)}"
-             (mouseenter)="selectActive(o)"
-             (click)="selectMatch(o, $event)">
-          <a href="javascript:void(0)" [ngClass]="dropdownItemClass">
-            <div [innerHtml]="sanitize(o[textField] | highlight:inputValue)"></div>
-          </a>
-        </div>
-      </li>
-    </ul>
-`;
-
 @Component({
   selector: 'ng-select',
   styles: [styles],
@@ -192,13 +163,45 @@ let optionsTemplate = `
            [ngClass]="inputClass"
            *ngIf="inputMode"
            placeholder="{{active.length <= 0 ? placeholder : ''}}">
-     ${optionsTemplate}
+    <!-- options template -->
+    <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
+        class="ui-select-choices" [ngClass]="dropdownMenuClass" role="menu">
+      <li *ngFor="let o of options" role="menuitem">
+        <div class="ui-select-choices-row"
+            [ngClass]="{dropdownItemActiveClass: isActive(o)}"
+            (mouseenter)="selectActive(o)"
+            (click)="selectMatch(o, $event)">
+          <a href="javascript:void(0)" [ngClass]="dropdownItemClass">
+            <div [innerHtml]="sanitize(o[textField] | highlight:inputValue)"></div>
+          </a>
+        </div>
+      </li>
+    </ul>
+
+    <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
+        class="ui-select-choices" [ngClass]="dropdownMenuClass" role="menu">
+      <li *ngFor="let c of options; let index=index" role="menuitem">
+        <div [ngClass]="dropdownDividerClass" *ngIf="index > 0"></div>
+        <div [ngClass]="dropdownHeaderClass">{{c[textField]}}</div>
+
+        <div *ngFor="let o of c[childrenField]"
+            class="ui-select-choices-row"
+            [ngClass]="{dropdownItemActiveClass: isActive(o)}"
+            (mouseenter)="selectActive(o)"
+            (click)="selectMatch(o, $event)">
+          <a href="javascript:void(0)" [ngClass]="dropdownItemClass">
+            <div [innerHtml]="sanitize(o[textField] | highlight:inputValue)"></div>
+          </a>
+        </div>
+      </li>
+    </ul>
   </div>
 
   <div tabindex="0"
      *ngIf="multiple === true"
      (keyup)="mainClick($event)"
      (focus)="focusToInput('')"
+     [offClick]="clickedOutside"
      class="ui-select-container ui-select-multiple"
      [ngClass]="inputClass + ' ' + dropdownClass + ' ' + openClass">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
@@ -226,7 +229,38 @@ let optionsTemplate = `
            [ngClass]="inputClass"
            placeholder="{{active.length <= 0 ? placeholder : ''}}"
            role="combobox">
-     ${optionsTemplate}
+    <!-- options template -->
+    <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
+        class="ui-select-choices" [ngClass]="dropdownMenuClass" role="menu">
+      <li *ngFor="let o of options" role="menuitem">
+        <div class="ui-select-choices-row"
+            [ngClass]="{dropdownItemActiveClass: isActive(o)}"
+            (mouseenter)="selectActive(o)"
+            (click)="selectMatch(o, $event)">
+          <a href="javascript:void(0)" [ngClass]="dropdownItemClass">
+            <div [innerHtml]="sanitize(o[textField] | highlight:inputValue)"></div>
+          </a>
+        </div>
+      </li>
+    </ul>
+
+    <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
+        class="ui-select-choices" [ngClass]="dropdownMenuClass" role="menu">
+      <li *ngFor="let c of options; let index=index" role="menuitem">
+        <div [ngClass]="dropdownDividerClass" *ngIf="index > 0"></div>
+        <div [ngClass]="dropdownHeaderClass">{{c[textField]}}</div>
+
+        <div *ngFor="let o of c[childrenField]"
+            class="ui-select-choices-row"
+            [ngClass]="{dropdownItemActiveClass: isActive(o)}"
+            (mouseenter)="selectActive(o)"
+            (click)="selectMatch(o, $event)">
+          <a href="javascript:void(0)" [ngClass]="dropdownItemClass">
+            <div [innerHtml]="sanitize(o[textField] | highlight:inputValue)"></div>
+          </a>
+        </div>
+      </li>
+    </ul>
   </div>
   `
 })
@@ -284,6 +318,7 @@ export class SelectComponent implements OnInit {
   @Output() public selected:EventEmitter<any> = new EventEmitter();
   @Output() public removed:EventEmitter<any> = new EventEmitter();
   @Output() public typed:EventEmitter<any> = new EventEmitter();
+  @Output() public opened:EventEmitter<any> = new EventEmitter();
 
   public options:Array<any> = [];
   public activeOption:any;
@@ -293,8 +328,17 @@ export class SelectComponent implements OnInit {
     return this._active;
   }
 
+  private set optionsOpened(value:boolean){
+    this._optionsOpened = value;
+    this.opened.emit(value);
+  }
+
+  private get optionsOpened(): boolean{
+    return this._optionsOpened;
+  }
+
   private inputMode:boolean = false;
-  private optionsOpened:boolean = false;
+  private _optionsOpened:boolean = false;
   private behavior:OptionsBehavior;
   private inputValue:string = '';
   private _items:Array<any> = [];
