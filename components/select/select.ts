@@ -408,6 +408,8 @@ export class SelectComponent implements OnInit {
       this.inputValue = target.value;
       this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
       this.doEvent('typed', this.inputValue);
+    }else {
+      this.open();
     }
   }
 
