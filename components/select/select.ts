@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, ElementRef, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SelectItem } from './select-item';
 import { stripTags } from './select-pipes';
@@ -108,6 +109,15 @@ let styles = `
 @Component({
   selector: 'ng-select',
   styles: [styles],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      /* tslint:disable */
+      useExisting: forwardRef(() => SelectComponent),
+      /* tslint:enable */
+      multi: true
+    }
+  ],
   template: `
   <div tabindex="0"
      *ngIf="multiple === false"
@@ -242,7 +252,7 @@ let styles = `
   </div>
   `
 })
-export class SelectComponent implements OnInit {
+export class SelectComponent implements OnInit, ControlValueAccessor {
   @Input() public allowClear:boolean = false;
   @Input() public placeholder:string = '';
   @Input() public idField:string = 'id';
@@ -317,6 +327,9 @@ export class SelectComponent implements OnInit {
   private get optionsOpened(): boolean{
     return this._optionsOpened;
   }
+
+  protected onChange:any = Function.prototype;
+  protected onTouched:any = Function.prototype;
 
   private inputMode:boolean = false;
   private _optionsOpened:boolean = false;
@@ -437,6 +450,11 @@ export class SelectComponent implements OnInit {
     if ((this as any)[type] && value) {
       (this as any)[type].next(value);
     }
+
+    this.onTouched();
+    if (type === 'selected' || type === 'removed') {
+      this.onChange(this.active);
+    }
   }
 
   public clickedOutside():void {
@@ -447,6 +465,14 @@ export class SelectComponent implements OnInit {
   public get firstItemHasChildren():boolean {
     return this.itemObjects[0] && this.itemObjects[0].hasChildren();
   }
+
+  public writeValue(val:any):void {
+    this.active = val;
+    this.data.emit(this.active);
+  }
+
+  public registerOnChange(fn:(_:any) => {}):void {this.onChange = fn;}
+  public registerOnTouched(fn:() => {}):void {this.onTouched = fn;}
 
   protected matchClick(e:any):void {
     if (this._disabled === true) {
