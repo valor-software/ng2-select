@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, ElementRef, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SelectItem } from './select-item';
 import { stripTags } from './select-pipes';
@@ -8,6 +9,11 @@ import { escapeRegexp } from './common';
 let styles = `
   .ui-select-toggle {
     position: relative;
+  }
+
+  /* Fix caret going into new line in Firefox */
+  .ui-select-placeholder {
+    float: left;
   }
   
   /* Fix Bootstrap dropdown position when inside a input-group */
@@ -103,6 +109,15 @@ let styles = `
 @Component({
   selector: 'ng-select',
   styles: [styles],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      /* tslint:disable */
+      useExisting: forwardRef(() => SelectComponent),
+      /* tslint:enable */
+      multi: true
+    }
+  ],
   template: `
   <div tabindex="0"
      *ngIf="multiple === false"
@@ -143,7 +158,7 @@ let styles = `
                (mouseenter)="selectActive(o)"
                (click)="selectMatch(o, $event)">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text) | highlight:inputValue"></div>
+              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
             </a>
           </div>
         </li>
@@ -162,7 +177,7 @@ let styles = `
                (click)="selectMatch(o, $event)"
                [ngClass]="{'active': isActive(o)}">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text) | highlight:inputValue"></div>
+              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
             </a>
           </div>
         </li>
@@ -173,6 +188,7 @@ let styles = `
      *ngIf="multiple === true"
      (keyup)="mainClick($event)"
      (focus)="focusToInput('')"
+     [offClick]="clickedOutside"
      class="ui-select-container ui-select-multiple dropdown form-control open">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <span class="ui-select-match">
@@ -184,7 +200,7 @@ let styles = `
                <a class="close"
                   style="margin-left: 5px; padding: 0;"
                   (click)="removeClick(a, $event)">&times;</a>
-               <span>{{a.text}}</span>
+               <span [innerHtml]="sanitize(a.text)"></span>
            </span>
         </span>
     </span>
@@ -209,7 +225,7 @@ let styles = `
                (mouseenter)="selectActive(o)"
                (click)="selectMatch(o, $event)">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text) | highlight:inputValue"></div>
+              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
             </a>
           </div>
         </li>
@@ -228,7 +244,7 @@ let styles = `
                (click)="selectMatch(o, $event)"
                [ngClass]="{'active': isActive(o)}">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text) | highlight:inputValue"></div>
+              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
             </a>
           </div>
         </li>
@@ -236,7 +252,7 @@ let styles = `
   </div>
   `
 })
-export class SelectComponent implements OnInit {
+export class SelectComponent implements OnInit, ControlValueAccessor {
   @Input() public allowClear:boolean = false;
   @Input() public placeholder:string = '';
   @Input() public idField:string = 'id';
@@ -292,6 +308,7 @@ export class SelectComponent implements OnInit {
   @Output() public selected:EventEmitter<any> = new EventEmitter();
   @Output() public removed:EventEmitter<any> = new EventEmitter();
   @Output() public typed:EventEmitter<any> = new EventEmitter();
+  @Output() public opened:EventEmitter<any> = new EventEmitter();
 
   public options:Array<SelectItem> = [];
   public itemObjects:Array<SelectItem> = [];
@@ -302,8 +319,20 @@ export class SelectComponent implements OnInit {
     return this._active;
   }
 
+  private set optionsOpened(value:boolean){
+    this._optionsOpened = value;
+    this.opened.emit(value);
+  }
+
+  private get optionsOpened(): boolean{
+    return this._optionsOpened;
+  }
+
+  protected onChange:any = Function.prototype;
+  protected onTouched:any = Function.prototype;
+
   private inputMode:boolean = false;
-  private optionsOpened:boolean = false;
+  private _optionsOpened:boolean = false;
   private behavior:OptionsBehavior;
   private inputValue:string = '';
   private _items:Array<any> = [];
@@ -392,6 +421,8 @@ export class SelectComponent implements OnInit {
       this.inputValue = target.value;
       this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
       this.doEvent('typed', this.inputValue);
+    }else {
+      this.open();
     }
   }
 
@@ -421,6 +452,11 @@ export class SelectComponent implements OnInit {
     if ((this as any)[type] && value) {
       (this as any)[type].next(value);
     }
+
+    this.onTouched();
+    if (type === 'selected' || type === 'removed') {
+      this.onChange(this.active);
+    }
   }
 
   public clickedOutside():void {
@@ -431,6 +467,14 @@ export class SelectComponent implements OnInit {
   public get firstItemHasChildren():boolean {
     return this.itemObjects[0] && this.itemObjects[0].hasChildren();
   }
+
+  public writeValue(val:any):void {
+    this.active = val;
+    this.data.emit(this.active);
+  }
+
+  public registerOnChange(fn:(_:any) => {}):void {this.onChange = fn;}
+  public registerOnTouched(fn:() => {}):void {this.onTouched = fn;}
 
   protected matchClick(e:any):void {
     if (this._disabled === true) {
