@@ -1,16 +1,11 @@
 import { Component } from '@angular/core';
-import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass } from '@angular/common';
-import { BUTTON_DIRECTIVES } from 'ng2-bootstrap/ng2-bootstrap';
-
-import { SELECT_DIRECTIVES } from '../../../ng2-select';
 
 // webpack html imports
 let template = require('./children-demo.html');
 
 @Component({
   selector: 'children-demo',
-  template: template,
-  directives: [SELECT_DIRECTIVES, NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES, BUTTON_DIRECTIVES ]
+  template
 })
 export class ChildrenDemoComponent {
   public items:Array<any> = [

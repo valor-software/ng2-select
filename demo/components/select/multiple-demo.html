@@ -1,7 +1,6 @@
 <div style="width: 300px; margin-bottom: 20px;">
   <h3>Select multiple cities</h3>
-  <ng-select [data]="value"
-              [multiple]="true"
+  <ng-select  [multiple]="true"
               [items]="items"
               [disabled]="disabled"
               (data)="refreshValue($event)"
