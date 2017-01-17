@@ -421,6 +421,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       this.inputValue = target.value;
       this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
       this.doEvent('typed', this.inputValue);
+    }else {
+      this.open();
     }
   }
 
