@@ -200,7 +200,7 @@ let styles = `
                <a class="close"
                   style="margin-left: 5px; padding: 0;"
                   (click)="remove(a)">&times;</a>
-               <span>{{a.text}}</span>
+               <span [innerHtml]="sanitize(a.text)"></span>
            </span>
         </span>
     </span>
