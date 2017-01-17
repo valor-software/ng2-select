@@ -137,7 +137,7 @@ let styles = `
               [innerHTML]="sanitize(active[0].text)"></span>
         <i class="dropdown-toggle pull-right"></i>
         <i class="caret pull-right"></i>
-        <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right" style="margin-right: 10px; padding: 0;" (click)="remove(activeOption)">
+        <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right" style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">
            <i class="glyphicon glyphicon-remove"></i>
         </a>
       </span>
@@ -199,7 +199,7 @@ let styles = `
                   [ngClass]="{'btn-default': true}">
                <a class="close"
                   style="margin-left: 5px; padding: 0;"
-                  (click)="remove(a)">&times;</a>
+                  (click)="removeClick(a, $event)">&times;</a>
                <span [innerHtml]="sanitize(a.text)"></span>
            </span>
         </span>
@@ -523,6 +523,11 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
   protected  isActive(value:SelectItem):boolean {
     return this.activeOption.text === value.text;
+  }
+
+  protected removeClick(value: SelectItem, event: any): void {
+    event.stopPropagation();
+    this.remove(value);
   }
 
   private focusToInput(value:string = ''):void {
