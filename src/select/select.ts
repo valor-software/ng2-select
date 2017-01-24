@@ -1,4 +1,14 @@
-import { Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ElementRef,
+  OnInit,
+  forwardRef,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SelectItem } from './select-item';
@@ -252,7 +262,7 @@ let styles = `
   </div>
   `
 })
-export class SelectComponent implements OnInit, ControlValueAccessor {
+export class SelectComponent implements OnInit, ControlValueAccessor, OnChanges {
   @Input() public allowClear:boolean = false;
   @Input() public placeholder:string = '';
   @Input() public idField:string = 'id';
@@ -428,6 +438,12 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   public ngOnInit():any {
     this.behavior = (this.firstItemHasChildren) ?
       new ChildrenBehavior(this) : new GenericBehavior(this);
+  }
+
+  public ngOnChanges(changes: SimpleChanges):void {
+    if(this.inputValue && changes['items'].currentValue !== changes['items'].previousValue) {
+      this.open();
+    }
   }
 
   public remove(item:SelectItem):void {
