@@ -1,16 +1,8 @@
-# Native UI Select Angular2 component ([demo](http://valor-software.com/ng2-select/))
-## ng2-select [![npm version](https://badge.fury.io/js/ng2-select.svg)](http://badge.fury.io/js/ng2-select) [![npm downloads](https://img.shields.io/npm/dm/ng2-select.svg)](https://npmjs.org/ng2-select)
-
-Follow me [![twitter](https://img.shields.io/twitter/follow/valorkin.svg?style=social&label=%20valorkin)](https://twitter.com/valorkin) to be notified about new releases.
+# Native UI Select Angular component ([demo](http://valor-software.com/ng2-select/))
+## ng2-select [![npm version](https://badge.fury.io/js/ng2-select.svg)](http://badge.fury.io/js/ng2-select) [![npm downloads](https://img.shields.io/npm/dm/ng2-select.svg)](https://npmjs.org/ng2-select)[![slack](https://ngx-slack.herokuapp.com/badge.svg)](https://ngx-slack.herokuapp.com)
 
 [![Angular 2 Style Guide](https://mgechev.github.io/angular2-style-guide/images/badge.svg)](https://github.com/mgechev/angular2-style-guide)
-[![Code Climate](https://codeclimate.com/github/valor-software/ng2-select/badges/gpa.svg)](https://codeclimate.com/github/valor-software/ng2-select)
-[![Build Status](https://travis-ci.org/valor-software/ng2-select.svg?branch=master)](https://travis-ci.org/valor-software/ng2-select)
-[![Join the chat at https://gitter.im/valor-software/ng2-bootstrap](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/valor-software/ng2-bootstrap?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![devDependency Status](https://david-dm.org/valor-software/ng2-select/dev-status.svg)](https://david-dm.org/valor-software/ng2-select#info=devDependencies)
-[![Throughput Graph](https://graphs.waffle.io/valor-software/ng2-select/throughput.svg)](https://waffle.io/valor-software/ng2-select/metrics)
-
-
+[![Build Status](https://travis-ci.org/valor-software/ng2-select.svg?branch=development)](https://travis-ci.org/valor-software/ng2-select)
 
 ## Quick start
 
