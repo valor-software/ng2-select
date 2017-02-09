@@ -3,6 +3,7 @@ export class SelectItem {
   public text:string;
   public children:Array<SelectItem>;
   public parent:SelectItem;
+  public disabled?: boolean;
 
   public constructor(source:any) {
     if (typeof source === 'string') {
@@ -11,6 +12,7 @@ export class SelectItem {
     if (typeof source === 'object') {
       this.id = source.id || source.text;
       this.text = source.text;
+      this.disabled = source.disabled;
       if (source.children && source.text) {
         this.children = source.children.map((c:any) => {
           let r:SelectItem = new SelectItem(c);
@@ -39,6 +41,7 @@ export class SelectItem {
     r.id = this.id;
     r.text = this.text;
     r.parent = this.parent;
+    r.disabled = this.disabled;
     return r;
   }
 }

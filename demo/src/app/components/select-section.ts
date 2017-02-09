@@ -25,6 +25,11 @@ let tabDesc: any = {
     heading: 'Rich',
     ts: require('!!raw-loader?lang=typescript!./select/rich-demo.ts'),
     html: require('!!raw-loader?lang=markup!./select/rich-demo.html')
+  },
+  disabled: {
+    heading: 'Disabled options',
+    ts: require('!!raw-loader?lang=typescript!./select/disabled-demo.ts'),
+    html: require('!!raw-loader?lang=markup!./select/disabled-demo.html')
   }
 };
 
@@ -45,6 +50,9 @@ let tabDesc: any = {
       </tab>
       <tab heading="Rich">
         <sample-section [desc]="tabDesc.rich"><rich-demo></rich-demo></sample-section>
+      </tab>
+      <tab heading="Disabled Option">
+        <sample-section [desc]="tabDesc.disabled"><disabled-demo></disabled-demo></sample-section>
       </tab>
     </tabset>
   </div>

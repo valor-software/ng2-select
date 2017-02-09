@@ -72,6 +72,12 @@ let styles = `
       outline: 0;
       background-color: #428bca;
   }
+  .ui-select-choices-row.disabled{
+    pointer-events:none;
+  }
+  .ui-select-choices-row.disabled a{
+    color:lightgray;
+  }
   
   .ui-select-multiple {
     height: auto;
@@ -133,7 +139,7 @@ let styles = `
           style="outline: 0;">
         <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
         <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
-              [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
+              [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0} "
               [innerHTML]="sanitize(active[0].text)"></span>
         <i class="dropdown-toggle pull-right"></i>
         <i class="caret pull-right"></i>
@@ -153,10 +159,10 @@ let styles = `
      <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
         <li *ngFor="let o of options" role="menuitem">
-          <div class="ui-select-choices-row"
+          <div class="ui-select-choices-row paco"
                [class.active]="isActive(o)"
                (mouseenter)="selectActive(o)"
-               (click)="selectMatch(o, $event)">
+               (click)="selectMatch(o, $event)" [ngClass]="{'disabled' : o.disabled}">
             <a href="javascript:void(0)" class="dropdown-item">
               <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
             </a>
@@ -175,7 +181,7 @@ let styles = `
                [class.active]="isActive(o)"
                (mouseenter)="selectActive(o)"
                (click)="selectMatch(o, $event)"
-               [ngClass]="{'active': isActive(o)}">
+               [ngClass]="{'active': isActive(o),'disabled' : o.disabled}">
             <a href="javascript:void(0)" class="dropdown-item">
               <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
             </a>
@@ -195,8 +201,7 @@ let styles = `
         <span *ngFor="let a of active">
             <span class="ui-select-match-item btn btn-default btn-secondary btn-xs"
                   tabindex="-1"
-                  type="button"
-                  [ngClass]="{'btn-default': true}">
+                  type="button">
                <a class="close"
                   style="margin-left: 5px; padding: 0;"
                   (click)="removeClick(a, $event)">&times;</a>
@@ -223,9 +228,9 @@ let styles = `
           <div class="ui-select-choices-row"
                [class.active]="isActive(o)"
                (mouseenter)="selectActive(o)"
-               (click)="selectMatch(o, $event)">
+               (click)="selectMatch(o, $event)" [ngClass]="{'disabled' : o.disabled}">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div><span>{{o.disabled}}</span>
             </a>
           </div>
         </li>
@@ -242,9 +247,9 @@ let styles = `
                [class.active]="isActive(o)"
                (mouseenter)="selectActive(o)"
                (click)="selectMatch(o, $event)"
-               [ngClass]="{'active': isActive(o)}">
+               [ngClass]="{'active': isActive(o), 'disabled': o.disabled}">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div><span>{{o.disabled}}</span>
             </a>
           </div>
         </li>
@@ -257,6 +262,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   @Input() public placeholder:string = '';
   @Input() public idField:string = 'id';
   @Input() public textField:string = 'text';
+  @Input() public disabledField:string = 'disabled';
   @Input() public childrenField:string = 'children';
   @Input() public multiple:boolean = false;
 
@@ -270,7 +276,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
           return item;
         }
       });
-      this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField], children: item[this.childrenField]})));
+      this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField], disabled: item[this.disabledField], children: item[this.childrenField]})));
     }
   }
 
@@ -296,7 +302,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       this._active = selectedItems.map((item:any) => {
         let data = areItemsStrings
           ? item
-          : {id: item[this.idField], text: item[this.textField]};
+          : {id: item[this.idField], text: item[this.textField],disabled: item[this.disabledField]};
 
         return new SelectItem(data);
       });
