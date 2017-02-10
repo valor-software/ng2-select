@@ -1,10 +1,14 @@
-import { Component } from '@angular/core';
-
+import {Component, ViewChild} from '@angular/core';
+import {SelectComponent} from "../../../../../src/select/select";
 @Component({
   selector: 'multiple-demo',
   templateUrl: './multiple-demo.html'
 })
 export class MultipleDemoComponent {
+
+  @ViewChild('ngSelectMultipleCities')
+  private ngSelectMultipleCities: SelectComponent;
+
   public items:Array<string> = ['Amsterdam', 'Antwerp', 'Athens', 'Barcelona',
     'Berlin', 'Birmingham', 'Bradford', 'Bremen', 'Brussels', 'Bucharest',
     'Budapest', 'Cologne', 'Copenhagen', 'Dortmund', 'Dresden', 'Dublin', 'Düsseldorf',
@@ -18,6 +22,14 @@ export class MultipleDemoComponent {
   private value:any = ['Athens'];
   private _disabledV:string = '0';
   private disabled:boolean = false;
+
+  public unselectAllItems():void{
+    this.ngSelectMultipleCities.unselectAllItems();
+  }
+
+  public selectAllItems():void{
+    this.ngSelectMultipleCities.selectAllItems();
+  }
 
   private get disabledV():string {
     return this._disabledV;

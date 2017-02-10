@@ -475,6 +475,40 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   public registerOnChange(fn:(_:any) => {}):void {this.onChange = fn;}
   public registerOnTouched(fn:() => {}):void {this.onTouched = fn;}
 
+  /**
+   * this will select all items automatically,
+   * applies only when {@link SelectComponent.multiple} === true
+   */
+  public selectAllItems():void{
+    if(this.multiple === true){
+      let allItems = this.itemObjects || [];
+      let allItemsLength= allItems.length;
+      if((typeof allItems!=="undefined") && (allItemsLength!==0)){
+        this.active = [];//reset before reassignment to prevent double update in view html
+        for(let i:number=0;i < allItemsLength; i++) {
+          this.active.push(allItems[i]);
+          this.data.next(this.active);
+        }
+      }
+    }
+  }
+
+  /**
+   * this will unselect all items previously selected,
+   * applies only when {@link SelectComponent.multiple} === true
+   */
+  unselectAllItems():void{
+    if(this.multiple === true){
+      let activeItems:Array<any> = this.active || [];
+      let activeItemsLength:number = activeItems.length;
+      if((typeof activeItems!=="undefined") && (activeItemsLength !== 0)){
+        for(let i:number=0;i < activeItemsLength; i++) {
+            this.remove(activeItems[i]);
+        }
+      }
+    }
+  }
+
   protected matchClick(e:any):void {
     if (this._disabled === true) {
       return;
