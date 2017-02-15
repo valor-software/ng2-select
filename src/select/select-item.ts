@@ -9,7 +9,7 @@ export class SelectItem {
       this.id = this.text = source;
     }
     if (typeof source === 'object') {
-      this.id = source.id || source.text;
+      this.id = source.id === undefined ? source.text : this.id;
       this.text = source.text;
       if (source.children && source.text) {
         this.children = source.children.map((c:any) => {
