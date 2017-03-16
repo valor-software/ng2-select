@@ -213,7 +213,7 @@ let styles = `
            </span>
         </span>
     </span>
-    <div [hidden]="!inputMode">
+    <div>
       <input type="text"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
