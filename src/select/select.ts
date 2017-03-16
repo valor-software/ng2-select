@@ -1,4 +1,6 @@
-import { Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef } from '@angular/core';
+import {
+  Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef, HostListener
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SelectItem } from './select-item';
@@ -128,11 +130,10 @@ let styles = `
   <div tabindex="0"
      *ngIf="multiple === false"
      (keyup)="mainClick($event)"
-     [offClick]="clickedOutside"
      class="ui-select-container dropdown open">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <div class="ui-select-match"
-         *ngIf="!inputMode">
+         [hidden]="inputMode">
       <span tabindex="-1"
           class="btn btn-default btn-secondary form-control ui-select-toggle"
           (click)="matchClick($event)"
@@ -148,18 +149,21 @@ let styles = `
         </a>
       </span>
     </div>
-    <input type="text" autocomplete="false" tabindex="-1"
+    <div [hidden]="!inputMode">
+      <input type="text" autocomplete="false" tabindex="-1"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
            [disabled]="disabled"
-           class="form-control ui-select-search"
-           *ngIf="inputMode"
+           class="form-control ui-select-search {{!inputMode}}"
+           
            placeholder="{{active.length <= 0 ? placeholder : ''}}">
+    </div>
+    
      <!-- options template -->
      <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
         <li *ngFor="let o of options" role="menuitem">
-          <div class="ui-select-choices-row paco"
+          <div class="ui-select-choices-row"
                [class.active]="isActive(o)"
                (mouseenter)="selectActive(o)"
                (click)="selectMatch(o, $event)" [ngClass]="{'disabled' : o.disabled}">
@@ -194,14 +198,14 @@ let styles = `
      *ngIf="multiple === true"
      (keyup)="mainClick($event)"
      (focus)="focusToInput('')"
-     [offClick]="clickedOutside"
      class="ui-select-container ui-select-multiple dropdown form-control open">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <span class="ui-select-match">
         <span *ngFor="let a of active">
             <span class="ui-select-match-item btn btn-default btn-secondary btn-xs"
                   tabindex="-1"
-                  type="button">
+                  type="button"
+                  [ngClass]="{'btn-default': true}">
                <a class="close"
                   style="margin-left: 5px; padding: 0;"
                   (click)="removeClick(a, $event)">&times;</a>
@@ -209,7 +213,8 @@ let styles = `
            </span>
         </span>
     </span>
-    <input type="text"
+    <div [hidden]="!inputMode">
+      <input type="text"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
            (click)="matchClick($event)"
@@ -221,6 +226,8 @@ let styles = `
            class="form-control ui-select-search"
            placeholder="{{active.length <= 0 ? placeholder : ''}}"
            role="combobox">
+    </div>
+    
      <!-- options template -->
      <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
@@ -230,7 +237,7 @@ let styles = `
                (mouseenter)="selectActive(o)"
                (click)="selectMatch(o, $event)" [ngClass]="{'disabled' : o.disabled}">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div><span>{{o.disabled}}</span>
+              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
             </a>
           </div>
         </li>
@@ -249,7 +256,7 @@ let styles = `
                (click)="selectMatch(o, $event)"
                [ngClass]="{'active': isActive(o), 'disabled': o.disabled}">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div><span>{{o.disabled}}</span>
+              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
             </a>
           </div>
         </li>
@@ -290,6 +297,12 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
   public get disabled():boolean {
     return this._disabled;
+  }
+
+  @HostListener('document:click', ['$event']) public onClick($event: MouseEvent): void {
+    if(!this.element.nativeElement.contains($event.target)) {
+      this.clickedOutside();
+    }
   }
 
   @Input()
@@ -346,7 +359,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
   public constructor(element:ElementRef, private sanitizer:DomSanitizer) {
     this.element = element;
-    this.clickedOutside = this.clickedOutside.bind(this);
   }
 
   public sanitize(html:string):SafeHtml {

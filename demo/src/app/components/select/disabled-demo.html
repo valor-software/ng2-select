@@ -7,6 +7,12 @@
              placeholder="No city selected"></ng-select>
   <p></p>
   <pre>{{value.text}}</pre>
+
+  <h3> test blur events</h3>
+  <ng-select [allowClear]="true"
+             [items]="items"
+             [disabled]="disabled"
+             placeholder="No city selected"></ng-select>
   <div>
     <button type="button" class="btn btn-primary"
             [(ngModel)]="disabledV" btnCheckbox
