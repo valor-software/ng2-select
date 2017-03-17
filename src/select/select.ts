@@ -148,15 +148,15 @@ let styles = `
         </a>
       </span>
     </div>
-    <div [hidden]="!optionsOpened">
+    
       <input type="text" autocomplete="false" tabindex="-1"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
            [disabled]="disabled"
-           class="form-control ui-select-search {{!inputMode}}"
-           
+           class="form-control ui-select-search"
+           *ngIf="inputMode"
            placeholder="{{active.length <= 0 ? placeholder : ''}}">
-    </div>
+    
     
      <!-- options template -->
      <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
@@ -377,7 +377,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     // backspace
     if (!isUpMode && e.keyCode === 8) {
       let el:any = this.element.nativeElement
-        .querySelector('div.ui-select-container > input');
+        .querySelector('div.ui-select-container  input');
       if (!el.value || el.value.length <= 0) {
         if (this.active.length > 0) {
           this.remove(this.active[this.active.length - 1]);
@@ -548,7 +548,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
   private focusToInput(value:string = ''):void {
     setTimeout(() => {
-      let el = this.element.nativeElement.querySelector('div.ui-select-container > input');
+      let el = this.element.nativeElement.querySelector('div.ui-select-container  input');
       if (el) {
         el.focus();
         el.value = value;
