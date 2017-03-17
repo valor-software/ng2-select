@@ -132,7 +132,7 @@ let styles = `
      (keyup)="mainClick($event)"
      class="ui-select-container dropdown open">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
-    <div class="ui-select-match">
+    <div class="ui-select-match" [hidden]="optionsOpened">
       <span tabindex="-1"
           class="btn btn-default btn-secondary form-control ui-select-toggle"
           (click)="matchClick($event)"
@@ -148,7 +148,7 @@ let styles = `
         </a>
       </span>
     </div>
-    <div [hidden]="!inputMode">
+    <div [hidden]="!optionsOpened">
       <input type="text" autocomplete="false" tabindex="-1"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
