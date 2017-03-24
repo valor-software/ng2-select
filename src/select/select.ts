@@ -1,5 +1,5 @@
 import {
-  Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef, HostListener
+  Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef, HostListener, OnChanges, SimpleChanges
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -263,7 +263,7 @@ let styles = `
   </div>
   `
 })
-export class SelectComponent implements OnInit, ControlValueAccessor {
+export class SelectComponent implements OnInit, ControlValueAccessor, OnChanges {
   @Input() public allowClear:boolean = false;
   @Input() public placeholder:string = '';
   @Input() public idField:string = 'id';
@@ -283,6 +283,12 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
         }
       });
       this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField], disabled: item[this.disabledField], children: item[this.childrenField]})));
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(this.inputValue && changes['items'].currentValue !== changes['items'].previousValue) {
+      this.open();
     }
   }
 
