@@ -287,9 +287,12 @@ export class SelectComponent implements OnInit, ControlValueAccessor, OnChanges 
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(this.inputValue && changes['items'].currentValue !== changes['items'].previousValue) {
-      this.open();
+    if (changes['items']) {
+      if(this.inputValue && changes['items'].currentValue !== changes['items'].previousValue) {
+        this.open();
+      }
     }
+
   }
 
   @Input()
