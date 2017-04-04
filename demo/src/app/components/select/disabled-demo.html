@@ -1,0 +1,23 @@
+<div class="selectivity-input example-input"
+     style="width: 300px; margin-bottom: 20px;">
+  <h3>Select a city by country(some might be disabled)</h3>
+  <ng-select [allowClear]="true"
+             [items]="items"
+             [disabled]="disabled"
+             placeholder="No city selected"></ng-select>
+  <p></p>
+  <pre>{{value.text}}</pre>
+
+  <h3> test blur events</h3>
+  <ng-select [allowClear]="true"
+             [items]="items"
+             [disabled]="disabled"
+             placeholder="No city selected"></ng-select>
+  <div>
+    <button type="button" class="btn btn-primary"
+            [(ngModel)]="disabledV" btnCheckbox
+            btnCheckboxTrue="1" btnCheckboxFalse="0">
+      {{disabled === '1' ? 'Enable' : 'Disable'}}
+    </button>
+  </div>
+</div>
