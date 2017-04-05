@@ -146,7 +146,6 @@ let styles = `
            [formControl]="formControl"    
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
-           [disabled]="disabled"
            class="form-control ui-select-search"
            *ngIf="inputMode"
            placeholder="{{active.length <= 0 ? placeholder : ''}}">
@@ -210,7 +209,6 @@ let styles = `
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
            (click)="matchClick($event)"
-           [disabled]="disabled"
            autocomplete="false"
            autocorrect="off"
            autocapitalize="off"
@@ -281,7 +279,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   public set disabled(value:boolean) {
     this._disabled = value;
     if (this._disabled === true) {
+      this.formControl.disable();
       this.hideOptions();
+    } else {
+      this.formControl.enable();
     }
   }
 
