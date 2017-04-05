@@ -20,7 +20,6 @@ export class SingleDemoComponent {
   private value:any = {};
   private _disabledV:string = '0';
   private disabled:boolean = false;
-  private singleControl:FormControl = new FormControl();
 
   private get disabledV():string {
     return this._disabledV;
