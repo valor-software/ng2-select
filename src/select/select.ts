@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SelectItem } from './select-item';
 import { stripTags } from './select-pipes';
@@ -143,6 +143,7 @@ let styles = `
       </span>
     </div>
     <input type="text" autocomplete="false" tabindex="-1"
+           [formControl]="formControl"    
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
            [disabled]="disabled"
@@ -205,6 +206,7 @@ let styles = `
         </span>
     </span>
     <input type="text"
+           [formControl]="formControl"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
            (click)="matchClick($event)"
@@ -259,6 +261,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   @Input() public textField:string = 'text';
   @Input() public childrenField:string = 'children';
   @Input() public multiple:boolean = false;
+  @Input() public formControl = new FormControl(); 
 
   @Input()
   public set items(value:Array<any>) {

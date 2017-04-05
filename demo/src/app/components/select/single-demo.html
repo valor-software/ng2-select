@@ -1,6 +1,7 @@
 <div style="width: 300px; margin-bottom: 20px;">
   <h3>Select a single city</h3>
   <ng-select [allowClear]="true"
+              [formControl]="singleControl"
               [items]="items"
               [disabled]="disabled"
               (data)="refreshValue($event)"
