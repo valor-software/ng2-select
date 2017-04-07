@@ -303,6 +303,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  @Input() public allowCreate:boolean = false;
+
   @Output() public data:EventEmitter<any> = new EventEmitter();
   @Output() public selected:EventEmitter<any> = new EventEmitter();
   @Output() public removed:EventEmitter<any> = new EventEmitter();
@@ -565,7 +567,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       e.preventDefault();
     }
     if (this.options.length <= 0) {
-      return;
+      if (!this.allowCreate) return;
+      value = new SelectItem(this.inputValue);
+      //prevent duplicates in list of active items
+      if (this.active.find((o:SelectItem) => value.text === o.text)) return;
     }
     if (this.multiple === true) {
       this.active.push(value);
