@@ -1,6 +1,6 @@
 ### Usage
 ```typescript
-import {SelectModule} from 'ng2-select';
+import {SelectModule} from 'ng2-select-compat';
 ```
 
 ### Annotations

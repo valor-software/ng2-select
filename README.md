@@ -14,8 +14,8 @@ ng2-select-compat is a compatible fork of ng2-select with fixes for Angular 4 an
 
 2. Include `ng2-select.css` in your project
 
-3. More information regarding of using ***ng2-select*** is located in
-  [demo](http://valor-software.github.io/ng2-select/) and [demo sources](https://github.com/valor-software/ng2-select/tree/master/demo).
+3. More information regarding of using ***ng2-select-compat*** is located in
+  [demo](http://roolebo.github.io/ng2-select-compat/) and [demo sources](https://github.com/valor-software/ng2-select-compat/tree/development/demo).
 
 ## API
 
