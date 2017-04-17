@@ -123,7 +123,7 @@ let styles = `
      *ngIf="multiple === false"
      (keyup)="mainClick($event)"
      [offClick]="clickedOutside"
-     class="ui-select-container dropdown open">
+     class="ui-select-container dropdown open show">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <div class="ui-select-match"
          *ngIf="!inputMode">
@@ -189,7 +189,7 @@ let styles = `
      (keyup)="mainClick($event)"
      (focus)="focusToInput('')"
      [offClick]="clickedOutside"
-     class="ui-select-container ui-select-multiple dropdown form-control open">
+     class="ui-select-container ui-select-multiple dropdown form-control open show">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <span class="ui-select-match">
         <span *ngFor="let a of active">
