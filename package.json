@@ -1,6 +1,6 @@
 {
   "name": "ng2-select-base",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "private": true,
   "description": "Angular2 based replacement for select boxes",
   "scripts": {
@@ -35,15 +35,15 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/valor-software/ng2-select.git"
+    "url": "git+ssh://git@github.com/roolebo/ng2-select-compat.git"
   },
   "bugs": {
     "url": "https://github.com/valor-software/ng2-select/issues"
   },
-  "homepage": "https://github.com/valor-software/ng2-select#readme",
+  "homepage": "https://github.com/roolebo/ng2-select-compat#readme",
   "peerDependencies": {
-    "@angular/common": "^2.3.0",
-    "@angular/core": "^2.3.0"
+    "@angular/common": "^2.3.0 || ^4.0.0",
+    "@angular/core": "^2.3.0 || ^4.0.0"
   },
   "devDependencies": {
     "@angular/common": "2.4.3",

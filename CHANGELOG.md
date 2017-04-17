@@ -1,3 +1,12 @@
+<a name="1.3.0"></a>
+# [1.3.0](https://github.com/roolebo/ng2-select-compat/compare/v1.2.0...v1.3.0) (2017-04-17)
+
+### Bug Fixes
+
+* don't declare global type ([#617](https://github.com/valor-software/ng2-select/issues/617)) ([0989fcb](https://github.com/roolebo/ng2-select-compat/commit/0989fcb9e017bfe955ddd7d7ae001b5ae96ffba5)
+* relax peer dependencies to allow angular 4 ([#738](https://github.com/valor-software/ng2-select/issues/738)) ([0e798ad](https://github.com/roolebo/ng2-select-compat/commit/0e798ad))
+
+
 <a name="1.2.0"></a>
 # [1.2.0](https://github.com/valor-software/ng2-select/compare/v1.1.2...v1.2.0) (2017-01-18)
 
