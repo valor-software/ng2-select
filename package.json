@@ -16,7 +16,7 @@
     "flow.github-release": "conventional-github-releaser -p angular",
     "build": "ngm build -p src --clean",
     "build.watch": "ngm build -p src --watch --skip-bundles",
-    "start": "ng serve --aot",
+    "start": "ng serve --aot false --port 4201",
     "pretest": "run-s lint build link",
     "test": "ng test -sr",
     "test-coverage": "ng test -sr -cc",

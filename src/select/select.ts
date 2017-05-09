@@ -5,6 +5,7 @@ import { SelectItem } from './select-item';
 import { stripTags } from './select-pipes';
 import { OptionsBehavior } from './select-interfaces';
 import { escapeRegexp } from './common';
+import { HighlightPipe } from './select-pipes';
 
 let styles = `
   .ui-select-toggle {
@@ -15,24 +16,24 @@ let styles = `
   .ui-select-placeholder {
     float: left;
   }
-  
+
   /* Fix Bootstrap dropdown position when inside a input-group */
   .input-group > .dropdown {
     /* Instead of relative */
     position: static;
   }
-  
+
   .ui-select-match > .btn {
     /* Instead of center because of .btn */
     text-align: left !important;
   }
-  
+
   .ui-select-match > .caret {
     position: absolute;
     top: 45%;
     right: 15px;
   }
-  
+
   .ui-disabled {
     background-color: #eceeef;
     border-radius: 4px;
@@ -45,7 +46,7 @@ let styles = `
     left: 0;
     cursor: not-allowed;
   }
-  
+
   .ui-select-choices {
     width: 100%;
     height: auto;
@@ -53,7 +54,7 @@ let styles = `
     overflow-x: hidden;
     margin-top: 0;
   }
-  
+
   .ui-select-multiple .ui-select-choices {
     margin-top: 1px;
   }
@@ -72,12 +73,12 @@ let styles = `
       outline: 0;
       background-color: #428bca;
   }
-  
+
   .ui-select-multiple {
     height: auto;
     padding:3px 3px 0 3px;
   }
-  
+
   .ui-select-multiple input.ui-select-search {
     background-color: transparent !important; /* To prevent double background when disabled */
     border: none;
@@ -86,13 +87,13 @@ let styles = `
     height: 1.6666em;
     padding: 0;
     margin-bottom: 3px;
-    
+
   }
   .ui-select-match .close {
       font-size: 1.6em;
       line-height: 0.75;
   }
-  
+
   .ui-select-multiple .ui-select-match-item {
     outline: 0;
     margin: 0 3px 3px 0;
@@ -134,7 +135,7 @@ let styles = `
         <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
         <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
               [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
-              [innerHTML]="sanitize(active[0].text)"></span>
+              [innerHTML]="active[0].securityText"></span>
         <i class="dropdown-toggle pull-right"></i>
         <i class="caret pull-right"></i>
         <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right" style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">
@@ -158,18 +159,18 @@ let styles = `
                (mouseenter)="selectActive(o)"
                (click)="selectMatch(o, $event)">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+              <div [innerHtml]="o.securityText"></div>
             </a>
           </div>
         </li>
       </ul>
-  
+
       <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
         <li *ngFor="let c of options; let index=index" role="menuitem">
           <div class="divider dropdown-divider" *ngIf="index > 0"></div>
           <div class="dropdown-header">{{c.text}}</div>
-  
+
           <div *ngFor="let o of c.children"
                class="ui-select-choices-row"
                [class.active]="isActive(o)"
@@ -177,7 +178,7 @@ let styles = `
                (click)="selectMatch(o, $event)"
                [ngClass]="{'active': isActive(o)}">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+              <div [innerHtml]="o.securityText"></div>
             </a>
           </div>
         </li>
@@ -200,7 +201,7 @@ let styles = `
                <a class="close"
                   style="margin-left: 5px; padding: 0;"
                   (click)="removeClick(a, $event)">&times;</a>
-               <span [innerHtml]="sanitize(a.text)"></span>
+               <span [innerHtml]="a.securityText"></span>
            </span>
         </span>
     </span>
@@ -225,18 +226,18 @@ let styles = `
                (mouseenter)="selectActive(o)"
                (click)="selectMatch(o, $event)">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+              <div [innerHtml]="o.securityText"></div>
             </a>
           </div>
         </li>
       </ul>
-  
+
       <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
         <li *ngFor="let c of options; let index=index" role="menuitem">
           <div class="divider dropdown-divider" *ngIf="index > 0"></div>
           <div class="dropdown-header">{{c.text}}</div>
-  
+
           <div *ngFor="let o of c.children"
                class="ui-select-choices-row"
                [class.active]="isActive(o)"
@@ -244,7 +245,7 @@ let styles = `
                (click)="selectMatch(o, $event)"
                [ngClass]="{'active': isActive(o)}">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+              <div [innerHtml]="o.securityText"></div>
             </a>
           </div>
         </li>
@@ -271,6 +272,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
         }
       });
       this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField], children: item[this.childrenField]})));
+      this.itemObjects.forEach(it => it.securityText = this.sanitize(it.text))
     }
   }
 
@@ -337,6 +339,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   private _items:Array<any> = [];
   private _disabled:boolean = false;
   private _active:Array<SelectItem> = [];
+  private _hiligther = new HighlightPipe();
 
   public constructor(element:ElementRef, private sanitizer:DomSanitizer) {
     this.element = element;
@@ -419,6 +422,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     if (target && target.value) {
       this.inputValue = target.value;
       this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
+      this.options.forEach(it => it.securityText = this.sanitize(this._hiligther.transform(it.text, this.inputValue)));
+      console.log(this.options);
       this.doEvent('typed', this.inputValue);
     }else {
       this.open();
