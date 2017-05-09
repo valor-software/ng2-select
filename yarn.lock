@@ -27,11 +27,11 @@
     minimist "^1.2.0"
     reflect-metadata "^0.1.2"
 
-"@angular/compiler@2.4.3", "@angular/compiler@^2.3.0", "@angular/compiler@^2.3.1":
+"@angular/compiler@2.4.3", "@angular/compiler@^2.3.1":
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-2.4.3.tgz#76a41916f90eda66643107740c4a9ae45cb7a6c1"
 
-"@angular/core@2.4.3", "@angular/core@^2.3.0", "@angular/core@^2.3.1":
+"@angular/core@2.4.3", "@angular/core@^2.3.1":
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/@angular/core/-/core-2.4.3.tgz#a72a13bb9f01659b8388558cd6e3a570a8434b1c"
 
@@ -77,12 +77,6 @@
     loader-utils "^0.2.16"
     magic-string "^0.16.0"
     source-map "^0.5.6"
-
-"@types/chokidar@1.4.31":
-  version "1.4.31"
-  resolved "https://registry.yarnpkg.com/@types/chokidar/-/chokidar-1.4.31.tgz#d4891791f429896eefa701aea5cec1fceececf83"
-  dependencies:
-    "@types/node" "*"
 
 "@types/fs-extra@0.0.33":
   version "0.0.33"
@@ -149,13 +143,6 @@
   resolved "https://registry.yarnpkg.com/@types/uglify-js/-/uglify-js-2.6.28.tgz#1499b48ca3a44132250b318cdde25b8f45f0c616"
   dependencies:
     "@types/source-map" "*"
-
-"@types/webpack@2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@types/webpack/-/webpack-2.2.0.tgz#da0646a2093d6405950a58597e3e7eabdc755207"
-  dependencies:
-    "@types/tapable" "*"
-    "@types/uglify-js" "*"
 
 "@types/webpack@^2.2.1":
   version "2.2.1"
@@ -4462,11 +4449,7 @@ lowercase-keys@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/lowercase-keys/-/lowercase-keys-1.0.0.tgz#4e3366b39e7f5457e35f1324bdf6f88d0bfc7306"
 
-lru-cache@2:
-  version "2.7.3"
-  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-2.7.3.tgz#6d4524e8b955f95d4f5b58851ce21dd72fb4e952"
-
-lru-cache@2.2.x:
+lru-cache@2, lru-cache@2.2.x:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-2.2.4.tgz#6c658619becf14031d0d0b594b16042ce4dc063d"
 
@@ -4778,13 +4761,13 @@ ng2-page-scroll@4.0.0-beta.2:
   version "4.0.0-beta.2"
   resolved "https://registry.yarnpkg.com/ng2-page-scroll/-/ng2-page-scroll-4.0.0-beta.2.tgz#eac125929f1717303950657c7a460a9ecef0b03b"
 
-ngm-cli@0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/ngm-cli/-/ngm-cli-0.4.0.tgz#1f184feed47cad8e52ce68fb587dd50ea4342ca0"
+ngm-cli@0.4.3:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/ngm-cli/-/ngm-cli-0.4.3.tgz#452e562c9987efb7209d31944df6045da650f560"
   dependencies:
     "@angular/compiler-cli" "^2.3.0"
     awesome-typescript-loader "3.0.0-beta.18"
-    npm-submodules "0.4.0"
+    npm-submodules "0.4.3"
 
 no-case@^2.2.0:
   version "2.3.1"
@@ -4937,15 +4920,10 @@ npm-run-path@^2.0.0:
   dependencies:
     path-key "^2.0.0"
 
-npm-submodules@0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/npm-submodules/-/npm-submodules-0.4.0.tgz#1c1f0b1bc56981c6203a3fe1b0aac6c7c83df2d5"
+npm-submodules@0.4.3:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/npm-submodules/-/npm-submodules-0.4.3.tgz#329ac78d61975a6ff44f4af899b77436dcadd7ab"
   dependencies:
-    "@angular/compiler" "^2.3.0"
-    "@angular/core" "^2.3.0"
-    "@types/chokidar" "1.4.31"
-    "@types/node" "7.0.0"
-    "@types/webpack" "2.2.0"
     chalk "1.1.3"
     cpy "5.0.0"
     del "2.2.2"

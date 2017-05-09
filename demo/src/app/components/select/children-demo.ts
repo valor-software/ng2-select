@@ -7,12 +7,14 @@ import { Component } from '@angular/core';
 export class ChildrenDemoComponent {
   public items:Array<any> = [
     {
+      id: 'p1',
       text: 'Austria',
       children: [
         {id: 54, text: 'Vienna'}
       ]
     },
     {
+      id: 'p2',
       text: 'Belgium',
       children: [
         {id: 2, text: 'Antwerp'},
@@ -20,30 +22,35 @@ export class ChildrenDemoComponent {
       ]
     },
     {
+      id: 'p3',
       text: 'Bulgaria',
       children: [
         {id: 48, text: 'Sofia'}
       ]
     },
     {
+      id: 'p4',
       text: 'Croatia',
       children: [
         {id: 58, text: 'Zagreb'}
       ]
     },
     {
+      id: 'p5',
       text: 'Czech Republic',
       children: [
         {id: 42, text: 'Prague'}
       ]
     },
     {
+      id: 'p6',
       text: 'Denmark',
       children: [
         {id: 13, text: 'Copenhagen'}
       ]
     },
     {
+      id: 'p7',
       text: 'England',
       children: [
         {id: 6, text: 'Birmingham'},
@@ -55,12 +62,14 @@ export class ChildrenDemoComponent {
       ]
     },
     {
+      id: 'p8',
       text: 'Finland',
       children: [
         {id: 25, text: 'Helsinki'}
       ]
     },
     {
+      id: 'p9',
       text: 'France',
       children: [
         {id: 35, text: 'Marseille'},
@@ -68,6 +77,7 @@ export class ChildrenDemoComponent {
       ]
     },
     {
+      id: 'p10',
       text: 'Germany',
       children: [
         {id: 5, text: 'Berlin'},

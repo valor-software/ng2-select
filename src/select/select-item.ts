@@ -1,6 +1,7 @@
 export class SelectItem {
   public id:string;
   public text:string;
+  public securityText: any;
   public children:Array<SelectItem>;
   public parent:SelectItem;
 
