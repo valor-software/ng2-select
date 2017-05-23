@@ -1,6 +1,6 @@
 {
-  "name": "ng2-select-base",
-  "version": "1.2.0",
+  "name": "ng-next-select-base",
+  "version": "1.3.0",
   "private": true,
   "description": "Angular2 based replacement for select boxes",
   "scripts": {
@@ -22,25 +22,27 @@
     "test-coverage": "ng test -sr -cc",
     "version": "npm run flow.changelog && git add -A"
   },
-  "main": "bundles/ng2-select.umd.js",
+  "main": "bundles/ng-next-select.umd.js",
   "module": "index.js",
   "typings": "index.d.ts",
   "keywords": [
     "angular2",
     "select",
     "selectify",
-    "angularjs"
+    "angularjs",
+    "ng2-select",
+    "ngx-select"
   ],
-  "author": "Vyacheslav Chub <vyacheslav.chub@valor-software.com>",
+  "author": "Syed Jafri <syedjafri99+ng-next-select@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/valor-software/ng2-select.git"
+    "url": "git+ssh://git@github.com/psilospore/ng-next-select.git"
   },
   "bugs": {
-    "url": "https://github.com/valor-software/ng2-select/issues"
+    "url": "https://github.com/psilospore/ng-next-select/issues"
   },
-  "homepage": "https://github.com/valor-software/ng2-select#readme",
+  "homepage": "https://github.com//psilospore/ng-next-select#readme",
   "peerDependencies": {
     "@angular/common": "^2.3.0",
     "@angular/core": "^2.3.0"
@@ -114,19 +116,17 @@
   },
   "contributors": [
     {
-      "name": "Vyacheslav Chub",
-      "email": "vyacheslav.chub@valor-software.com",
-      "url": "https://github.com/buchslava"
+      "name": "Syed Jafri",
+      "email": "syedjafri99+ng-next-select@gmail.com",
+      "url": "https://github.com/psilospore"
     },
     {
-      "name": "Dmitriy Shekhovtsov",
-      "email": "valorkin@gmail.com",
-      "url": "https://github.com/valorkin"
+      "name": "Dylan Bostian",
+      "url": "https://github.com/dboss3"
     },
     {
-      "name": "Oleksandr Telnov",
-      "email": "otelnov@gmail.com",
-      "url": "https://github.com/otelnov"
+      "name": "Chris Williams",
+      "url": "https://github.com/howthatdo"
     }
   ]
 }
