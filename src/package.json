@@ -1,6 +1,6 @@
 {
-  "name": "ng2-select",
-  "version": "1.2.0",
+  "name": "ng2-select-maple",
+  "version": "0.0.4",
   "peerDependencies": {
     "@angular/common": "*",
     "@angular/core": "*"
