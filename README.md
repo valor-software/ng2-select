@@ -10,12 +10,9 @@ library anymore and/or we become too busy to maintain it we are open to adding o
 
 1. A recommended way to install ***ng-next-select*** is through [npm](https://www.npmjs.com/search?q=ng-next-select) package manager using the following command:
 
-  `npm i ng2-select --save`
+  `npm i ng-next-select --save`
 
 2. Include `ng2-select.css` in your project
-
-3. More information regarding of using ***ng2-select*** is located in
-  [demo](http://valor-software.github.io/ng2-select/) and [demo sources](https://github.com/valor-software/ng2-select/tree/master/demo).
 
 ## API
 
