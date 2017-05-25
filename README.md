@@ -12,7 +12,7 @@ library anymore and/or we become too busy to maintain it we are open to adding o
 
   `npm i ng-next-select --save`
 
-2. Include `ng2-select.css` in your project
+2. Include `ng-next-select.css` in your project
 
 ## API
 
@@ -46,6 +46,13 @@ Please follow this guidelines when reporting bugs and feature requests:
 2. Please **always** write steps to reproduce the error. That way we can focus on fixing the bug, not scratching our heads trying to reproduce it.
 
 Thanks for understanding!
+
+# Migration from Valor's ng2-select
+
+1. Import our library in your package.json instead of ng2-select 
+2. Rename ng2-select.css to ng-next-select.css
+
+TODO
 
 ### License
 
