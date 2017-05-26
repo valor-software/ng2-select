@@ -17,6 +17,7 @@
     "build": "ngm build -p src --clean",
     "build.watch": "ngm build -p src --watch --skip-bundles",
     "start": "ng serve --aot",
+    "startNoAot": "ng serve",
     "pretest": "run-s lint build link",
     "test": "ng test -sr",
     "test-coverage": "ng test -sr -cc",
