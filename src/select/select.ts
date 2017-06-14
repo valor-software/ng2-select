@@ -422,6 +422,15 @@ export class SelectComponent implements OnInit, ControlValueAccessor, OnChanges 
   }
 
   public ngOnInit(): any {
+
+    var _select = this;
+    this.element.nativeElement.addEventListener("ng2-select-clicked", function (event: any) {
+      if (event.detail.id != _select.element.nativeElement.id) {
+        _select.inputMode = false;
+        _select.optionsOpened = false;
+      };
+    });
+
     this.behavior = (this.firstItemHasChildren) ?
       new ChildrenBehavior(this) : new GenericBehavior(this);
   }
@@ -478,6 +487,13 @@ export class SelectComponent implements OnInit, ControlValueAccessor, OnChanges 
   public registerOnTouched(fn: () => {}): void { this.onTouched = fn; }
 
   protected matchClick(e: any): void {
+
+    let selectElements: NodeListOf<Element> = document.querySelectorAll("ng-select");
+    let event = new CustomEvent("ng2-select-clicked", { detail: { id: this.element.nativeElement.id } });
+    for (let SelectElement of Array.prototype.slice.call(selectElements)) {
+      SelectElement.dispatchEvent(event)
+    };
+
     if (this._disabled === true) {
       return;
     }
