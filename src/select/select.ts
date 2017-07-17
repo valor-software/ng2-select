@@ -262,6 +262,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
   @Input()
   public set items(value:Array<any>) {
+    this._active = [];
     if (!value) {
       this._items = this.itemObjects = [];
     } else {
