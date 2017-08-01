@@ -1,0 +1,8 @@
+{
+  "name": "ng2-select",
+  "version": "1.2.0",
+  "peerDependencies": {
+    "@angular/common": "*",
+    "@angular/core": "*"
+  }
+}
