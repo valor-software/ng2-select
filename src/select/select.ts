@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SelectItem } from './select-item';
 import { stripTags } from './select-pipes';
@@ -143,9 +143,9 @@ let styles = `
       </span>
     </div>
     <input type="text" autocomplete="false" tabindex="-1"
+           [formControl]="formControl"    
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
-           [disabled]="disabled"
            class="form-control ui-select-search"
            *ngIf="inputMode"
            placeholder="{{active.length <= 0 ? placeholder : ''}}">
@@ -205,10 +205,10 @@ let styles = `
         </span>
     </span>
     <input type="text"
+           [formControl]="formControl"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
            (click)="matchClick($event)"
-           [disabled]="disabled"
            autocomplete="false"
            autocorrect="off"
            autocapitalize="off"
@@ -259,6 +259,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   @Input() public textField:string = 'text';
   @Input() public childrenField:string = 'children';
   @Input() public multiple:boolean = false;
+  @Input() public formControl = new FormControl(); 
 
   @Input()
   public set items(value:Array<any>) {
@@ -278,7 +279,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   public set disabled(value:boolean) {
     this._disabled = value;
     if (this._disabled === true) {
+      this.formControl.disable();
       this.hideOptions();
+    } else {
+      this.formControl.enable();
     }
   }
 
@@ -408,7 +412,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
     // enter
     if (!isUpMode && e.keyCode === 13) {
-      if (this.active.indexOf(this.activeOption) === -1) {
+      if (!this.active.find(a => a.id === this.activeOption.id)) {
         this.selectActiveMatch();
         this.behavior.next();
       }

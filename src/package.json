@@ -1,8 +1,9 @@
 {
-  "name": "ng2-select",
-  "version": "1.2.0",
+  "name": "ng-next-select",
+  "version": "1.3.2",
   "peerDependencies": {
     "@angular/common": "*",
     "@angular/core": "*"
-  }
+  },
+  "readme": "../README.md"
 }

@@ -1,6 +1,6 @@
 {
   "project": {
-    "name": "ng2-select"
+    "name": "ng-next-select"
   },
   "apps": [
     {
@@ -19,8 +19,8 @@
       ],
       "scripts": [
       ],
+      "environmentSource": "environments/environment.ts",
       "environments": {
-        "source": "environments/environment.ts",
         "dev": "environments/environment.ts",
         "prod": "environments/environment.prod.ts"
       }

@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SelectModule } from '../ng2-select';
+import { SelectModule } from '../ng-next-select';
 
 const html = ``;
 
-describe('Component: ng2-select', () => {
+describe('Component: ng-next-select', () => {
   let fixture:ComponentFixture<any>;
   let context:TestSelectComponent;
 

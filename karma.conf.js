@@ -6,18 +6,18 @@ const customLaunchers = require('./scripts/sauce-browsers').customLaunchers;
 module.exports = function (config) {
   const configuration = {
     basePath: '',
-    frameworks: ['jasmine', 'angular-cli'],
+    frameworks: ['jasmine', '@angular/cli'],
     plugins: [
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-remap-istanbul'),
-      require('angular-cli/plugins/karma')
+      require('@angular/cli/plugins/karma')
     ],
     files: [
       {pattern: './scripts/test.ts', watched: false}
     ],
     preprocessors: {
-      './scripts/test.ts': ['angular-cli']
+      './scripts/test.ts': ['@angular/cli']
     },
     remapIstanbulReporter: {
       reports: {
@@ -62,7 +62,7 @@ module.exports = function (config) {
     configuration.reporters.push('saucelabs');
     configuration.sauceLabs = {
       verbose: true,
-      testName: 'ng2-bootstrap unit tests',
+      testName: 'ngx-bootstrap unit tests',
       recordScreenshots: false,
       username: process.env.SAUCE_USERNAME,
       accessKey: process.env.SAUCE_ACCESS_KEY,

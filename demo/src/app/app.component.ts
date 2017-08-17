@@ -7,7 +7,7 @@ let gettingStarted = require('html-loader!markdown-loader!../getting-started.md'
   template: `
     <main class="bd-pageheader">
       <div class="container">
-        <h1>ng2-select</h1>
+        <h1>ng-next-select</h1>
         <p>Native Angular2 component for Select</p>
         <a class="btn btn-primary" href="https://github.com/valor-software/ng2-select">View on GitHub</a>
         <div class="row">
