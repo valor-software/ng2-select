@@ -3,7 +3,7 @@
 ## Description
 
 This is a library based on a fork from [ng2-select](https://github.com/valor-software/ng2-select).
-We would love any PRs if you have enhancements in mind. We intend on maintaining this library for a while and in the event that our organization does not need this 
+We would love any PRs if you have enhancements in mind. We intend on maintaining this library for a while and in the event that our organization does not need this
 library anymore and/or we become too busy to maintain it we are open to adding other co-maintainers.
 
 ## Quick start
@@ -52,7 +52,7 @@ Thanks for understanding!
 1. Import our library in your package.json instead of ng2-select 
 2. Rename ng2-select.css to ng-next-select.css
 
-TODO
+That's it
 
 ### License
 
