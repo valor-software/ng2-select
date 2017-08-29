@@ -38,6 +38,7 @@
   - `selected` - it fires after a new option selected; returns object with `id` and `text` properties that describes a new option.
   - `removed` - it fires after an option removed; returns object with `id` and `text` properties that describes a removed option.
   - `typed` - it fires after changing of search input; returns `string` with that value.
+  - `opend` - it fires after the dropdown has been opened or closed; returns `boolean` with value true or false
 
 # Troubleshooting
 
