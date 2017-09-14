@@ -1,5 +1,5 @@
 {
-  "name": "ng2-select-base",
+  "name": "ng2-select",
   "version": "1.2.0",
   "private": true,
   "description": "Angular2 based replacement for select boxes",
