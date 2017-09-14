@@ -709,6 +709,9 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
     this.fillOptionsMap();
     this.ensureHighlightVisible(this.optionsMap);
   }
+  public current(): void{
+    this.ensureHighlightVisible(this.optionsMap);
+  }
 
   public last(): void {
     this.actor.activeOption =
