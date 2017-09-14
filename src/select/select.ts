@@ -553,13 +553,14 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     this.options = this.itemObjects
       .filter((option: SelectItem) => (this.multiple === false ||
       this.multiple === true && !this.active.find((o: SelectItem) => option.text === o.text)));
-
-    if (this.options.length > 0 && !(this.behavior as any).actor.activeOption) {
-      this.behavior.first();
-    } else {
-      this.behavior.current();
-    }
     this.optionsOpened = true;
+    setTimeout(() => {
+      if (this.options.length > 0 && !(this.behavior as any).actor.activeOption) {
+        this.behavior.first();
+      } else {
+        this.behavior.current();
+      }
+    })
   }
 
   private hideOptions(): void {
@@ -709,7 +710,8 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
     this.fillOptionsMap();
     this.ensureHighlightVisible(this.optionsMap);
   }
-  public current(): void{
+
+  public current(): void {
     this.ensureHighlightVisible(this.optionsMap);
   }
 
