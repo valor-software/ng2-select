@@ -1,109 +1,108 @@
 import { Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { SelectItem } from './select-item';
 import { stripTags } from './select-pipes';
 import { OptionsBehavior } from './select-interfaces';
 import { escapeRegexp } from './common';
 
 let styles = `
-  .ui-select-toggle {
-    position: relative;
-  }
+.ui-select-match {
+  padding: 0;
+}
 
-  /* Fix caret going into new line in Firefox */
-  .ui-select-placeholder {
-    float: left;
-  }
-  
-  /* Fix Bootstrap dropdown position when inside a input-group */
-  .input-group > .dropdown {
-    /* Instead of relative */
-    position: static;
-  }
-  
-  .ui-select-match > .btn {
-    /* Instead of center because of .btn */
-    text-align: left !important;
-  }
-  
-  .ui-select-match > .caret {
-    position: absolute;
-    top: 45%;
-    right: 15px;
-  }
-  
-  .ui-disabled {
-    background-color: #eceeef;
-    border-radius: 4px;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 5;
-    opacity: 0.6;
-    top: 0;
-    left: 0;
-    cursor: not-allowed;
-  }
-  
-  .ui-select-choices {
-    width: 100%;
-    height: auto;
-    max-height: 200px;
-    overflow-x: hidden;
-    margin-top: 0;
-  }
-  
-  .ui-select-multiple .ui-select-choices {
-    margin-top: 1px;
-  }
-  .ui-select-choices-row>a {
-      display: block;
-      padding: 3px 20px;
-      clear: both;
-      font-weight: 400;
-      line-height: 1.42857143;
-      color: #333;
-      white-space: nowrap;
-  }
-  .ui-select-choices-row.active>a {
-      color: #fff;
-      text-decoration: none;
-      outline: 0;
-      background-color: #428bca;
-  }
-  
-  .ui-select-multiple {
-    height: auto;
-    padding:3px 3px 0 3px;
-  }
-  
-  .ui-select-multiple input.ui-select-search {
-    background-color: transparent !important; /* To prevent double background when disabled */
-    border: none;
-    outline: none;
-    box-shadow: none;
-    height: 1.6666em;
-    padding: 0;
-    margin-bottom: 3px;
-    
-  }
-  .ui-select-match .close {
-      font-size: 1.6em;
-      line-height: 0.75;
-  }
-  
-  .ui-select-multiple .ui-select-match-item {
-    outline: 0;
-    margin: 0 3px 3px 0;
-  }
-  .ui-select-toggle > .caret {
-      position: absolute;
-      height: 10px;
-      top: 50%;
-      right: 10px;
-      margin-top: -2px;
-  }
+.ui-select-toggle {
+  position: relative;
+  border: 0;
+  outline: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Fix caret going into new line in Firefox */
+.ui-select-placeholder {
+  float: left;
+}
+
+/* Fix Bootstrap dropdown position when inside a input-group */
+/*
+  TODO: this does not work with Angular2 css encapsulation!
+  (but this should really be fixed upstream in Bootstrap)
+*/
+.input-group > .dropdown {
+  /* Instead of relative */
+  position: static !important;
+}
+
+.ui-select-match > .btn {
+  /* Instead of center because of .btn */
+  text-align: left !important;
+}
+
+.ui-select-match > .caret {
+  position: absolute;
+  top: 45%;
+  right: 15px;
+}
+
+.ui-disabled {
+  background-color: #eceeef;
+  border-radius: 4px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  opacity: 0.6;
+  top: 0;
+  left: 0;
+  cursor: not-allowed;
+}
+
+.ui-select-choices {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  overflow-x: hidden;
+  margin-top: 0;
+}
+
+.ui-select-multiple .ui-select-choices {
+  margin-top: 1px;
+}
+
+.ui-select-multiple {
+  height: auto;
+}
+
+.ui-select-multiple input.ui-select-search {
+  background-color: transparent !important; /* To prevent double background when disabled */
+  border: none;
+  outline: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.ui-select-multiple .ui-select-match-item {
+  outline: 0;
+  margin-bottom: 0.25rem;
+}
+.ui-select-multiple .ui-select-match-item:not(:last-child) {
+  margin-right: 0.25rem;
+}
+
+.ui-select-match-item-close {
+  padding: 0;
+  line-height: 0.8;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.ui-select-toggle .ui-select-match-item-close {
+  margin-right: 10px;
+}
+
+.ui-select-multiple .ui-select-match-item-close {
+  margin-left: 10px;
+}
 `;
 
 @Component({
@@ -123,22 +122,26 @@ let styles = `
      *ngIf="multiple === false"
      (keyup)="mainClick($event)"
      [offClick]="clickedOutside"
-     class="ui-select-container dropdown open">
+     class="ui-select-container"
+     [ngClass]="dropdownClass + ' ' + openClass">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <div class="ui-select-match"
-         *ngIf="!inputMode">
+        [ngClass]="inputClass"
+        *ngIf="!inputMode">
       <span tabindex="-1"
-          class="btn btn-default btn-secondary form-control ui-select-toggle"
-          (click)="matchClick($event)"
-          style="outline: 0;">
-        <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
-        <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
-              [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
-              [innerHTML]="sanitize(active[0].text)"></span>
-        <i class="dropdown-toggle pull-right"></i>
-        <i class="caret pull-right"></i>
-        <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right" style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">
-           <i class="glyphicon glyphicon-remove"></i>
+          class="ui-select-toggle"
+          [ngClass]="buttonClass"
+          (click)="matchClick($event)">
+        <span *ngIf="active.length <= 0" class="ui-select-placeholder" [ngClass]="placeholderTextClass">{{placeholder}}</span>
+        <span *ngIf="active.length > 0" class="ui-select-match-text"
+              [ngClass]="activeTextPositionClass + (allowClear && active.length > 0 ? ' ui-select-allow-clear' : '')"
+              [innerHTML]="sanitize(active[0][textField])"></span>
+        <i [ngClass]="caretIconClass + ' ' + iconPositionClass" aria-hidden="true"></i>
+        <a *ngIf="allowClear && active.length>0"
+          [ngClass]="closeIconClass + ' ' + iconPositionClass"
+          class="ui-select-match-item-close"
+          (click)="removeClick(active[0], $event)">
+          &times;
         </a>
       </span>
     </div>
@@ -146,42 +149,38 @@ let styles = `
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
            [disabled]="disabled"
-           class="form-control ui-select-search"
+           class="ui-select-search"
+           [ngClass]="inputClass"
            *ngIf="inputMode"
            placeholder="{{active.length <= 0 ? placeholder : ''}}">
-     <!-- options template -->
-     <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
-          class="ui-select-choices dropdown-menu" role="menu">
-        <li *ngFor="let o of options" role="menuitem">
-          <div class="ui-select-choices-row"
-               [class.active]="isActive(o)"
-               (mouseenter)="selectActive(o)"
-               (click)="selectMatch(o, $event)">
-            <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
-            </a>
-          </div>
+    <!-- options template -->
+    <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
+        class="ui-select-choices" [ngClass]="dropdownMenuClass + ' ' + openClass" role="menu">
+      <li *ngFor="let o of options" role="menuitem" [ngClass]="(isActive(o) ? dropdownItemActiveClass : '')">
+        <a href="javascript:void(0)"
+          [ngClass]="dropdownItemClass + (isActive(o) ? ' ' + dropdownItemActiveClass : '')"
+          (mouseenter)="selectMarked(o)"
+          (click)="selectMatch(o, $event)">
+          <div [innerHtml]="sanitize(o[textField] | highlight:inputValue)"></div>
+        </a>
+      </li>
+    </ul>
+
+    <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
+        class="ui-select-choices" [ngClass]="dropdownMenuClass + ' ' + openClass" role="menu">
+      <ng-container *ngFor="let c of options; let index=index">
+        <li role="separator" [ngClass]="dropdownDividerClass" *ngIf="index > 0"></li>
+        <li [ngClass]="dropdownHeaderClass">{{c[textField]}}</li>
+        <li *ngFor="let o of c[childrenField]" role="menuitem" [ngClass]="(isActive(o) ? dropdownItemActiveClass : '')">
+          <a href="javascript:void(0)"
+            [ngClass]="dropdownItemClass + (isActive(o) ? ' ' + dropdownItemActiveClass : '')"
+            (mouseenter)="selectMarked(o)"
+            (click)="selectMatch(o, $event)">
+            <div [innerHtml]="sanitize(o[textField] | highlight:inputValue)"></div>
+          </a>
         </li>
-      </ul>
-  
-      <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
-          class="ui-select-choices dropdown-menu" role="menu">
-        <li *ngFor="let c of options; let index=index" role="menuitem">
-          <div class="divider dropdown-divider" *ngIf="index > 0"></div>
-          <div class="dropdown-header">{{c.text}}</div>
-  
-          <div *ngFor="let o of c.children"
-               class="ui-select-choices-row"
-               [class.active]="isActive(o)"
-               (mouseenter)="selectActive(o)"
-               (click)="selectMatch(o, $event)"
-               [ngClass]="{'active': isActive(o)}">
-            <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
-            </a>
-          </div>
-        </li>
-      </ul>
+      </ng-container>
+    </ul>
   </div>
 
   <div tabindex="0"
@@ -189,21 +188,20 @@ let styles = `
      (keyup)="mainClick($event)"
      (focus)="focusToInput('')"
      [offClick]="clickedOutside"
-     class="ui-select-container ui-select-multiple dropdown form-control open">
+     class="ui-select-container ui-select-multiple"
+     [ngClass]="inputClass + ' ' + dropdownClass + ' ' + openClass">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
-    <span class="ui-select-match">
-        <span *ngFor="let a of active">
-            <span class="ui-select-match-item btn btn-default btn-secondary btn-xs"
-                  tabindex="-1"
-                  type="button"
-                  [ngClass]="{'btn-default': true}">
-               <a class="close"
-                  style="margin-left: 5px; padding: 0;"
-                  (click)="removeClick(a, $event)">&times;</a>
-               <span [innerHtml]="sanitize(a.text)"></span>
-           </span>
-        </span>
-    </span>
+    <div class="ui-select-match" [ngClass]="multiButtonContainerClass">
+      <span *ngFor="let a of active"
+            class="ui-select-match-item"
+            tabindex="-1"
+            [ngClass]="buttonClass">
+        <a [ngClass]="closeIconClass"
+          class="ui-select-match-item-close"
+          (click)="removeClick(a, $event)">&times;</a>
+        <span [innerHtml]="sanitize(a[textField])"></span>
+      </span>
+    </div>
     <input type="text"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
@@ -213,65 +211,72 @@ let styles = `
            autocorrect="off"
            autocapitalize="off"
            spellcheck="false"
-           class="form-control ui-select-search"
+           class="ui-select-search"
+           [ngClass]="inputClass"
            placeholder="{{active.length <= 0 ? placeholder : ''}}"
            role="combobox">
-     <!-- options template -->
-     <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
-          class="ui-select-choices dropdown-menu" role="menu">
-        <li *ngFor="let o of options" role="menuitem">
-          <div class="ui-select-choices-row"
-               [class.active]="isActive(o)"
-               (mouseenter)="selectActive(o)"
-               (click)="selectMatch(o, $event)">
-            <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
-            </a>
-          </div>
+    <!-- options template -->
+    <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
+        class="ui-select-choices" [ngClass]="dropdownMenuClass + ' ' + openClass" role="menu">
+      <li *ngFor="let o of options" role="menuitem" [ngClass]="(isActive(o) ? dropdownItemActiveClass : '')">
+        <a href="javascript:void(0)"
+          [ngClass]="dropdownItemClass + (isActive(o) ? ' ' + dropdownItemActiveClass : '')"
+          (mouseenter)="selectMarked(o)"
+          (click)="selectMatch(o, $event)">
+          <div [innerHtml]="sanitize(o[textField] | highlight:inputValue)"></div>
+        </a>
+      </li>
+    </ul>
+
+    <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
+        class="ui-select-choices" [ngClass]="dropdownMenuClass + ' ' + openClass" role="menu">
+      <ng-container *ngFor="let c of options; let index=index">
+        <li role="separator" [ngClass]="dropdownDividerClass" *ngIf="index > 0"></li>
+        <li [ngClass]="dropdownHeaderClass">{{c[textField]}}</li>
+        <li *ngFor="let o of c[childrenField]" role="menuitem" [ngClass]="(isActive(o) ? dropdownItemActiveClass : '')">
+          <a href="javascript:void(0)"
+            [ngClass]="dropdownItemClass + (isActive(o) ? ' ' + dropdownItemActiveClass : '')"
+            (mouseenter)="selectMarked(o)"
+            (click)="selectMatch(o, $event)">
+            <div [innerHtml]="sanitize(o[textField] | highlight:inputValue)"></div>
+          </a>
         </li>
-      </ul>
-  
-      <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
-          class="ui-select-choices dropdown-menu" role="menu">
-        <li *ngFor="let c of options; let index=index" role="menuitem">
-          <div class="divider dropdown-divider" *ngIf="index > 0"></div>
-          <div class="dropdown-header">{{c.text}}</div>
-  
-          <div *ngFor="let o of c.children"
-               class="ui-select-choices-row"
-               [class.active]="isActive(o)"
-               (mouseenter)="selectActive(o)"
-               (click)="selectMatch(o, $event)"
-               [ngClass]="{'active': isActive(o)}">
-            <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
-            </a>
-          </div>
-        </li>
-      </ul>
+      </ng-container>
+    </ul>
   </div>
   `
 })
 export class SelectComponent implements OnInit, ControlValueAccessor {
+  @Input() public multiButtonContainerClass:string = 'btn-toolbar';
+  @Input() public buttonClass:string = 'btn btn-default btn-outline-secondary';
+  @Input() public inputClass:string = 'form-control';
+  @Input() public dropdownClass:string = 'dropdown';
+  @Input() public dropdownMenuClass:string = 'dropdown-menu';
+  @Input() public dropdownItemClass:string = 'dropdown-item';
+  @Input() public dropdownItemActiveClass:string = 'active';
+  @Input() public dropdownDividerClass:string = 'divider dropdown-divider';
+  @Input() public dropdownHeaderClass:string = 'dropdown-header';
+  @Input() public openClass:string = 'open show';
+  @Input() public caretIconClass:string = 'dropdown-toggle caret';
+  @Input() public closeIconClass:string = 'close';
+  @Input() public iconPositionClass:string = 'pull-right float-right';
+  @Input() public placeholderTextClass:string = 'text-muted';
+  @Input() public activeTextPositionClass:string = 'pull-left float-left';
+
   @Input() public allowClear:boolean = false;
   @Input() public placeholder:string = '';
   @Input() public idField:string = 'id';
   @Input() public textField:string = 'text';
   @Input() public childrenField:string = 'children';
+  @Input() public parentField:string = 'parent';
   @Input() public multiple:boolean = false;
 
   @Input()
-  public set items(value:Array<any>) {
-    if (!value) {
-      this._items = this.itemObjects = [];
-    } else {
-      this._items = value.filter((item:any) => {
-        if ((typeof item === 'string') || (typeof item === 'object' && item && item[this.textField] && item[this.idField])) {
-          return item;
-        }
-      });
-      this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField], children: item[this.childrenField]})));
-    }
+  public set items(value:any[]) {
+    this._items = this._getValidatedArray(value);
+  }
+  public get items(): any[] {
+    return this._items;
   }
 
   @Input()
@@ -287,20 +292,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   }
 
   @Input()
-  public set active(selectedItems:Array<any>) {
-    if (!selectedItems || selectedItems.length === 0) {
-      this._active = [];
-    } else {
-      let areItemsStrings = typeof selectedItems[0] === 'string';
-
-      this._active = selectedItems.map((item:any) => {
-        let data = areItemsStrings
-          ? item
-          : {id: item[this.idField], text: item[this.textField]};
-
-        return new SelectItem(data);
-      });
-    }
+  public set active(selectedItems:any[]) {
+    this._active = this._getValidatedArray(selectedItems);
   }
 
   @Output() public data:EventEmitter<any> = new EventEmitter();
@@ -309,34 +302,34 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   @Output() public typed:EventEmitter<any> = new EventEmitter();
   @Output() public opened:EventEmitter<any> = new EventEmitter();
 
-  public options:Array<SelectItem> = [];
-  public itemObjects:Array<SelectItem> = [];
-  public activeOption:SelectItem;
+  public options:any[] = [];
+  public markedOption:any;
   public element:ElementRef;
 
-  public get active():Array<any> {
+  public get active():any[] {
     return this._active;
   }
 
-  private set optionsOpened(value:boolean){
+  public set optionsOpened(value:boolean){
     this._optionsOpened = value;
     this.opened.emit(value);
   }
 
-  private get optionsOpened(): boolean{
+  public get optionsOpened(): boolean{
     return this._optionsOpened;
   }
 
   protected onChange:any = Function.prototype;
   protected onTouched:any = Function.prototype;
 
-  private inputMode:boolean = false;
+  public inputMode:boolean = false;
+  public inputValue:string = '';
+
   private _optionsOpened:boolean = false;
   private behavior:OptionsBehavior;
-  private inputValue:string = '';
-  private _items:Array<any> = [];
+  private _items:any[] = [];
   private _disabled:boolean = false;
-  private _active:Array<SelectItem> = [];
+  private _active:any[] = [];
 
   public constructor(element:ElementRef, private sanitizer:DomSanitizer) {
     this.element = element;
@@ -361,6 +354,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     if (!isUpMode && e.keyCode === 8) {
       let el:any = this.element.nativeElement
         .querySelector('div.ui-select-container > input');
+
       if (!el.value || el.value.length <= 0) {
         if (this.active.length > 0) {
           this.remove(this.active[this.active.length - 1]);
@@ -371,7 +365,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     // esc
     if (!isUpMode && e.keyCode === 27) {
       this.hideOptions();
-      this.element.nativeElement.children[0].focus();
+      this.element.nativeElement[this.childrenField][0].focus();
       e.preventDefault();
       return;
     }
@@ -408,8 +402,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
     // enter
     if (!isUpMode && e.keyCode === 13) {
-      if (this.active.indexOf(this.activeOption) === -1) {
-        this.selectActiveMatch();
+      if (this.active.indexOf(this.markedOption) === -1) {
+        this.selectMarkedMatch();
         this.behavior.next();
       }
       e.preventDefault();
@@ -430,7 +424,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       new ChildrenBehavior(this) : new GenericBehavior(this);
   }
 
-  public remove(item:SelectItem):void {
+  public remove(item:any):void {
     if (this._disabled === true) {
       return;
     }
@@ -464,7 +458,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   }
 
   public get firstItemHasChildren():boolean {
-    return this.itemObjects[0] && this.itemObjects[0].hasChildren();
+    return this._items[0] &&
+            this._items[0][this.childrenField] &&
+            Array.isArray(this._items[0][this.childrenField]) &&
+            this._items[0][this.childrenField].length > 0;
   }
 
   public writeValue(val:any):void {
@@ -475,7 +472,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   public registerOnChange(fn:(_:any) => {}):void {this.onChange = fn;}
   public registerOnTouched(fn:() => {}):void {this.onTouched = fn;}
 
-  protected matchClick(e:any):void {
+  public matchClick(e:any):void {
     if (this._disabled === true) {
       return;
     }
@@ -486,7 +483,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
   }
 
-  protected  mainClick(event:any):void {
+  public  mainClick(event:any):void {
     if (this.inputMode === true || this._disabled === true) {
       return;
     }
@@ -516,20 +513,21 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     this.inputEvent(event);
   }
 
-  protected  selectActive(value:SelectItem):void {
-    this.activeOption = value;
+  public  selectMarked(value:any):void {
+    this.markedOption = value;
   }
 
-  protected  isActive(value:SelectItem):boolean {
-    return this.activeOption.id === value.id;
+  public  isActive(value:any):boolean {
+    return this.active.find((o:any) => value[this.idField] === o[this.idField]);
+    // return this.markedOption[this.idField] === value[this.idField];
   }
 
-  protected removeClick(value: SelectItem, event: any): void {
+  public removeClick(value: any, event: any): void {
     event.stopPropagation();
     this.remove(value);
   }
 
-  private focusToInput(value:string = ''):void {
+  public focusToInput(value:string = ''):void {
     setTimeout(() => {
       let el = this.element.nativeElement.querySelector('div.ui-select-container > input');
       if (el) {
@@ -539,27 +537,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }, 0);
   }
 
-  private open():void {
-    this.options = this.itemObjects
-      .filter((option:SelectItem) => (this.multiple === false ||
-      this.multiple === true && !this.active.find((o:SelectItem) => option.text === o.text)));
-
-    if (this.options.length > 0) {
-      this.behavior.first();
-    }
-    this.optionsOpened = true;
-  }
-
-  private hideOptions():void {
-    this.inputMode = false;
-    this.optionsOpened = false;
-  }
-
-  private selectActiveMatch():void {
-    this.selectMatch(this.activeOption);
-  }
-
-  private selectMatch(value:SelectItem, e:Event = void 0):void {
+  public selectMatch(value:any, e:Event = void 0):void {
     if (e) {
       e.stopPropagation();
       e.preventDefault();
@@ -580,9 +558,70 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     if (this.multiple === true) {
       this.focusToInput('');
     } else {
-      this.focusToInput(stripTags(value.text));
+      this.focusToInput(stripTags(value[this.textField]));
       this.element.nativeElement.querySelector('.ui-select-container').focus();
     }
+  }
+
+  private _getValidatedArray(value:any[]):any[] {
+    if (!value || value.length === 0) {
+      return [];
+    } else {
+      return value
+        .filter((item:any) => item) // makes sure item exists
+        .map((item:any) => {
+          let data:any = {};
+          if (typeof item === 'string') {
+            data[this.idField] = item;
+            data[this.textField] = item;
+          } else if (typeof item === 'object') {
+            data = this._addParent(item);
+          }
+
+          return data;
+        });
+    }
+  }
+
+  private _addParent(item:any):any {
+    let newItem:any = item;
+
+    if ((typeof item === 'object') && item && item[this.childrenField] && Array.isArray(item[this.childrenField])) {
+      newItem[this.childrenField] = this._getValidatedArray(item[this.childrenField]).map((c:any) => {
+        let p:any = {};
+        if (item[this.idField]) {
+          p[this.idField] = item[this.idField];
+        }
+        if (item[this.textField]) {
+          p[this.textField] = item[this.textField];
+        }
+        c[this.parentField] = p;
+        return c;
+      });
+    }
+
+    return newItem;
+  }
+
+  private open():void {
+    this.options = this._items
+      .filter((option:any) => (this.multiple === false ||
+      this.multiple === true &&
+      !this.active.find((o:any) => option[this.idField] === o[this.idField])));
+
+    if (this.options.length > 0) {
+      this.behavior.first();
+    }
+    this.optionsOpened = true;
+  }
+
+  private hideOptions():void {
+    this.inputMode = false;
+    this.optionsOpened = false;
+  }
+
+  private selectMarkedMatch():void {
+    this.selectMatch(this.markedOption);
   }
 }
 
@@ -595,17 +634,25 @@ export class Behavior {
     this.actor = actor;
   }
 
+  protected fillChildrenHash(item:any, optionsMap:Map<string, number>, startIndex:number):number {
+    let i = startIndex;
+    item[this.actor.childrenField].map((child:any) => {
+      optionsMap.set(child[this.actor.idField], i++);
+    });
+    return i;
+  }
+
   public fillOptionsMap():void {
     this.optionsMap.clear();
     let startPos = 0;
-    this.actor.itemObjects
-      .map((item:SelectItem) => {
-        startPos = item.fillChildrenHash(this.optionsMap, startPos);
+    this.actor.items
+      .map((item:any) => {
+        startPos = this.fillChildrenHash(item, this.optionsMap, startPos);
       });
   }
 
   public ensureHighlightVisible(optionsMap:Map<string, number> = void 0):void {
-    let container = this.actor.element.nativeElement.querySelector('.ui-select-choices-content');
+    let container = this.actor.element.nativeElement.querySelector('.ui-select-choices');
     if (!container) {
       return;
     }
@@ -631,9 +678,9 @@ export class Behavior {
   }
 
   private getActiveIndex(optionsMap:Map<string, number> = void 0):number {
-    let ai = this.actor.options.indexOf(this.actor.activeOption);
+    let ai = this.actor.options.indexOf(this.actor.markedOption);
     if (ai < 0 && optionsMap !== void 0) {
-      ai = optionsMap.get(this.actor.activeOption.id);
+      ai = optionsMap.get(this.actor.markedOption[this.actor.idField]);
     }
     return ai;
   }
@@ -645,39 +692,39 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
   }
 
   public first():void {
-    this.actor.activeOption = this.actor.options[0];
+    this.actor.markedOption = this.actor.options[0];
     super.ensureHighlightVisible();
   }
 
   public last():void {
-    this.actor.activeOption = this.actor.options[this.actor.options.length - 1];
+    this.actor.markedOption = this.actor.options[this.actor.options.length - 1];
     super.ensureHighlightVisible();
   }
 
   public prev():void {
-    let index = this.actor.options.indexOf(this.actor.activeOption);
-    this.actor.activeOption = this.actor
+    let index = this.actor.options.indexOf(this.actor.markedOption);
+    this.actor.markedOption = this.actor
       .options[index - 1 < 0 ? this.actor.options.length - 1 : index - 1];
     super.ensureHighlightVisible();
   }
 
   public next():void {
-    let index = this.actor.options.indexOf(this.actor.activeOption);
-    this.actor.activeOption = this.actor
+    let index = this.actor.options.indexOf(this.actor.markedOption);
+    this.actor.markedOption = this.actor
       .options[index + 1 > this.actor.options.length - 1 ? 0 : index + 1];
     super.ensureHighlightVisible();
   }
 
   public filter(query:RegExp):void {
-    let options = this.actor.itemObjects
-      .filter((option:SelectItem) => {
-        return stripTags(option.text).match(query) &&
+    let options = this.actor.items
+      .filter((option:any) => {
+        return stripTags(option[this.actor.textField]).match(query) &&
           (this.actor.multiple === false ||
-          (this.actor.multiple === true && this.actor.active.map((item:SelectItem) => item.id).indexOf(option.id) < 0));
+          (this.actor.multiple === true && this.actor.active.map((item: any) => item[this.actor.idField]).indexOf(option[this.actor.idField]) < 0));
       });
     this.actor.options = options;
     if (this.actor.options.length > 0) {
-      this.actor.activeOption = this.actor.options[0];
+      this.actor.markedOption = this.actor.options[0];
       super.ensureHighlightVisible();
     }
   }
@@ -689,34 +736,34 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
   }
 
   public first():void {
-    this.actor.activeOption = this.actor.options[0].children[0];
+    this.actor.markedOption = this.actor.options[0][this.actor.childrenField][0];
     this.fillOptionsMap();
     this.ensureHighlightVisible(this.optionsMap);
   }
 
   public last():void {
-    this.actor.activeOption =
+    this.actor.markedOption =
       this.actor
         .options[this.actor.options.length - 1]
-        .children[this.actor.options[this.actor.options.length - 1].children.length - 1];
+        [this.actor.childrenField][this.actor.options[this.actor.options.length - 1][this.actor.childrenField].length - 1];
     this.fillOptionsMap();
     this.ensureHighlightVisible(this.optionsMap);
   }
 
   public prev():void {
     let indexParent = this.actor.options
-      .findIndex((option:SelectItem) => this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id);
-    let index = this.actor.options[indexParent].children
-      .findIndex((option:SelectItem) => this.actor.activeOption && this.actor.activeOption.id === option.id);
-    this.actor.activeOption = this.actor.options[indexParent].children[index - 1];
-    if (!this.actor.activeOption) {
+      .findIndex((option:any) => this.actor.markedOption[this.actor.parentField] && this.actor.markedOption[this.actor.parentField][this.actor.idField] === option[this.actor.idField]);
+    let index = this.actor.options[indexParent][this.actor.childrenField]
+      .findIndex((option:any) => this.actor.markedOption && this.actor.markedOption[this.actor.idField] === option[this.actor.idField]);
+    this.actor.markedOption = this.actor.options[indexParent][this.actor.childrenField][index - 1];
+    if (!this.actor.markedOption) {
       if (this.actor.options[indexParent - 1]) {
-        this.actor.activeOption = this.actor
+        this.actor.markedOption = this.actor
           .options[indexParent - 1]
-          .children[this.actor.options[indexParent - 1].children.length - 1];
+          [this.actor.childrenField][this.actor.options[indexParent - 1][this.actor.childrenField].length - 1];
       }
     }
-    if (!this.actor.activeOption) {
+    if (!this.actor.markedOption) {
       this.last();
     }
     this.fillOptionsMap();
@@ -725,16 +772,16 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
 
   public next():void {
     let indexParent = this.actor.options
-      .findIndex((option:SelectItem) => this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id);
-    let index = this.actor.options[indexParent].children
-      .findIndex((option:SelectItem) => this.actor.activeOption && this.actor.activeOption.id === option.id);
-    this.actor.activeOption = this.actor.options[indexParent].children[index + 1];
-    if (!this.actor.activeOption) {
+      .findIndex((option:any) => this.actor.markedOption[this.actor.parentField] && this.actor.markedOption[this.actor.parentField][this.actor.idField] === option[this.actor.idField]);
+    let index = this.actor.options[indexParent][this.actor.childrenField]
+      .findIndex((option:any) => this.actor.markedOption && this.actor.markedOption[this.actor.idField] === option[this.actor.idField]);
+    this.actor.markedOption = this.actor.options[indexParent][this.actor.childrenField][index + 1];
+    if (!this.actor.markedOption) {
       if (this.actor.options[indexParent + 1]) {
-        this.actor.activeOption = this.actor.options[indexParent + 1].children[0];
+        this.actor.markedOption = this.actor.options[indexParent + 1][this.actor.childrenField][0];
       }
     }
-    if (!this.actor.activeOption) {
+    if (!this.actor.markedOption) {
       this.first();
     }
     this.fillOptionsMap();
@@ -742,22 +789,30 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
   }
 
   public filter(query:RegExp):void {
-    let options:Array<SelectItem> = [];
+    let options:any[] = [];
     let optionsMap:Map<string, number> = new Map<string, number>();
     let startPos = 0;
-    for (let si of this.actor.itemObjects) {
-      let children:Array<SelectItem> = si.children.filter((option:SelectItem) => query.test(option.text));
-      startPos = si.fillChildrenHash(optionsMap, startPos);
+    for (let si of this.actor.items) {
+      let children:any[] = si[this.actor.childrenField].filter((option:any) => query.test(option[this.actor.textField]));
+      startPos = this.fillChildrenHash(si, optionsMap, startPos);
       if (children.length > 0) {
-        let newSi = si.getSimilar();
-        newSi.children = children;
+        let newSi = this._getSimilar(si);
+        newSi[this.actor.childrenField] = children;
         options.push(newSi);
       }
     }
     this.actor.options = options;
     if (this.actor.options.length > 0) {
-      this.actor.activeOption = this.actor.options[0].children[0];
+      this.actor.markedOption = this.actor.options[0][this.actor.childrenField][0];
       super.ensureHighlightVisible(optionsMap);
     }
+  }
+
+  private _getSimilar(item:any):any {
+    let r:any = {};
+    r[this.actor.idField] = item[this.actor.idField];
+    r[this.actor.textField] = item[this.actor.textField];
+    r[this.actor.parentField] = item[this.actor.parentField];
+    return r;
   }
 }

@@ -16,13 +16,13 @@ let gettingStarted = require('html-loader!markdown-loader!../getting-started.md'
         </div>
       </div>
     </main>
-  
+
     <div class="container">
       <section id="getting-started" [innerHtml]="gettingStarted"></section>
-  
+
       <select-section class="col-md-12"></select-section>
     </div>
-  
+
     <footer class="footer">
       <div class="container">
         <p class="text-muted text-center"><a href="https://github.com/valor-software/ng2-select">ng2-select</a> is maintained by <a href="https://github.com/valor-software">valor-software</a>.</p>
