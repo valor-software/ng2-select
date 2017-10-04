@@ -1,3 +1,21 @@
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/valor-software/ng2-select/compare/v1.1.2...v1.2.0) (2017-01-18)
+
+
+### Bug Fixes
+
+* add checking for not udefined document object ([#541](https://github.com/valor-software/ng2-select/issues/541)) ([7330f47](https://github.com/valor-software/ng2-select/commit/7330f47))
+* **demo:** Removed duplicated attribute (data)="value" from multiple-demo.html ([#516](https://github.com/valor-software/ng2-select/issues/516)) ([7cbeb46](https://github.com/valor-software/ng2-select/commit/7cbeb46))
+* **forms:** Validation compliant to ngModel ([#575](https://github.com/valor-software/ng2-select/issues/575)) ([aaadcbb](https://github.com/valor-software/ng2-select/commit/aaadcbb))
+* **select:** compare the ID of a SelectItem instead of its text ([#358](https://github.com/valor-software/ng2-select/issues/358)) ([5c3a4e1](https://github.com/valor-software/ng2-select/commit/5c3a4e1))
+
+
+### Features
+
+* **select:** update to ng v2.3+ ([#590](https://github.com/valor-software/ng2-select/issues/590)) ([71536bc](https://github.com/valor-software/ng2-select/commit/71536bc))
+
+
+
 <a name="1.1.2"></a>
 ## [1.1.2](https://github.com/valor-software/ng2-select/compare/v1.1.1...v1.1.2) (2016-11-11)
 
