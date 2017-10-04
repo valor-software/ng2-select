@@ -345,7 +345,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     if (e.keyCode === 9) {
       return;
     }
-
     if (isUpMode && (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 38 ||
       e.keyCode === 40 || e.keyCode === 13)) {
       e.preventDefault();
