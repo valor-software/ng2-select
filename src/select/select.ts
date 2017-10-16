@@ -531,7 +531,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   }
 
   protected  isActive(value: SelectItem): boolean {
-    return this.activeOption.id === value.id;
+    return this.activeOption && this.activeOption.id === value.id;
   }
 
   protected removeClick(value: SelectItem, event: any): void {
