@@ -6,11 +6,11 @@ declare const ENV:string;
 // google code-prettify
 declare const PR:any;
 
-declare const require:any;
-declare const global:any;
+// declare const require:any;
+// declare const global:any;
 
 declare module jasmine {
-  interface Matchers {
+  interface Matchers<T> {
     toHaveCssClass(expected: any): boolean;
   }
 }
