@@ -181,15 +181,15 @@ export class ChildrenDemoComponent {
       ]
     }
   ];
-  private value:any = {};
-  private _disabledV:string = '0';
-  private disabled:boolean = false;
+  public value:any = {};
+  public _disabledV:string = '0';
+  public disabled:boolean = false;
 
-  private get disabledV():string {
+  public get disabledV():string {
     return this._disabledV;
   }
 
-  private set disabledV(value:string) {
+  public set disabledV(value:string) {
     this._disabledV = value;
     this.disabled = this._disabledV === '1';
   }
