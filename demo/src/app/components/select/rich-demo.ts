@@ -50,10 +50,10 @@ const COLORS = [
   encapsulation: ViewEncapsulation.None  // Enable dynamic HTML styles
 })
 export class RichDemoComponent implements OnInit {
-  private value:any = {};
-  private _disabledV:string = '0';
-  private disabled:boolean = false;
-  private items:Array<any> = [];
+  public value:any = {};
+  public _disabledV:string = '0';
+  public disabled:boolean = false;
+  public items:Array<any> = [];
 
   public ngOnInit():any {
     COLORS.forEach((color:{name:string, hex:string}) => {
@@ -64,11 +64,11 @@ export class RichDemoComponent implements OnInit {
     });
   }
 
-  private get disabledV():string {
+  public get disabledV():string {
     return this._disabledV;
   }
 
-  private set disabledV(value:string) {
+  public set disabledV(value:string) {
     this._disabledV = value;
     this.disabled = this._disabledV === '1';
   }
