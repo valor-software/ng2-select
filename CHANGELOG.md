@@ -1,3 +1,19 @@
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/valor-software/ng2-select/compare/v1.2.0...v2.0.0) (2017-11-23)
+
+
+### Bug Fixes
+
+* **demo:** update dependencies, fix aot build ([#902](https://github.com/valor-software/ng2-select/issues/902)) ([6328439](https://github.com/valor-software/ng2-select/commit/6328439))
+* **test:** add tsconfig for specs ([#904](https://github.com/valor-software/ng2-select/issues/904)) ([ce84518](https://github.com/valor-software/ng2-select/commit/ce84518))
+
+
+### Features
+
+* **forms:** adds functionality to make ng2-select compatible with form-controls ([#881](https://github.com/valor-software/ng2-select/issues/881)) ([201c6e2](https://github.com/valor-software/ng2-select/commit/201c6e2))
+
+
+
 <a name="1.2.0"></a>
 # [1.2.0](https://github.com/valor-software/ng2-select/compare/v1.1.2...v1.2.0) (2017-01-18)
 
