@@ -413,7 +413,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
     // enter
     if (!isUpMode && e.keyCode === 13) {
-      if (this.active.indexOf(this.activeOption) === -1) {
+      if (!this.active.find(a => a.id === this.activeOption.id)) {
         this.selectActiveMatch();
         this.behavior.next();
       }
