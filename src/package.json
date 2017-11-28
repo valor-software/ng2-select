@@ -1,5 +1,5 @@
 {
-  "name": "ng2-select",
+  "name": "ng2-select-exposit",
   "peerDependencies": {
     "@angular/common": "*",
     "@angular/core": "*"
