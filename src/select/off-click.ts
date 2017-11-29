@@ -22,12 +22,13 @@ export class OffClickDirective {
 
   private checkIsPathContainsCurrentElement($event: any) {
     let isPathContainsCurrentElement = false;
-    $event.path.forEach((pathElement: any) => {
+    for (let i = 0; i < $event.path.length; i++) {
+      const pathElement = $event.path[i];
       if (pathElement == this.currentElementRef.nativeElement) {
-        console.log("PATH CONTAINS", pathElement, this.currentElementRef.nativeElement);
         isPathContainsCurrentElement = true;
       }
-    });
+    }
+
     return isPathContainsCurrentElement;
   }
 }
