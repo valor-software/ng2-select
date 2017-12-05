@@ -413,11 +413,39 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
     // enter
     if (!isUpMode && e.keyCode === 13) {
-      if (this.active.indexOf(this.activeOption) === -1) {
-        this.selectActiveMatch();
-        this.behavior.next();
+      if(this.options.length <= 0 && this.inputValue != ""){
+        let newValue = new SelectItem(this.inputValue);
+        console.log(JSON.stringify(newValue, null,4));
+        this.itemObjects.push(newValue);
+        
+        if(this.active.indexOf(newValue) == -1){
+            this.active.push(newValue);
+            this.data.next(this.active);
+            this.behavior.next();
+            
+            console.log(JSON.stringify(this.active, null,4));
+        }
+
+        this.doEvent('selected', newValue);
+        this.hideOptions();
+        if (this.multiple === true) {
+          this.focusToInput('');
+        } else {
+          this.focusToInput(stripTags(newValue.text));
+          this.element.nativeElement.querySelector('.ui-select-container').focus();
+        }
+        // Clear input
+        let target = e.target || e.srcElement;
+        target.value = "";
       }
-      e.preventDefault();
+      else{
+        if (this.active.indexOf(this.activeOption) === -1) {
+          this.selectActiveMatch();
+          this.behavior.next();
+        }
+        e.preventDefault();
+      }
+      
       return;
     }
     let target = e.target || e.srcElement;
