@@ -137,7 +137,7 @@ let styles = `
           (click)="matchClick($event)"
           style="outline: 0;">
         <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
-        <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
+        <span *ngIf="active.length > 0" class="ui-select-match-text pull-left" style="pointer-events:none"
               [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
               [innerHTML]="sanitize(active[0].text)"></span>
         <i class="dropdown-toggle pull-right"></i>
@@ -163,7 +163,7 @@ let styles = `
                (mouseenter)="selectActive(o)"
                (click)="selectMatch(o, $event)">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+              <div [innerHtml]="sanitize(o.text | highlight:inputValue)" style="pointer-events:none"></div>
             </a>
           </div>
         </li>
