@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { SelectSectionComponent } from './components/select-section';
 import { ChildrenDemoComponent } from './components/select/children-demo';
 import { MultipleDemoComponent } from './components/select/multiple-demo';
+import { NoAutocompleteDemo } from './components/select/no-autocomplete-demo';
 import { RichDemoComponent } from './components/select/rich-demo';
 import { SingleDemoComponent } from './components/select/single-demo';
 import { SampleSectionComponent } from './components/sample-section.component';
@@ -20,6 +21,7 @@ import { SampleSectionComponent } from './components/sample-section.component';
     SelectSectionComponent,
     ChildrenDemoComponent,
     MultipleDemoComponent,
+    NoAutocompleteDemo,
     RichDemoComponent,
     SingleDemoComponent
   ],
