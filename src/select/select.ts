@@ -131,7 +131,7 @@ let styles = `
      class="ui-select-container dropdown open">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <div class="ui-select-match"
-         *ngIf="!inputMode">
+         *ngIf="!inputMode || noAutocomplete">
       <span tabindex="-1"
           class="btn btn-default btn-secondary form-control ui-select-toggle"
           (click)="matchClick($event)"
@@ -152,7 +152,7 @@ let styles = `
            (keyup)="inputEvent($event, true)"
            [disabled]="disabled"
            class="form-control ui-select-search"
-           *ngIf="inputMode"
+           *ngIf="inputMode && !noAutocomplete"
            placeholder="{{active.length <= 0 ? placeholder : ''}}">
      <!-- options template -->
      <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
@@ -264,6 +264,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   @Input() public textField: string = 'text';
   @Input() public childrenField: string = 'children';
   @Input() public multiple: boolean = false;
+  @Input() public noAutocomplete: boolean = false;
 
   @Input()
   public set items(value: Array<any>) {
@@ -342,10 +343,11 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   private _items: Array<any> = [];
   private _disabled: boolean = false;
   private _active: Array<SelectItem> = [];
-
+  static list:Array<any> = [];
   public constructor(element: ElementRef, private sanitizer: DomSanitizer) {
     this.element = element;
     this.clickedOutside = this.clickedOutside.bind(this);
+    SelectComponent.list.push(this);
   }
 
   public sanitize(html: string): SafeHtml {
@@ -499,7 +501,9 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
     this.inputMode = !this.inputMode;
     if (this.inputMode === true && ((this.multiple === true && e) || this.multiple === false)) {
-      this.focusToInput();
+      if(!this.noAutocomplete){
+        this.focusToInput();
+      }
       this.open();
     }
   }
@@ -598,7 +602,9 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     if (this.multiple === true) {
       this.focusToInput('');
     } else {
-      this.focusToInput(stripTags(value.text));
+      if(!this.noAutocomplete){
+        this.focusToInput(stripTags(value.text));
+      }
       this.element.nativeElement.querySelector('.ui-select-container').focus();
     }
   }
@@ -779,3 +785,4 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
     }
   }
 }
+(<any>window).SelectComponent = SelectComponent;

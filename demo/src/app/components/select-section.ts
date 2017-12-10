@@ -25,6 +25,11 @@ let tabDesc: any = {
     heading: 'Rich',
     ts: require('!!raw-loader?lang=typescript!./select/rich-demo.ts'),
     html: require('!!raw-loader?lang=markup!./select/rich-demo.html')
+  },
+  noAutoComplete: {
+    heading: 'noAutoComplete',
+    ts: require('!!raw-loader?lang=typescript!./select/no-autocomplete-demo.ts'),
+    html: require('!!raw-loader?lang=markup!./select/no-autocomplete-demo.html')
   }
 };
 
@@ -45,6 +50,9 @@ let tabDesc: any = {
       </tab>
       <tab heading="Rich">
         <sample-section [desc]="tabDesc.rich"><rich-demo></rich-demo></sample-section>
+      </tab>
+      <tab heading="No autocomplete">
+        <sample-section [desc]="tabDesc.noAutoComplete"><no-autocomplete-demo></no-autocomplete-demo></sample-section>
       </tab>
     </tabset>
   </div>
