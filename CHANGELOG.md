@@ -1,3 +1,13 @@
+<a name="2.0.1"></a>
+## [2.0.1](https://github.com/valor-software/ng2-select/compare/v2.0.0...v2.0.1) (2017-12-11)
+
+
+### Bug Fixes
+
+* **ci:** fix travis ([#906](https://github.com/valor-software/ng2-select/issues/906)) ([855ac2f](https://github.com/valor-software/ng2-select/commit/855ac2f))
+
+
+
 <a name="2.0.0"></a>
 # [2.0.0](https://github.com/valor-software/ng2-select/compare/v1.2.0...v2.0.0) (2017-11-23)
 
