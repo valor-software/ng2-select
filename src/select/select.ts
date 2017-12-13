@@ -770,7 +770,7 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
     let optionsMap: Map<string, number> = new Map<string, number>();
     let startPos = 0;
     for (let si of this.actor.itemObjects) {
-      let children: Array<SelectItem> = si.children.filter((option: SelectItem) => query.test(option.text));
+      let children: Array<SelectItem> = si.children.filter((option: SelectItem) => stripTags(option.text).match(query));
       startPos = si.fillChildrenHash(optionsMap, startPos);
       if (children.length > 0) {
         let newSi = si.getSimilar();
