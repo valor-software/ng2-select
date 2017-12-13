@@ -29,6 +29,7 @@
   - `allowClear` (`?boolean=false`) (*not yet supported*) - Set to `true` to allow the selection to be cleared. This option only applies to single-value inputs.
   - `placeholder` (`?string=''`) - Placeholder text to display when the element has no focus and selected items.
   - `disabled` (`?boolean=false`) - When `true`, it specifies that the component should be disabled.
+  - `autoComplete` (`?boolean=false`) - When `true`, there is no input, just plan-html select box
   - `multiple` - (`?boolean=false`) - Mode of this component. If set `true` user can select more than one option.
   This option only applies to single-value inputs, as multiple-value inputs don't have the search input in the dropdown to begin with.
 
