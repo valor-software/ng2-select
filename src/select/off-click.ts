@@ -1,22 +1,34 @@
-import { Directive, HostListener, Input, OnInit, OnDestroy } from '@angular/core';
+import {Directive, ElementRef, Input} from '@angular/core';
 
 @Directive({
-  selector: '[offClick]'
+  selector: '[offClick]',
+  host: {
+    '(document:click)': 'offClickHandlerInternal($event)',
+  },
 })
 
-export class OffClickDirective implements OnInit, OnDestroy {
-  /* tslint:disable */
+export class OffClickDirective {
   @Input('offClick') public offClickHandler: any;
-  /* tslint:enable */
-  @HostListener('click', ['$event']) public onClick($event: MouseEvent): void {
-    $event.stopPropagation();
+
+  constructor(private currentElementRef: ElementRef) {
   }
 
-  public ngOnInit(): any {
-    setTimeout(() => { if(typeof document !== 'undefined') { document.addEventListener('click', this.offClickHandler); } }, 0);
+  public offClickHandlerInternal($event: any) {
+    let isPathContainsCurrentElement = this.checkIsPathContainsCurrentElement($event);
+    if (!isPathContainsCurrentElement) {
+      this.offClickHandler();
+    }
   }
 
-  public ngOnDestroy(): any {
-    if(typeof document !== 'undefined') { document.removeEventListener('click', this.offClickHandler); }
+  private checkIsPathContainsCurrentElement($event: any) {
+    let isPathContainsCurrentElement = false;
+    for (let i = 0; i < $event.path.length; i++) {
+      const pathElement = $event.path[i];
+      if (pathElement == this.currentElementRef.nativeElement) {
+        isPathContainsCurrentElement = true;
+      }
+    }
+
+    return isPathContainsCurrentElement;
   }
 }
