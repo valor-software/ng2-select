@@ -1,28 +1,37 @@
 import {async, fakeAsync, tick, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
-
+import {FormsModule, ReactiveFormsModule, FormControl} from '@angular/forms';
 import {SelectModule, SelectComponent} from '../ng2-select';
 
 @Component({
     selector: 'select-test',
     template: `
         <ng-select id="sel-1" #component1
-                   [allowClear]="allowClear"
-                   [placeholder]="placeholder"
-                   [textField]="textField"
-                   [childrenField]="childrenField"
-                   [multiple]="multiple"
-                   [noAutoComplete]="noAutoComplete"
-                   [items]="items"
-                   [disabled]="disabled"
-                   [active]="active"
+                   [allowClear]="select1.allowClear"
+                   [placeholder]="select1.placeholder"
+                   [textField]="select1.textField"
+                   [childrenField]="select1.childrenField"
+                   [multiple]="select1.multiple"
+                   [noAutoComplete]="select1.noAutoComplete"
+                   [items]="select1.items"
+                   [disabled]="select1.disabled"
+                   [active]="select1.active"
 
-                   (data)="data($event)"
-                   (selected)="selected($event)"
-                   (removed)="removed($event)"
-                   (typed)="typed($event)"
-                   (opened)="opened($event)"></ng-select>
-        <ng-select id="sel-2" #component2></ng-select>
+                   (data)="select1.data($event)"
+                   (selected)="select1.selected($event)"
+                   (removed)="select1.removed($event)"
+                   (typed)="select1.typed($event)"
+                   (opened)="select1.opened($event)"></ng-select>
+        <ng-select id="sel-2" #component2
+                   [formControl]="select2.formControl"
+                   [allowClear]="select2.allowClear"
+                   [placeholder]="select2.placeholder"
+                   [textField]="select2.textField"
+                   [childrenField]="select2.childrenField"
+                   [multiple]="select2.multiple"
+                   [noAutoComplete]="select2.noAutoComplete"
+                   [items]="select2.items"
+                   [active]="select2.active"></ng-select>
         <ng-select id="sel-3" #component3 [multiple]="true"></ng-select>`
 })
 class TestSelectComponent {
@@ -30,22 +39,38 @@ class TestSelectComponent {
     @ViewChild('component2') component2: SelectComponent;
     @ViewChild('component3') component3: SelectComponent;
 
-    public allowClear: boolean;     // +
-    public placeholder: string;
-    public idField: string;
-    public textField: string;
-    public childrenField: string;
-    public multiple: boolean;       // +
-    public noAutoComplete: boolean; // +
-    public items: any[];            // +
-    public disabled: boolean;       // +
-    public active: any[];
+    public select1: any = {
+        allowClear: false,          // +
+        placeholder: '',
+        idField: 'id',
+        textField: 'text',
+        childrenField: 'children',
+        multiple: false,            // +
+        noAutoComplete: false,      // +
+        items: [],                  // +
+        disabled: false,            // +
+        active: [],
 
-    public data = (v: any) => console.log('data', v);
-    public selected = (v: any) => console.log('selected', v);
-    public removed = (v: any) => console.log('removed', v);
-    public typed = (v: any) => console.log('typed', v);
-    public opened = (v: any) => console.log('opened', v);
+        data: (v: any) => console.log('data', v),
+        selected: (v: any) => console.log('selected', v),
+        removed: (v: any) => console.log('removed', v),
+        typed: (v: any) => console.log('typed', v),
+        opened: (v: any) => console.log('opened', v)
+    };
+
+    public select2: any = {
+        formControl: new FormControl(),
+
+        allowClear: false,          // +
+        placeholder: '',
+        idField: 'id',
+        textField: 'text',          // +
+        childrenField: 'children',
+        multiple: false,            // +
+        noAutoComplete: false,      // +
+        items: [],                  // +
+        active: []
+    };
 }
 
 describe('Component: ng2-select', () => {
@@ -77,7 +102,7 @@ describe('Component: ng2-select', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [SelectModule],
+            imports: [FormsModule, ReactiveFormsModule, SelectModule],
             declarations: [TestSelectComponent]
         }).compileComponents();
     }));
@@ -85,22 +110,21 @@ describe('Component: ng2-select', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(TestSelectComponent);
 
-        fixture.componentInstance.allowClear = false;
-        fixture.componentInstance.placeholder = '';
-        fixture.componentInstance.idField = 'id';
-        fixture.componentInstance.textField = 'text';
-        fixture.componentInstance.childrenField = 'children';
-        fixture.componentInstance.multiple = false;
-        fixture.componentInstance.noAutoComplete = false;
-        // fixture.componentInstance.items = ;
-        fixture.componentInstance.disabled = false;
-        fixture.componentInstance.active = [];
+        fixture.componentInstance.select1.allowClear = false;
+        fixture.componentInstance.select1.placeholder = '';
+        fixture.componentInstance.select1.idField = 'id';
+        fixture.componentInstance.select1.textField = 'text';
+        fixture.componentInstance.select1.childrenField = 'children';
+        fixture.componentInstance.select1.multiple = false;
+        fixture.componentInstance.select1.noAutoComplete = false;
+        fixture.componentInstance.select1.disabled = false;
+        fixture.componentInstance.select1.active = [];
 
-        spyOn(fixture.componentInstance, 'data').and.callThrough();
-        spyOn(fixture.componentInstance, 'selected').and.callThrough();
-        spyOn(fixture.componentInstance, 'removed').and.callThrough();
-        spyOn(fixture.componentInstance, 'typed').and.callThrough();
-        spyOn(fixture.componentInstance, 'opened').and.callThrough();
+        spyOn(fixture.componentInstance.select1, 'data');
+        spyOn(fixture.componentInstance.select1, 'selected');
+        spyOn(fixture.componentInstance.select1, 'removed');
+        spyOn(fixture.componentInstance.select1, 'typed');
+        spyOn(fixture.componentInstance.select1, 'opened');
 
         fixture.detectChanges();
     });
@@ -114,11 +138,11 @@ describe('Component: ng2-select', () => {
         expect(formControl(2)).toBeTruthy();
         expect(formControl(3)).toBeTruthy();
 
-        expect(fixture.componentInstance.data).toHaveBeenCalledTimes(0);
-        expect(fixture.componentInstance.selected).toHaveBeenCalledTimes(0);
-        expect(fixture.componentInstance.removed).toHaveBeenCalledTimes(0);
-        expect(fixture.componentInstance.typed).toHaveBeenCalledTimes(0);
-        expect(fixture.componentInstance.opened).toHaveBeenCalledTimes(0);
+        expect(fixture.componentInstance.select1.data).toHaveBeenCalledTimes(0);
+        expect(fixture.componentInstance.select1.selected).toHaveBeenCalledTimes(0);
+        expect(fixture.componentInstance.select1.removed).toHaveBeenCalledTimes(0);
+        expect(fixture.componentInstance.select1.typed).toHaveBeenCalledTimes(0);
+        expect(fixture.componentInstance.select1.opened).toHaveBeenCalledTimes(0);
     });
 
     it('test default properties', () => {
@@ -133,11 +157,11 @@ describe('Component: ng2-select', () => {
         expect(fixture.componentInstance.component2.disabled).toBeFalsy();
         expect(fixture.componentInstance.component2.active).toEqual([]);
 
-        expect(fixture.componentInstance.data).toHaveBeenCalledTimes(0);
-        expect(fixture.componentInstance.selected).toHaveBeenCalledTimes(0);
-        expect(fixture.componentInstance.removed).toHaveBeenCalledTimes(0);
-        expect(fixture.componentInstance.typed).toHaveBeenCalledTimes(0);
-        expect(fixture.componentInstance.opened).toHaveBeenCalledTimes(0);
+        expect(fixture.componentInstance.select1.data).toHaveBeenCalledTimes(0);
+        expect(fixture.componentInstance.select1.selected).toHaveBeenCalledTimes(0);
+        expect(fixture.componentInstance.select1.removed).toHaveBeenCalledTimes(0);
+        expect(fixture.componentInstance.select1.typed).toHaveBeenCalledTimes(0);
+        expect(fixture.componentInstance.select1.opened).toHaveBeenCalledTimes(0);
     });
 
     it('should be only one dropdown for all select components', () => {
@@ -157,7 +181,7 @@ describe('Component: ng2-select', () => {
         expect(selectChoices(3).length).toBe(0);
 
         // set items to select 1, 2, 3
-        fixture.componentInstance.items = items1;
+        fixture.componentInstance.select1.items = items1;
         fixture.componentInstance.component2.items = items1;
         fixture.componentInstance.component3.items = items1;
         fixture.detectChanges();
@@ -208,215 +232,256 @@ describe('Component: ng2-select', () => {
         expect(selectChoices(2).length).toBe(0);
         expect(selectChoices(3).length).toBe(0);
 
-        expect(fixture.componentInstance.data).toHaveBeenCalledTimes(0);
-        expect(fixture.componentInstance.selected).toHaveBeenCalledTimes(0);
-        expect(fixture.componentInstance.removed).toHaveBeenCalledTimes(0);
-        expect(fixture.componentInstance.typed).toHaveBeenCalledTimes(0);
-        expect(fixture.componentInstance.opened).toHaveBeenCalledTimes(4);
+        expect(fixture.componentInstance.select1.data).toHaveBeenCalledTimes(0);
+        expect(fixture.componentInstance.select1.selected).toHaveBeenCalledTimes(0);
+        expect(fixture.componentInstance.select1.removed).toHaveBeenCalledTimes(0);
+        expect(fixture.componentInstance.select1.typed).toHaveBeenCalledTimes(0);
+        expect(fixture.componentInstance.select1.opened).toHaveBeenCalledTimes(4);
     });
 
     it('should have not auto complete', () => {
-        fixture.componentInstance.noAutoComplete = true;
+        fixture.componentInstance.select1.noAutoComplete = true;
         fixture.detectChanges();
         formControl(1).click();
         fixture.detectChanges();
         expect(formControlInput(1)).toBeFalsy();
     });
 
-    describe('should be focused', () => {
+    describe('test without model', () => {
         beforeEach(() => {
-            fixture.componentInstance.items = items1;
-        });
-
-        it('single', () => {
-            fixture.componentInstance.multiple = false;
-        });
-
-        it('multiple', () => {
-            fixture.componentInstance.multiple = true;
-        });
-
-        afterEach(() => {
-            formControl(1).click();
+            fixture.componentInstance.select1.items = items1;
             fixture.detectChanges();
-            fixture.detectChanges();
-            expect(formControlInput(1)).toBeTruthy();
-            expect(formControlInput(1).value).toBe('');
-            expect(formControlInput(1)).toBe(document.activeElement);
+        });
 
-            expect(fixture.componentInstance.data).toHaveBeenCalledTimes(0);
-            expect(fixture.componentInstance.selected).toHaveBeenCalledTimes(0);
-            expect(fixture.componentInstance.removed).toHaveBeenCalledTimes(0);
-            expect(fixture.componentInstance.typed).toHaveBeenCalledTimes(0);
-            expect(fixture.componentInstance.opened).toHaveBeenCalledTimes(1);
+        describe('should be focused', () => {
+            it('single', () => {
+                fixture.componentInstance.select1.multiple = false;
+            });
+
+            it('multiple', () => {
+                fixture.componentInstance.select1.multiple = true;
+            });
+
+            afterEach(() => {
+                formControl(1).click();
+                fixture.detectChanges();
+                fixture.detectChanges();
+                expect(formControlInput(1)).toBeTruthy();
+                expect(formControlInput(1).value).toBe('');
+                expect(formControlInput(1)).toBe(document.activeElement);
+
+                expect(fixture.componentInstance.select1.data).toHaveBeenCalledTimes(0);
+                expect(fixture.componentInstance.select1.selected).toHaveBeenCalledTimes(0);
+                expect(fixture.componentInstance.select1.removed).toHaveBeenCalledTimes(0);
+                expect(fixture.componentInstance.select1.typed).toHaveBeenCalledTimes(0);
+                expect(fixture.componentInstance.select1.opened).toHaveBeenCalledTimes(1);
+            });
+        });
+
+        describe('should selecting items and clean it', () => {
+            it('single', () => {
+                expect(formControlInput(1)).toBeFalsy();
+                expect(selectedItem(1)).toBeFalsy();
+
+                formControl(1).click();
+                fixture.detectChanges();
+                expect(formControlInput(1)).toBeTruthy();
+                expect(formControlInput(1).value).toBe('');
+                expect(selectChoices(1).length).toBe(3);
+                expect(selectedItem(1)).toBeFalsy();
+
+                selectChoices(1)[0].click();
+                fixture.detectChanges();
+                expect(formControlInput(1)).toBeFalsy();
+                expect(selectedItem(1)).toBeTruthy();
+                expect(selectedItem(1).innerHTML).toBe('v1');
+
+                formControl(1).click();
+                fixture.detectChanges();
+                expect(formControlInput(1)).toBeTruthy();
+                expect(formControlInput(1).value).toBe('');
+                expect(selectChoices(1).length).toBe(3);
+                expect(selectedItem(1)).toBeFalsy();
+
+                selectChoices(1)[1].click();
+                fixture.detectChanges();
+                expect(formControlInput(1)).toBeFalsy();
+                expect(selectedItem(1)).toBeTruthy();
+                expect(selectedItem(1).innerHTML).toBe('v2');
+                expect(el(1).querySelector('.btn-link')).toBeFalsy();
+
+                fixture.componentInstance.select1.allowClear = true;
+                fixture.detectChanges();
+                expect(el(1).querySelector('.btn-link')).toBeTruthy();
+
+                el(1).querySelector('.btn-link').click();
+                fixture.detectChanges();
+                expect(formControlInput(1)).toBeFalsy();
+                expect(selectedItem(1)).toBeFalsy();
+            });
+
+            it('multiple', () => {
+                expect(formControlInput(1)).toBeFalsy();
+                expect(selectedItems(1).length).toBe(0);
+
+                fixture.componentInstance.select1.multiple = true;
+                fixture.detectChanges();
+                formControl(1).click();
+                fixture.detectChanges();
+                expect(formControlInput(1)).toBeTruthy();
+                expect(formControlInput(1).value).toBe('');
+                expect(selectChoices(1).length).toBe(3);
+                expect(selectedItems(1).length).toBe(0);
+
+                selectChoices(1)[0].click();
+                fixture.detectChanges();
+                expect(formControlInput(1)).toBeTruthy();
+                expect(selectedItems(1).length).toBe(1);
+                expect(selectedItems(1)[0].querySelector('span').innerHTML).toBe('v1');
+
+                formControl(1).click();
+                fixture.detectChanges();
+                expect(formControlInput(1)).toBeTruthy();
+                expect(formControlInput(1).value).toBe('');
+                expect(selectChoices(1).length).toBe(2);
+                expect(selectedItems(1).length).toBe(1);
+
+                selectChoices(1)[1].click();
+                fixture.detectChanges();
+                expect(formControlInput(1)).toBeTruthy();
+                expect(selectedItems(1).length).toBe(2);
+                expect(selectedItems(1)[0].querySelector('span').innerHTML).toBe('v1');
+                expect(selectedItems(1)[1].querySelector('span').innerHTML).toBe('v3');
+
+                selectedItems(1)[1].querySelector('.close').click();
+                fixture.detectChanges();
+                expect(formControlInput(1)).toBeTruthy();
+                expect(selectedItems(1).length).toBe(1);
+                expect(selectedItems(1)[0].querySelector('span').innerHTML).toBe('v1');
+            });
+
+            afterEach(() => {
+                expect(fixture.componentInstance.select1.data).toHaveBeenCalledTimes(3);
+                expect(fixture.componentInstance.select1.selected).toHaveBeenCalledTimes(2);
+                expect(fixture.componentInstance.select1.removed).toHaveBeenCalledTimes(1);
+                expect(fixture.componentInstance.select1.typed).toHaveBeenCalledTimes(0);
+                expect(fixture.componentInstance.select1.opened).toHaveBeenCalledTimes(4);
+            });
+        });
+
+        describe('should be searched', () => {
+            it('single', () => {
+                fixture.componentInstance.select1.multiple = false;
+                fixture.detectChanges();
+            });
+
+            it('multiple', () => {
+                fixture.componentInstance.select1.multiple = true;
+                fixture.detectChanges();
+            });
+
+            afterEach(() => {
+                formControl(1).click();
+                fixture.detectChanges();
+                expect(formControlInput(1)).toBeTruthy();
+                expect(selectChoices(1).length).toBe(3);
+
+                formControlInput(1).value = '1';
+                formControlInput(1).dispatchEvent(new Event('keyup'));
+                fixture.detectChanges();
+                expect(selectChoices(1).length).toBe(1);
+
+                formControlInput(1).value = 'v';
+                formControlInput(1).dispatchEvent(new Event('keyup'));
+                fixture.detectChanges();
+                expect(selectChoices(1).length).toBe(3);
+
+                expect(fixture.componentInstance.select1.data).toHaveBeenCalledTimes(0);
+                expect(fixture.componentInstance.select1.selected).toHaveBeenCalledTimes(0);
+                expect(fixture.componentInstance.select1.removed).toHaveBeenCalledTimes(0);
+                expect(fixture.componentInstance.select1.typed).toHaveBeenCalledTimes(2);
+                expect(fixture.componentInstance.select1.opened).toHaveBeenCalledTimes(1);
+            });
+        });
+
+        describe('should be disabled', () => {
+            beforeEach(() => {
+                fixture.componentInstance.select1.disabled = true;
+                fixture.detectChanges();
+            });
+
+            it('single', () => {
+                formControl(1).click();
+                fixture.detectChanges();
+                expect(formControlInput(1)).toBeFalsy();
+                expect(selectChoices(1).length).toBe(0);
+            });
+
+            it('multiple', () => {
+                fixture.componentInstance.select1.multiple = true;
+                fixture.detectChanges();
+                formControl(1).click();
+                fixture.detectChanges();
+                expect(formControlInput(1)).toBeTruthy();
+                expect(selectChoices(1).length).toBe(0);
+            });
+
+            afterEach(() => {
+                fixture.componentInstance.select1.disabled = false;
+                fixture.detectChanges();
+                expect(fixture.componentInstance.select1.data).toHaveBeenCalledTimes(0);
+                expect(fixture.componentInstance.select1.selected).toHaveBeenCalledTimes(0);
+                expect(fixture.componentInstance.select1.removed).toHaveBeenCalledTimes(0);
+                expect(fixture.componentInstance.select1.typed).toHaveBeenCalledTimes(0);
+                expect(fixture.componentInstance.select1.opened).toHaveBeenCalledTimes(0);
+            });
         });
     });
 
-    describe('should selecting items and clean it', () => {
-        it('single', () => {
-            expect(formControlInput(1)).toBeFalsy();
-            expect(selectedItem(1)).toBeFalsy();
-
-            fixture.componentInstance.items = items1;
-            fixture.detectChanges();
-            formControl(1).click();
-            fixture.detectChanges();
-            expect(formControlInput(1)).toBeTruthy();
-            expect(formControlInput(1).value).toBe('');
-            expect(selectChoices(1).length).toBe(3);
-            expect(selectedItem(1)).toBeFalsy();
-
-            selectChoices(1)[0].click();
-            fixture.detectChanges();
-            expect(formControlInput(1)).toBeFalsy();
-            expect(selectedItem(1)).toBeTruthy();
-            expect(selectedItem(1).innerHTML).toBe('v1');
-
-            formControl(1).click();
-            fixture.detectChanges();
-            expect(formControlInput(1)).toBeTruthy();
-            expect(formControlInput(1).value).toBe('');
-            expect(selectChoices(1).length).toBe(3);
-            expect(selectedItem(1)).toBeFalsy();
-
-            selectChoices(1)[1].click();
-            fixture.detectChanges();
-            expect(formControlInput(1)).toBeFalsy();
-            expect(selectedItem(1)).toBeTruthy();
-            expect(selectedItem(1).innerHTML).toBe('v2');
-            expect(el(1).querySelector('.btn-link')).toBeFalsy();
-
-            fixture.componentInstance.allowClear = true;
-            fixture.detectChanges();
-            expect(el(1).querySelector('.btn-link')).toBeTruthy();
-
-            el(1).querySelector('.btn-link').click();
-            fixture.detectChanges();
-            expect(formControlInput(1)).toBeFalsy();
-            expect(selectedItem(1)).toBeFalsy();
-        });
-
-        it('multiple', () => {
-            expect(formControlInput(1)).toBeFalsy();
-            expect(selectedItems(1).length).toBe(0);
-
-            fixture.componentInstance.items = items1;
-            fixture.componentInstance.multiple = true;
-            fixture.detectChanges();
-            formControl(1).click();
-            fixture.detectChanges();
-            expect(formControlInput(1)).toBeTruthy();
-            expect(formControlInput(1).value).toBe('');
-            expect(selectChoices(1).length).toBe(3);
-            expect(selectedItems(1).length).toBe(0);
-
-            selectChoices(1)[0].click();
-            fixture.detectChanges();
-            expect(formControlInput(1)).toBeTruthy();
-            expect(selectedItems(1).length).toBe(1);
-            expect(selectedItems(1)[0].querySelector('span').innerHTML).toBe('v1');
-
-            formControl(1).click();
-            fixture.detectChanges();
-            expect(formControlInput(1)).toBeTruthy();
-            expect(formControlInput(1).value).toBe('');
-            expect(selectChoices(1).length).toBe(2);
-            expect(selectedItems(1).length).toBe(1);
-
-            selectChoices(1)[1].click();
-            fixture.detectChanges();
-            expect(formControlInput(1)).toBeTruthy();
-            expect(selectedItems(1).length).toBe(2);
-            expect(selectedItems(1)[0].querySelector('span').innerHTML).toBe('v1');
-            expect(selectedItems(1)[1].querySelector('span').innerHTML).toBe('v3');
-
-            selectedItems(1)[1].querySelector('.close').click();
-            fixture.detectChanges();
-            expect(formControlInput(1)).toBeTruthy();
-            expect(selectedItems(1).length).toBe(1);
-            expect(selectedItems(1)[0].querySelector('span').innerHTML).toBe('v1');
-        });
-
-        afterEach(() => {
-            expect(fixture.componentInstance.data).toHaveBeenCalledTimes(3);
-            expect(fixture.componentInstance.selected).toHaveBeenCalledTimes(2);
-            expect(fixture.componentInstance.removed).toHaveBeenCalledTimes(1);
-            expect(fixture.componentInstance.typed).toHaveBeenCalledTimes(0);
-            expect(fixture.componentInstance.opened).toHaveBeenCalledTimes(4);
-        });
-    });
-
-    describe('should be searched', () => {
+    describe('FormControl should be valid when empty and allowClear', () => {
         beforeEach(() => {
-            fixture.componentInstance.items = items1;
-            fixture.detectChanges();
+            fixture.componentInstance.select2.textField = 'name';
+            fixture.componentInstance.select2.items = items2;
+            fixture.componentInstance.select2.allowClear = true;
         });
 
         it('single', () => {
-            fixture.componentInstance.multiple = false;
+            fixture.componentInstance.select2.multiple = false;
             fixture.detectChanges();
+            expect(fixture.componentInstance.select2.formControl.valid).toBeFalsy();
+
+            formControl(2).click();
+            fixture.detectChanges();
+            expect(selectChoices(2).length).toBeGreaterThan(0);
+
+            selectChoices(2)[0].click();
+            fixture.detectChanges();
+            expect(fixture.componentInstance.select2.formControl.valid).toBeTruthy();
+
+            el(2).querySelector('.btn-link').click();
+            fixture.detectChanges();
+            expect(fixture.componentInstance.select2.formControl.value).toEqual([]);
+            expect(fixture.componentInstance.select2.formControl.valid).toBeTruthy();
         });
 
         it('multiple', () => {
-            fixture.componentInstance.multiple = true;
+            fixture.componentInstance.select2.multiple = true;
             fixture.detectChanges();
-        });
+            expect(fixture.componentInstance.select2.formControl.valid).toBeFalsy();
 
-        afterEach(() => {
-            formControl(1).click();
+            formControl(2).click();
             fixture.detectChanges();
-            expect(formControlInput(1)).toBeTruthy();
-            expect(selectChoices(1).length).toBe(3);
+            expect(selectChoices(2).length).toBeGreaterThan(0);
 
-            formControlInput(1).value = '1';
-            formControlInput(1).dispatchEvent(new Event('keyup'));
+            selectChoices(2)[0].click();
             fixture.detectChanges();
-            expect(selectChoices(1).length).toBe(1);
+            expect(fixture.componentInstance.select2.formControl.valid).toBeTruthy();
 
-            formControlInput(1).value = 'v';
-            formControlInput(1).dispatchEvent(new Event('keyup'));
+            selectedItems(2)[0].querySelector('.close').click();
             fixture.detectChanges();
-            expect(selectChoices(1).length).toBe(3);
-
-            expect(fixture.componentInstance.data).toHaveBeenCalledTimes(0);
-            expect(fixture.componentInstance.selected).toHaveBeenCalledTimes(0);
-            expect(fixture.componentInstance.removed).toHaveBeenCalledTimes(0);
-            expect(fixture.componentInstance.typed).toHaveBeenCalledTimes(2);
-            expect(fixture.componentInstance.opened).toHaveBeenCalledTimes(1);
+            expect(fixture.componentInstance.select2.formControl.value).toEqual([]);
+            expect(fixture.componentInstance.select2.formControl.valid).toBeTruthy();
         });
     });
 
-    describe('should be disabled', () => {
-        beforeEach(() => {
-            fixture.componentInstance.items = items1;
-            fixture.componentInstance.disabled = true;
-            fixture.detectChanges();
-        });
-
-        it('single', () => {
-            formControl(1).click();
-            fixture.detectChanges();
-            expect(formControlInput(1)).toBeFalsy();
-            expect(selectChoices(1).length).toBe(0);
-        });
-
-        it('multiple', () => {
-            fixture.componentInstance.multiple = true;
-            fixture.detectChanges();
-            formControl(1).click();
-            fixture.detectChanges();
-            expect(formControlInput(1)).toBeTruthy();
-            expect(selectChoices(1).length).toBe(0);
-        });
-
-        afterEach(() => {
-            fixture.componentInstance.disabled = false;
-            fixture.detectChanges();
-            expect(fixture.componentInstance.data).toHaveBeenCalledTimes(0);
-            expect(fixture.componentInstance.selected).toHaveBeenCalledTimes(0);
-            expect(fixture.componentInstance.removed).toHaveBeenCalledTimes(0);
-            expect(fixture.componentInstance.typed).toHaveBeenCalledTimes(0);
-            expect(fixture.componentInstance.opened).toHaveBeenCalledTimes(0);
-        });
-    });
 });

@@ -121,7 +121,7 @@ let styles = `
         {
             provide: NG_VALIDATORS,
             useExisting: forwardRef(() => SelectComponent),
-            multi: true,
+            multi: true
         }
     ],
     template: `
@@ -529,12 +529,14 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
     }
 
     public validate(c: FormControl): any {
+        console.log('SelectComponent.validate');
+
         let controlValue = c ? c.value : [];
         if (!controlValue) {
             controlValue = [];
         }
 
-        return (controlValue.length > 0) ? null : {
+        return this.allowClear || (controlValue.length > 0) ? null : {
             ng2SelectEmptyError: {
                 valid: false
             }
