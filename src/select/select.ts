@@ -529,8 +529,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
     }
 
     public validate(c: FormControl): any {
-        console.log('SelectComponent.validate');
-
         let controlValue = c ? c.value : [];
         if (!controlValue) {
             controlValue = [];
