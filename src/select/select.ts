@@ -142,8 +142,8 @@ let styles = `
               [innerHTML]="sanitize(active[0].text)"></span>
         <i class="dropdown-toggle pull-right"></i>
         <i class="caret pull-right"></i>
-        <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right" style="margin-right: 10px; padding: 0;"
-           (click)="removeClick(active[0], $event)">
+        <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right"
+           style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">
            <i class="glyphicon glyphicon-remove"></i>
         </a>
       </span>
@@ -448,8 +448,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
         // Clear input
         let target = e.target || e.srcElement;
         target.value = '';
-      }
-      else {
+      } else {
         if (this.active.indexOf(this.activeOption) === -1) {
           this.selectActiveMatch();
           this.behavior.next();
@@ -596,7 +595,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
   }
 
   protected isActive(value: SelectItem): boolean {
-    return this.activeOption.id === value.id;
+    return this.activeOption && this.activeOption.id === value.id;
   }
 
   protected removeClick(value: SelectItem, event: any): void {
@@ -612,11 +611,12 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
     this.options = this.itemObjects
       .filter((option: SelectItem) => (this.multiple === false ||
         this.multiple === true && !this.active.find((o: SelectItem) => option.text === o.text)));
-
-    if (this.options.length > 0) {
-      this.behavior.first();
-    }
     this.optionsOpened = true;
+    if (this.options.length > 0 && !(this.behavior as any).actor.activeOption) {
+      this.behavior.first();
+    } else {
+      this.behavior.current();
+    }
   }
 
   private hideOptions(): void {
@@ -720,6 +720,10 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
     super.ensureHighlightVisible();
   }
 
+  public current(): void {
+    super.ensureHighlightVisible();
+  }
+
   public last(): void {
     this.actor.activeOption = this.actor.options[this.actor.options.length - 1];
     super.ensureHighlightVisible();
@@ -762,6 +766,10 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
   public first(): void {
     this.actor.activeOption = this.actor.options[0].children[0];
     this.fillOptionsMap();
+    this.ensureHighlightVisible(this.optionsMap);
+  }
+
+  public current(): void {
     this.ensureHighlightVisible(this.optionsMap);
   }
 
@@ -817,7 +825,7 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
     let optionsMap: Map<string, number> = new Map<string, number>();
     let startPos = 0;
     for (let si of this.actor.itemObjects) {
-      let children: Array<SelectItem> = si.children.filter((option: SelectItem) => stripTags(option.text).match(query));
+      let children: Array<SelectItem> = si.children.filter((option: SelectItem) => query.test(option.text));
       startPos = si.fillChildrenHash(optionsMap, startPos);
       if (children.length > 0) {
         let newSi = si.getSimilar();
@@ -832,5 +840,3 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
     }
   }
 }
-
-(<any>window).SelectComponent = SelectComponent;
