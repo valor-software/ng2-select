@@ -180,8 +180,7 @@ let styles = `
                class="ui-select-choices-row"
                [class.active]="isActive(o)"
                (mouseenter)="selectActive(o)"
-               (click)="selectMatch(o, $event)"
-               [ngClass]="{'active': isActive(o)}">
+               (click)="selectMatch(o, $event)">
             <a href="javascript:void(0)" class="dropdown-item">
               <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
             </a>
@@ -247,8 +246,7 @@ let styles = `
                class="ui-select-choices-row"
                [class.active]="isActive(o)"
                (mouseenter)="selectActive(o)"
-               (click)="selectMatch(o, $event)"
-               [ngClass]="{'active': isActive(o)}">
+               (click)="selectMatch(o, $event)">
             <a href="javascript:void(0)" class="dropdown-item">
               <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
             </a>
@@ -612,11 +610,14 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
       .filter((option: SelectItem) => (this.multiple === false ||
         this.multiple === true && !this.active.find((o: SelectItem) => option.text === o.text)));
     this.optionsOpened = true;
-    if (this.options.length > 0 && !(this.behavior as any).actor.activeOption) {
-      this.behavior.first();
-    } else {
-      this.behavior.current();
-    }
+    // todo: fix scrolling to active item after open. setTimeout - is bad approach
+    // setTimeout(() => {
+      if (this.options.length > 0 && !(this.behavior as any).actor.activeOption) {
+        this.behavior.first();
+      } else {
+        this.behavior.current();
+      }
+    // }, 0);
   }
 
   private hideOptions(): void {
