@@ -1,5 +1,5 @@
 {
-  "name": "ng2-select-base",
+  "name": "ng2-select-ex-base",
   "version": "2.0.1",
   "private": true,
   "description": "Angular2 based replacement for select boxes",
@@ -22,7 +22,7 @@
     "test-coverage": "ng test -sr -cc",
     "version": "npm run flow.changelog && git add -A"
   },
-  "main": "bundles/ng2-select.umd.js",
+  "main": "bundles/ng2-select-ex.umd.js",
   "module": "index.js",
   "typings": "index.d.ts",
   "keywords": [
@@ -35,12 +35,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/valor-software/ng2-select.git"
+    "url": "git+ssh://git@github.com:optimistex/ng2-select-ex.git"
   },
   "bugs": {
-    "url": "https://github.com/valor-software/ng2-select/issues"
+    "url": "https://github.com/optimistex/ng2-select-ex/issues"
   },
-  "homepage": "https://github.com/valor-software/ng2-select#readme",
+  "homepage": "https://github.com/optimistex/ng2-select-ex#readme",
   "peerDependencies": {
     "@angular/common": ">=4.3.0 || >5.0.0",
     "@angular/core": ">=4.3.0 || >5.0.0"
@@ -128,6 +128,11 @@
       "name": "Oleksandr Telnov",
       "email": "otelnov@gmail.com",
       "url": "https://github.com/otelnov"
+    },
+    {
+      "name": "Konstantin Polyntsov",
+      "email": "optimistex@gmail.com",
+      "url": "https://github.com/optimistex"
     }
   ]
 }

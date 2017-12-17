@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { TabsModule, ButtonsModule } from 'ngx-bootstrap';
 
-import { SelectModule } from 'ng2-select';
+import { SelectModule } from 'ng2-select-ex';
 import { AppComponent } from './app.component';
 import { SelectSectionComponent } from './components/select-section';
 import { ChildrenDemoComponent } from './components/select/children-demo';

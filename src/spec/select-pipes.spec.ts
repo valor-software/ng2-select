@@ -1,7 +1,7 @@
 import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
-import { SelectModule, SelectComponent } from '../ng2-select';
+import { SelectModule, SelectComponent } from '../ng2-select-ex';
 
 @Component({
   selector: 'select-test',
@@ -73,7 +73,7 @@ class TestSelectComponent {
   };
 }
 
-describe('Component: ng2-select', () => {
+describe('Component: ng2-select-ex', () => {
   let fixture: ComponentFixture<TestSelectComponent>;
   const el = (id: number) => fixture.debugElement.nativeElement.querySelector(`#sel-${id} .ui-select-container`);
   const formControl = (id: number) => el(id).querySelector('.form-control');

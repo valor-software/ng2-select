@@ -28,7 +28,7 @@
   ],
   "files": [
     "../scripts/typings.d.ts",
-    "./ng2-select.ts",
+    "./ng2-select-ex.ts",
     "./index.ts"
   ],
   "angularCompilerOptions": {
