@@ -8,7 +8,7 @@
     "demo.serve": "run-s build link demo.build lite-server",
     "demo.gh-pages": "run-s build demo.build demo.deploy",
     "demo.build": "ng build -prod --aot",
-    "demo.deploy": "gh-pages -d demo/dist",
+    "demo.deploy": "gh-pages -d docs",
     "link": "ngm link -p src --here",
     "lint": "exit 0",
     "disable-lint": "tslint \"**/*.ts\" -c tslint.json --fix --type-check -t prose -e \"node_modules/**\" -e \"dist/**\" -e \"temp/**\" -e \"scripts/docs/**\"",
