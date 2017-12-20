@@ -23,5 +23,4 @@ export class HighlightPipe implements PipeTransform {
     }
     return value;
   }
-
 }

@@ -1,6 +1,6 @@
 <div tabindex="0" class="ui-select-container dropdown open"
      [class.ui-select-multiple]="multiple === true" [class.form-control]="multiple === true"
-     (keyup)="mainClick($event)" [offClick]="clickedOutside" (focus)="multiple === true ? focusToInput() : null">
+     [offClick]="clickedOutside" (keyup)="mainClick($event)" (focus)="multiple === true ? focusToInput() : null">
   <div [class.ui-disabled]="disabled"></div>
 
   <!-- single selected item -->
@@ -46,17 +46,14 @@
          role="combobox">
 
   <!-- options template -->
-  <ul *ngIf="optionsOpened && options && options.length > 0"
-      class="ui-select-choices dropdown-menu" role="menu">
+  <ul role="menu" class="ui-select-choices dropdown-menu" *ngIf="optionsOpened && options && options.length > 0">
     <li *ngFor="let parentItem of options; let idx=index" role="menuitem">
       <div class="divider dropdown-divider" *ngIf="parentItem.children && (idx > 0)"></div>
       <div class="dropdown-header" *ngIf="parentItem.children">{{parentItem.text}}</div>
 
       <div *ngFor="let item of (parentItem.children || [parentItem])"
-           class="ui-select-choices-row"
-           [class.active]="isActive(item)"
-           (mouseenter)="selectActive(item)"
-           (click)="selectMatch(item, $event)">
+           class="ui-select-choices-row" [class.active]="isActive(item)"
+           (mouseenter)="selectActive(item)" (click)="selectMatch(item, $event)">
         <a href="javascript:void(0)" class="dropdown-item">
           <div [innerHtml]="sanitize(item.text | highlight:inputValue)"></div>
         </a>
