@@ -111,7 +111,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
   protected onChange: any = Function.prototype;
   protected onTouched: any = Function.prototype;
 
-  private inputMode: boolean = false;
+  public inputMode: boolean = false;
   private _optionsOpened: boolean = false;
   private behavior: OptionsBehavior;
   private inputValue: string = '';
@@ -323,7 +323,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
     }
   }
 
-  protected mainClick(event: KeyboardEvent): void {
+  public mainClick(event: KeyboardEvent): void {
     if (this.inputMode === true || this._disabled === true) {
       return;
     }
@@ -366,7 +366,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
     this.remove(value);
   }
 
-  private focusToInput(value: string = ''): void {
+  public focusToInput(value: string = ''): void {
     this._focusValueToInput = value;
   }
 
