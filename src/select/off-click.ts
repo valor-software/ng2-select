@@ -1,5 +1,9 @@
 import { Directive, ElementRef, Input, HostListener } from '@angular/core';
 
+export interface IExtMouseEvent extends MouseEvent {
+  path: HTMLElement[];
+}
+
 @Directive({
   selector: '[offClick]'
 })
@@ -10,19 +14,17 @@ export class OffClickDirective {
   }
 
   @HostListener('document:click', ['$event'])
-  public offClickHandlerInternal($event: MouseEvent) {
+  public offClickHandlerInternal($event: IExtMouseEvent) {
     if (!this.checkIsPathContainsCurrentElement($event)) {
       this.offClick();
     }
   }
 
-  private checkIsPathContainsCurrentElement($event: MouseEvent) {
-    let el: HTMLElement = <HTMLElement>$event.target;
-    while (el) {
-      if (el === this.currentElementRef.nativeElement) {
+  private checkIsPathContainsCurrentElement($event: IExtMouseEvent) {
+    for (const pathElement of $event.path) {
+      if (pathElement === this.currentElementRef.nativeElement) {
         return true;
       }
-      el = el.parentElement;
     }
     return false;
   }
