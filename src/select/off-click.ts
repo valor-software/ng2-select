@@ -10,21 +10,20 @@ export class OffClickDirective {
   }
 
   @HostListener('document:click', ['$event'])
-  public offClickHandlerInternal($event: any) {
+  public offClickHandlerInternal($event: MouseEvent) {
     if (!this.checkIsPathContainsCurrentElement($event)) {
       this.offClick();
     }
   }
 
-  private checkIsPathContainsCurrentElement($event: any) {
-    let isPathContainsCurrentElement = false;
-    for (let i = 0; i < $event.path.length; i++) {
-      const pathElement = $event.path[i];
-      if (pathElement === this.currentElementRef.nativeElement) {
-        isPathContainsCurrentElement = true;
+  private checkIsPathContainsCurrentElement($event: MouseEvent) {
+    let el: HTMLElement = <HTMLElement>$event.target;
+    while (el) {
+      if (el === this.currentElementRef.nativeElement) {
+        return true;
       }
+      el = el.parentElement;
     }
-
-    return isPathContainsCurrentElement;
+    return false;
   }
 }

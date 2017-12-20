@@ -2,9 +2,15 @@ import { Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef,
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SelectItem } from './select-item';
-import { stripTags } from './select-pipes';
 import { OptionsBehavior } from './select-interfaces';
 import { escapeRegexp } from './common';
+import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
+
+function stripTags(input: string): string {
+  const tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
+  const commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+  return input.replace(commentsAndPhpTags, '').replace(tags, '');
+}
 
 @Component({
   selector: 'ng-select',
@@ -13,9 +19,7 @@ import { escapeRegexp } from './common';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      /* tslint:disable */
       useExisting: forwardRef(() => SelectComponent),
-      /* tslint:enable */
       multi: true
     },
     {
@@ -36,9 +40,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
 
   @Input()
   public set items(value: Array<any>) {
-    if (!value) {
-      this._items = this.itemObjects = [];
-    } else {
+    if (value) {
       this._items = value.filter((item: any) => {
         if ((typeof item === 'string') || (typeof item === 'object' && item && item[this.textField] && item[this.idField])) {
           return item;
@@ -49,6 +51,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
         text: item[this.textField],
         children: item[this.childrenField]
       })));
+    } else {
+      this._items = this.itemObjects = [];
     }
   }
 
@@ -66,18 +70,15 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
 
   @Input()
   public set active(selectedItems: Array<any>) {
-    if (!selectedItems || selectedItems.length === 0) {
-      this._active = [];
-    } else {
-      const areItemsStrings = typeof selectedItems[0] === 'string';
-
+    if (selectedItems && selectedItems.length) {
       this._active = selectedItems.map((item: any) => {
-        const data = areItemsStrings
+        const data = typeof selectedItems[0] === 'string'
           ? item
           : {id: item[this.idField], text: item[this.textField]};
-
         return new SelectItem(data);
       });
+    } else {
+      this._active = [];
     }
   }
 
@@ -130,7 +131,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
-  public inputEvent(e: any, isUpMode: boolean = false): void {
+  public inputEvent(e: KeyboardEvent, isUpMode: boolean = false): void {
     // tab
     if (e.keyCode === 9) {
       return;
@@ -142,8 +143,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
     }
     // backspace
     if (!isUpMode && e.keyCode === 8) {
-      const el: any = this.element.nativeElement
-        .querySelector('div.ui-select-container > input');
+      const el: any = this.element.nativeElement.querySelector('div.ui-select-container > input');
       if (!el.value || el.value.length <= 0) {
         if (this.active.length > 0) {
           this.remove(this.active[this.active.length - 1]);
@@ -213,7 +213,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
           this.element.nativeElement.querySelector('.ui-select-container').focus();
         }
         // Clear input
-        const target = e.target || e.srcElement;
+        const target: HTMLInputElement = <HTMLInputElement>(e.target || e.srcElement);
         target.value = '';
       } else {
         if (this.active.indexOf(this.activeOption) === -1) {
@@ -225,7 +225,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
 
       return;
     }
-    const target = e.target || e.srcElement;
+    const target: HTMLInputElement = <HTMLInputElement>(e.target || e.srcElement);
     if (target && target.value) {
       this.inputValue = target.value;
       this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
@@ -236,8 +236,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
   }
 
   public ngOnInit(): any {
-    this.behavior = (this.firstItemHasChildren) ?
-      new ChildrenBehavior(this) : new GenericBehavior(this);
+    this.behavior = this.firstItemHasChildren ? new ChildrenBehavior(this) : new GenericBehavior(this);
   }
 
   public ngAfterContentChecked(): void {
@@ -294,10 +293,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
   }
 
   public validate(c: FormControl): any {
-    let controlValue = c ? c.value : [];
-    if (!controlValue) {
-      controlValue = [];
-    }
+    const controlValue = c && c.value ? c.value : [];
 
     return this.allowClear || (controlValue.length > 0) ? null : {
       ng2SelectEmptyError: {
@@ -327,7 +323,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
     }
   }
 
-  protected mainClick(event: any): void {
+  protected mainClick(event: KeyboardEvent): void {
     if (this.inputMode === true || this._disabled === true) {
       return;
     }
@@ -352,7 +348,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
       .toLowerCase();
     this.focusToInput(value);
     this.open();
-    const target = event.target || event.srcElement;
+    const target: HTMLInputElement = <HTMLInputElement>(event.target || event.srcElement);
     target.value = value;
     this.inputEvent(event);
   }
@@ -398,10 +394,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
     this.selectMatch(this.activeOption);
   }
 
-  private selectMatch(value: SelectItem, e: Event = void 0): void {
-    if (e) {
-      e.stopPropagation();
-      e.preventDefault();
+  private selectMatch(value: SelectItem, event: Event = null): void {
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
     }
     if (this.options.length <= 0) {
       return;
@@ -471,9 +467,9 @@ export class Behavior {
     }
   }
 
-  private getActiveIndex(optionsMap: Map<string, number> = void 0): number {
+  private getActiveIndex(optionsMap: Map<string, number> = null): number {
     let ai = this.actor.options.indexOf(this.actor.activeOption);
-    if (ai < 0 && optionsMap !== void 0) {
+    if (ai < 0 && optionsMap !== null) {
       ai = optionsMap.get(this.actor.activeOption.id);
     }
     return ai;
@@ -544,19 +540,20 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
   }
 
   public last(): void {
-    this.actor.activeOption =
-      this.actor
-        .options[this.actor.options.length - 1]
-        .children[this.actor.options[this.actor.options.length - 1].children.length - 1];
+    this.actor.activeOption = this.actor
+      .options[this.actor.options.length - 1]
+      .children[this.actor.options[this.actor.options.length - 1].children.length - 1];
     this.fillOptionsMap();
     this.ensureHighlightVisible(this.optionsMap);
   }
 
   public prev(): void {
-    const indexParent = this.actor.options
-      .findIndex((option: SelectItem) => this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id);
-    const index = this.actor.options[indexParent].children
-      .findIndex((option: SelectItem) => this.actor.activeOption && this.actor.activeOption.id === option.id);
+    const indexParent = this.actor.options.findIndex((option: SelectItem) =>
+      this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id
+    );
+    const index = this.actor.options[indexParent].children.findIndex((option: SelectItem) =>
+      this.actor.activeOption && this.actor.activeOption.id === option.id
+    );
     this.actor.activeOption = this.actor.options[indexParent].children[index - 1];
     if (!this.actor.activeOption) {
       if (this.actor.options[indexParent - 1]) {
@@ -564,8 +561,6 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
           .options[indexParent - 1]
           .children[this.actor.options[indexParent - 1].children.length - 1];
       }
-    }
-    if (!this.actor.activeOption) {
       this.last();
     }
     this.fillOptionsMap();
@@ -573,17 +568,17 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
   }
 
   public next(): void {
-    const indexParent = this.actor.options
-      .findIndex((option: SelectItem) => this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id);
-    const index = this.actor.options[indexParent].children
-      .findIndex((option: SelectItem) => this.actor.activeOption && this.actor.activeOption.id === option.id);
+    const indexParent = this.actor.options.findIndex((option: SelectItem) =>
+      this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id
+    );
+    const index = this.actor.options[indexParent].children.findIndex((option: SelectItem) =>
+      this.actor.activeOption && this.actor.activeOption.id === option.id
+    );
     this.actor.activeOption = this.actor.options[indexParent].children[index + 1];
     if (!this.actor.activeOption) {
       if (this.actor.options[indexParent + 1]) {
         this.actor.activeOption = this.actor.options[indexParent + 1].children[0];
       }
-    }
-    if (!this.actor.activeOption) {
       this.first();
     }
     this.fillOptionsMap();
