@@ -1,5 +1,4 @@
-<div tabindex="0"
-     *ngIf="multiple === false"
+<div tabindex="0" *ngIf="multiple === false"
      (keyup)="mainClick($event)"
      [offClick]="clickedOutside"
      class="ui-select-container dropdown open">
@@ -63,8 +62,7 @@
   </ul>
 </div>
 
-<div tabindex="0"
-     *ngIf="multiple === true"
+<div tabindex="0" *ngIf="multiple === true"
      (keyup)="mainClick($event)"
      (focus)="focusToInput('')"
      [offClick]="clickedOutside"

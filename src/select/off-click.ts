@@ -1,22 +1,18 @@
-import {Directive, ElementRef, Input} from '@angular/core';
+import { Directive, ElementRef, Input, HostListener } from '@angular/core';
 
 @Directive({
-  selector: '[offClick]',
-  host: {
-    '(document:click)': 'offClickHandlerInternal($event)',
-  },
+  selector: '[offClick]'
 })
-
 export class OffClickDirective {
-  @Input('offClick') public offClickHandler: any;
+  @Input() public offClick: () => void;
 
   constructor(private currentElementRef: ElementRef) {
   }
 
+  @HostListener('document:click', ['$event'])
   public offClickHandlerInternal($event: any) {
-    let isPathContainsCurrentElement = this.checkIsPathContainsCurrentElement($event);
-    if (!isPathContainsCurrentElement) {
-      this.offClickHandler();
+    if (!this.checkIsPathContainsCurrentElement($event)) {
+      this.offClick();
     }
   }
 
@@ -24,7 +20,7 @@ export class OffClickDirective {
     let isPathContainsCurrentElement = false;
     for (let i = 0; i < $event.path.length; i++) {
       const pathElement = $event.path[i];
-      if (pathElement == this.currentElementRef.nativeElement) {
+      if (pathElement === this.currentElementRef.nativeElement) {
         isPathContainsCurrentElement = true;
       }
     }
