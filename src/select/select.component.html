@@ -46,27 +46,13 @@
          role="combobox">
 
   <!-- options template -->
-  <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
+  <ul *ngIf="optionsOpened && options && options.length > 0"
       class="ui-select-choices dropdown-menu" role="menu">
-    <li *ngFor="let item of options" role="menuitem">
-      <div class="ui-select-choices-row"
-           [class.active]="isActive(item)"
-           (mouseenter)="selectActive(item)"
-           (click)="selectMatch(item, $event)">
-        <a href="javascript:void(0)" class="dropdown-item">
-          <div [innerHtml]="sanitize(item.text | highlight:inputValue)"></div>
-        </a>
-      </div>
-    </li>
-  </ul>
+    <li *ngFor="let parentItem of options; let idx=index" role="menuitem">
+      <div class="divider dropdown-divider" *ngIf="parentItem.children && (idx > 0)"></div>
+      <div class="dropdown-header" *ngIf="parentItem.children">{{parentItem.text}}</div>
 
-  <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
-      class="ui-select-choices dropdown-menu" role="menu">
-    <li *ngFor="let parentItem of options; let index=index" role="menuitem">
-      <div class="divider dropdown-divider" *ngIf="index > 0"></div>
-      <div class="dropdown-header">{{parentItem.text}}</div>
-
-      <div *ngFor="let item of parentItem.children"
+      <div *ngFor="let item of (parentItem.children || [parentItem])"
            class="ui-select-choices-row"
            [class.active]="isActive(item)"
            (mouseenter)="selectActive(item)"
