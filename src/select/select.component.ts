@@ -177,8 +177,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
       e.preventDefault();
       return;
     }
-    // up
     if (!isUpMode && e.keyCode === 38) {
+    // up
       this.behavior.prev();
       e.preventDefault();
       return;
@@ -295,7 +295,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
   public validate(c: FormControl): any {
     const controlValue = c && c.value ? c.value : [];
 
-    return this.allowClear || (controlValue.length > 0) ? null : {
+    return this.allowClear || this.multiple || (controlValue.length > 0) ? null : {
       ng2SelectEmptyError: {
         valid: false
       }
