@@ -51,7 +51,7 @@
       <div class="divider dropdown-divider" *ngIf="parentItem.children && (idx > 0)"></div>
       <div class="dropdown-header" *ngIf="parentItem.children">{{parentItem.text}}</div>
 
-      <div *ngFor="let item of (parentItem.children || [parentItem])"
+      <div *ngFor="let item of (parentItem.children || [parentItem])" #choiceItem
            class="ui-select-choices-row" [class.active]="isActive(item)"
            (mouseenter)="selectActive(item)" (click)="selectMatch(item, $event)">
         <a href="javascript:void(0)" class="dropdown-item">

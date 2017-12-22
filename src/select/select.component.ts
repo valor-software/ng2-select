@@ -1,4 +1,7 @@
-import { Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef, AfterContentChecked } from '@angular/core';
+import {
+  Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef, AfterContentChecked, ViewChildren,
+  QueryList, AfterViewInit
+} from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SelectItem } from './select-item';
@@ -29,7 +32,7 @@ function stripTags(input: string): string {
     }
   ]
 })
-export class SelectComponent implements OnInit, ControlValueAccessor, AfterContentChecked {
+export class SelectComponent implements OnInit, ControlValueAccessor, AfterViewInit, AfterContentChecked {
   @Input() public allowClear: boolean = false;
   @Input() public placeholder: string = '';
   @Input() public idField: string = 'id';
@@ -90,8 +93,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
 
   public options: Array<SelectItem> = [];
   public itemObjects: Array<SelectItem> = [];
-  public activeOption: SelectItem;
+  public activeOption: SelectItem = null;
   public element: ElementRef;
+
+  @ViewChildren('choiceItem') choiceItem: QueryList<any>;
 
   public get active(): Array<any> {
     return this._active;
@@ -178,7 +183,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
       return;
     }
     if (!isUpMode && e.keyCode === 38) {
-    // up
+      // up
       this.behavior.prev();
       e.preventDefault();
       return;
@@ -237,6 +242,14 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
 
   public ngOnInit(): any {
     this.behavior = this.firstItemHasChildren ? new ChildrenBehavior(this) : new GenericBehavior(this);
+  }
+
+  ngAfterViewInit(): void {
+    this.choiceItem.changes.subscribe(() => {
+      if (this.optionsOpened) {
+        (this.behavior as any).ensureHighlightVisible();
+      }
+    });
   }
 
   public ngAfterContentChecked(): void {
@@ -375,14 +388,12 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterConte
       .filter((option: SelectItem) => (this.multiple === false ||
         this.multiple === true && !this.active.find((o: SelectItem) => option.text === o.text)));
     this.optionsOpened = true;
-    // todo: fix scrolling to active item after open. setTimeout - is bad approach
-    // setTimeout(() => {
+
     if (this.options.length > 0 && !(this.behavior as any).actor.activeOption) {
       this.behavior.first();
     } else {
       this.behavior.current();
     }
-    // }, 0);
   }
 
   private hideOptions(): void {
@@ -442,28 +453,30 @@ export class Behavior {
   }
 
   public ensureHighlightVisible(optionsMap: Map<string, number> = void 0): void {
-    const container = this.actor.element.nativeElement.querySelector('.ui-select-choices-content');
+    const container = this.actor.element.nativeElement.querySelector('.ui-select-choices');
     if (!container) {
       return;
     }
+
     const choices = container.querySelectorAll('.ui-select-choices-row');
     if (choices.length < 1) {
       return;
     }
+
     const activeIndex = this.getActiveIndex(optionsMap);
     if (activeIndex < 0) {
       return;
     }
-    const highlighted: any = choices[activeIndex];
-    if (!highlighted) {
+
+    const activeEl = choices[activeIndex];
+    if (!activeEl) {
       return;
     }
-    const posY: number = highlighted.offsetTop + highlighted.clientHeight - container.scrollTop;
-    const height: number = container.offsetHeight;
-    if (posY > height) {
-      container.scrollTop += posY - height;
-    } else if (posY < highlighted.clientHeight) {
-      container.scrollTop -= highlighted.clientHeight - posY;
+
+    if (activeEl.offsetTop < container.scrollTop) {
+      container.scrollTop = activeEl.offsetTop;
+    } else if (activeEl.offsetTop + activeEl.offsetHeight > container.scrollTop + container.clientHeight) {
+      container.scrollTop = activeEl.offsetTop + activeEl.offsetHeight - container.clientHeight;
     }
   }
 

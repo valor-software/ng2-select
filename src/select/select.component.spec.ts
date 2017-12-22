@@ -130,6 +130,7 @@ describe('Component SelectComponent', () => {
   const el = (id: number) => fixture.debugElement.nativeElement.querySelector(`#sel-${id} .ui-select-container`);
   const formControl = (id: number) => el(id).querySelector('.form-control');
   const formControlInput = (id: number) => el(id).querySelector('input');
+  const selectChoicesContainer = (id: number) => el(id).querySelector('.ui-select-choices');
   const selectChoices = (id: number) => el(id).querySelectorAll('.ui-select-choices-row');
   const selectChoiceActive = (id: number) => el(id).querySelector('.ui-select-choices-row.active div');
   const selectedItem = (id: number) => el(id).querySelector('.ui-select-match-text'); // select multiple = false
@@ -261,7 +262,11 @@ describe('Component SelectComponent', () => {
 
   describe('menu should be have navigation', () => {
     beforeEach(() => {
-      fixture.componentInstance.component1.items = items1;
+      const items: Array<{ id: number; text: string }> = [];
+      for (let i = 1; i <= 100; i++) {
+        items.push({id: i, text: 'item ' + i});
+      }
+      fixture.componentInstance.component1.items = items;
       formControl(1).click();
       fixture.detectChanges();
       expect(selectChoices(1).length).toBeGreaterThan(0);
@@ -270,27 +275,37 @@ describe('Component SelectComponent', () => {
     it('activate last item by press the button arrow right', () => {
       formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 39)); // arrow right
       fixture.detectChanges();
-      expect(selectChoiceActive(1).innerHTML).toBe('item four');
+      expect(selectChoiceActive(1).innerHTML).toBe('item 100');
     });
 
     it('activate previous item by press the button arrow up', () => {
       formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 39)); // arrow right
       formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 38)); // arrow up
       fixture.detectChanges();
-      expect(selectChoiceActive(1).innerHTML).toBe('item three');
+      expect(selectChoiceActive(1).innerHTML).toBe('item 99');
     });
 
     it('activate first item by press the button arrow left', () => {
       formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 39)); // arrow right
       formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 37)); // arrow left
       fixture.detectChanges();
-      expect(selectChoiceActive(1).innerHTML).toBe('item one');
+      expect(selectChoiceActive(1).innerHTML).toBe('item 1');
     });
 
     it('activate next item by press the button arrow down', () => {
       formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
       fixture.detectChanges();
-      expect(selectChoiceActive(1).innerHTML).toBe('item two');
+      expect(selectChoiceActive(1).innerHTML).toBe('item 2');
+    });
+
+    afterEach(() => {
+      const choiceActive = selectChoiceActive(1),
+        choicesContainer = selectChoicesContainer(1),
+        viewPortHeight = choicesContainer.clientHeight,
+        scrollTop = choicesContainer.scrollTop,
+        activeItemTop = choiceActive.offsetTop;
+
+      expect((scrollTop <= activeItemTop) && (activeItemTop <= scrollTop + viewPortHeight)).toBeTruthy();
     });
   });
 
