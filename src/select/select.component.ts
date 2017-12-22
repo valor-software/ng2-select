@@ -492,7 +492,7 @@ export abstract class Behavior {
     }
   }
 
-  private getActiveIndex(optionsMap: Map<string, number> = null): number {
+  private getActiveIndex(optionsMap: Map<string | number, number> = null): number {
     let ai = this.actor.options.indexOf(this.actor.activeOption);
     if (ai < 0 && optionsMap !== null) {
       ai = optionsMap.get(this.actor.activeOption.id);

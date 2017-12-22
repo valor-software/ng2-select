@@ -1,15 +1,21 @@
-export class SelectItem {
-  public id: string;
+export interface ISelectItem {
+  id?: number | string;
+  text?: string;
+  children?: ISelectItem[];
+}
+
+export class SelectItem implements ISelectItem {
+  public id: number | string;
   public text: string;
-  public children: Array<SelectItem>;
+  public children: SelectItem[];
   public parent: SelectItem;
 
-  public constructor(source: any) {
+  public constructor(source: string | ISelectItem) {
     if (typeof source === 'string') {
       this.id = this.text = source;
     }
-    if (typeof source === 'object') {
-      this.id = source.id || source.text;
+    if (typeof source === 'object' && source !== null) {
+      this.id = typeof source.id === 'undefined' ? source.text : source.id;
       this.text = source.text;
       if (source.children && source.text) {
         this.children = [].concat(source.children).map((c: any) => {
@@ -17,12 +23,11 @@ export class SelectItem {
           r.parent = this;
           return r;
         });
-        this.text = source.text;
       }
     }
   }
 
-  public fillChildrenHash(optionsMap: Map<string, number>, startIndex: number): number {
+  public fillChildrenHash(optionsMap: Map<string | number, number>, startIndex: number): number {
     let i = startIndex;
     this.children.map((child: SelectItem) => {
       optionsMap.set(child.id, i++);
@@ -35,10 +40,8 @@ export class SelectItem {
   }
 
   public getSimilar(): SelectItem {
-    const r: SelectItem = new SelectItem(false);
-    r.id = this.id;
-    r.text = this.text;
-    r.parent = this.parent;
-    return r;
+    const result: SelectItem = new SelectItem({id: this.id, text: this.text});
+    result.parent = this.parent;
+    return result;
   }
 }

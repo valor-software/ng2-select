@@ -507,14 +507,14 @@ describe('Component SelectComponent', () => {
 
     it('objects with mixed id & text fields', () => {
       fixture.componentInstance.select1.items = [
-        {id: 0, text: '0'}, {xId: 1, text: '1'}, {id: 2, xText: '2'}, {id: 3, text: '3'},
+        {id: 0, text: 'i0'}, {xId: 1, text: 'i1'}, {id: 2, xText: 'i2'}, {id: 3, text: 'i3'},
       ];
       fixture.detectChanges();
       formControl(1).click();
       fixture.detectChanges();
       expect(selectChoices(1).length).toBe(2);
-      expect(selectChoices(1)[0].innerHTML).toBe('0');
-      expect(selectChoices(1)[1].innerHTML).toBe('3');
+      expect(selectChoices(1)[0].innerHTML).toBe('i0');
+      expect(selectChoices(1)[1].innerHTML).toBe('i3');
     });
 
     it('objects with children fields by default field names', () => {
