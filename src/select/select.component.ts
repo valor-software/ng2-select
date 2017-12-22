@@ -5,7 +5,6 @@ import {
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SelectItem } from './select-item';
-import { OptionsBehavior } from './select-interfaces';
 import { escapeRegexp } from './common';
 import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
 
@@ -118,7 +117,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterViewI
 
   public inputMode: boolean = false;
   private _optionsOpened: boolean = false;
-  private behavior: OptionsBehavior;
+  private behavior: Behavior;
   private inputValue: string = '';
   private _items: Array<any> = [];
   private _disabled: boolean = false;
@@ -405,7 +404,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterViewI
     this.selectMatch(this.activeOption);
   }
 
-  private selectMatch(value: SelectItem, event: Event = null): void {
+  private selectMatch(value: SelectItem, event: MouseEvent = null): void {
     if (event) {
       event.stopPropagation();
       event.preventDefault();
@@ -434,7 +433,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterViewI
   }
 }
 
-export class Behavior {
+export abstract class Behavior {
   public optionsMap: Map<string, number> = new Map<string, number>();
 
   public actor: SelectComponent;
@@ -442,6 +441,18 @@ export class Behavior {
   public constructor(actor: SelectComponent) {
     this.actor = actor;
   }
+
+  public abstract first(): void;
+
+  public abstract last(): void;
+
+  public abstract prev(): void;
+
+  public abstract next(): void;
+
+  public abstract current(): void;
+
+  public abstract filter(query: RegExp): void;
 
   public fillOptionsMap(): void {
     this.optionsMap.clear();
@@ -489,7 +500,7 @@ export class Behavior {
   }
 }
 
-export class GenericBehavior extends Behavior implements OptionsBehavior {
+export class GenericBehavior extends Behavior {
   public constructor(actor: SelectComponent) {
     super(actor);
   }
@@ -537,7 +548,7 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
   }
 }
 
-export class ChildrenBehavior extends Behavior implements OptionsBehavior {
+export class ChildrenBehavior extends Behavior {
   public constructor(actor: SelectComponent) {
     super(actor);
   }
