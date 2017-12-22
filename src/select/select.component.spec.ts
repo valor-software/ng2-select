@@ -260,7 +260,7 @@ describe('Component SelectComponent', () => {
     });
   });
 
-  describe('menu should be have navigation', () => {
+  describe('menu should be have navigation and active item should be visible', () => {
     beforeEach(() => {
       const items: Array<{ id: number; text: string }> = [];
       for (let i = 1; i <= 100; i++) {
@@ -299,12 +299,9 @@ describe('Component SelectComponent', () => {
     });
 
     afterEach(() => {
-      const choiceActive = selectChoiceActive(1),
-        choicesContainer = selectChoicesContainer(1),
-        viewPortHeight = choicesContainer.clientHeight,
-        scrollTop = choicesContainer.scrollTop,
-        activeItemTop = choiceActive.offsetTop;
-
+      const viewPortHeight = selectChoicesContainer(1).clientHeight,
+        scrollTop = selectChoicesContainer(1).scrollTop,
+        activeItemTop = selectChoiceActive(1).offsetTop;
       expect((scrollTop <= activeItemTop) && (activeItemTop <= scrollTop + viewPortHeight)).toBeTruthy();
     });
   });
