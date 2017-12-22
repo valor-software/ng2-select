@@ -41,10 +41,11 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterViewI
   @Input() public noAutoComplete: boolean = false;
 
   @Input()
-  public set items(value: Array<any>) {
+  public set items(value: Array<string | { [key: string]: any }>) {
     if (value) {
-      this._items = value.filter((item: any) => (typeof item === 'string')
-        || (typeof item === 'object' && item[this.idField] && item[this.textField])
+      this._items = value.filter((item: string | { [key: string]: any }) =>
+        (typeof item === 'string') ||
+        (typeof item === 'object' && item.hasOwnProperty(this.idField) && item.hasOwnProperty(this.textField))
       );
       this.itemObjects = this._items.map((item: any) => (
         typeof item === 'string' ? new SelectItem(item) : new SelectItem({
