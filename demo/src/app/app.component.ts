@@ -1,5 +1,7 @@
 import { Component, AfterContentInit } from '@angular/core';
 
+const pac = require('ng2-select-ex/package.json');
+
 const gettingStarted = require('html-loader!markdown-loader!../getting-started.md');
 
 @Component({
@@ -7,7 +9,7 @@ const gettingStarted = require('html-loader!markdown-loader!../getting-started.m
   template: `
     <main class="bd-pageheader">
       <div class="container">
-        <h1>ng2-select-ex</h1>
+        <h1>ng2-select-ex v{{p?.version}}</h1>
         <p>Native Angular2 component for Select</p>
         <a class="btn btn-primary" href="https://github.com/optimistex/ng2-select-ex">View on GitHub</a>
         <div class="row">
@@ -39,6 +41,7 @@ const gettingStarted = require('html-loader!markdown-loader!../getting-started.m
 })
 export class AppComponent implements AfterContentInit {
   public gettingStarted: string = gettingStarted;
+  public p = pac;
 
   public ngAfterContentInit(): any {
     setTimeout(() => {
