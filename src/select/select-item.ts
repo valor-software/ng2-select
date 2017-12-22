@@ -12,7 +12,7 @@ export class SelectItem {
       this.id = source.id || source.text;
       this.text = source.text;
       if (source.children && source.text) {
-        this.children = source.children.map((c: any) => {
+        this.children = [].concat(source.children).map((c: any) => {
           const r: SelectItem = new SelectItem(c);
           r.parent = this;
           return r;

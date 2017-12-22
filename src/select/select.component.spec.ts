@@ -131,7 +131,7 @@ describe('Component SelectComponent', () => {
   const formControl = (id: number) => el(id).querySelector('.form-control');
   const formControlInput = (id: number) => el(id).querySelector('input');
   const selectChoicesContainer = (id: number) => el(id).querySelector('.ui-select-choices');
-  const selectChoices = (id: number) => el(id).querySelectorAll('.ui-select-choices-row');
+  const selectChoices = (id: number) => el(id).querySelectorAll('.ui-select-choices-row div');
   const selectChoiceActive = (id: number) => el(id).querySelector('.ui-select-choices-row.active div');
   const selectedItem = (id: number) => el(id).querySelector('.ui-select-match-text'); // select multiple = false
   const selectedItems = (id: number) => el(id).querySelectorAll('.ui-select-match-item'); // select multiple = true
@@ -483,6 +483,71 @@ describe('Component SelectComponent', () => {
       tmpFixture.componentInstance.select2.multiple = true;
       tmpFixture.detectChanges();
       expect(tmpFixture.componentInstance.select2.formControl.valid).toBeTruthy();
+    });
+  });
+
+  describe('should setup items from array of', () => {
+    it('objects with default id & text fields', () => {
+      fixture.componentInstance.select1.items = items1;
+      fixture.detectChanges();
+      formControl(1).click();
+      fixture.detectChanges();
+      expect(selectChoices(1).length).toBe(items1.length);
+    });
+
+    it('objects without default id & text fields ', () => {
+      fixture.componentInstance.select1.idField = 'uuid';
+      fixture.componentInstance.select1.textField = 'name';
+      fixture.componentInstance.select1.items = items3;
+      fixture.detectChanges();
+      formControl(1).click();
+      fixture.detectChanges();
+      expect(selectChoices(1).length).toBe(items3.length);
+    });
+
+    it('objects with mixed id & text fields', () => {
+      fixture.componentInstance.select1.items = [
+        {id: 1, text: '1'}, {xId: 2, text: '2'}, {id: 3, xText: '3'}, {id: 4, text: '4'},
+      ];
+      fixture.detectChanges();
+      formControl(1).click();
+      fixture.detectChanges();
+      expect(selectChoices(1).length).toBe(2);
+      expect(selectChoices(1)[0].innerHTML).toBe('1');
+      expect(selectChoices(1)[1].innerHTML).toBe('4');
+    });
+
+    it('objects with children fields by default field names', () => {
+      fixture.componentInstance.select1.items = [
+        {id: 1, text: '1', children: {id: 11, text: '11'}},
+        {id: 2, text: '2', children: [{id: 21, text: '21'}, {id: 22, text: '22'}]}
+      ];
+      fixture.detectChanges();
+      formControl(1).click();
+      fixture.detectChanges();
+      expect(selectChoices(1).length).toBe(3);
+    });
+
+    it('objects with children fields by not default field names', () => {
+      fixture.componentInstance.select1.idField = 'xId';
+      fixture.componentInstance.select1.textField = 'xText';
+      fixture.componentInstance.select1.childrenField = 'xChildren';
+      fixture.componentInstance.select1.items = [
+        {xId: 1, xText: '1', xChildren: {xId: 11, xText: '11'}},
+        {xId: 2, xText: '2', xChildren: [{xId: 21, xText: '21'}, {xId: 22, xText: '22'}]}
+      ];
+      fixture.detectChanges();
+      formControl(1).click();
+      fixture.detectChanges();
+      expect(selectChoices(1).length).toBe(3);
+    });
+
+    it('strings', () => {
+      fixture.componentInstance.select1.items = ['one', 'two', 'three'];
+      fixture.detectChanges();
+      formControl(1).click();
+      fixture.detectChanges();
+      expect(selectChoices(1).length).toBe(3);
     });
   });
 });

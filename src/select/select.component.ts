@@ -43,16 +43,16 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterViewI
   @Input()
   public set items(value: Array<any>) {
     if (value) {
-      this._items = value.filter((item: any) => {
-        if ((typeof item === 'string') || (typeof item === 'object' && item && item[this.textField] && item[this.idField])) {
-          return item;
-        }
-      });
-      this.itemObjects = this._items.map((item: any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({
-        id: item[this.idField],
-        text: item[this.textField],
-        children: item[this.childrenField]
-      })));
+      this._items = value.filter((item: any) => (typeof item === 'string')
+        || (typeof item === 'object' && item[this.idField] && item[this.textField])
+      );
+      this.itemObjects = this._items.map((item: any) => (
+        typeof item === 'string' ? new SelectItem(item) : new SelectItem({
+          id: item[this.idField],
+          text: item[this.textField],
+          children: item[this.childrenField]
+        })
+      ));
     } else {
       this._items = this.itemObjects = [];
     }
