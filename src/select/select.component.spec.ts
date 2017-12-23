@@ -648,12 +648,7 @@ describe('Component SelectComponent', () => {
         fixture.componentInstance.select3.value = [items1[1]];
 
         fixture.detectChanges();
-        setTimeout(() => {
-          items1.forEach(item => lazyItems.push(item));
-          // fixture.componentInstance.select1.items = lazyItems;
-          // fixture.componentInstance.select2.items = lazyItems;
-          // fixture.componentInstance.select3.items = lazyItems;
-        }, 2000);
+        setTimeout(() => items1.forEach(item => lazyItems.push(item)), 2000);
         tick(2100);
         fixture.detectChanges();
       }));

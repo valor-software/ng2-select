@@ -1,8 +1,4 @@
-export interface ISelectItem {
-  id?: number | string;
-  text?: string;
-  children?: ISelectItem[];
-}
+import { ISelectItem } from './select.interfaces';
 
 export class SelectItem implements ISelectItem {
   public id: number | string;

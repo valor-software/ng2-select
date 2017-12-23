@@ -1,3 +1,4 @@
+export * from './select/select.interfaces';
 export * from './select/common';
 export * from './select/off-click';
 export * from './select/select.module';
