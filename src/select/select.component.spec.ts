@@ -207,19 +207,24 @@ describe('Component SelectComponent', () => {
   });
 
   describe('menu should be opened', () => {
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture.componentInstance.component1.items = items1;
+      fixture.detectChanges();
       formControl(1).click();
       fixture.detectChanges();
-    });
+    }));
 
-    it('by click', () => expect(selectChoices(1).length).toBeGreaterThan(0));
+    it('by click', () => {
+      expect(fixture.componentInstance.component1.itemObjects.length).toBeGreaterThan(0);
+      expect(selectChoices(1).length).toBeGreaterThan(0);
+    });
   });
 
   describe('menu should be closed', () => {
     beforeEach(() => {
       fixture.componentInstance.component1.items = items1;
       fixture.componentInstance.component2.items = items1;
+      fixture.detectChanges();
       formControl(1).click();
       fixture.detectChanges();
       expect(selectChoices(1).length).toBeGreaterThan(0);
@@ -244,6 +249,7 @@ describe('Component SelectComponent', () => {
   describe('after open menu with no selected item', () => {
     beforeEach(() => {
       fixture.componentInstance.component1.items = items1;
+      fixture.detectChanges();
       formControl(1).click();
       fixture.detectChanges();
       expect(selectChoices(1).length).toBeGreaterThan(0);
@@ -261,6 +267,7 @@ describe('Component SelectComponent', () => {
         items.push({id: i, text: 'item ' + i});
       }
       fixture.componentInstance.component1.items = items;
+      fixture.detectChanges();
       formControl(1).click();
       fixture.detectChanges();
       expect(selectChoices(1).length).toBeGreaterThan(0);
@@ -567,16 +574,25 @@ describe('Component SelectComponent', () => {
         fixture.detectChanges();
       }));
 
-      it('by the active attribute', () => {
+      it('by the active attribute and selected item must be active in menu', () => {
         expect(selectedItem(1).innerHTML).toBe(items1[1].text);
+        formControl(1).click();
+        fixture.detectChanges();
+        expect(selectChoiceActive(1).innerHTML).toBe(items1[1].text);
       });
 
-      it('by a FormControl attribute', () => {
+      it('by a FormControl attribute and selected item must be active in menu', () => {
         expect(selectedItem(2).innerHTML).toBe(items1[1].text);
+        formControl(2).click();
+        fixture.detectChanges();
+        expect(selectChoiceActive(2).innerHTML).toBe(items1[1].text);
       });
 
-      it('by a ngModel attribute', () => {
+      it('by a ngModel attribute and selected item must be active in menu', () => {
         expect(selectedItem(3).innerHTML).toBe(items1[1].text);
+        formControl(3).click();
+        fixture.detectChanges();
+        expect(selectChoiceActive(3).innerHTML).toBe(items1[1].text);
       });
     });
 
@@ -632,21 +648,41 @@ describe('Component SelectComponent', () => {
         fixture.componentInstance.select3.value = [items1[1]];
 
         fixture.detectChanges();
-        setTimeout(() => items1.forEach(item => lazyItems.push(item)), 2000);
+        setTimeout(() => {
+          items1.forEach(item => lazyItems.push(item));
+          // fixture.componentInstance.select1.items = lazyItems;
+          // fixture.componentInstance.select2.items = lazyItems;
+          // fixture.componentInstance.select3.items = lazyItems;
+        }, 2000);
         tick(2100);
         fixture.detectChanges();
       }));
 
-      it('by the active attribute', () => {
+      it('by the active attribute and selected item must be active in menu', () => {
         expect(selectedItem(1).innerHTML).toBe(items1[1].text);
+        formControl(1).click();
+        fixture.detectChanges();
+        expect(selectChoiceActive(1).innerHTML).toBe(items1[1].text);
       });
 
-      it('by a FormControl attribute', () => {
+      it('by a FormControl attribute and selected item must be active in menu', () => {
         expect(selectedItem(2).innerHTML).toBe(items1[1].text);
+        formControl(2).click();
+        fixture.detectChanges();
+        expect(selectChoiceActive(2).innerHTML).toBe(items1[1].text);
       });
 
-      it('by a ngModel attribute', () => {
+      it('by a ngModel attribute and selected item must be active in menu', () => {
         expect(selectedItem(3).innerHTML).toBe(items1[1].text);
+        formControl(3).click();
+        fixture.detectChanges();
+        expect(selectChoiceActive(3).innerHTML).toBe(items1[1].text);
+      });
+
+      afterEach(() => {
+        expect(fixture.componentInstance.component1.itemObjects.length).toBeGreaterThan(0);
+        expect(fixture.componentInstance.component2.itemObjects.length).toBeGreaterThan(0);
+        expect(fixture.componentInstance.component3.itemObjects.length).toBeGreaterThan(0);
       });
     });
 

@@ -1,6 +1,6 @@
 import {
   Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef, AfterContentChecked, ViewChildren,
-  QueryList, AfterViewInit
+  QueryList, AfterViewInit, DoCheck, IterableDiffers, IterableDiffer
 } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -31,7 +31,7 @@ function stripTags(input: string): string {
     }
   ]
 })
-export class SelectComponent implements OnInit, ControlValueAccessor, AfterViewInit, AfterContentChecked {
+export class SelectComponent implements OnInit, DoCheck, ControlValueAccessor, AfterViewInit, AfterContentChecked {
   @Input() public allowClear: boolean = false;
   @Input() public placeholder: string = '';
   @Input() public idField: string = 'id';
@@ -40,8 +40,9 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterViewI
   @Input() public multiple: boolean = false;
   @Input() public noAutoComplete: boolean = false;
 
-  @Input()
-  public set items(value: Array<string | { [key: string]: any }>) {
+  @Input() public items: any[];
+
+  private setItems(value: Array<string | { [key: string]: any }>) {
     if (value) {
       this._items = value.filter((item: string | { [key: string]: any }) =>
         (typeof item === 'string') ||
@@ -80,6 +81,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterViewI
           : {id: item[this.idField], text: item[this.textField]};
         return new SelectItem(data);
       });
+      this.selectActive(this._active[0]);
     } else {
       this._active = [];
     }
@@ -126,10 +128,14 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterViewI
   private _focusValueToInput: any = false;
   static list: Array<any> = [];
 
-  public constructor(element: ElementRef, private sanitizer: DomSanitizer) {
+  private itemsDiffer: IterableDiffer<any>;
+
+  public constructor(element: ElementRef, private sanitizer: DomSanitizer,
+                     private iterableDiffers: IterableDiffers) {
     this.element = element;
     this.clickedOutside = this.clickedOutside.bind(this);
     SelectComponent.list.push(this);
+    this.itemsDiffer = this.iterableDiffers.find([]).create<any>(null);
   }
 
   public sanitize(html: string): SafeHtml {
@@ -244,7 +250,13 @@ export class SelectComponent implements OnInit, ControlValueAccessor, AfterViewI
     this.behavior = this.firstItemHasChildren ? new ChildrenBehavior(this) : new GenericBehavior(this);
   }
 
-  ngAfterViewInit(): void {
+  public ngDoCheck(): void {
+    if (this.itemsDiffer.diff(this.items)) {
+      this.setItems(this.items);
+    }
+  }
+
+  public ngAfterViewInit(): void {
     this.choiceItem.changes.subscribe(() => {
       if (this.optionsOpened) {
         (this.behavior as any).ensureHighlightVisible();
