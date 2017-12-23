@@ -1,7 +1,7 @@
 import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
-import { SelectModule } from './select.module';
+import { SelectModule } from '../select.module';
 import { SelectComponent } from './select.component';
 
 

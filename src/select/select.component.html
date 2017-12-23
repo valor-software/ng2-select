@@ -1,6 +1,7 @@
 <div tabindex="0" class="ui-select-container dropdown open"
      [class.ui-select-multiple]="multiple === true" [class.form-control]="multiple === true"
-     [offClick]="clickedOutside" (keyup)="mainClick($event)" (focus)="multiple === true ? focusToInput() : null">
+     offClick (clickedOutside)="clickedOutside()" (keyup)="mainClick($event)"
+     (focus)="multiple === true ? focusToInput() : null">
   <div [class.ui-disabled]="disabled"></div>
 
   <!-- single selected item -->

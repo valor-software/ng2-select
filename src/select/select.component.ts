@@ -5,7 +5,7 @@ import {
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SelectItem } from './select-item';
-import { escapeRegexp } from './common';
+import { escapeRegexp } from '../common/common';
 import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
 
 function stripTags(input: string): string {

@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, HostListener } from '@angular/core';
+import { Directive, ElementRef, Input, HostListener, Output, EventEmitter } from '@angular/core';
 
 export interface IExtMouseEvent extends MouseEvent {
   path: HTMLElement[];
@@ -8,7 +8,7 @@ export interface IExtMouseEvent extends MouseEvent {
   selector: '[offClick]'
 })
 export class OffClickDirective {
-  @Input() public offClick: () => void;
+  @Output() public clickedOutside: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private currentElementRef: ElementRef) {
   }
@@ -16,7 +16,7 @@ export class OffClickDirective {
   @HostListener('document:click', ['$event'])
   public offClickHandlerInternal($event: IExtMouseEvent) {
     if (!this.checkIsPathContainsCurrentElement($event)) {
-      this.offClick();
+      this.clickedOutside.emit();
     }
   }
 

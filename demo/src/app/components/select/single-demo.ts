@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './single-demo.html'
 })
 export class SingleDemoComponent {
-  public items:Array<string> = ['Amsterdam', 'Antwerp', 'Athens', 'Barcelona',
+  public items: Array<string> = ['Amsterdam', 'Antwerp', 'Athens', 'Barcelona',
     'Berlin', 'Birmingham', 'Bradford', 'Bremen', 'Brussels', 'Bucharest',
     'Budapest', 'Cologne', 'Copenhagen', 'Dortmund', 'Dresden', 'Dublin',
     'Düsseldorf', 'Essen', 'Frankfurt', 'Genoa', 'Glasgow', 'Gothenburg',
@@ -16,32 +16,32 @@ export class SingleDemoComponent {
     'The Hague', 'Turin', 'Valencia', 'Vienna', 'Vilnius', 'Warsaw', 'Wrocław',
     'Zagreb', 'Zaragoza', 'Łódź'];
 
-  public value:any = {};
-  public _disabledV:string = '0';
-  public disabled:boolean = false;
+  public value: any = {};
+  public _disabledV: string = '0';
+  public disabled: boolean = false;
 
-  public get disabledV():string {
+  public get disabledV(): string {
     return this._disabledV;
   }
 
-  public set disabledV(value:string) {
+  public set disabledV(value: string) {
     this._disabledV = value;
     this.disabled = this._disabledV === '1';
   }
 
-  public selected(value:any):void {
+  public selected(value: any): void {
     console.log('Selected value is: ', value);
   }
 
-  public removed(value:any):void {
+  public removed(value: any): void {
     console.log('Removed value is: ', value);
   }
 
-  public typed(value:any):void {
+  public typed(value: any): void {
     console.log('New search input: ', value);
   }
 
-  public refreshValue(value:any):void {
+  public refreshValue(value: any): void {
     this.value = value;
   }
 }
