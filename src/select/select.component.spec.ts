@@ -106,12 +106,6 @@ const items1 = [
   {id: 4, text: 'item four'},
 ];
 const items2 = [
-  {id: 1, name: 'v1'},
-  {id: 2, name: 'v2'},
-  {id: 4, name: 'v4'},
-  {id: 5, name: 'v5'}
-];
-const items3 = [
   {uuid: 'uuid-6', name: 'v6'},
   {uuid: 'uuid-7', name: 'v7'},
   {uuid: 'uuid-8', name: 'v8'},
@@ -306,64 +300,66 @@ describe('Component SelectComponent', () => {
     });
   });
 
-  describe('should select a single item', () => {
-    beforeEach(() => {
-      fixture.componentInstance.select1.items = items1;
-      fixture.componentInstance.select1.multiple = false;
-      fixture.detectChanges();
-      formControl(1).click();
-      fixture.detectChanges();
-      expect(selectChoices(1).length).toBeGreaterThan(0);
+  describe('should select', () => {
+    describe('a single item', () => {
+      beforeEach(() => {
+        fixture.componentInstance.select1.items = items1;
+        fixture.componentInstance.select1.multiple = false;
+        fixture.detectChanges();
+        formControl(1).click();
+        fixture.detectChanges();
+        expect(selectChoices(1).length).toBeGreaterThan(0);
+      });
+
+      it('by click on choice item', () => {
+        selectChoices(1)[1].click();
+      });
+
+      it('by press the key Enter on a choice item', () => {
+        formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
+        formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 13)); // key Enter
+      });
+
+      afterEach(() => {
+        fixture.detectChanges();
+        expect(selectedItem(1).innerHTML).toBe('item two');
+      });
     });
 
-    it('by click on choice item', () => {
-      selectChoices(1)[1].click();
-    });
+    describe('multiple items', () => {
+      beforeEach(() => {
+        fixture.componentInstance.select1.items = items1;
+        fixture.componentInstance.select1.multiple = true;
+        fixture.detectChanges();
+        formControl(1).click();
+        fixture.detectChanges();
+        expect(selectChoices(1).length).toBeGreaterThan(0);
+      });
 
-    it('by press the key Enter on a choice item', () => {
-      formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
-      formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 13)); // key Enter
-    });
+      it('by clicking on choice items', () => {
+        selectChoices(1)[1].click();
+        fixture.detectChanges();
+        formControl(1).click();
+        fixture.detectChanges();
+        selectChoices(1)[2].click();
+      });
 
-    afterEach(() => {
-      fixture.detectChanges();
-      expect(selectedItem(1).innerHTML).toBe('item two');
-    });
-  });
+      it('by press the key Enter on choice items', () => {
+        formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
+        formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 13)); // key Enter
+        fixture.detectChanges();
+        formControl(1).click();
+        fixture.detectChanges();
+        formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
+        formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 13)); // key Enter
+      });
 
-  describe('should select a multiple items', () => {
-    beforeEach(() => {
-      fixture.componentInstance.select1.items = items1;
-      fixture.componentInstance.select1.multiple = true;
-      fixture.detectChanges();
-      formControl(1).click();
-      fixture.detectChanges();
-      expect(selectChoices(1).length).toBeGreaterThan(0);
-    });
-
-    it('by clicking on choice items', () => {
-      selectChoices(1)[1].click();
-      fixture.detectChanges();
-      formControl(1).click();
-      fixture.detectChanges();
-      selectChoices(1)[2].click();
-    });
-
-    it('by press the key Enter on a choice item', () => {
-      formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
-      formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 13)); // key Enter
-      fixture.detectChanges();
-      formControl(1).click();
-      fixture.detectChanges();
-      formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
-      formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 13)); // key Enter
-    });
-
-    afterEach(() => {
-      fixture.detectChanges();
-      expect(selectedItems(1).length).toBe(2);
-      expect(selectedItems(1)[0].querySelector(' span').innerHTML).toBe('item two');
-      expect(selectedItems(1)[1].querySelector(' span').innerHTML).toBe('item four');
+      afterEach(() => {
+        fixture.detectChanges();
+        expect(selectedItems(1).length).toBe(2);
+        expect(selectedItems(1)[0].querySelector(' span').innerHTML).toBe('item two');
+        expect(selectedItems(1)[1].querySelector(' span').innerHTML).toBe('item four');
+      });
     });
   });
 
@@ -385,7 +381,7 @@ describe('Component SelectComponent', () => {
       expect(selectedItem(1)).toBeFalsy();
     });
 
-    it('a multiple item', () => {
+    it('multiple items', () => {
       fixture.componentInstance.select1.multiple = true;
       fixture.detectChanges();
       selectedItems(1)[0].querySelector('.close').click();
@@ -498,11 +494,11 @@ describe('Component SelectComponent', () => {
     it('objects without default id & text fields ', () => {
       fixture.componentInstance.select1.idField = 'uuid';
       fixture.componentInstance.select1.textField = 'name';
-      fixture.componentInstance.select1.items = items3;
+      fixture.componentInstance.select1.items = items2;
       fixture.detectChanges();
       formControl(1).click();
       fixture.detectChanges();
-      expect(selectChoices(1).length).toBe(items3.length);
+      expect(selectChoices(1).length).toBe(items2.length);
     });
 
     it('objects with mixed id & text fields', () => {
@@ -550,4 +546,147 @@ describe('Component SelectComponent', () => {
       expect(selectChoices(1).length).toBe(3);
     });
   });
+
+  describe('should set selected items ', () => {
+    describe('for single select with preload items', () => {
+      beforeEach(fakeAsync(() => {
+        fixture.componentInstance.select1.multiple = false;
+        fixture.componentInstance.select1.items = items1;
+        fixture.componentInstance.select1.active = [items1[1]];
+
+        fixture.componentInstance.select2.multiple = false;
+        fixture.componentInstance.select2.items = items1;
+        fixture.componentInstance.select2.formControl.setValue([items1[1]]);
+
+        fixture.componentInstance.select3.multiple = false;
+        fixture.componentInstance.select3.items = items1;
+        fixture.componentInstance.select3.value = [items1[1]];
+
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+      }));
+
+      it('by the active attribute', () => {
+        expect(selectedItem(1).innerHTML).toBe(items1[1].text);
+      });
+
+      it('by a FormControl attribute', () => {
+        expect(selectedItem(2).innerHTML).toBe(items1[1].text);
+      });
+
+      it('by a ngModel attribute', () => {
+        expect(selectedItem(3).innerHTML).toBe(items1[1].text);
+      });
+    });
+
+    describe('for multiple select with preload items', () => {
+      beforeEach(fakeAsync(() => {
+        fixture.componentInstance.select1.multiple = true;
+        fixture.componentInstance.select1.items = items1;
+        fixture.componentInstance.select1.active = [items1[0], items1[1]];
+
+        fixture.componentInstance.select2.multiple = true;
+        fixture.componentInstance.select2.items = items1;
+        fixture.componentInstance.select2.formControl.setValue([items1[0], items1[1]]);
+
+        fixture.componentInstance.select3.multiple = true;
+        fixture.componentInstance.select3.items = items1;
+        fixture.componentInstance.select3.value = [items1[0], items1[1]];
+
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+      }));
+
+      it('by the active attribute', () => {
+        expect(selectedItems(1)[0].querySelector('span').innerHTML).toBe(items1[0].text);
+        expect(selectedItems(1)[1].querySelector('span').innerHTML).toBe(items1[1].text);
+      });
+
+      it('by a FormControl attribute', () => {
+        expect(selectedItems(2)[0].querySelector('span').innerHTML).toBe(items1[0].text);
+        expect(selectedItems(2)[1].querySelector('span').innerHTML).toBe(items1[1].text);
+      });
+
+      it('by a ngModel attribute', () => {
+        expect(selectedItems(3)[0].querySelector('span').innerHTML).toBe(items1[0].text);
+        expect(selectedItems(3)[1].querySelector('span').innerHTML).toBe(items1[1].text);
+      });
+    });
+
+    describe('for single select with lazy loading items', () => {
+      beforeEach(fakeAsync(() => {
+        const lazyItems = [];
+
+        fixture.componentInstance.select1.multiple = false;
+        fixture.componentInstance.select1.items = lazyItems;
+        fixture.componentInstance.select1.active = [items1[1]];
+
+        fixture.componentInstance.select2.multiple = false;
+        fixture.componentInstance.select2.items = lazyItems;
+        fixture.componentInstance.select2.formControl.setValue([items1[1]]);
+
+        fixture.componentInstance.select3.multiple = false;
+        fixture.componentInstance.select3.items = lazyItems;
+        fixture.componentInstance.select3.value = [items1[1]];
+
+        fixture.detectChanges();
+        setTimeout(() => items1.forEach(item => lazyItems.push(item)), 2000);
+        tick(2100);
+        fixture.detectChanges();
+      }));
+
+      it('by the active attribute', () => {
+        expect(selectedItem(1).innerHTML).toBe(items1[1].text);
+      });
+
+      it('by a FormControl attribute', () => {
+        expect(selectedItem(2).innerHTML).toBe(items1[1].text);
+      });
+
+      it('by a ngModel attribute', () => {
+        expect(selectedItem(3).innerHTML).toBe(items1[1].text);
+      });
+    });
+
+    describe('for multiple select with lazy loading items', () => {
+      beforeEach(fakeAsync(() => {
+        const lazyItems = [];
+
+        fixture.componentInstance.select1.multiple = true;
+        fixture.componentInstance.select1.items = lazyItems;
+        fixture.componentInstance.select1.active = [items1[0], items1[1]];
+
+        fixture.componentInstance.select2.multiple = true;
+        fixture.componentInstance.select2.items = lazyItems;
+        fixture.componentInstance.select2.formControl.setValue([items1[0], items1[1]]);
+
+        fixture.componentInstance.select3.multiple = true;
+        fixture.componentInstance.select3.items = lazyItems;
+        fixture.componentInstance.select3.value = [items1[0], items1[1]];
+
+        fixture.detectChanges();
+        setTimeout(() => items1.forEach(item => lazyItems.push(item)), 2000);
+        tick(2100);
+        fixture.detectChanges();
+      }));
+
+      it('by the active attribute', () => {
+        expect(selectedItems(1)[0].querySelector('span').innerHTML).toBe(items1[0].text);
+        expect(selectedItems(1)[1].querySelector('span').innerHTML).toBe(items1[1].text);
+      });
+
+      it('by a FormControl attribute', () => {
+        expect(selectedItems(2)[0].querySelector('span').innerHTML).toBe(items1[0].text);
+        expect(selectedItems(2)[1].querySelector('span').innerHTML).toBe(items1[1].text);
+      });
+
+      it('by a ngModel attribute', () => {
+        expect(selectedItems(3)[0].querySelector('span').innerHTML).toBe(items1[0].text);
+        expect(selectedItems(3)[1].querySelector('span').innerHTML).toBe(items1[1].text);
+      });
+    });
+  });
+
 });
