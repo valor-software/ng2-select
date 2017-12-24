@@ -120,7 +120,7 @@ const items2 = [
 ];
 
 const createKeyboardEvent = (typeArg: string, keyCode: number) => {
-  const customEvent = new CustomEvent(typeArg);
+  const customEvent = new CustomEvent(typeArg, {bubbles: true, cancelable: true});
   customEvent['keyCode'] = keyCode;
   return customEvent;
 };
@@ -205,7 +205,7 @@ describe('NgxSelectComponent', () => {
     });
   });
 
-  xdescribe('property noAutoComplete should', () => {
+  describe('property noAutoComplete should', () => {
     beforeEach(() => {
       fixture.componentInstance.select1.noAutoComplete = true;
       fixture.detectChanges();
@@ -218,7 +218,7 @@ describe('NgxSelectComponent', () => {
     });
   });
 
-  xdescribe('menu should be opened', () => {
+  describe('menu should be opened', () => {
     beforeEach(fakeAsync(() => {
       fixture.componentInstance.component1.items = items1;
       fixture.detectChanges();
@@ -232,7 +232,7 @@ describe('NgxSelectComponent', () => {
     });
   });
 
-  xdescribe('menu should be closed', () => {
+  describe('menu should be closed', () => {
     beforeEach(() => {
       fixture.componentInstance.component1.items = items1;
       fixture.componentInstance.component2.items = items1;
@@ -247,7 +247,7 @@ describe('NgxSelectComponent', () => {
     it('by select item', () => selectChoices(1)[0].click());
 
     it('by press button Escape', () => {
-      formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 27)); // key Escape
+      formControl(1).dispatchEvent(createKeyboardEvent('keyup', 27)); // key Escape
     });
 
     it('by open other menu', () => formControl(2).click());

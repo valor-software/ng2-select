@@ -2,6 +2,7 @@ import { Component, DoCheck, forwardRef, Input, IterableDiffer, IterableDiffers,
 import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgSelectOption, Validator } from '@angular/forms';
 import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
 import { NgxSelectOptGroup, NgxSelectOption } from './ngx-select.classes';
+import { INgxSelectOption } from './ngx-select.interfaces';
 
 @Component({
   selector: 'ngx-select',
@@ -38,6 +39,7 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
 
   protected options: Array<NgxSelectOptGroup | NgxSelectOption> = [];
   private itemsDiffer: IterableDiffer<any>;
+  private selectedOptions: INgxSelectOption[] = [];
 
   constructor(iterableDiffers: IterableDiffers) {
     this.itemsDiffer = iterableDiffers.find([]).create<any>(null);
@@ -53,17 +55,27 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
   }
 
   protected mainClickedOutside(): void {
-    this.optionsOpened = false;
+    this.optionsHide();
   }
 
   protected mainKeyUp(event: KeyboardEvent): void {
+    console.log('NgxSelectComponent.mainKeyUp', event.keyCode);
+    switch (event.keyCode) {
+      case 27:
+        event.preventDefault();
+        this.optionsHide();
+        break;
+    }
   }
 
   protected focusToInput(): void {
   }
 
   protected matchClick(e: any): void {
-    this.optionsOpened = true;
+    this.optionsShow();
+  }
+
+  protected inputKeyPress(event: KeyboardEvent) {
   }
 
   protected isActiveOption(option: NgxSelectOption): boolean {
@@ -74,6 +86,19 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
   }
 
   protected selectOption(option: NgxSelectOption, $event: Event): void {
+    if (!this.multiple) {
+      this.selectedOptions.length = 0;
+    }
+    this.selectedOptions.push(option);
+    this.optionsHide();
+  }
+
+  private optionsShow() {
+    this.optionsOpened = true;
+  }
+
+  private optionsHide() {
+    this.optionsOpened = false;
   }
 
   private buildOptions(data: any[]): Array<NgxSelectOption | NgxSelectOptGroup> {

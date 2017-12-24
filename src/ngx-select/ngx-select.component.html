@@ -31,20 +31,19 @@
   <!--</span>-->
   <!--</div>-->
 
-  <!--&lt;!&ndash; live search an item from the list &ndash;&gt;-->
-  <!--<input type="text" class="form-control ui-select-search"-->
-  <!--*ngIf="(multiple === true) || (inputMode && !noAutoComplete)"-->
-  <!--[tabindex]="multiple === false? -1: 0"-->
-  <!--(keydown)="inputEvent($event)"-->
-  <!--(keyup)="inputEvent($event, true)"-->
-  <!--[disabled]="disabled"-->
-  <!--placeholder="{{active.length <= 0 ? placeholder : ''}}"-->
-  <!--(click)="multiple === true ? matchClick($event) : null"-->
-  <!--autocomplete="false"-->
-  <!--autocorrect="off"-->
-  <!--autocapitalize="off"-->
-  <!--spellcheck="false"-->
-  <!--role="combobox">-->
+  <!-- live search an item from the list -->
+  <input type="text" class="form-control ui-select-search"
+         *ngIf="(multiple === true) || (inputMode && !noAutoComplete)"
+         [tabindex]="multiple === false? -1: 0"
+         (keypress)="inputKeyPress($event)"
+         [disabled]="disabled"
+         placeholder="{{active.length <= 0 ? placeholder : ''}}"
+         (click)="multiple === true ? matchClick($event) : null"
+         autocomplete="false"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"
+         role="combobox">
 
   <!-- options template -->
   <ul role="menu" class="ui-select-choices dropdown-menu" *ngIf="optionsOpened && options && options.length > 0">
