@@ -52,7 +52,7 @@
       <div class="dropdown-header" *ngIf="opt.type === 'optgroup'">{{opt.label}}</div>
 
       <div *ngFor="let option of (opt.options || [opt])" #choiceItem
-           class="ui-select-choices-row" [class.active]="isActiveOption(option)"
+           class="ui-select-choices-row" [class.active]="optionActive === option"
            (mouseenter)="optionActivate(option)" (click)="selectOption(option, $event)">
         <a href="javascript:void(0)" class="dropdown-item">
           <div>{{option.text}}</div>

@@ -1,5 +1,5 @@
 import { Component, DoCheck, forwardRef, Input, IterableDiffer, IterableDiffers, OnInit } from '@angular/core';
-import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgSelectOption, Validator } from '@angular/forms';
+import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
 import { NgxSelectOptGroup, NgxSelectOption } from './ngx-select.classes';
 import { INgxSelectOptGroup, INgxSelectOption } from './ngx-select.interfaces';
@@ -39,9 +39,9 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
 
   protected options: Array<NgxSelectOptGroup | NgxSelectOption> = [];
   protected optionsFiltered: Array<NgxSelectOptGroup | NgxSelectOption> = [];
+  protected optionsSelected: INgxSelectOption[] = [];
+  protected optionActive: INgxSelectOption;
   private itemsDiffer: IterableDiffer<any>;
-  private selectedOptions: INgxSelectOption[] = [];
-  private activeOption: INgxSelectOption;
 
   constructor(iterableDiffers: IterableDiffers) {
     this.itemsDiffer = iterableDiffers.find([]).create<any>(null);
@@ -81,24 +81,16 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
   protected inputKeyPress(event: KeyboardEvent) {
   }
 
-  protected isActiveOption(option: NgxSelectOption): boolean {
-    return this.activeOption === option;
-  }
-
   protected selectOption(option: NgxSelectOption, $event: Event): void {
     if (!this.multiple) {
-      this.selectedOptions.length = 0;
+      this.optionsSelected.length = 0;
     }
-    this.selectedOptions.push(option);
+    this.optionsSelected.push(option);
     this.optionsClose();
   }
 
   protected optionActivate(option: INgxSelectOption): void {
-    this.activeOption = option;
-  }
-
-  private optionsFilter(search: string = ''): void {
-    this.optionsFiltered = this.options;
+    this.optionActive = option;
   }
 
   private optionActivateFirst(): void {
@@ -128,10 +120,14 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
   private optionActivateLast(): void {
   }
 
+  private optionsFilter(search: string = ''): void {
+    this.optionsFiltered = this.options;
+  }
+
   private optionsOpen() {
     this.optionsOpened = true;
-    if (!this.multiple && this.selectedOptions.length) {
-      this.optionActivate(this.selectedOptions[0]);
+    if (!this.multiple && this.optionsSelected.length) {
+      this.optionActivate(this.optionsSelected[0]);
     } else {
       this.optionActivateFirst();
     }
