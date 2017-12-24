@@ -258,7 +258,7 @@ describe('NgxSelectComponent', () => {
     });
   });
 
-  xdescribe('after open menu with no selected item', () => {
+  describe('after open menu with no selected item', () => {
     beforeEach(() => {
       fixture.componentInstance.component1.items = items1;
       fixture.detectChanges();

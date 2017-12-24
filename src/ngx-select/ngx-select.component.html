@@ -47,13 +47,13 @@
 
   <!-- options template -->
   <ul role="menu" class="ui-select-choices dropdown-menu" *ngIf="optionsOpened && options && options.length > 0">
-    <li *ngFor="let opt of options; let idx=index" role="menuitem">
+    <li *ngFor="let opt of optionsFiltered; let idx=index" role="menuitem">
       <div class="divider dropdown-divider" *ngIf="opt.type === 'optgroup' && (idx > 0)"></div>
       <div class="dropdown-header" *ngIf="opt.type === 'optgroup'">{{opt.label}}</div>
 
       <div *ngFor="let option of (opt.options || [opt])" #choiceItem
            class="ui-select-choices-row" [class.active]="isActiveOption(option)"
-           (mouseenter)="activateOption(option)" (click)="selectOption(option, $event)">
+           (mouseenter)="optionActivate(option)" (click)="selectOption(option, $event)">
         <a href="javascript:void(0)" class="dropdown-item">
           <div>{{option.text}}</div>
         </a>
