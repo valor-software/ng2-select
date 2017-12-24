@@ -1,9 +1,13 @@
-export interface ISelectOption {
-  value?: number | string;
-  text?: string;
+export interface INgxSelectOptionBase {
+  type: 'option' | 'optgroup';
 }
 
-export interface ISelectOptGroup {
-  label?: string;
-  options?: ISelectOption;
+export interface INgxSelectOption {
+  value: number | string;
+  text: string;
+}
+
+export interface INgxSelectOptGroup {
+  label: string;
+  options: INgxSelectOption[];
 }

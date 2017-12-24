@@ -1,6 +1,7 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
-import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
+import { Component, DoCheck, forwardRef, Input, IterableDiffer, IterableDiffers, OnInit } from '@angular/core';
+import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgSelectOption, Validator } from '@angular/forms';
 import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
+import { NgxSelectOptGroup, NgxSelectOption } from './ngx-select.classes';
 
 @Component({
   selector: 'ngx-select',
@@ -19,11 +20,12 @@ import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
     }
   ]
 })
-export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validator {
+export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validator, DoCheck {
   @Input() public items: any[];
-  @Input() public idField: string = 'id';
+  @Input() public valueField: string = 'id';
   @Input() public textField: string = 'text';
-  @Input() public childrenField: string = 'children';
+  @Input() public labelField: string = 'label';
+  @Input() public optionsField: string = 'options';
   @Input() public multiple: boolean = false;
   @Input() public allowClear: boolean = false;
   @Input() public placeholder: string = '';
@@ -31,22 +33,85 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
   @Input() public disabled: boolean = false;
   @Input() public active: any | any[];
 
-  constructor() {
+
+  protected optionsOpened: boolean = false;
+
+  protected options: Array<NgxSelectOptGroup | NgxSelectOption> = [];
+  private itemsDiffer: IterableDiffer<any>;
+
+  constructor(iterableDiffers: IterableDiffers) {
+    this.itemsDiffer = iterableDiffers.find([]).create<any>(null);
   }
 
   ngOnInit() {
   }
 
-  public clickedOutside(): void {
+  ngDoCheck(): void {
+    if (this.itemsDiffer.diff(this.items)) {
+      this.options = this.buildOptions(this.items);
+    }
   }
 
-  public mainClick(event: KeyboardEvent): void {
+  protected mainClickedOutside(): void {
+    this.optionsOpened = false;
   }
 
-  public focusToInput(): void {
+  protected mainKeyUp(event: KeyboardEvent): void {
   }
 
-  public matchClick(e: any): void {
+  protected focusToInput(): void {
+  }
+
+  protected matchClick(e: any): void {
+    this.optionsOpened = true;
+  }
+
+  protected isActiveOption(option: NgxSelectOption): boolean {
+    return false;
+  }
+
+  protected activateOption(option: NgxSelectOption): void {
+  }
+
+  protected selectOption(option: NgxSelectOption, $event: Event): void {
+  }
+
+  private buildOptions(data: any[]): Array<NgxSelectOption | NgxSelectOptGroup> {
+    const result: Array<NgxSelectOption | NgxSelectOptGroup> = [];
+    let option: NgxSelectOption;
+
+    [].concat(data).forEach((item: any) => {
+      const isOptGroup = typeof item === 'object' && item !== null &&
+        item.hasOwnProperty(this.labelField) && item.hasOwnProperty(this.optionsField) &&
+        Array.isArray(item[this.optionsField]);
+      if (isOptGroup) {
+        const optGroup = new NgxSelectOptGroup(item[this.labelField]);
+        item[this.optionsField].forEach(subOption => {
+          if (option = this.buildOption(subOption, optGroup)) {
+            optGroup.options.push(option);
+          }
+        });
+        result.push(optGroup);
+      } else if (option = this.buildOption(item, null)) {
+        result.push(option);
+      }
+    });
+
+    return result;
+  }
+
+  private buildOption(data: any, parent: NgxSelectOptGroup): NgxSelectOption {
+    let value, text;
+    if (typeof data === 'string' || typeof data === 'number') {
+      value = text = data;
+    } else if (typeof data === 'object' && data !== null &&
+      (data.hasOwnProperty(this.valueField) || data.hasOwnProperty(this.textField))) {
+      value = data.hasOwnProperty(this.valueField) ? data[this.valueField] : data[this.textField];
+      text = data.hasOwnProperty(this.textField) ? data[this.textField] : data[this.valueField];
+    } else {
+      return null;
+    }
+    return new NgxSelectOption(value, text, parent);
   }
 
   //////////// interface Validator ////////////
