@@ -18,14 +18,7 @@ import { NgxSelectComponent } from './ngx-select.component';
                 [multiple]="select1.multiple"
                 [noAutoComplete]="select1.noAutoComplete"
                 [items]="select1.items"
-                [disabled]="select1.disabled"
-                [active]="select1.active"
-
-                (data)="select1.data($event)"
-                (selected)="select1.selected($event)"
-                (removed)="select1.removed($event)"
-                (typed)="select1.typed($event)"
-                (opened)="select1.opened($event)"></ngx-select>
+                [disabled]="select1.disabled"></ngx-select>
     <ngx-select id="sel-2" #component2
                 [formControl]="select2.formControl"
                 [allowClear]="select2.allowClear"
@@ -65,14 +58,7 @@ class TestNgxSelectComponent {
     multiple: false,
     noAutoComplete: false,
     items: [],
-    disabled: false,
-    active: [],
-
-    data: () => null,
-    selected: () => null,
-    removed: () => null,
-    typed: () => null,
-    opened: () => null
+    disabled: false
   };
 
   public select2: any = {
@@ -198,10 +184,6 @@ describe('NgxSelectComponent', () => {
 
     it('"disabled" should be false', () => {
       expect(fixture.componentInstance.component2.disabled).toBeFalsy();
-    });
-
-    xit('"active" should be an empty array', () => {
-      expect(fixture.componentInstance.component2.active).toEqual([]);
     });
   });
 

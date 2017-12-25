@@ -37,7 +37,7 @@
          [tabindex]="multiple === false? -1: 0"
          (keypress)="inputKeyPress($event)"
          [disabled]="disabled"
-         placeholder="{{active.length <= 0 ? placeholder : ''}}"
+         placeholder="{{optionsSelected.length? '': placeholder}}"
          (click)="multiple === true ? matchClick($event) : null"
          autocomplete="false"
          autocorrect="off"

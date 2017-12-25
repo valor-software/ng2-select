@@ -32,8 +32,6 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
   @Input() public placeholder: string = '';
   @Input() public noAutoComplete: boolean = false;
   @Input() public disabled: boolean = false;
-  @Input() public active: any | any[];
-
 
   protected optionsOpened: boolean = false;
 
