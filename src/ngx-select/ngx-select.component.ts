@@ -137,8 +137,15 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
   }
 
   protected optionRemove(option: NgxSelectOption, event: Event): void {
-    event.stopPropagation();
-
+    if (!this.disabled) {
+      event.stopPropagation();
+      if (this.multiple) {
+        const optionIndex = this.optionsSelected.indexOf(option);
+        this.optionsSelected.splice(optionIndex, 1);
+      } else {
+        this.optionsSelected.length = 0;
+      }
+    }
   }
 
   protected isOptionActive(option: NgxSelectOption, element: HTMLElement) {

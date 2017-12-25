@@ -364,7 +364,7 @@ describe('NgxSelectComponent', () => {
     });
   });
 
-  xdescribe('should remove selected', () => {
+  describe('should remove selected', () => {
     beforeEach(() => {
       fixture.componentInstance.select1.items = items1;
       fixture.componentInstance.select1.allowClear = true;
@@ -391,7 +391,7 @@ describe('NgxSelectComponent', () => {
     });
   });
 
-  xdescribe('after click', () => {
+  describe('after click', () => {
     beforeEach(() => {
       fixture.componentInstance.select1.items = items1;
       fixture.detectChanges();
