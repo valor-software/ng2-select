@@ -7,28 +7,27 @@
   <div class="ui-select-match" *ngIf="(multiple === false) && (!optionsOpened || noAutoComplete)">
     <div tabindex="-1" class="btn btn-default btn-secondary form-control ui-select-toggle"
          (click)="matchClick($event)" style="outline: 0;">
-      <!--<span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>-->
-      <!--<span *ngIf="active.length > 0" class="ui-select-match-text pull-left"-->
-      <!--[class.ui-select-allow-clear]="allowClear"-->
-      <!--[innerHTML]="sanitize(active[0].text)"></span>-->
-      <!--<i class="dropdown-toggle pull-right"></i>-->
-      <!--<i class="caret pull-right"></i>-->
-      <!--<a *ngIf="allowClear && active.length > 0" class="btn btn-xs btn-link pull-right"-->
-      <!--style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">-->
-      <!--<i class="glyphicon glyphicon-remove"></i>-->
-      <!--</a>-->
+      <span *ngIf="optionsSelected.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
+      <span *ngIf="optionsSelected.length > 0" class="ui-select-match-text pull-left"
+            [class.ui-select-allow-clear]="allowClear">{{optionsSelected[0].text}}</span>
+      <i class="dropdown-toggle pull-right"></i>
+      <i class="caret pull-right"></i>
+      <a *ngIf="allowClear && optionsSelected.length > 0" class="btn btn-xs btn-link pull-right"
+         style="margin-right: 10px; padding: 0;" (click)="optionRemove(optionsSelected[0], $event)">
+        <i class="glyphicon glyphicon-remove"></i>
+      </a>
     </div>
   </div>
 
-  <!--&lt;!&ndash; multiple selected items &ndash;&gt;-->
-  <!--<div class="ui-select-match" *ngIf="multiple === true">-->
-  <!--<span *ngFor="let item of active">-->
-  <!--<span tabindex="-1" class="btn btn-default btn-secondary btn-xs ui-select-match-item" type="button">-->
-  <!--<a class="close" style="margin-left: 5px; padding: 0;" (click)="removeClick(item, $event)">&times;</a>-->
-  <!--<span [innerHtml]="sanitize(item.text)"></span>-->
-  <!--</span>-->
-  <!--</span>-->
-  <!--</div>-->
+  <!-- multiple selected items -->
+  <div class="ui-select-match" *ngIf="multiple === true">
+    <span *ngFor="let option of optionsSelected">
+      <span tabindex="-1" class="btn btn-default btn-secondary btn-xs ui-select-match-item" type="button">
+        <a class="close" style="margin-left: 5px; padding: 0;" (click)="optionRemove(option, $event)">&times;</a>
+        <span>{{option.text}}</span>
+      </span>
+    </span>
+  </div>
 
   <!-- live search an item from the list -->
   <input #input type="text" class="form-control ui-select-search"
@@ -54,7 +53,7 @@
 
       <div #choiceItem *ngFor="let option of (opt.options || [opt])"
            class="ui-select-choices-row" [class.active]="isOptionActive(option, choiceItem)"
-           (mouseenter)="optionActivate(option)" (click)="selectOption(option, $event)">
+           (mouseenter)="optionActivate(option)" (click)="optionSelect(option, $event)">
         <div class="dropdown-item">{{option.text}}</div>
       </div>
     </li>

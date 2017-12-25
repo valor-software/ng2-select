@@ -52,7 +52,7 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
 
   protected options: Array<NgxSelectOptGroup | NgxSelectOption> = [];
   protected optionsFiltered: Array<NgxSelectOptGroup | NgxSelectOption> = [];
-  protected optionsSelected: NgxSelectOption[] = [];
+  protected optionsSelected: Array<NgxSelectOption> = [];
   protected optionActive: NgxSelectOption;
   private itemsDiffer: IterableDiffer<any>;
 
@@ -83,11 +83,19 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
   }
 
   protected inputKeyDown(event: KeyboardEvent) {
-    if ([37, 38, 39, 40].indexOf(event.keyCode) > -1) {
+    if ([37, 38, 39, 40].includes(event.keyCode)) {
       event.preventDefault();
       event.stopPropagation();
     }
     switch (event.keyCode) {
+      case 13: // enter
+        if (this.optionsOpened) {
+          this.optionSelect(this.optionActive);
+          this.optionActivateNext();
+        } else {
+          this.optionsOpen();
+        }
+        break;
       case 37: // arrow left
         this.optionActivateFirst();
         break;
@@ -117,12 +125,20 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
     this.optionsOpen();
   }
 
-  protected selectOption(option: NgxSelectOption, $event: Event): void {
+  protected optionSelect(option: NgxSelectOption, event: Event = null): void {
+    if (event) {
+      event.stopPropagation();
+    }
     if (!this.multiple) {
       this.optionsSelected.length = 0;
     }
     this.optionsSelected.push(option);
     this.optionsClose();
+  }
+
+  protected optionRemove(option: NgxSelectOption, event: Event): void {
+    event.stopPropagation();
+
   }
 
   protected isOptionActive(option: NgxSelectOption, element: HTMLElement) {
@@ -221,11 +237,14 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
   }
 
   private optionsFilter(search: string = ''): void {
-    this.optionsFiltered = this.options;
+    this.optionsFiltered = this.options.filter((option: NgxSelectOptGroup | NgxSelectOption) => {
+      return !this.multiple || !this.optionsSelected.includes(<NgxSelectOption>option);
+    });
   }
 
   private optionsOpen() {
     this.optionsOpened = true;
+    this.optionsFilter();
     if (!this.multiple && this.optionsSelected.length) {
       this.optionActivate(this.optionsSelected[0]);
     } else {

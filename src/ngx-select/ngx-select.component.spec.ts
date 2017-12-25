@@ -300,7 +300,7 @@ describe('NgxSelectComponent', () => {
     });
   });
 
-  xdescribe('should select', () => {
+  describe('should select', () => {
     describe('a single item', () => {
       beforeEach(() => {
         fixture.componentInstance.select1.items = items1;
@@ -350,6 +350,7 @@ describe('NgxSelectComponent', () => {
         fixture.detectChanges();
         formControl(1).click();
         fixture.detectChanges();
+        formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
         formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
         formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 13)); // key Enter
       });
