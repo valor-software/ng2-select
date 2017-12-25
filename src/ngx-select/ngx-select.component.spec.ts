@@ -148,7 +148,6 @@ describe('NgxSelectComponent', () => {
     expect(selectChoices(3).length).toBe(0);
   });
 
-
   describe('should create with default property', () => {
     it('"allowClear" should be false', () => {
       expect(fixture.componentInstance.component2.allowClear).toBeFalsy();
@@ -254,7 +253,7 @@ describe('NgxSelectComponent', () => {
     });
   });
 
-  xdescribe('menu should be have navigation and active item should be visible', () => {
+  describe('menu should be have navigation and active item should be visible', () => {
     beforeEach(() => {
       const items: Array<{ id: number; text: string }> = [];
       for (let i = 1; i <= 100; i++) {

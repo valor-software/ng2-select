@@ -1,11 +1,10 @@
-<div tabindex="0" class="ui-select-container dropdown open"
+<div class="ui-select-container dropdown open"
      [class.ui-select-multiple]="multiple === true" [class.form-control]="multiple === true"
-     (keyup)="mainKeyUp($event)" offClick (clickedOutside)="mainClickedOutside()"
-     (focus)="multiple === true ? focusToInput() : null">
+     (keyup)="mainKeyUp($event)" offClick (clickedOutside)="mainClickedOutside()">
   <div [class.ui-disabled]="disabled"></div>
 
   <!-- single selected item -->
-  <div class="ui-select-match" *ngIf="(multiple === false) && (!inputMode || noAutoComplete)">
+  <div class="ui-select-match" *ngIf="(multiple === false) && (!optionsOpened || noAutoComplete)">
     <div tabindex="-1" class="btn btn-default btn-secondary form-control ui-select-toggle"
          (click)="matchClick($event)" style="outline: 0;">
       <!--<span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>-->
@@ -32,11 +31,12 @@
   <!--</div>-->
 
   <!-- live search an item from the list -->
-  <input type="text" class="form-control ui-select-search"
-         *ngIf="(multiple === true) || (inputMode && !noAutoComplete)"
+  <input #input type="text" class="form-control ui-select-search"
+         *ngIf="(multiple === true) || (optionsOpened && !noAutoComplete)"
          [tabindex]="multiple === false? -1: 0"
+         (keydown)="inputKeyDown($event)"
          (keypress)="inputKeyPress($event)"
-         [disabled]="disabled"
+         [disabled]="inputIsDisabled()"
          placeholder="{{optionsSelected.length? '': placeholder}}"
          (click)="multiple === true ? matchClick($event) : null"
          autocomplete="false"
@@ -46,17 +46,16 @@
          role="combobox">
 
   <!-- options template -->
-  <ul role="menu" class="ui-select-choices dropdown-menu" *ngIf="optionsOpened && options && options.length > 0">
+  <ul #choiceMenu role="menu" class="ui-select-choices dropdown-menu"
+      *ngIf="optionsOpened && options && options.length > 0">
     <li *ngFor="let opt of optionsFiltered; let idx=index" role="menuitem">
       <div class="divider dropdown-divider" *ngIf="opt.type === 'optgroup' && (idx > 0)"></div>
       <div class="dropdown-header" *ngIf="opt.type === 'optgroup'">{{opt.label}}</div>
 
-      <div *ngFor="let option of (opt.options || [opt])" #choiceItem
-           class="ui-select-choices-row" [class.active]="optionActive === option"
+      <div #choiceItem *ngFor="let option of (opt.options || [opt])"
+           class="ui-select-choices-row" [class.active]="isOptionActive(option, choiceItem)"
            (mouseenter)="optionActivate(option)" (click)="selectOption(option, $event)">
-        <a href="javascript:void(0)" class="dropdown-item">
-          <div>{{option.text}}</div>
-        </a>
+        <div class="dropdown-item">{{option.text}}</div>
       </div>
     </li>
   </ul>

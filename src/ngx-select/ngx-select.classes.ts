@@ -17,6 +17,6 @@ export class NgxSelectOptGroup implements INgxSelectOptGroup, INgxSelectOptionBa
   readonly type = 'optgroup';
 
   constructor(public label: string,
-              public options: NgxSelectOption[] = []) {
+              public options: Array<NgxSelectOption> = []) {
   }
 }

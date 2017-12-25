@@ -1,8 +1,11 @@
-import { Component, DoCheck, forwardRef, Input, IterableDiffer, IterableDiffers, OnInit } from '@angular/core';
+import {
+  Component, DoCheck, ElementRef, forwardRef, HostBinding, HostListener, Input, IterableDiffer, IterableDiffers, OnInit, QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
 import { NgxSelectOptGroup, NgxSelectOption } from './ngx-select.classes';
-import { INgxSelectOptGroup, INgxSelectOption } from './ngx-select.interfaces';
 
 @Component({
   selector: 'ngx-select',
@@ -33,12 +36,24 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
   @Input() public noAutoComplete: boolean = false;
   @Input() public disabled: boolean = false;
 
+  @ViewChild('choiceMenu') choiceMenuElRef: ElementRef;
+  @ViewChild('input') inputElRef: ElementRef;
+
+  @HostBinding() tabindex = 0;
+
+  @HostListener('focus', ['$event'])
+  protected focusToInput(): void {
+    if (this.inputElRef) {
+      this.inputElRef.nativeElement.focus();
+    }
+  }
+
   protected optionsOpened: boolean = false;
 
   protected options: Array<NgxSelectOptGroup | NgxSelectOption> = [];
   protected optionsFiltered: Array<NgxSelectOptGroup | NgxSelectOption> = [];
-  protected optionsSelected: INgxSelectOption[] = [];
-  protected optionActive: INgxSelectOption;
+  protected optionsSelected: NgxSelectOption[] = [];
+  protected optionActive: NgxSelectOption;
   private itemsDiffer: IterableDiffer<any>;
 
   constructor(iterableDiffers: IterableDiffers) {
@@ -60,23 +75,46 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
   }
 
   protected mainKeyUp(event: KeyboardEvent): void {
-    console.log('NgxSelectComponent.mainKeyUp', event.keyCode);
     switch (event.keyCode) {
-      case 27:
-        event.preventDefault();
+      case 27: // escape
         this.optionsClose();
         break;
     }
   }
 
-  protected focusToInput(): void {
+  protected inputKeyDown(event: KeyboardEvent) {
+    if ([37, 38, 39, 40].indexOf(event.keyCode) > -1) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    switch (event.keyCode) {
+      case 37: // arrow left
+        this.optionActivateFirst();
+        break;
+      case 38: // arrow up
+        this.optionActivatePrevious();
+        break;
+      case 39: // arrow right
+        this.optionActivateLast();
+        break;
+      case 40: // arrow down
+        this.optionActivateNext();
+        break;
+    }
+  }
+
+  protected inputKeyPress(event: KeyboardEvent) {
+  }
+
+  protected inputIsDisabled(): boolean {
+    if (!this.disabled && this.optionsOpened) {
+      this.focusToInput();
+    }
+    return this.disabled;
   }
 
   protected matchClick(e: any): void {
     this.optionsOpen();
-  }
-
-  protected inputKeyPress(event: KeyboardEvent) {
   }
 
   protected selectOption(option: NgxSelectOption, $event: Event): void {
@@ -87,35 +125,99 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
     this.optionsClose();
   }
 
-  protected optionActivate(option: INgxSelectOption): void {
+  protected isOptionActive(option: NgxSelectOption, element: HTMLElement) {
+    if (this.optionActive === option) {
+      this.ensureVisibleElement(element);
+      return true;
+    }
+    return false;
+  }
+
+  protected optionActivate(option: NgxSelectOption): void {
     this.optionActive = option;
   }
 
   private optionActivateFirst(): void {
-    for (let i1 = 0; i1 < this.optionsFiltered.length; i1++) {
-      if (this.optionsFiltered[i1] instanceof NgxSelectOption) {
-        const option: INgxSelectOption = <NgxSelectOption>this.optionsFiltered[i1];
+    for (let i = 0; i < this.optionsFiltered.length; i++) {
+      const option = this.optionsFiltered[i];
+      if (option instanceof NgxSelectOption) {
         this.optionActivate(option);
         return;
-      } else if (this.optionsFiltered[i1] instanceof NgxSelectOptGroup) {
-        const optGroup: INgxSelectOptGroup = <NgxSelectOptGroup>this.optionsFiltered[i1];
-        for (let i2 = 0; i2 < optGroup.options.length; i2++) {
-          if (optGroup.options[i2] instanceof NgxSelectOption) {
-            this.optionActivate(optGroup.options[i2]);
-            return;
-          }
-        }
+      } else if (option instanceof NgxSelectOptGroup && option.options.length) {
+        this.optionActivate(option.options[0]);
+        return;
       }
     }
   }
 
   private optionActivateNext(): void {
+    let option,
+      i = this.optionsFiltered.indexOf(this.optionActive.parent || this.optionActive),
+      ii = (this.optionActive.parent ? this.optionActive.parent.options.indexOf(this.optionActive) : 0) + 1;
+
+    do {
+      option = this.optionsFiltered[i];
+      if ((option instanceof NgxSelectOptGroup) && (ii <= option.options.length - 1)) {
+        this.optionActivate(option.options[ii]);
+        return;
+      }
+      ii = 0;
+      i++;
+      option = this.optionsFiltered[i];
+      if (option instanceof NgxSelectOption) {
+        this.optionActivate(option);
+        return;
+      }
+    } while (i < this.optionsFiltered.length);
+
+    this.optionActivateFirst();
   }
 
   private optionActivatePrevious(): void {
+    let option,
+      i = this.optionsFiltered.indexOf(this.optionActive.parent || this.optionActive),
+      ii = (this.optionActive.parent ? this.optionActive.parent.options.indexOf(this.optionActive) : 0) - 1;
+
+    do {
+      option = this.optionsFiltered[i];
+      if ((option instanceof NgxSelectOptGroup) && (ii >= 0)) {
+        this.optionActivate(option.options[ii]);
+        return;
+      }
+      ii = 0;
+      i--;
+      option = this.optionsFiltered[i];
+      if (option instanceof NgxSelectOption) {
+        this.optionActivate(option);
+        return;
+      }
+    } while (i > 0);
+
+    this.optionActivateLast();
   }
 
   private optionActivateLast(): void {
+    for (let i = this.optionsFiltered.length - 1; i >= 0; i--) {
+      const option = this.optionsFiltered[i];
+      if (option instanceof NgxSelectOption) {
+        this.optionActivate(option);
+        return;
+      } else if (option instanceof NgxSelectOptGroup && option.options.length) {
+        this.optionActivate(option.options[option.options.length - 1]);
+        return;
+      }
+    }
+  }
+
+  private ensureVisibleElement(element: HTMLElement) {
+    if (this.choiceMenuElRef) {
+      const container: HTMLElement = this.choiceMenuElRef.nativeElement;
+      if (element.offsetTop < container.scrollTop) {
+        container.scrollTop = element.offsetTop;
+      } else if (element.offsetTop + element.offsetHeight > container.scrollTop + container.clientHeight) {
+        container.scrollTop = element.offsetTop + element.offsetHeight - container.clientHeight;
+      }
+    }
   }
 
   private optionsFilter(search: string = ''): void {
