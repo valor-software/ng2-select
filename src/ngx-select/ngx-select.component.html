@@ -1,11 +1,11 @@
 <div class="ui-select-container dropdown open"
      [class.ui-select-multiple]="multiple === true" [class.form-control]="multiple === true"
-     (keyup)="mainKeyUp($event)" offClick (clickedOutside)="mainClickedOutside()">
+     offClick (clickedOutside)="mainClickedOutside()">
   <div [class.ui-disabled]="disabled"></div>
 
   <!-- single selected item -->
   <div class="ui-select-match" *ngIf="(multiple === false) && (!optionsOpened || noAutoComplete)">
-    <div tabindex="-1" class="btn btn-default btn-secondary form-control ui-select-toggle"
+    <div class="btn btn-default btn-secondary form-control ui-select-toggle"
          (click)="matchClick($event)" style="outline: 0;">
       <span *ngIf="optionsSelected.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
       <span *ngIf="optionsSelected.length > 0" class="ui-select-match-text pull-left"
@@ -32,13 +32,13 @@
 
   <!-- live search an item from the list -->
   <input #input type="text" class="form-control ui-select-search"
-         *ngIf="(multiple === true) || (optionsOpened && !noAutoComplete)"
+         *ngIf="checkInputVisibility()"
          [tabindex]="multiple === false? -1: 0"
          (keydown)="inputKeyDown($event)"
-         (keyup)="optionsFilter(input.value)"
+         (keyup)="inputKeyUp(input.value)"
          [disabled]="inputIsDisabled()"
          placeholder="{{optionsSelected.length? '': placeholder}}"
-         (click)="multiple === true ? matchClick($event) : null"
+         (click)="inputClick(input.value)"
          autocomplete="false"
          autocorrect="off"
          autocapitalize="off"
