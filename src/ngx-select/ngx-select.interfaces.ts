@@ -1,5 +1,7 @@
+export type TNgxSelectOptionType = 'option' | 'optgroup';
+
 export interface INgxSelectOptionBase {
-  type: 'option' | 'optgroup';
+  type: TNgxSelectOptionType;
 }
 
 export interface INgxSelectOption {

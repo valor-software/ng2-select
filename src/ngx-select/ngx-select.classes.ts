@@ -1,7 +1,7 @@
-import { INgxSelectOptGroup, INgxSelectOption, INgxSelectOptionBase } from './ngx-select.interfaces';
+import { INgxSelectOptGroup, INgxSelectOption, INgxSelectOptionBase, TNgxSelectOptionType } from './ngx-select.interfaces';
 
 export class NgxSelectOption implements INgxSelectOption, INgxSelectOptionBase {
-  readonly type = 'option';
+  readonly type: TNgxSelectOptionType = 'option';
 
   constructor(public value: number | string,
               public text: string,
@@ -14,7 +14,7 @@ export class NgxSelectOption implements INgxSelectOption, INgxSelectOptionBase {
 }
 
 export class NgxSelectOptGroup implements INgxSelectOptGroup, INgxSelectOptionBase {
-  readonly type = 'optgroup';
+  readonly type: TNgxSelectOptionType = 'optgroup';
 
   public optionsFiltered: NgxSelectOption[];
 

@@ -90,10 +90,10 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
     }
   }
 
-  protected optionsOpened: boolean = false;
+  public optionsOpened: boolean = false;
 
   protected options: Array<NgxSelectOptGroup | NgxSelectOption> = [];
-  protected optionsFiltered: Array<NgxSelectOptGroup | NgxSelectOption> = [];
+  public optionsFiltered: Array<NgxSelectOptGroup | NgxSelectOption> = [];
   protected optionsSelected: Array<NgxSelectOption> = [];
   protected optionActive: NgxSelectOption;
   private itemsDiffer: IterableDiffer<any>;
@@ -111,11 +111,11 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
     }
   }
 
-  protected mainClickedOutside(): void {
+  public mainClickedOutside(): void {
     this.optionsClose();
   }
 
-  protected checkInputVisibility(): boolean {
+  public checkInputVisibility(): boolean {
     return (this.multiple === true) || (this.optionsOpened && !this.noAutoComplete);
   }
 

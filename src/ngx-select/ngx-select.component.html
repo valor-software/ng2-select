@@ -47,7 +47,7 @@
 
   <!-- options template -->
   <ul #choiceMenu role="menu" class="ui-select-choices dropdown-menu"
-      *ngIf="optionsOpened && options && options.length > 0">
+      *ngIf="optionsOpened && optionsFiltered && optionsFiltered.length">
     <li *ngFor="let opt of optionsFiltered; let idx=index" role="menuitem">
       <div class="divider dropdown-divider" *ngIf="opt.type === 'optgroup' && (idx > 0)"></div>
       <div class="dropdown-header" *ngIf="opt.type === 'optgroup'">{{opt.label}}</div>
