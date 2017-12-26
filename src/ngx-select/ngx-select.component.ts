@@ -130,6 +130,7 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
     }
     this.optionsSelected.push(option);
     this.optionsClose();
+    this.valueFromOptionsSelected();
   }
 
   protected optionRemove(option: NgxSelectOption, event: Event): void {
@@ -346,6 +347,7 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
 
   private valueFromOptionsSelected(): void {
     this._value = this.optionsSelected.map((option: NgxSelectOption) => option.value);
+    this.propagateChange(this._value);
   }
 
   //////////// interface Validator ////////////

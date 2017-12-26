@@ -276,7 +276,7 @@ describe('NgxSelectComponent', () => {
   });
 
   describe('should select', () => {
-    describe('a single item', () => {
+    describe('a single item with ngModel', () => {
       beforeEach(() => {
         fixture.componentInstance.select1.items = items1;
         fixture.componentInstance.select1.multiple = false;
@@ -298,10 +298,37 @@ describe('NgxSelectComponent', () => {
       afterEach(() => {
         fixture.detectChanges();
         expect(selectedItem(1).innerHTML).toBe('item two');
+        expect(fixture.componentInstance.select1.value).toEqual([2]);
       });
     });
 
-    describe('multiple items', () => {
+    describe('a single item with FormControl', () => {
+      beforeEach(() => {
+        fixture.componentInstance.select2.items = items1;
+        fixture.componentInstance.select2.multiple = false;
+        fixture.detectChanges();
+        formControl(2).click();
+        fixture.detectChanges();
+        expect(selectChoices(2).length).toBeGreaterThan(0);
+      });
+
+      it('by click on choice item', () => {
+        selectChoices(2)[1].click();
+      });
+
+      it('by press the key Enter on a choice item', () => {
+        formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
+        formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 13)); // key Enter
+      });
+
+      afterEach(() => {
+        fixture.detectChanges();
+        expect(selectedItem(2).innerHTML).toBe('item two');
+        expect(fixture.componentInstance.select2.formControl.value).toEqual([2]);
+      });
+    });
+
+    describe('multiple items with ngModel', () => {
       beforeEach(() => {
         fixture.componentInstance.select1.items = items1;
         fixture.componentInstance.select1.multiple = true;
@@ -335,6 +362,45 @@ describe('NgxSelectComponent', () => {
         expect(selectedItems(1).length).toBe(2);
         expect(selectedItems(1)[0].querySelector(' span').innerHTML).toBe('item two');
         expect(selectedItems(1)[1].querySelector(' span').innerHTML).toBe('item four');
+        expect(fixture.componentInstance.select1.value).toEqual([2, 4]);
+      });
+    });
+
+    describe('multiple items with FormControl', () => {
+      beforeEach(() => {
+        fixture.componentInstance.select2.items = items1;
+        fixture.componentInstance.select2.multiple = true;
+        fixture.detectChanges();
+        formControl(2).click();
+        fixture.detectChanges();
+        expect(selectChoices(2).length).toBeGreaterThan(0);
+      });
+
+      it('by clicking on choice items', () => {
+        selectChoices(2)[1].click();
+        fixture.detectChanges();
+        formControl(2).click();
+        fixture.detectChanges();
+        selectChoices(2)[2].click();
+      });
+
+      it('by press the key Enter on choice items', () => {
+        formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
+        formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 13)); // key Enter
+        fixture.detectChanges();
+        formControl(2).click();
+        fixture.detectChanges();
+        formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
+        formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
+        formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 13)); // key Enter
+      });
+
+      afterEach(() => {
+        fixture.detectChanges();
+        expect(selectedItems(2).length).toBe(2);
+        expect(selectedItems(2)[0].querySelector(' span').innerHTML).toBe('item two');
+        expect(selectedItems(2)[1].querySelector(' span').innerHTML).toBe('item four');
+        expect(fixture.componentInstance.select2.formControl.value).toEqual([2, 4]);
       });
     });
   });
