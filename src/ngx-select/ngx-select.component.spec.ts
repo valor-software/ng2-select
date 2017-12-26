@@ -414,7 +414,7 @@ describe('NgxSelectComponent', () => {
     });
   });
 
-  xdescribe('choice items should be filtered', () => {
+  describe('choice items should be filtered', () => {
     beforeEach(() => {
       fixture.componentInstance.select1.items = items1;
       fixture.detectChanges();

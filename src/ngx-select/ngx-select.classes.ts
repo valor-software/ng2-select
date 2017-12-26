@@ -16,7 +16,14 @@ export class NgxSelectOption implements INgxSelectOption, INgxSelectOptionBase {
 export class NgxSelectOptGroup implements INgxSelectOptGroup, INgxSelectOptionBase {
   readonly type = 'optgroup';
 
+  public optionsFiltered: NgxSelectOption[];
+
   constructor(public label: string,
-              public options: Array<NgxSelectOption> = []) {
+              public options: NgxSelectOption[] = []) {
+    this.filter(() => true);
+  }
+
+  public filter(callbackFn: (value: NgxSelectOption) => any): void {
+    this.optionsFiltered = this.options.filter((option: NgxSelectOption) => callbackFn(option));
   }
 }

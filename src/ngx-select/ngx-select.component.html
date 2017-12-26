@@ -34,7 +34,7 @@
          *ngIf="(multiple === true) || (optionsOpened && !noAutoComplete)"
          [tabindex]="multiple === false? -1: 0"
          (keydown)="inputKeyDown($event)"
-         (keypress)="inputKeyPress($event)"
+         (keyup)="optionsFilter(input.value)"
          [disabled]="inputIsDisabled()"
          placeholder="{{optionsSelected.length? '': placeholder}}"
          (click)="multiple === true ? matchClick($event) : null"
@@ -51,10 +51,10 @@
       <div class="divider dropdown-divider" *ngIf="opt.type === 'optgroup' && (idx > 0)"></div>
       <div class="dropdown-header" *ngIf="opt.type === 'optgroup'">{{opt.label}}</div>
 
-      <div #choiceItem *ngFor="let option of (opt.options || [opt])"
+      <div #choiceItem *ngFor="let option of (opt.optionsFiltered || [opt])"
            class="ui-select-choices-row" [class.active]="isOptionActive(option, choiceItem)"
            (mouseenter)="optionActivate(option)" (click)="optionSelect(option, $event)">
-        <div class="dropdown-item">{{option.text}}</div>
+        <div class="dropdown-item" [innerHtml]="highlightText(option.text)"></div>
       </div>
     </li>
   </ul>

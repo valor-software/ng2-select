@@ -6,6 +6,8 @@ import {
 import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
 import { NgxSelectOptGroup, NgxSelectOption } from './ngx-select.classes';
+import { escapeRegexp } from '../common/common';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'ngx-select',
@@ -56,7 +58,7 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
   protected optionActive: NgxSelectOption;
   private itemsDiffer: IterableDiffer<any>;
 
-  constructor(iterableDiffers: IterableDiffers) {
+  constructor(private sanitizer: DomSanitizer, iterableDiffers: IterableDiffers) {
     this.itemsDiffer = iterableDiffers.find([]).create<any>(null);
   }
 
@@ -111,9 +113,6 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
     }
   }
 
-  protected inputKeyPress(event: KeyboardEvent) {
-  }
-
   protected inputIsDisabled(): boolean {
     if (!this.disabled && this.optionsOpened) {
       this.focusToInput();
@@ -166,25 +165,35 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
       if (option instanceof NgxSelectOption) {
         this.optionActivate(option);
         return;
-      } else if (option instanceof NgxSelectOptGroup && option.options.length) {
-        this.optionActivate(option.options[0]);
+      } else if (option instanceof NgxSelectOptGroup && option.optionsFiltered.length) {
+        this.optionActivate(option.optionsFiltered[0]);
         return;
       }
     }
   }
 
+  protected highlightText(fullText: string) {
+    if (this.inputElRef) {
+      const highlightText = this.inputElRef.nativeElement.value;
+      if (highlightText) {
+        fullText = fullText.replace(new RegExp(highlightText, 'gi'), '<strong>$&</strong>');
+      }
+    }
+    return this.sanitizer.bypassSecurityTrustHtml(fullText);
+  }
+
   private optionActivateNext(): void {
     let option,
       i = this.optionsFiltered.indexOf(this.optionActive.parent || this.optionActive),
-      ii = (this.optionActive.parent ? this.optionActive.parent.options.indexOf(this.optionActive) : 0) + 1;
+      ii = (this.optionActive.parent ? this.optionActive.parent.optionsFiltered.indexOf(this.optionActive) : 0) + 1;
 
     do {
       option = this.optionsFiltered[i];
-      if ((option instanceof NgxSelectOptGroup) && (ii <= option.options.length - 1)) {
-        this.optionActivate(option.options[ii]);
+      if ((option instanceof NgxSelectOptGroup) && (ii <= option.optionsFiltered.length - 1)) {
+        this.optionActivate(option.optionsFiltered[ii === -2 ? 0 : ii]);
         return;
       }
-      ii = 0;
+      ii = -2;
       i++;
       option = this.optionsFiltered[i];
       if (option instanceof NgxSelectOption) {
@@ -199,22 +208,22 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
   private optionActivatePrevious(): void {
     let option,
       i = this.optionsFiltered.indexOf(this.optionActive.parent || this.optionActive),
-      ii = (this.optionActive.parent ? this.optionActive.parent.options.indexOf(this.optionActive) : 0) - 1;
+      ii = (this.optionActive.parent ? this.optionActive.parent.optionsFiltered.indexOf(this.optionActive) : 0) - 1;
 
     do {
       option = this.optionsFiltered[i];
-      if ((option instanceof NgxSelectOptGroup) && (ii >= 0)) {
-        this.optionActivate(option.options[ii]);
+      if ((option instanceof NgxSelectOptGroup) && (ii >= 0 || ii === -2)) {
+        this.optionActivate(option.optionsFiltered[ii === -2 ? option.optionsFiltered.length - 1 : ii]);
         return;
       }
-      ii = 0;
+      ii = -2;
       i--;
       option = this.optionsFiltered[i];
       if (option instanceof NgxSelectOption) {
         this.optionActivate(option);
         return;
       }
-    } while (i > 0);
+    } while (i >= 0);
 
     this.optionActivateLast();
   }
@@ -225,8 +234,8 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
       if (option instanceof NgxSelectOption) {
         this.optionActivate(option);
         return;
-      } else if (option instanceof NgxSelectOptGroup && option.options.length) {
-        this.optionActivate(option.options[option.options.length - 1]);
+      } else if (option instanceof NgxSelectOptGroup && option.optionsFiltered.length) {
+        this.optionActivate(option.optionsFiltered[option.optionsFiltered.length - 1]);
         return;
       }
     }
@@ -243,10 +252,30 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
     }
   }
 
-  private optionsFilter(search: string = ''): void {
+  protected optionsFilter(search: string = ''): void {
+    let activeIsFiltered = false;
+    const regExp = new RegExp(search, 'gi'),
+      filterOption = (option: NgxSelectOption) => {
+        const filter = regExp.test(option.text) && (!this.multiple || !this.optionsSelected.includes(option));
+        if (!filter && option === this.optionActive) {
+          activeIsFiltered = true;
+        }
+        return filter;
+      };
+
     this.optionsFiltered = this.options.filter((option: NgxSelectOptGroup | NgxSelectOption) => {
-      return !this.multiple || !this.optionsSelected.includes(<NgxSelectOption>option);
+      if (option instanceof NgxSelectOption) {
+        return filterOption(<NgxSelectOption>option);
+      } else if (option instanceof NgxSelectOptGroup) {
+        const subOp = <NgxSelectOptGroup>option;
+        subOp.filter((subOption: NgxSelectOption) => filterOption(subOption));
+        return subOp.optionsFiltered.length;
+      }
     });
+
+    if (activeIsFiltered) {
+      this.optionActivateFirst();
+    }
   }
 
   private optionsOpen() {
