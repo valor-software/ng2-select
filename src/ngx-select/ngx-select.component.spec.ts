@@ -526,27 +526,23 @@ describe('NgxSelectComponent', () => {
     });
   });
 
-  xdescribe('should set selected items ', () => {
+  describe('should set selected items ', () => {
     describe('for single select with preload items', () => {
       beforeEach(fakeAsync(() => {
         fixture.componentInstance.select1.multiple = false;
         fixture.componentInstance.select1.items = items1;
-        fixture.componentInstance.select1.active = [items1[1]];
-
-        fixture.componentInstance.select1.multiple = false;
-        fixture.componentInstance.select1.items = items1;
-        fixture.componentInstance.select1.formControl.setValue([items1[1]]);
+        fixture.componentInstance.select1.value = [items1[1].value];
 
         fixture.componentInstance.select2.multiple = false;
         fixture.componentInstance.select2.items = items1;
-        fixture.componentInstance.select2.value = [items1[1]];
+        fixture.componentInstance.select2.formControl.setValue([items1[1].value]);
 
         fixture.detectChanges();
         tick();
         fixture.detectChanges();
       }));
 
-      it('by the active attribute and selected item must be active in menu', () => {
+      it('by a ngModel attribute and selected item must be active in menu', () => {
         expect(selectedItem(1).innerHTML).toBe(items1[1].text);
         formControl(1).click();
         fixture.detectChanges();
@@ -559,35 +555,24 @@ describe('NgxSelectComponent', () => {
         fixture.detectChanges();
         expect(selectChoiceActive(2).innerHTML).toBe(items1[1].text);
       });
-
-      it('by a ngModel attribute and selected item must be active in menu', () => {
-        expect(selectedItem(3).innerHTML).toBe(items1[1].text);
-        formControl(3).click();
-        fixture.detectChanges();
-        expect(selectChoiceActive(3).innerHTML).toBe(items1[1].text);
-      });
     });
 
     describe('for multiple select with preload items', () => {
       beforeEach(fakeAsync(() => {
         fixture.componentInstance.select1.multiple = true;
         fixture.componentInstance.select1.items = items1;
-        fixture.componentInstance.select1.active = [items1[0], items1[1]];
-
-        fixture.componentInstance.select1.multiple = true;
-        fixture.componentInstance.select1.items = items1;
-        fixture.componentInstance.select1.formControl.setValue([items1[0], items1[1]]);
+        fixture.componentInstance.select1.value = [items1[0].value, items1[1].value];
 
         fixture.componentInstance.select2.multiple = true;
         fixture.componentInstance.select2.items = items1;
-        fixture.componentInstance.select2.value = [items1[0], items1[1]];
+        fixture.componentInstance.select2.formControl.setValue([items1[0].value, items1[1].value]);
 
         fixture.detectChanges();
         tick();
         fixture.detectChanges();
       }));
 
-      it('by the active attribute', () => {
+      it('by a ngModel attribute', () => {
         expect(selectedItems(1)[0].querySelector('span').innerHTML).toBe(items1[0].text);
         expect(selectedItems(1)[1].querySelector('span').innerHTML).toBe(items1[1].text);
       });
@@ -595,11 +580,6 @@ describe('NgxSelectComponent', () => {
       it('by a FormControl attribute', () => {
         expect(selectedItems(2)[0].querySelector('span').innerHTML).toBe(items1[0].text);
         expect(selectedItems(2)[1].querySelector('span').innerHTML).toBe(items1[1].text);
-      });
-
-      it('by a ngModel attribute', () => {
-        expect(selectedItems(3)[0].querySelector('span').innerHTML).toBe(items1[0].text);
-        expect(selectedItems(3)[1].querySelector('span').innerHTML).toBe(items1[1].text);
       });
     });
 
@@ -609,15 +589,11 @@ describe('NgxSelectComponent', () => {
 
         fixture.componentInstance.select1.multiple = false;
         fixture.componentInstance.select1.items = lazyItems;
-        fixture.componentInstance.select1.active = [items1[1]];
-
-        fixture.componentInstance.select1.multiple = false;
-        fixture.componentInstance.select1.items = lazyItems;
-        fixture.componentInstance.select1.formControl.setValue([items1[1]]);
+        fixture.componentInstance.select1.value = [items1[1].value];
 
         fixture.componentInstance.select2.multiple = false;
         fixture.componentInstance.select2.items = lazyItems;
-        fixture.componentInstance.select2.value = [items1[1]];
+        fixture.componentInstance.select2.formControl.setValue([items1[1].value]);
 
         fixture.detectChanges();
         setTimeout(() => items1.forEach(item => lazyItems.push(item)), 2000);
@@ -625,7 +601,7 @@ describe('NgxSelectComponent', () => {
         fixture.detectChanges();
       }));
 
-      it('by the active attribute and selected item must be active in menu', () => {
+      it('by a ngModel attribute and selected item must be active in menu', () => {
         expect(selectedItem(1).innerHTML).toBe(items1[1].text);
         formControl(1).click();
         fixture.detectChanges();
@@ -638,18 +614,6 @@ describe('NgxSelectComponent', () => {
         fixture.detectChanges();
         expect(selectChoiceActive(2).innerHTML).toBe(items1[1].text);
       });
-
-      it('by a ngModel attribute and selected item must be active in menu', () => {
-        expect(selectedItem(3).innerHTML).toBe(items1[1].text);
-        formControl(3).click();
-        fixture.detectChanges();
-        expect(selectChoiceActive(3).innerHTML).toBe(items1[1].text);
-      });
-
-      afterEach(() => {
-        // expect(fixture.componentInstance.component1.itemObjects.length).toBeGreaterThan(0);
-        // expect(fixture.componentInstance.component2.itemObjects.length).toBeGreaterThan(0);
-      });
     });
 
     describe('for multiple select with lazy loading items', () => {
@@ -658,15 +622,11 @@ describe('NgxSelectComponent', () => {
 
         fixture.componentInstance.select1.multiple = true;
         fixture.componentInstance.select1.items = lazyItems;
-        fixture.componentInstance.select1.active = [items1[0], items1[1]];
-
-        fixture.componentInstance.select1.multiple = true;
-        fixture.componentInstance.select1.items = lazyItems;
-        fixture.componentInstance.select1.formControl.setValue([items1[0], items1[1]]);
+        fixture.componentInstance.select1.value = [items1[0].value, items1[1].value];
 
         fixture.componentInstance.select2.multiple = true;
         fixture.componentInstance.select2.items = lazyItems;
-        fixture.componentInstance.select2.value = [items1[0], items1[1]];
+        fixture.componentInstance.select2.formControl.setValue([items1[0].value, items1[1].value]);
 
         fixture.detectChanges();
         setTimeout(() => items1.forEach(item => lazyItems.push(item)), 2000);
@@ -674,7 +634,7 @@ describe('NgxSelectComponent', () => {
         fixture.detectChanges();
       }));
 
-      it('by the active attribute', () => {
+      it('by a ngModel attribute', () => {
         expect(selectedItems(1)[0].querySelector('span').innerHTML).toBe(items1[0].text);
         expect(selectedItems(1)[1].querySelector('span').innerHTML).toBe(items1[1].text);
       });
@@ -682,11 +642,6 @@ describe('NgxSelectComponent', () => {
       it('by a FormControl attribute', () => {
         expect(selectedItems(2)[0].querySelector('span').innerHTML).toBe(items1[0].text);
         expect(selectedItems(2)[1].querySelector('span').innerHTML).toBe(items1[1].text);
-      });
-
-      it('by a ngModel attribute', () => {
-        expect(selectedItems(3)[0].querySelector('span').innerHTML).toBe(items1[0].text);
-        expect(selectedItems(3)[1].querySelector('span').innerHTML).toBe(items1[1].text);
       });
     });
   });

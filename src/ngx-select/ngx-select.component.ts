@@ -1,5 +1,5 @@
 import {
-  Component, DoCheck, ElementRef, forwardRef, HostBinding, HostListener, Input, IterableDiffer, IterableDiffers, OnInit, QueryList,
+  Component, DoCheck, ElementRef, forwardRef, HostBinding, HostListener, Input, IterableDiffer, IterableDiffers,
   ViewChild
 } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
@@ -24,7 +24,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
     }
   ]
 })
-export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validator, DoCheck {
+export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCheck {
   @Input() public items: any[];
   @Input() public optionValueField: string = 'id';
   @Input() public optionTextField: string = 'text';
@@ -36,8 +36,8 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
   @Input() public noAutoComplete: boolean = false;
   @Input() public disabled: boolean = false;
 
-  @ViewChild('choiceMenu') choiceMenuElRef: ElementRef;
-  @ViewChild('input') inputElRef: ElementRef;
+  @ViewChild('choiceMenu') protected choiceMenuElRef: ElementRef;
+  @ViewChild('input') protected inputElRef: ElementRef;
 
   @HostBinding() tabindex = 0;
 
@@ -55,17 +55,16 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
   protected optionsSelected: Array<NgxSelectOption> = [];
   protected optionActive: NgxSelectOption;
   private itemsDiffer: IterableDiffer<any>;
+  private _value: any[] = [];
 
   constructor(private sanitizer: DomSanitizer, iterableDiffers: IterableDiffers) {
     this.itemsDiffer = iterableDiffers.find([]).create<any>(null);
   }
 
-  ngOnInit() {
-  }
-
   ngDoCheck(): void {
     if (this.itemsDiffer.diff(this.items)) {
       this.options = this.buildOptions(this.items);
+      this.valueToOptionsSelected();
       this.optionsFilter();
     }
   }
@@ -330,6 +329,25 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
     return new NgxSelectOption(value, text, parent);
   }
 
+  private valueToOptionsSelected(): void {
+    this.optionsSelected.length = 0;
+    this.options.forEach((option: NgxSelectOptGroup | NgxSelectOption) => {
+      if (option instanceof NgxSelectOption && this._value.includes(option.value)) {
+        this.optionsSelected.push(option);
+      } else if (option instanceof NgxSelectOptGroup) {
+        option.options.forEach((subOption: NgxSelectOption) => {
+          if (this._value.includes(subOption.value)) {
+            this.optionsSelected.push(subOption);
+          }
+        });
+      }
+    });
+  }
+
+  private valueFromOptionsSelected(): void {
+    this._value = this.optionsSelected.map((option: NgxSelectOption) => option.value);
+  }
+
   //////////// interface Validator ////////////
   validate(c: AbstractControl): { [key: string]: any; } {
     const controlValue = c && Array.isArray(c.value) ? c.value : [];
@@ -346,7 +364,9 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
 
   public onTouchedCallback: () => void = () => null;
 
-  writeValue(obj: any): void {
+  public writeValue(obj: any): void {
+    this._value = [].concat(obj);
+    this.valueToOptionsSelected();
   }
 
   public registerOnChange(fn: (_: any) => {}): void {
@@ -357,6 +377,6 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
     this.onTouchedCallback = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {
+  public setDisabledState(isDisabled: boolean): void {
   }
 }
