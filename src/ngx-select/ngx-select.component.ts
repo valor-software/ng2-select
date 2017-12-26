@@ -5,7 +5,7 @@ import {
 import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
 import { NgxSelectOptGroup, NgxSelectOption } from './ngx-select.classes';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'ngx-select',
@@ -170,7 +170,7 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
     }
   }
 
-  protected highlightText(fullText: string) {
+  protected highlightText(fullText: string): SafeHtml {
     if (this.inputElRef) {
       const highlightText = this.inputElRef.nativeElement.value;
       if (highlightText) {
@@ -302,7 +302,7 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
         Array.isArray(item[this.optionsField]);
       if (isOptGroup) {
         const optGroup = new NgxSelectOptGroup(item[this.labelField]);
-        item[this.optionsField].forEach(subOption => {
+        item[this.optionsField].forEach((subOption: NgxSelectOption) => {
           if (option = this.buildOption(subOption, optGroup)) {
             optGroup.options.push(option);
           }
@@ -332,7 +332,13 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
 
   //////////// interface Validator ////////////
   validate(c: AbstractControl): { [key: string]: any; } {
-    return null;
+    const controlValue = c && Array.isArray(c.value) ? c.value : [];
+
+    return this.multiple || this.allowClear || controlValue.length ? null : {
+      ng2SelectEmptyError: {
+        valid: false
+      }
+    };
   }
 
   //////////// interface ControlValueAccessor ////////////

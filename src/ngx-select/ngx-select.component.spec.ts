@@ -454,7 +454,7 @@ describe('NgxSelectComponent', () => {
     });
   });
 
-  xdescribe('FormControl should be', () => {
+  describe('FormControl should be', () => {
     let tmpFixture: ComponentFixture<TestNgxSelectComponent>;
 
     beforeEach(() => {
