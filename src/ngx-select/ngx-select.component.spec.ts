@@ -8,7 +8,9 @@ import { NgxSelectComponent } from './ngx-select.component';
 @Component({
   selector: 'select-test',
   template: `
+
     <ngx-select id="sel-1" #component1
+                [(ngModel)]="select1.value"
                 [allowClear]="select1.allowClear"
                 [placeholder]="select1.placeholder"
                 [optionValueField]="select1.optionValueField"
@@ -30,25 +32,15 @@ import { NgxSelectComponent } from './ngx-select.component';
                 [multiple]="select2.multiple"
                 [noAutoComplete]="select2.noAutoComplete"
                 [items]="select2.items"></ngx-select>
-    <ngx-select id="sel-3" #component3
-                [(ngModel)]="select3.value"
-                [allowClear]="select3.allowClear"
-                [placeholder]="select3.placeholder"
-                [optionValueField]="select3.optionValueField"
-                [optionTextField]="select3.optionTextField"
-                [optGroupLabelField]="select3.optGroupLabelField"
-                [optGroupOptionsField]="select3.optGroupOptionsField"
-                [multiple]="select3.multiple"
-                [noAutoComplete]="select3.noAutoComplete"
-                [items]="select3.items"
-                [disabled]="select3.disabled"></ngx-select>`
+  `
 })
 class TestNgxSelectComponent {
   @ViewChild('component1') public component1: NgxSelectComponent;
   @ViewChild('component2') public component2: NgxSelectComponent;
-  @ViewChild('component3') public component3: NgxSelectComponent;
 
   public select1: any = {
+    value: null,
+
     allowClear: false,
     placeholder: '',
     optionValueField: 'value',
@@ -73,21 +65,6 @@ class TestNgxSelectComponent {
     multiple: false,
     noAutoComplete: false,
     items: []
-  };
-
-  public select3: any = {
-    value: null,
-
-    allowClear: false,
-    placeholder: '',
-    optionValueField: 'value',
-    optionTextField: 'text',
-    optGroupLabelField: 'label',
-    optGroupOptionsField: 'options',
-    multiple: false,
-    noAutoComplete: false,
-    items: [],
-    disabled: false
   };
 }
 
@@ -139,13 +116,11 @@ describe('NgxSelectComponent', () => {
     expect(fixture).toBeTruthy();
     expect(fixture.componentInstance.component1).toBeTruthy();
     expect(fixture.componentInstance.component2).toBeTruthy();
-    expect(fixture.componentInstance.component3).toBeTruthy();
   });
 
   it('should create with closed menu', () => {
     expect(selectChoices(1).length).toBe(0);
     expect(selectChoices(2).length).toBe(0);
-    expect(selectChoices(3).length).toBe(0);
   });
 
   describe('should create with default property', () => {
@@ -558,13 +533,13 @@ describe('NgxSelectComponent', () => {
         fixture.componentInstance.select1.items = items1;
         fixture.componentInstance.select1.active = [items1[1]];
 
+        fixture.componentInstance.select1.multiple = false;
+        fixture.componentInstance.select1.items = items1;
+        fixture.componentInstance.select1.formControl.setValue([items1[1]]);
+
         fixture.componentInstance.select2.multiple = false;
         fixture.componentInstance.select2.items = items1;
-        fixture.componentInstance.select2.formControl.setValue([items1[1]]);
-
-        fixture.componentInstance.select3.multiple = false;
-        fixture.componentInstance.select3.items = items1;
-        fixture.componentInstance.select3.value = [items1[1]];
+        fixture.componentInstance.select2.value = [items1[1]];
 
         fixture.detectChanges();
         tick();
@@ -599,13 +574,13 @@ describe('NgxSelectComponent', () => {
         fixture.componentInstance.select1.items = items1;
         fixture.componentInstance.select1.active = [items1[0], items1[1]];
 
+        fixture.componentInstance.select1.multiple = true;
+        fixture.componentInstance.select1.items = items1;
+        fixture.componentInstance.select1.formControl.setValue([items1[0], items1[1]]);
+
         fixture.componentInstance.select2.multiple = true;
         fixture.componentInstance.select2.items = items1;
-        fixture.componentInstance.select2.formControl.setValue([items1[0], items1[1]]);
-
-        fixture.componentInstance.select3.multiple = true;
-        fixture.componentInstance.select3.items = items1;
-        fixture.componentInstance.select3.value = [items1[0], items1[1]];
+        fixture.componentInstance.select2.value = [items1[0], items1[1]];
 
         fixture.detectChanges();
         tick();
@@ -636,13 +611,13 @@ describe('NgxSelectComponent', () => {
         fixture.componentInstance.select1.items = lazyItems;
         fixture.componentInstance.select1.active = [items1[1]];
 
+        fixture.componentInstance.select1.multiple = false;
+        fixture.componentInstance.select1.items = lazyItems;
+        fixture.componentInstance.select1.formControl.setValue([items1[1]]);
+
         fixture.componentInstance.select2.multiple = false;
         fixture.componentInstance.select2.items = lazyItems;
-        fixture.componentInstance.select2.formControl.setValue([items1[1]]);
-
-        fixture.componentInstance.select3.multiple = false;
-        fixture.componentInstance.select3.items = lazyItems;
-        fixture.componentInstance.select3.value = [items1[1]];
+        fixture.componentInstance.select2.value = [items1[1]];
 
         fixture.detectChanges();
         setTimeout(() => items1.forEach(item => lazyItems.push(item)), 2000);
@@ -674,7 +649,6 @@ describe('NgxSelectComponent', () => {
       afterEach(() => {
         // expect(fixture.componentInstance.component1.itemObjects.length).toBeGreaterThan(0);
         // expect(fixture.componentInstance.component2.itemObjects.length).toBeGreaterThan(0);
-        // expect(fixture.componentInstance.component3.itemObjects.length).toBeGreaterThan(0);
       });
     });
 
@@ -686,13 +660,13 @@ describe('NgxSelectComponent', () => {
         fixture.componentInstance.select1.items = lazyItems;
         fixture.componentInstance.select1.active = [items1[0], items1[1]];
 
+        fixture.componentInstance.select1.multiple = true;
+        fixture.componentInstance.select1.items = lazyItems;
+        fixture.componentInstance.select1.formControl.setValue([items1[0], items1[1]]);
+
         fixture.componentInstance.select2.multiple = true;
         fixture.componentInstance.select2.items = lazyItems;
-        fixture.componentInstance.select2.formControl.setValue([items1[0], items1[1]]);
-
-        fixture.componentInstance.select3.multiple = true;
-        fixture.componentInstance.select3.items = lazyItems;
-        fixture.componentInstance.select3.value = [items1[0], items1[1]];
+        fixture.componentInstance.select2.value = [items1[0], items1[1]];
 
         fixture.detectChanges();
         setTimeout(() => items1.forEach(item => lazyItems.push(item)), 2000);
