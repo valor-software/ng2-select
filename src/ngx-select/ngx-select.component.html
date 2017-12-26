@@ -9,7 +9,8 @@
          (click)="matchClick($event)" style="outline: 0;">
       <span *ngIf="optionsSelected.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
       <span *ngIf="optionsSelected.length > 0" class="ui-select-match-text pull-left"
-            [class.ui-select-allow-clear]="allowClear">{{optionsSelected[0].text}}</span>
+            [class.ui-select-allow-clear]="allowClear"
+            [innerHtml]="sanitize(optionsSelected[0].text)"></span>
       <i class="dropdown-toggle pull-right"></i>
       <i class="caret pull-right"></i>
       <a *ngIf="allowClear && optionsSelected.length > 0" class="btn btn-xs btn-link pull-right"
@@ -24,7 +25,7 @@
     <span *ngFor="let option of optionsSelected">
       <span tabindex="-1" class="btn btn-default btn-secondary btn-xs ui-select-match-item" type="button">
         <a class="close" style="margin-left: 5px; padding: 0;" (click)="optionRemove(option, $event)">&times;</a>
-        <span>{{option.text}}</span>
+        <span [innerHtml]="sanitize(option.text)"></span>
       </span>
     </span>
   </div>

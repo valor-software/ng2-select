@@ -406,29 +406,64 @@ describe('NgxSelectComponent', () => {
   });
 
   describe('should remove selected', () => {
-    beforeEach(() => {
-      fixture.componentInstance.select1.items = items1;
-      fixture.componentInstance.select1.allowClear = true;
-      fixture.detectChanges();
-      formControl(1).click();
-      fixture.detectChanges();
-      selectChoices(1)[0].click();
-      fixture.detectChanges();
-      expect(selectedItem(1).innerHTML).toBe('item one');
+    describe('from select with ngModel', () => {
+      beforeEach(() => {
+        fixture.componentInstance.select1.items = items1;
+        fixture.componentInstance.select1.allowClear = true;
+        fixture.detectChanges();
+        formControl(1).click();
+        fixture.detectChanges();
+        selectChoices(1)[0].click();
+        fixture.detectChanges();
+        expect(selectedItem(1).innerHTML).toBe('item one');
+        expect(fixture.componentInstance.select1.value).toEqual([1]);
+      });
+
+      it('a single item', () => {
+        el(1).querySelector('.btn-link').click();
+        fixture.detectChanges();
+        expect(selectedItem(1)).toBeFalsy();
+        expect(fixture.componentInstance.select1.value).toEqual([]);
+      });
+
+      it('multiple items', () => {
+        fixture.componentInstance.select1.multiple = true;
+        fixture.detectChanges();
+        selectedItems(1)[0].querySelector('.close').click();
+        fixture.detectChanges();
+        expect(selectedItems(1).length).toBe(0);
+        expect(fixture.componentInstance.select1.value).toEqual([]);
+      });
     });
 
-    it('a single item', () => {
-      el(1).querySelector('.btn-link').click();
-      fixture.detectChanges();
-      expect(selectedItem(1)).toBeFalsy();
-    });
+    describe('from select with FormControl', () => {
+      beforeEach(() => {
+        fixture.componentInstance.select2.items = items1;
+        fixture.componentInstance.select2.allowClear = true;
+        fixture.detectChanges();
+        formControl(2).click();
+        fixture.detectChanges();
+        selectChoices(2)[0].click();
+        fixture.detectChanges();
+        expect(selectedItem(2).innerHTML).toBe('item one');
+        expect(fixture.componentInstance.select2.formControl.value).toEqual([1]);
+      });
 
-    it('multiple items', () => {
-      fixture.componentInstance.select1.multiple = true;
-      fixture.detectChanges();
-      selectedItems(1)[0].querySelector('.close').click();
-      fixture.detectChanges();
-      expect(selectedItems(1).length).toBe(0);
+      it('a single item', () => {
+        el(2).querySelector('.btn-link').click();
+        fixture.detectChanges();
+        expect(selectedItem(2)).toBeFalsy();
+        expect(fixture.componentInstance.select2.formControl.value).toEqual([]);
+      });
+
+      it('multiple items', () => {
+        fixture.componentInstance.select2.multiple = true;
+        fixture.detectChanges();
+        selectedItems(2)[0].querySelector('.close').click();
+        fixture.detectChanges();
+        expect(selectedItems(2).length).toBe(0);
+        expect(fixture.componentInstance.select2.formControl.value).toEqual([]);
+      });
     });
   });
 

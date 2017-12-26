@@ -142,6 +142,7 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
       } else {
         this.optionsSelected.length = 0;
       }
+      this.valueFromOptionsSelected();
     }
   }
 
@@ -170,6 +171,10 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
     }
   }
 
+  protected sanitize(html: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(html);
+  }
+
   protected highlightText(fullText: string): SafeHtml {
     if (this.inputElRef) {
       const highlightText = this.inputElRef.nativeElement.value;
@@ -177,7 +182,7 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
         fullText = fullText.replace(new RegExp(highlightText, 'gi'), '<strong>$&</strong>');
       }
     }
-    return this.sanitizer.bypassSecurityTrustHtml(fullText);
+    return this.sanitize(fullText);
   }
 
   private optionActivateNext(): void {

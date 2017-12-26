@@ -46,46 +46,29 @@ const COLORS = [
 @Component({
   selector: 'rich-demo',
   templateUrl: './rich-demo.html',
-  styles: [`colorbox,.colorbox { display:inline-block; height:14px; width:14px;margin-right:4px; border:1px solid #000;}`],
+  styles: [`colorbox, .colorbox {
+      display: inline-block;
+      height: 14px;
+      width: 14px;
+      margin-right: 4px;
+      border: 1px solid #000;
+  }`],
   encapsulation: ViewEncapsulation.None  // Enable dynamic HTML styles
 })
 export class RichDemoComponent implements OnInit {
-  public value:any = {};
-  public _disabledV:string = '0';
-  public disabled:boolean = false;
-  public items:Array<any> = [];
+  public items: any[] = [];
 
-  public ngOnInit():any {
-    COLORS.forEach((color:{name:string, hex:string}) => {
+  public ngValue: any = [];
+  public ngxValue: any = [];
+  public ngDisabled: boolean = false;
+  public ngxDisabled: boolean = false;
+
+  public ngOnInit(): any {
+    COLORS.forEach((color: { name: string, hex: string }) => {
       this.items.push({
         id: color.hex,
         text: `<colorbox style='background-color:${color.hex};'></colorbox>${color.name} (${color.hex})`
       });
     });
-  }
-
-  public get disabledV():string {
-    return this._disabledV;
-  }
-
-  public set disabledV(value:string) {
-    this._disabledV = value;
-    this.disabled = this._disabledV === '1';
-  }
-
-  public selected(value:any):void {
-    console.log('Selected value is: ', value);
-  }
-
-  public removed(value:any):void {
-    console.log('Removed value is: ', value);
-  }
-
-  public typed(value:any):void {
-    console.log('New search input: ', value);
-  }
-
-  public refreshValue(value:any):void {
-    this.value = value;
   }
 }

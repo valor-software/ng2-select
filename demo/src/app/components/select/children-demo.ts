@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './children-demo.html'
 })
 export class ChildrenDemoComponent {
-  public items:Array<any> = [
+  public items: any[] = [
     {
       id: 100,
       text: 'Austria',
@@ -204,28 +204,13 @@ export class ChildrenDemoComponent {
       ]
     }
   ];
-  public value:any = {};
-  public _disabledV:string = '0';
-  public disabled:boolean = false;
 
-  public get disabledV():string {
-    return this._disabledV;
-  }
+  public ngValue: any[] = [];
+  public ngxValue: any[] = [];
+  public ngDisabled: boolean = false;
+  public ngxDisabled: boolean = false;
 
-  public set disabledV(value:string) {
-    this._disabledV = value;
-    this.disabled = this._disabledV === '1';
-  }
-
-  public selected(value:any):void {
-    console.log('Selected value is: ', value);
-  }
-
-  public removed(value:any):void {
-    console.log('Removed value is: ', value);
-  }
-
-  public refreshValue(value:any):void {
-    this.value = value;
+  public ngValueToString() {
+    return JSON.stringify(this.ngValue, (key, value) => key === 'parent' ? undefined : value);
   }
 }

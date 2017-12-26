@@ -4,18 +4,15 @@
     <h4>ng-select</h4>
     <ng-select [allowClear]="true"
                [items]="items"
-               [disabled]="disabled"
-               (data)="refreshValue($event)"
-               (selected)="selected($event)"
-               (removed)="removed($event)"
-               placeholder="No city selected"></ng-select>
+               [disabled]="ngDisabled"
+               [(ngModel)]="ngValue"
+               placeholder="No city selected">
+    </ng-select>
     <p></p>
-    <pre>{{value.text}}</pre>
+    <pre>{{ngValueToString()}}</pre>
     <div>
-      <button type="button" class="btn btn-primary"
-              [(ngModel)]="disabledV" btnCheckbox
-              btnCheckboxTrue="1" btnCheckboxFalse="0">
-        {{disabled ? 'Enable' : 'Disable'}}
+      <button type="button" class="btn btn-primary" (click)="ngDisabled = !ngDisabled">
+        {{ngDisabled ? 'Enable' : 'Disable'}}
       </button>
     </div>
   </div>
@@ -24,19 +21,17 @@
     <h4>ngx-select</h4>
     <ngx-select [allowClear]="true"
                 [items]="items"
-                [disabled]="disabled"
-                valueField="id" textField="text" labelField="text" optionsField="children"
-                (data)="refreshValue($event)"
-                (selected)="selected($event)"
-                (removed)="removed($event)"
-                placeholder="No city selected"></ngx-select>
+                [disabled]="ngxDisabled"
+                [(ngModel)]="ngxValue"
+                optionValueField="id" optionTextField="text"
+                optGroupLabelField="text" optGroupOptionsField="children"
+                placeholder="No city selected">
+    </ngx-select>
     <p></p>
-    <pre>{{value.text}}</pre>
+    <pre>{{ngxValue | json}}</pre>
     <div>
-      <button type="button" class="btn btn-primary"
-              [(ngModel)]="disabledV" btnCheckbox
-              btnCheckboxTrue="1" btnCheckboxFalse="0">
-        {{disabled ? 'Enable' : 'Disable'}}
+      <button class="btn btn-primary" (click)="ngxDisabled = !ngxDisabled">
+        {{ngxDisabled ? 'Enable' : 'Disable'}}
       </button>
     </div>
   </div>

@@ -1,23 +1,18 @@
 <h3>Select a single city</h3>
 <div class="example-block">
   <div class="example-block__item">
-    <h4>ng2-select</h4>
+    <h4>ng-select</h4>
     <ng-select [allowClear]="true"
                [items]="items"
-               [disabled]="disabled"
-               (data)="refreshValue($event)"
-               (selected)="selected($event)"
-               (removed)="removed($event)"
-               (typed)="typed($event)"
+               [disabled]="ngDisabled"
+               [(ngModel)]="ngValue"
                placeholder="No city selected">
     </ng-select>
     <p></p>
-    <pre>{{value.text}}</pre>
+    <pre>{{ngValue | json}}</pre>
     <div>
-      <button type="button" class="btn btn-primary"
-              [(ngModel)]="disabledV" btnCheckbox
-              btnCheckboxTrue="1" btnCheckboxFalse="0">
-        {{disabled ? 'Enable' : 'Disable'}}
+      <button type="button" class="btn btn-primary" (click)="ngDisabled = !ngDisabled">
+        {{ngDisabled ? 'Enable' : 'Disable'}}
       </button>
     </div>
   </div>
@@ -26,20 +21,15 @@
     <h4>ngx-select</h4>
     <ngx-select [allowClear]="true"
                 [items]="items"
-                [disabled]="disabled"
-                (data)="refreshValue($event)"
-                (selected)="selected($event)"
-                (removed)="removed($event)"
-                (typed)="typed($event)"
+                [disabled]="ngxDisabled"
+                [(ngModel)]="ngxValue"
                 placeholder="No city selected">
     </ngx-select>
     <p></p>
-    <pre>{{value.text}}</pre>
+    <pre>{{ngxValue | json}}</pre>
     <div>
-      <button type="button" class="btn btn-primary"
-              [(ngModel)]="disabledV" btnCheckbox
-              btnCheckboxTrue="1" btnCheckboxFalse="0">
-        {{disabled ? 'Enable' : 'Disable'}}
+      <button class="btn btn-primary" (click)="ngxDisabled = !ngxDisabled">
+        {{ngxDisabled ? 'Enable' : 'Disable'}}
       </button>
     </div>
   </div>
