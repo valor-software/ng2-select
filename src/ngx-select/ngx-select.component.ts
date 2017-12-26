@@ -26,10 +26,10 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validator, DoCheck {
   @Input() public items: any[];
-  @Input() public valueField: string = 'id';
-  @Input() public textField: string = 'text';
-  @Input() public labelField: string = 'label';
-  @Input() public optionsField: string = 'options';
+  @Input() public optionValueField: string = 'id';
+  @Input() public optionTextField: string = 'text';
+  @Input() public optGroupLabelField: string = 'label';
+  @Input() public optGroupOptionsField: string = 'options';
   @Input() public multiple: boolean = false;
   @Input() public allowClear: boolean = false;
   @Input() public placeholder: string = '';
@@ -298,11 +298,11 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
 
     [].concat(data).forEach((item: any) => {
       const isOptGroup = typeof item === 'object' && item !== null &&
-        item.hasOwnProperty(this.labelField) && item.hasOwnProperty(this.optionsField) &&
-        Array.isArray(item[this.optionsField]);
+        item.hasOwnProperty(this.optGroupLabelField) && item.hasOwnProperty(this.optGroupOptionsField) &&
+        Array.isArray(item[this.optGroupOptionsField]);
       if (isOptGroup) {
-        const optGroup = new NgxSelectOptGroup(item[this.labelField]);
-        item[this.optionsField].forEach((subOption: NgxSelectOption) => {
+        const optGroup = new NgxSelectOptGroup(item[this.optGroupLabelField]);
+        item[this.optGroupOptionsField].forEach((subOption: NgxSelectOption) => {
           if (option = this.buildOption(subOption, optGroup)) {
             optGroup.options.push(option);
           }
@@ -321,9 +321,9 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
     if (typeof data === 'string' || typeof data === 'number') {
       value = text = data;
     } else if (typeof data === 'object' && data !== null &&
-      (data.hasOwnProperty(this.valueField) || data.hasOwnProperty(this.textField))) {
-      value = data.hasOwnProperty(this.valueField) ? data[this.valueField] : data[this.textField];
-      text = data.hasOwnProperty(this.textField) ? data[this.textField] : data[this.valueField];
+      (data.hasOwnProperty(this.optionValueField) || data.hasOwnProperty(this.optionTextField))) {
+      value = data.hasOwnProperty(this.optionValueField) ? data[this.optionValueField] : data[this.optionTextField];
+      text = data.hasOwnProperty(this.optionTextField) ? data[this.optionTextField] : data[this.optionValueField];
     } else {
       return null;
     }

@@ -11,10 +11,10 @@ import { NgxSelectComponent } from './ngx-select.component';
     <ngx-select id="sel-1" #component1
                 [allowClear]="select1.allowClear"
                 [placeholder]="select1.placeholder"
-                [valueField]="select1.valueField"
-                [textField]="select1.textField"
-                [labelField]="select1.labelField"
-                [optionsField]="select1.optionsField"
+                [optionValueField]="select1.optionValueField"
+                [optionTextField]="select1.optionTextField"
+                [optGroupLabelField]="select1.optGroupLabelField"
+                [optGroupOptionsField]="select1.optGroupOptionsField"
                 [multiple]="select1.multiple"
                 [noAutoComplete]="select1.noAutoComplete"
                 [items]="select1.items"
@@ -23,10 +23,10 @@ import { NgxSelectComponent } from './ngx-select.component';
                 [formControl]="select2.formControl"
                 [allowClear]="select2.allowClear"
                 [placeholder]="select2.placeholder"
-                [valueField]="select2.valueField"
-                [textField]="select2.textField"
-                [labelField]="select2.labelField"
-                [optionsField]="select2.optionsField"
+                [optionValueField]="select2.optionValueField"
+                [optionTextField]="select2.optionTextField"
+                [optGroupLabelField]="select2.optGroupLabelField"
+                [optGroupOptionsField]="select2.optGroupOptionsField"
                 [multiple]="select2.multiple"
                 [noAutoComplete]="select2.noAutoComplete"
                 [items]="select2.items"></ngx-select>
@@ -34,10 +34,10 @@ import { NgxSelectComponent } from './ngx-select.component';
                 [(ngModel)]="select3.value"
                 [allowClear]="select3.allowClear"
                 [placeholder]="select3.placeholder"
-                [valueField]="select3.valueField"
-                [textField]="select3.textField"
-                [labelField]="select3.labelField"
-                [optionsField]="select3.optionsField"
+                [optionValueField]="select3.optionValueField"
+                [optionTextField]="select3.optionTextField"
+                [optGroupLabelField]="select3.optGroupLabelField"
+                [optGroupOptionsField]="select3.optGroupOptionsField"
                 [multiple]="select3.multiple"
                 [noAutoComplete]="select3.noAutoComplete"
                 [items]="select3.items"
@@ -51,10 +51,10 @@ class TestNgxSelectComponent {
   public select1: any = {
     allowClear: false,
     placeholder: '',
-    valueField: 'value',
-    textField: 'text',
-    labelField: 'label',
-    optionsField: 'options',
+    optionValueField: 'value',
+    optionTextField: 'text',
+    optGroupLabelField: 'label',
+    optGroupOptionsField: 'options',
     multiple: false,
     noAutoComplete: false,
     items: [],
@@ -66,10 +66,10 @@ class TestNgxSelectComponent {
 
     allowClear: false,
     placeholder: '',
-    valueField: 'value',
-    textField: 'text',
-    labelField: 'label',
-    optionsField: 'options',
+    optionValueField: 'value',
+    optionTextField: 'text',
+    optGroupLabelField: 'label',
+    optGroupOptionsField: 'options',
     multiple: false,
     noAutoComplete: false,
     items: []
@@ -80,10 +80,10 @@ class TestNgxSelectComponent {
 
     allowClear: false,
     placeholder: '',
-    valueField: 'value',
-    textField: 'text',
-    labelField: 'label',
-    optionsField: 'options',
+    optionValueField: 'value',
+    optionTextField: 'text',
+    optGroupLabelField: 'label',
+    optGroupOptionsField: 'options',
     multiple: false,
     noAutoComplete: false,
     items: [],
@@ -92,10 +92,10 @@ class TestNgxSelectComponent {
 }
 
 const items1 = [
-  {id: 1, text: 'item one'},
-  {id: 2, text: 'item two'},
-  {id: 3, text: 'item three'},
-  {id: 4, text: 'item four'},
+  {value: 1, text: 'item one'},
+  {value: 2, text: 'item two'},
+  {value: 3, text: 'item three'},
+  {value: 4, text: 'item four'},
 ];
 const items2 = [
   {uuid: 'uuid-6', name: 'v6'},
@@ -157,20 +157,20 @@ describe('NgxSelectComponent', () => {
       expect(fixture.componentInstance.component2.placeholder).toEqual('');
     });
 
-    it('"valueField" should be "id"', () => {
-      expect(fixture.componentInstance.component2.valueField).toBe('value');
+    it('"optionValueField" should be "id"', () => {
+      expect(fixture.componentInstance.component2.optionValueField).toBe('value');
     });
 
-    it('"textField" should be "text"', () => {
-      expect(fixture.componentInstance.component2.textField).toBe('text');
+    it('"optionTextField" should be "text"', () => {
+      expect(fixture.componentInstance.component2.optionTextField).toBe('text');
     });
 
-    it('"labelField" should be "children"', () => {
-      expect(fixture.componentInstance.component2.labelField).toBe('label');
+    it('"optGroupLabelField" should be "children"', () => {
+      expect(fixture.componentInstance.component2.optGroupLabelField).toBe('label');
     });
 
-    it('"optionsField" should be "children"', () => {
-      expect(fixture.componentInstance.component2.optionsField).toBe('options');
+    it('"optGroupOptionsField" should be "children"', () => {
+      expect(fixture.componentInstance.component2.optGroupOptionsField).toBe('options');
     });
 
     it('"multiple" should be false', () => {
@@ -483,7 +483,7 @@ describe('NgxSelectComponent', () => {
     });
   });
 
-  xdescribe('should setup items from array of', () => {
+  describe('should setup items from array of', () => {
     it('objects with default id & text fields', () => {
       fixture.componentInstance.select1.items = items1;
       fixture.detectChanges();
@@ -494,7 +494,7 @@ describe('NgxSelectComponent', () => {
 
     it('objects without default id & text fields ', () => {
       fixture.componentInstance.select1.idField = 'uuid';
-      fixture.componentInstance.select1.textField = 'name';
+      fixture.componentInstance.select1.optionTextField = 'name';
       fixture.componentInstance.select1.items = items2;
       fixture.detectChanges();
       formControl(1).click();
@@ -503,21 +503,23 @@ describe('NgxSelectComponent', () => {
     });
 
     it('objects with mixed id & text fields', () => {
+      fixture.componentInstance.select1.optionValueField = 'id';
       fixture.componentInstance.select1.items = [
-        {id: 0, text: 'i0'}, {xId: 1, text: 'i1'}, {id: 2, xText: 'i2'}, {id: 3, text: 'i3'},
+        {id: 0, text: 'i0'}, {xId: 1, text: 'i1'}, {id: 2, xText: 'i2'},
+        {xId: 3, xText: 'i3'}, {id: 4, text: 'i4'},
       ];
       fixture.detectChanges();
       formControl(1).click();
       fixture.detectChanges();
-      expect(selectChoices(1).length).toBe(2);
+      expect(selectChoices(1).length).toBe(4);
       expect(selectChoices(1)[0].innerHTML).toBe('i0');
-      expect(selectChoices(1)[1].innerHTML).toBe('i3');
+      expect(selectChoices(1)[1].innerHTML).toBe('i1');
     });
 
     it('objects with children fields by default field names', () => {
       fixture.componentInstance.select1.items = [
-        {id: 1, text: '1', children: {id: 11, text: '11'}},
-        {id: 2, text: '2', children: [{id: 21, text: '21'}, {id: 22, text: '22'}]}
+        {label: '1', options: [{value: 11, text: '11'}]},
+        {label: '2', options: [{value: 21, text: '21'}, {value: 22, text: '22'}]}
       ];
       fixture.detectChanges();
       formControl(1).click();
@@ -526,12 +528,13 @@ describe('NgxSelectComponent', () => {
     });
 
     it('objects with children fields by not default field names', () => {
-      fixture.componentInstance.select1.idField = 'xId';
-      fixture.componentInstance.select1.textField = 'xText';
-      fixture.componentInstance.select1.childrenField = 'xChildren';
+      fixture.componentInstance.select1.optGroupLabelField = 'xText';
+      fixture.componentInstance.select1.optGroupOptionsField = 'xChildren';
+      fixture.componentInstance.select1.optionValueField = 'xId';
+      fixture.componentInstance.select1.optionTextField = 'xText';
       fixture.componentInstance.select1.items = [
-        {xId: 1, xText: '1', xChildren: {xId: 11, xText: '11'}},
-        {xId: 2, xText: '2', xChildren: [{xId: 21, xText: '21'}, {xId: 22, xText: '22'}]}
+        {xText: '1', xChildren: {xId: 11, xText: '11'}},
+        {xText: '2', xChildren: [{xId: 21, xText: '21'}, {xId: 22, xText: '22'}]}
       ];
       fixture.detectChanges();
       formControl(1).click();
