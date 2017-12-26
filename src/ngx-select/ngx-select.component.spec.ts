@@ -430,7 +430,7 @@ describe('NgxSelectComponent', () => {
     });
   });
 
-  xdescribe('should be disabled', () => {
+  describe('should be disabled', () => {
     beforeEach(() => {
       fixture.componentInstance.select1.disabled = true;
       fixture.detectChanges();

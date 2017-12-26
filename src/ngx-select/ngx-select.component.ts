@@ -1,12 +1,10 @@
 import {
   Component, DoCheck, ElementRef, forwardRef, HostBinding, HostListener, Input, IterableDiffer, IterableDiffers, OnInit, QueryList,
-  ViewChild,
-  ViewChildren
+  ViewChild
 } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
 import { NgxSelectOptGroup, NgxSelectOption } from './ngx-select.classes';
-import { escapeRegexp } from '../common/common';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -279,12 +277,14 @@ export class NgxSelectComponent implements OnInit, ControlValueAccessor, Validat
   }
 
   private optionsOpen() {
-    this.optionsOpened = true;
-    this.optionsFilter();
-    if (!this.multiple && this.optionsSelected.length) {
-      this.optionActivate(this.optionsSelected[0]);
-    } else {
-      this.optionActivateFirst();
+    if (!this.disabled) {
+      this.optionsOpened = true;
+      this.optionsFilter();
+      if (!this.multiple && this.optionsSelected.length) {
+        this.optionActivate(this.optionsSelected[0]);
+      } else {
+        this.optionActivateFirst();
+      }
     }
   }
 
