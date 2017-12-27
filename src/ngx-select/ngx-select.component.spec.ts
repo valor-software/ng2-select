@@ -94,7 +94,9 @@ describe('NgxSelectComponent', () => {
   const formControl = (id: number) => el(id).querySelector('.form-control');
   const formControlInput = (id: number) => el(id).querySelector('input');
   const selectChoicesContainer = (id: number) => el(id).querySelector('.ui-select-choices');
-  const selectChoices = (id: number) => el(id).querySelectorAll('.ui-select-choices-row div');
+  // const selectChoices = (id: number) => el(id).querySelectorAll('.ui-select-choices-row div');
+  const selectChoices = (id: number) => fixture.debugElement.nativeElement
+    .querySelectorAll(`#sel-${id} .ui-select-container.open .ui-select-choices-row div`);
   const selectChoiceActive = (id: number) => el(id).querySelector('.ui-select-choices-row.active div');
   const selectedItem = (id: number) => el(id).querySelector('.ui-select-match-text'); // select multiple = false
   const selectedItems = (id: number) => el(id).querySelectorAll('.ui-select-match-item'); // select multiple = true
@@ -103,8 +105,7 @@ describe('NgxSelectComponent', () => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, SelectModule],
       declarations: [TestNgxSelectComponent]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

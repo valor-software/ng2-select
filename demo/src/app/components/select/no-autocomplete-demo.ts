@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './no-autocomplete-demo.html'
 })
 export class NoAutoCompleteDemoComponent {
-  public items: string[] = ['Amsterdam', 'Antwerp', 'Athens', 'Barcelona',
+  public _items: string[] = ['Amsterdam', 'Antwerp', 'Athens', 'Barcelona',
     'Berlin', 'Birmingham', 'Bradford', 'Bremen', 'Brussels', 'Bucharest',
     'Budapest', 'Cologne', 'Copenhagen', 'Dortmund', 'Dresden', 'Dublin',
     'Düsseldorf', 'Essen', 'Frankfurt', 'Genoa', 'Glasgow', 'Gothenburg',
@@ -16,6 +16,15 @@ export class NoAutoCompleteDemoComponent {
     'The Hague', 'Turin', 'Valencia', 'Vienna', 'Vilnius', 'Warsaw', 'Wrocław',
     'Zagreb', 'Zaragoza', 'Łódź'];
 
+  constructor() {
+    const a = [];
+    for (let i = 1; i <= 50; i++) {
+      this._items.forEach(v => a.push(i + ' ' + v));
+    }
+    this.items = a;
+  }
+
+  public items: string[] = [];
   public ngValue: any = [];
   public ngxValue: any = [];
   public ngDisabled: boolean = false;

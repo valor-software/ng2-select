@@ -1,4 +1,5 @@
 import { INgxSelectOptGroup, INgxSelectOption, INgxSelectOptionBase, TNgxSelectOptionType } from './ngx-select.interfaces';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 export class NgxSelectOption implements INgxSelectOption, INgxSelectOptionBase {
   readonly type: TNgxSelectOptionType = 'option';
@@ -10,6 +11,23 @@ export class NgxSelectOption implements INgxSelectOption, INgxSelectOptionBase {
 
   public get parent(): NgxSelectOptGroup {
     return this._parent;
+  }
+
+  private cacheHighlightText: string;
+  private cacheRenderedText: SafeHtml = null;
+
+  public renderText(sanitizer: DomSanitizer, highlightText: string): SafeHtml {
+    if (this.cacheHighlightText !== highlightText || this.cacheRenderedText === null) {
+      this.cacheHighlightText = highlightText;
+      if (this.cacheHighlightText) {
+        this.cacheRenderedText = sanitizer.bypassSecurityTrustHtml(
+          this.text.replace(new RegExp(this.cacheHighlightText, 'gi'), '<strong>$&</strong>')
+        );
+      } else {
+        this.cacheRenderedText = sanitizer.bypassSecurityTrustHtml(this.text);
+      }
+    }
+    return this.cacheRenderedText;
   }
 }
 

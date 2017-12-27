@@ -1,7 +1,4 @@
-import {
-  Component, DoCheck, ElementRef, forwardRef, HostBinding, HostListener, Input, IterableDiffer, IterableDiffers,
-  ViewChild
-} from '@angular/core';
+import { Component, DoCheck, ElementRef, forwardRef, Input, IterableDiffer, IterableDiffers, ViewChild } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
 import { NgxSelectOptGroup, NgxSelectOption } from './ngx-select.classes';
@@ -40,16 +37,13 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
   @ViewChild('input') protected inputElRef: ElementRef;
   @ViewChild('choiceMenu') protected choiceMenuElRef: ElementRef;
 
-  // @HostBinding() tabindex = 0;
-
-  // @HostListener('focus', ['$event'])
   public focusToInput(): void {
-    if (this.checkInputVisibility() && this.inputElRef) {
+    if (this.checkInputVisibility() && this.inputElRef &&
+      this.inputElRef.nativeElement !== document.activeElement) {
       this.inputElRef.nativeElement.focus();
     }
   }
 
-  // @HostListener('keydown', ['$event'])
   public inputKeyDown(event: KeyboardEvent) {
     if (event.keyCode === 13 /*key enter*/) {
       event.preventDefault();
@@ -82,7 +76,6 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
     }
   }
 
-  // @HostListener('keyup', ['$event'])
   public hostKeyUp(event: KeyboardEvent): void {
     switch (event.keyCode) {
       case 27: // escape
@@ -100,6 +93,9 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
   private itemsDiffer: IterableDiffer<any>;
   private _value: any[] = [];
 
+  private cacheFilterSearchText: string;
+  private cacheSelectedLength: number;
+
   constructor(private sanitizer: DomSanitizer, iterableDiffers: IterableDiffers) {
     this.itemsDiffer = iterableDiffers.find([]).create<any>(null);
   }
@@ -108,8 +104,13 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
     if (this.itemsDiffer.diff(this.items)) {
       this.options = this.buildOptions(this.items);
       this.valueToOptionsSelected();
-      this.optionsFilter();
+      this.optionsFilter('', true);
     }
+  }
+
+  public trackByOption(index: number, option: NgxSelectOptGroup | NgxSelectOption) {
+    return option instanceof NgxSelectOption ? option.value :
+      (option instanceof NgxSelectOptGroup ? option.label : option);
   }
 
   public mainClickedOutside(): void {
@@ -125,10 +126,6 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
       this.focusToInput();
     }
     return this.disabled;
-  }
-
-  protected matchClick(e: any): void {
-    this.optionsOpen();
   }
 
   protected optionSelect(option: NgxSelectOption, event: Event = null): void {
@@ -185,14 +182,11 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
-  protected highlightText(fullText: string): SafeHtml {
+  protected highlightOption(option: NgxSelectOption): SafeHtml {
     if (this.inputElRef) {
-      const highlightText = this.inputElRef.nativeElement.value;
-      if (highlightText) {
-        fullText = fullText.replace(new RegExp(highlightText, 'gi'), '<strong>$&</strong>');
-      }
+      return option.renderText(this.sanitizer, this.inputElRef.nativeElement.value);
     }
-    return this.sanitize(fullText);
+    return option.renderText(this.sanitizer, '');
   }
 
   private optionActivateNext(): void {
@@ -255,13 +249,18 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
     }
   }
 
+  private cacheElementOffsetTop: number;
+
   private ensureVisibleElement(element: HTMLElement) {
     if (this.choiceMenuElRef) {
-      const container: HTMLElement = this.choiceMenuElRef.nativeElement;
-      if (element.offsetTop < container.scrollTop) {
-        container.scrollTop = element.offsetTop;
-      } else if (element.offsetTop + element.offsetHeight > container.scrollTop + container.clientHeight) {
-        container.scrollTop = element.offsetTop + element.offsetHeight - container.clientHeight;
+      if (this.cacheElementOffsetTop !== element.offsetTop) {
+        this.cacheElementOffsetTop = element.offsetTop;
+        const container: HTMLElement = this.choiceMenuElRef.nativeElement;
+        if (this.cacheElementOffsetTop < container.scrollTop) {
+          container.scrollTop = this.cacheElementOffsetTop;
+        } else if (this.cacheElementOffsetTop + element.offsetHeight > container.scrollTop + container.clientHeight) {
+          container.scrollTop = this.cacheElementOffsetTop + element.offsetHeight - container.clientHeight;
+        }
       }
     }
   }
@@ -280,29 +279,34 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
     }
   }
 
-  protected optionsFilter(search: string = ''): void {
-    let activeIsFiltered = false;
-    const regExp = new RegExp(search, 'gi'),
-      filterOption = (option: NgxSelectOption) => {
-        const filter = regExp.test(option.text) && (!this.multiple || !this.optionsSelected.includes(option));
-        if (!filter && option === this.optionActive) {
-          activeIsFiltered = true;
+  protected optionsFilter(search: string, optionsChanged: boolean = false): void {
+    if (optionsChanged || (this.cacheFilterSearchText !== search) ||
+      (this.cacheSelectedLength !== this.optionsSelected.length)) {
+      this.cacheFilterSearchText = search;
+      this.cacheSelectedLength = this.optionsSelected.length;
+      let activeIsFiltered = false;
+      const regExp = new RegExp(this.cacheFilterSearchText, 'gi'),
+        filterOption = (option: NgxSelectOption) => {
+          const filter = regExp.test(option.text) && (!this.multiple || !this.optionsSelected.includes(option));
+          if (!filter && option === this.optionActive) {
+            activeIsFiltered = true;
+          }
+          return filter;
+        };
+
+      this.optionsFiltered = this.options.filter((option: NgxSelectOptGroup | NgxSelectOption) => {
+        if (option instanceof NgxSelectOption) {
+          return filterOption(<NgxSelectOption>option);
+        } else if (option instanceof NgxSelectOptGroup) {
+          const subOp = <NgxSelectOptGroup>option;
+          subOp.filter((subOption: NgxSelectOption) => filterOption(subOption));
+          return subOp.optionsFiltered.length;
         }
-        return filter;
-      };
+      });
 
-    this.optionsFiltered = this.options.filter((option: NgxSelectOptGroup | NgxSelectOption) => {
-      if (option instanceof NgxSelectOption) {
-        return filterOption(<NgxSelectOption>option);
-      } else if (option instanceof NgxSelectOptGroup) {
-        const subOp = <NgxSelectOptGroup>option;
-        subOp.filter((subOption: NgxSelectOption) => filterOption(subOption));
-        return subOp.optionsFiltered.length;
+      if (activeIsFiltered) {
+        this.optionActivateFirst();
       }
-    });
-
-    if (activeIsFiltered) {
-      this.optionActivateFirst();
     }
   }
 
@@ -329,25 +333,25 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
 
   private buildOptions(data: any[]): Array<NgxSelectOption | NgxSelectOptGroup> {
     const result: Array<NgxSelectOption | NgxSelectOptGroup> = [];
-    let option: NgxSelectOption;
-
-    [].concat(data).forEach((item: any) => {
-      const isOptGroup = typeof item === 'object' && item !== null &&
-        item.hasOwnProperty(this.optGroupLabelField) && item.hasOwnProperty(this.optGroupOptionsField) &&
-        Array.isArray(item[this.optGroupOptionsField]);
-      if (isOptGroup) {
-        const optGroup = new NgxSelectOptGroup(item[this.optGroupLabelField]);
-        item[this.optGroupOptionsField].forEach((subOption: NgxSelectOption) => {
-          if (option = this.buildOption(subOption, optGroup)) {
-            optGroup.options.push(option);
-          }
-        });
-        result.push(optGroup);
-      } else if (option = this.buildOption(item, null)) {
-        result.push(option);
-      }
-    });
-
+    if (Array.isArray(data)) {
+      let option: NgxSelectOption;
+      data.forEach((item: any) => {
+        const isOptGroup = typeof item === 'object' && item !== null &&
+          item.hasOwnProperty(this.optGroupLabelField) && item.hasOwnProperty(this.optGroupOptionsField) &&
+          Array.isArray(item[this.optGroupOptionsField]);
+        if (isOptGroup) {
+          const optGroup = new NgxSelectOptGroup(item[this.optGroupLabelField]);
+          item[this.optGroupOptionsField].forEach((subOption: NgxSelectOption) => {
+            if (option = this.buildOption(subOption, optGroup)) {
+              optGroup.options.push(option);
+            }
+          });
+          result.push(optGroup);
+        } else if (option = this.buildOption(item, null)) {
+          result.push(option);
+        }
+      });
+    }
     return result;
   }
 
