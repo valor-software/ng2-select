@@ -36,20 +36,21 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
   @Input() public noAutoComplete: boolean = false;
   @Input() public disabled: boolean = false;
 
-  @ViewChild('choiceMenu') protected choiceMenuElRef: ElementRef;
+  @ViewChild('main') protected mainElRef: ElementRef;
   @ViewChild('input') protected inputElRef: ElementRef;
+  @ViewChild('choiceMenu') protected choiceMenuElRef: ElementRef;
 
-  @HostBinding() tabindex = 0;
+  // @HostBinding() tabindex = 0;
 
-  @HostListener('focus', ['$event'])
-  protected focusToInput(): void {
+  // @HostListener('focus', ['$event'])
+  public focusToInput(): void {
     if (this.checkInputVisibility() && this.inputElRef) {
       this.inputElRef.nativeElement.focus();
     }
   }
 
-  @HostListener('keydown', ['$event'])
-  protected inputKeyDown(event: KeyboardEvent) {
+  // @HostListener('keydown', ['$event'])
+  public inputKeyDown(event: KeyboardEvent) {
     if (event.keyCode === 13 /*key enter*/) {
       event.preventDefault();
       event.stopPropagation();
@@ -81,8 +82,8 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
     }
   }
 
-  @HostListener('keyup', ['$event'])
-  protected hostKeyUp(event: KeyboardEvent): void {
+  // @HostListener('keyup', ['$event'])
+  public hostKeyUp(event: KeyboardEvent): void {
     switch (event.keyCode) {
       case 27: // escape
         this.optionsClose(true);
@@ -99,7 +100,7 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
   private itemsDiffer: IterableDiffer<any>;
   private _value: any[] = [];
 
-  constructor(private element: ElementRef, private sanitizer: DomSanitizer, iterableDiffers: IterableDiffers) {
+  constructor(private sanitizer: DomSanitizer, iterableDiffers: IterableDiffers) {
     this.itemsDiffer = iterableDiffers.find([]).create<any>(null);
   }
 
@@ -321,7 +322,7 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
     this.optionsOpened = false;
     if (focusToHost) {
       const x = window.scrollX, y = window.scrollY;
-      this.element.nativeElement.focus();
+      this.mainElRef.nativeElement.focus();
       window.scrollTo(x, y);
     }
   }
