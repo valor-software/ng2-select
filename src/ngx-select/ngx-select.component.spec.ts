@@ -11,6 +11,7 @@ import { NgxSelectComponent } from './ngx-select.component';
 
     <ngx-select id="sel-1" #component1
                 [(ngModel)]="select1.value"
+                [defaultValue]="select1.defaultValue"
                 [allowClear]="select1.allowClear"
                 [placeholder]="select1.placeholder"
                 [optionValueField]="select1.optionValueField"
@@ -40,6 +41,7 @@ class TestNgxSelectComponent {
 
   public select1: any = {
     value: null,
+    defaultValue: [],
 
     allowClear: false,
     placeholder: '',
@@ -122,6 +124,12 @@ describe('NgxSelectComponent', () => {
   it('should create with closed menu', () => {
     expect(selectChoices(1).length).toBe(0);
     expect(selectChoices(2).length).toBe(0);
+  });
+
+  it('should have default value', () => {
+    fixture.componentInstance.select1.defaultValue = [5];
+    fixture.detectChanges();
+    expect(fixture.componentInstance.select1.value).toEqual([5]);
   });
 
   describe('should create with default property', () => {

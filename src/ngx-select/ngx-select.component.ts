@@ -1,4 +1,7 @@
-import { Component, DoCheck, ElementRef, forwardRef, Input, IterableDiffer, IterableDiffers, ViewChild } from '@angular/core';
+import {
+  Component, DoCheck, ElementRef, forwardRef, Input, IterableDiffer, IterableDiffers, OnChanges, SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
 import { NgxSelectOptGroup, NgxSelectOption } from './ngx-select.classes';
@@ -21,7 +24,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
     }
   ]
 })
-export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCheck {
+export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCheck, OnChanges {
   @Input() public items: any[];
   @Input() public optionValueField: string = 'id';
   @Input() public optionTextField: string = 'text';
@@ -32,10 +35,42 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
   @Input() public placeholder: string = '';
   @Input() public noAutoComplete: boolean = false;
   @Input() public disabled: boolean = false;
+  @Input() public defaultValue: any[] = [];
 
   @ViewChild('main') protected mainElRef: ElementRef;
   @ViewChild('input') protected inputElRef: ElementRef;
   @ViewChild('choiceMenu') protected choiceMenuElRef: ElementRef;
+
+  public optionsOpened: boolean = false;
+
+  protected options: Array<NgxSelectOptGroup | NgxSelectOption> = [];
+  public optionsFiltered: Array<NgxSelectOptGroup | NgxSelectOption> = [];
+  protected optionsSelected: Array<NgxSelectOption> = [];
+  protected optionActive: NgxSelectOption;
+  private itemsDiffer: IterableDiffer<any>;
+  private _value: any[] = [];
+
+  private cacheFilterSearchText: string;
+  private cacheSelectedLength: number;
+
+  constructor(private sanitizer: DomSanitizer, iterableDiffers: IterableDiffers) {
+    this.itemsDiffer = iterableDiffers.find([]).create<any>(null);
+  }
+
+  ngDoCheck(): void {
+    if (this.itemsDiffer.diff(this.items)) {
+      this.options = this.buildOptions(this.items);
+      this.valueToOptionsSelected();
+      this.optionsFilter('', true);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const defVal = changes['defaultValue'];
+    if (defVal && !this.optionsSelected.length) {
+      this.valueFromOptionsSelected();
+    }
+  }
 
   public focusToInput(): void {
     if (this.checkInputVisibility() && this.inputElRef &&
@@ -81,30 +116,6 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
       case 27: // escape
         this.optionsClose(true);
         break;
-    }
-  }
-
-  public optionsOpened: boolean = false;
-
-  protected options: Array<NgxSelectOptGroup | NgxSelectOption> = [];
-  public optionsFiltered: Array<NgxSelectOptGroup | NgxSelectOption> = [];
-  protected optionsSelected: Array<NgxSelectOption> = [];
-  protected optionActive: NgxSelectOption;
-  private itemsDiffer: IterableDiffer<any>;
-  private _value: any[] = [];
-
-  private cacheFilterSearchText: string;
-  private cacheSelectedLength: number;
-
-  constructor(private sanitizer: DomSanitizer, iterableDiffers: IterableDiffers) {
-    this.itemsDiffer = iterableDiffers.find([]).create<any>(null);
-  }
-
-  ngDoCheck(): void {
-    if (this.itemsDiffer.diff(this.items)) {
-      this.options = this.buildOptions(this.items);
-      this.valueToOptionsSelected();
-      this.optionsFilter('', true);
     }
   }
 
@@ -385,7 +396,11 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
   }
 
   private valueFromOptionsSelected(): void {
-    this._value = this.optionsSelected.map((option: NgxSelectOption) => option.value);
+    if (this.optionsSelected.length) {
+      this._value = this.optionsSelected.map((option: NgxSelectOption) => option.value);
+    } else {
+      this._value = [].concat(this.defaultValue);
+    }
     this.propagateChange(this._value);
   }
 
