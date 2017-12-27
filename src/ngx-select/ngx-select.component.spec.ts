@@ -518,17 +518,18 @@ describe('NgxSelectComponent', () => {
   describe('should be disabled', () => {
     beforeEach(() => {
       fixture.componentInstance.select1.disabled = true;
+      fixture.componentInstance.select2.formControl.disable();
       fixture.detectChanges();
     });
 
-    it('single select', () => {
+    it('single select by attribute', () => {
       formControl(1).click();
       fixture.detectChanges();
       expect(formControlInput(1)).toBeFalsy();
       expect(selectChoices(1).length).toBe(0);
     });
 
-    it('multiple select', () => {
+    it('multiple select by attribute', () => {
       fixture.componentInstance.select1.multiple = true;
       fixture.detectChanges();
       formControl(1).click();
@@ -536,6 +537,23 @@ describe('NgxSelectComponent', () => {
       expect(formControlInput(1)).toBeTruthy();
       expect(formControlInput(1).disabled).toBeTruthy();
       expect(selectChoices(1).length).toBe(0);
+    });
+
+    it('single select by FormControl.disable()', () => {
+      formControl(2).click();
+      fixture.detectChanges();
+      expect(formControlInput(2)).toBeFalsy();
+      expect(selectChoices(2).length).toBe(0);
+    });
+
+    it('multiple select by FormControl.disable()', () => {
+      fixture.componentInstance.select2.multiple = true;
+      fixture.detectChanges();
+      formControl(2).click();
+      fixture.detectChanges();
+      expect(formControlInput(2)).toBeTruthy();
+      expect(formControlInput(2).disabled).toBeTruthy();
+      expect(selectChoices(2).length).toBe(0);
     });
   });
 

@@ -434,5 +434,6 @@ export class NgxSelectComponent implements ControlValueAccessor, Validator, DoCh
   }
 
   public setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 }
