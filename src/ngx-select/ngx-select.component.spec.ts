@@ -24,6 +24,7 @@ import { NgxSelectComponent } from './ngx-select.component';
                 [disabled]="select1.disabled"></ngx-select>
     <ngx-select id="sel-2" #component2
                 [formControl]="select2.formControl"
+                [defaultValue]="select2.defaultValue"
                 [allowClear]="select2.allowClear"
                 [placeholder]="select2.placeholder"
                 [optionValueField]="select2.optionValueField"
@@ -56,7 +57,8 @@ class TestNgxSelectComponent {
   };
 
   public select2: any = {
-    formControl: new FormControl(),
+    formControl: new FormControl([]),
+    defaultValue: [],
 
     allowClear: false,
     placeholder: '',
@@ -110,10 +112,11 @@ describe('NgxSelectComponent', () => {
     }).compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(fakeAsync(() => {
     fixture = TestBed.createComponent(TestNgxSelectComponent);
     fixture.detectChanges();
-  });
+    // tick(200);
+  }));
 
   it('should create', () => {
     expect(fixture).toBeTruthy();
@@ -126,10 +129,32 @@ describe('NgxSelectComponent', () => {
     expect(selectChoices(2).length).toBe(0);
   });
 
-  it('should have default value', () => {
-    fixture.componentInstance.select1.defaultValue = [5];
-    fixture.detectChanges();
-    expect(fixture.componentInstance.select1.value).toEqual([5]);
+  describe('should have value', () => {
+    describe('equal empty', () => {
+      it('by ngModel', () => {
+        expect(fixture.componentInstance.select1.value).toEqual([]);
+      });
+
+      it('by FormControl', () => {
+        expect(fixture.componentInstance.select2.formControl.value).toEqual([]);
+      });
+    });
+
+    describe('equal default value', () => {
+      beforeEach(() => {
+        fixture.componentInstance.select1.defaultValue = [5];
+        fixture.componentInstance.select2.defaultValue = [5];
+        fixture.detectChanges();
+      });
+
+      it('by ngModel', () => {
+        expect(fixture.componentInstance.select1.value).toEqual([5]);
+      });
+
+      it('by FormControl', () => {
+        expect(fixture.componentInstance.select2.formControl.value).toEqual([5]);
+      });
+    });
   });
 
   describe('should create with default property', () => {
@@ -554,35 +579,6 @@ describe('NgxSelectComponent', () => {
       expect(formControlInput(2)).toBeTruthy();
       expect(formControlInput(2).disabled).toBeTruthy();
       expect(selectChoices(2).length).toBe(0);
-    });
-  });
-
-  describe('FormControl should be', () => {
-    let tmpFixture: ComponentFixture<TestNgxSelectComponent>;
-
-    beforeEach(() => {
-      tmpFixture = TestBed.createComponent(TestNgxSelectComponent);
-      tmpFixture.componentInstance.select2.items = items1;
-    });
-
-    it('valid when select is: single, empty and allowClear', () => {
-      tmpFixture.componentInstance.select2.multiple = false;
-      tmpFixture.componentInstance.select2.allowClear = true;
-      tmpFixture.detectChanges();
-      expect(tmpFixture.componentInstance.select2.formControl.valid).toBeTruthy();
-    });
-
-    it('invalid when select is: single, empty and not allowClear', () => {
-      tmpFixture.componentInstance.select2.multiple = false;
-      tmpFixture.componentInstance.select2.allowClear = false;
-      tmpFixture.detectChanges();
-      expect(tmpFixture.componentInstance.select2.formControl.valid).toBeFalsy();
-    });
-
-    it('valid when select is: multiple and empty', () => {
-      tmpFixture.componentInstance.select2.multiple = true;
-      tmpFixture.detectChanges();
-      expect(tmpFixture.componentInstance.select2.formControl.valid).toBeTruthy();
     });
   });
 

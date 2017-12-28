@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'single-demo',
@@ -16,8 +17,8 @@ export class SingleDemoComponent {
     'The Hague', 'Turin', 'Valencia', 'Vienna', 'Vilnius', 'Warsaw', 'Wrocław',
     'Zagreb', 'Zaragoza', 'Łódź'];
 
-  public ngValue: any = [];
-  public ngxValue: any = [];
-  public ngDisabled: boolean = false;
-  public ngxDisabled: boolean = false;
+  public ngControl = new FormControl();
+  public ngxControl = new FormControl();
+
+  public ngxDefault = 'Bradford';
 }

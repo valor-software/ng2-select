@@ -18,7 +18,7 @@ export class NoAutoCompleteDemoComponent {
 
   constructor() {
     const a = [];
-    for (let i = 1; i <= 50; i++) {
+    for (let i = 1; i <= 20; i++) {
       this._items.forEach(v => a.push(i + ' ' + v));
     }
     this.items = a;

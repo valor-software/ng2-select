@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { TabsModule, ButtonsModule } from 'ngx-bootstrap';
@@ -29,6 +29,7 @@ import { SelectModule } from 'ng2-select-ex';
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     SelectModule,
     TabsModule.forRoot(),
     ButtonsModule.forRoot(),
