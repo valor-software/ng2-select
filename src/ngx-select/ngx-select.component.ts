@@ -5,6 +5,7 @@ import { NgxSelectOptGroup, NgxSelectOption } from './ngx-select.classes';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/take';
