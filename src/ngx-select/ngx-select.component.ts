@@ -1,11 +1,9 @@
-import {
-  Component, DoCheck, ElementRef, forwardRef, Input, IterableDiffer, IterableDiffers, OnChanges,
-  SimpleChanges, ViewChild
-} from '@angular/core';
+import { Component, DoCheck, ElementRef, forwardRef, Input, IterableDiffer, IterableDiffers, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
 import { NgxSelectOptGroup, NgxSelectOption } from './ngx-select.classes';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'ngx-select',
@@ -19,7 +17,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
     }
   ]
 })
-export class NgxSelectComponent implements ControlValueAccessor, DoCheck, OnChanges {
+export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   @Input() public items: any[];
   @Input() public optionValueField: string = 'id';
   @Input() public optionTextField: string = 'text';
@@ -42,6 +40,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, OnChan
   protected optionsSelected: Array<NgxSelectOption> = [];
   protected optionActive: NgxSelectOption;
   private itemsDiffer: IterableDiffer<any>;
+  private defaultValueDiffer: IterableDiffer<any[]>;
   private cacheFilterSearchText: string;
   private cacheSelectedLength: number;
   private cacheElementOffsetTop: number;
@@ -50,6 +49,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, OnChan
 
   constructor(private sanitizer: DomSanitizer, iterableDiffers: IterableDiffers) {
     this.itemsDiffer = iterableDiffers.find([]).create<any>(null);
+    this.defaultValueDiffer = iterableDiffers.find([]).create<any>(null);
   }
 
   public ngDoCheck(): void {
@@ -58,13 +58,14 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, OnChan
       this.valueToOptionsSelected();
       this.optionsFilter('', true);
     }
-  }
 
-  public ngOnChanges(changes: SimpleChanges): void {
-    const defVal = changes['defaultValue'];
-    if (defVal) {
-      this._defaultValue = defVal.currentValue ? [].concat(defVal.currentValue) : [];
-      this.valueFromOptionsSelected();
+    const defVal = this.defaultValue ? [].concat(this.defaultValue) : [];
+    if (this.defaultValueDiffer.diff(defVal)) {
+      this._defaultValue = defVal;
+      if (!this._value.length && this._defaultValue.length) {
+        this.valueToOptionsSelected();
+        this.valueFromOptionsSelected();
+      }
     }
   }
 
@@ -238,7 +239,8 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, OnChan
   }
 
   private set value(val: any[]) {
-    this._value = val ? [].concat(val) : [];
+    const newVal = val ? [].concat(val) : [];
+    this._value = _.isEqual(newVal, this._defaultValue) ? [] : newVal;
     this.valueToOptionsSelected();
     this.onChange(this.value);
     this.onTouched();

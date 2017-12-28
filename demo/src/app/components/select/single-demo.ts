@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import random from '@angular-devkit/schematics/src/rules/random';
 
 @Component({
   selector: 'single-demo',
   templateUrl: './single-demo.html'
 })
-export class SingleDemoComponent {
+export class SingleDemoComponent implements OnInit, OnDestroy {
   public items: string[] = ['Amsterdam', 'Antwerp', 'Athens', 'Barcelona',
     'Berlin', 'Birmingham', 'Bradford', 'Bremen', 'Brussels', 'Bucharest',
     'Budapest', 'Cologne', 'Copenhagen', 'Dortmund', 'Dresden', 'Dublin',
@@ -20,5 +21,30 @@ export class SingleDemoComponent {
   public ngControl = new FormControl();
   public ngxControl = new FormControl();
 
-  public ngxDefault = 'Bradford';
+  // public ngxDefault = 'Bradford';
+
+  private _ngxDefaultInterval;
+  private _ngxDefault;
+
+  constructor() {
+    setTimeout(() => {
+      this._ngxDefaultInterval = setInterval(() => {
+        const idx = Math.floor(Math.random() * (this.items.length - 1));
+        this._ngxDefault = this.items[idx];
+        console.log('new default value = ', this._ngxDefault);
+      }, 2000);
+    }, 2000);
+  }
+
+  ngOnInit(): void {
+    this.ngxControl.valueChanges.subscribe(_ => console.log('ngxControl.valueChange', _));
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this._ngxDefaultInterval);
+  }
+
+  public doNgxDefault(): any {
+    return this._ngxDefault;
+  }
 }
