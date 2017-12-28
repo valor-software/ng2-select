@@ -7,6 +7,8 @@ import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/last';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/filter';
@@ -79,16 +81,11 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   }
 
   private propagateActualValues() {
-    Observable.from(this.options)
-      .flatMap((option: NgxSelectOptGroup | NgxSelectOption) => {
-        return option instanceof NgxSelectOption ? Observable.of(option) :
-          (option instanceof NgxSelectOptGroup ? Observable.from(option.options) : Observable.empty());
-      })
+    this.observableOptions()
       .map((option: NgxSelectOption) => option.value)
       .toArray()
       .subscribe((values: any[]) => {
         const newValues = this.value.filter(v => values.includes(v));
-        console.log('propagateActualValues', this.value, newValues);
         if (!_.isEqual(this.value, newValues)) {
           this.onChange(newValues);
         }
@@ -275,88 +272,47 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   }
 
   private optionActivateFirst(): void {
-    for (let i = 0; i < this.optionsFiltered.length; i++) {
-      const option = this.optionsFiltered[i];
-      if (option instanceof NgxSelectOption) {
-        this.optionActivate(option);
-        return;
-      } else if (option instanceof NgxSelectOptGroup && option.optionsFiltered.length) {
-        this.optionActivate(option.optionsFiltered[0]);
-        return;
-      }
-    }
+    this.observableOptions(true).take(1)
+      .subscribe((option: NgxSelectOption) => this.optionActivate(option));
   }
 
   private optionActivateNext(): void {
-    if (this.optionActive) {
-      let option,
-        i = this.optionsFiltered.indexOf(this.optionActive.parent || this.optionActive),
-        ii = (this.optionActive.parent ? this.optionActive.parent.optionsFiltered.indexOf(this.optionActive) : 0) + 1;
-
-      do {
-        option = this.optionsFiltered[i];
-        if ((option instanceof NgxSelectOptGroup) && (ii <= option.optionsFiltered.length - 1)) {
-          this.optionActivate(option.optionsFiltered[ii === -2 ? 0 : ii]);
-          return;
+    this.observableOptions(true).toArray()
+      .subscribe((options: NgxSelectOption[]) => {
+        const newActiveIdx = options.indexOf(this.optionActive) + 1;
+        if (newActiveIdx < options.length) {
+          this.optionActivate(options[newActiveIdx]);
+        } else {
+          this.optionActivate(options[0]);
         }
-        ii = -2;
-        i++;
-        option = this.optionsFiltered[i];
-        if (option instanceof NgxSelectOption) {
-          this.optionActivate(option);
-          return;
-        }
-      } while (i < this.optionsFiltered.length);
-    }
-    this.optionActivateFirst();
+      });
   }
 
   private optionActivatePrevious(): void {
-    let option,
-      i = this.optionsFiltered.indexOf(this.optionActive.parent || this.optionActive),
-      ii = (this.optionActive.parent ? this.optionActive.parent.optionsFiltered.indexOf(this.optionActive) : 0) - 1;
-
-    do {
-      option = this.optionsFiltered[i];
-      if ((option instanceof NgxSelectOptGroup) && (ii >= 0 || ii === -2)) {
-        this.optionActivate(option.optionsFiltered[ii === -2 ? option.optionsFiltered.length - 1 : ii]);
-        return;
-      }
-      ii = -2;
-      i--;
-      option = this.optionsFiltered[i];
-      if (option instanceof NgxSelectOption) {
-        this.optionActivate(option);
-        return;
-      }
-    } while (i >= 0);
-
-    this.optionActivateLast();
+    this.observableOptions(true).toArray()
+      .subscribe((options: NgxSelectOption[]) => {
+        const newActiveIdx = options.indexOf(this.optionActive) - 1;
+        if (newActiveIdx >= 0) {
+          this.optionActivate(options[newActiveIdx]);
+        } else {
+          this.optionActivate(options[options.length - 1]);
+        }
+      });
   }
 
   private optionActivateLast(): void {
-    for (let i = this.optionsFiltered.length - 1; i >= 0; i--) {
-      const option = this.optionsFiltered[i];
-      if (option instanceof NgxSelectOption) {
-        this.optionActivate(option);
-        return;
-      } else if (option instanceof NgxSelectOptGroup && option.optionsFiltered.length) {
-        this.optionActivate(option.optionsFiltered[option.optionsFiltered.length - 1]);
-        return;
-      }
-    }
+    this.observableOptions(true).last()
+      .subscribe((option: NgxSelectOption) => this.optionActivate(option));
   }
 
   private ensureVisibleElement(element: HTMLElement) {
-    if (this.choiceMenuElRef) {
-      if (this.cacheElementOffsetTop !== element.offsetTop) {
-        this.cacheElementOffsetTop = element.offsetTop;
-        const container: HTMLElement = this.choiceMenuElRef.nativeElement;
-        if (this.cacheElementOffsetTop < container.scrollTop) {
-          container.scrollTop = this.cacheElementOffsetTop;
-        } else if (this.cacheElementOffsetTop + element.offsetHeight > container.scrollTop + container.clientHeight) {
-          container.scrollTop = this.cacheElementOffsetTop + element.offsetHeight - container.clientHeight;
-        }
+    if (this.choiceMenuElRef && this.cacheElementOffsetTop !== element.offsetTop) {
+      this.cacheElementOffsetTop = element.offsetTop;
+      const container: HTMLElement = this.choiceMenuElRef.nativeElement;
+      if (this.cacheElementOffsetTop < container.scrollTop) {
+        container.scrollTop = this.cacheElementOffsetTop;
+      } else if (this.cacheElementOffsetTop + element.offsetHeight > container.scrollTop + container.clientHeight) {
+        container.scrollTop = this.cacheElementOffsetTop + element.offsetHeight - container.clientHeight;
       }
     }
   }
@@ -422,17 +378,28 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
 
   private valueToOptionsSelected(): void {
     this.optionsSelected.length = 0;
-    Observable.from(this.options)
-      .flatMap((option: NgxSelectOptGroup | NgxSelectOption) => {
-        return option instanceof NgxSelectOption ? Observable.of(option) :
-          (option instanceof NgxSelectOptGroup ? Observable.from(option.options) : Observable.empty());
-      })
+    this.observableOptions()
       .filter((option: NgxSelectOption) => this.value.includes(option.value))
       .subscribe((option: NgxSelectOption) => this.optionsSelected.push(option));
   }
 
   private valueFromOptionsSelected(): void {
     this.setValue(this.optionsSelected.map((option: NgxSelectOption) => option.value));
+  }
+
+  private observableOptions(filtered: boolean = false): Observable<NgxSelectOption> {
+    if (filtered) {
+      return Observable.from(this.optionsFiltered)
+        .flatMap((option: NgxSelectOptGroup | NgxSelectOption) =>
+          option instanceof NgxSelectOption ? Observable.of(option) :
+            (option instanceof NgxSelectOptGroup ? Observable.from(option.optionsFiltered) : Observable.empty())
+        );
+    }
+    return Observable.from(this.options)
+      .flatMap((option: NgxSelectOptGroup | NgxSelectOption) =>
+        option instanceof NgxSelectOption ? Observable.of(option) :
+          (option instanceof NgxSelectOptGroup ? Observable.from(option.options) : Observable.empty())
+      );
   }
 
   //////////// interface ControlValueAccessor ////////////
