@@ -112,7 +112,7 @@ describe('NgxSelectComponent', () => {
     }).compileComponents();
   }));
 
-  beforeEach(fakeAsync(() => {
+  beforeEach(async(() => {
     fixture = TestBed.createComponent(TestNgxSelectComponent);
     fixture.detectChanges();
     // tick(200);
@@ -196,6 +196,34 @@ describe('NgxSelectComponent', () => {
 
     afterEach(() => {
       expect(valueChanged).toHaveBeenCalledTimes(5);
+    });
+  });
+
+  describe('should return values from items only when items is not contain some values', function () {
+    const createItems = (values: number[]) => values.map(v => {
+      return {value: v, text: 'val ' + v};
+    });
+
+    it('by ngModel', fakeAsync(() => {
+      fixture.componentInstance.select1.items = createItems([1, 2, 3, 4, 5]);
+      fixture.componentInstance.select1.value = [1, 3, 4];
+      fixture.detectChanges();
+      tick();
+      expect(fixture.componentInstance.select1.value).toEqual([1, 3, 4]);
+      fixture.componentInstance.select1.items = createItems([1, 2, 4, 5, 6]);
+      fixture.detectChanges();
+      expect(fixture.componentInstance.select1.value).toEqual([1, 4]);
+    }));
+
+    it('by FormControl', () => {
+      fixture.componentInstance.select2.items = createItems([1, 2, 3, 4, 5]);
+      fixture.componentInstance.select2.formControl.setValue([1, 3, 4]);
+      fixture.detectChanges();
+      // tick();
+      expect(fixture.componentInstance.select2.formControl.value).toEqual([1, 3, 4]);
+      fixture.componentInstance.select2.items = createItems([1, 2, 4, 5, 6]);
+      fixture.detectChanges();
+      expect(fixture.componentInstance.select2.formControl.value).toEqual([1, 4]);
     });
   });
 

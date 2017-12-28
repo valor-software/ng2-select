@@ -4,6 +4,14 @@ import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
 import { NgxSelectOptGroup, NgxSelectOption } from './ngx-select.classes';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import * as _ from 'lodash';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/toArray';
 
 @Component({
   selector: 'ngx-select',
@@ -57,6 +65,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
       this.options = this.buildOptions(this.items);
       this.valueToOptionsSelected();
       this.optionsFilter('', true);
+      this.propagateActualValues();
     }
 
     const defVal = this.defaultValue ? [].concat(this.defaultValue) : [];
@@ -67,6 +76,23 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
         this.valueFromOptionsSelected();
       }
     }
+  }
+
+  private propagateActualValues() {
+    Observable.from(this.options)
+      .flatMap((option: NgxSelectOptGroup | NgxSelectOption) => {
+        return option instanceof NgxSelectOption ? Observable.of(option) :
+          (option instanceof NgxSelectOptGroup ? Observable.from(option.options) : Observable.empty());
+      })
+      .map((option: NgxSelectOption) => option.value)
+      .toArray()
+      .subscribe((values: any[]) => {
+        const newValues = this.value.filter(v => values.includes(v));
+        console.log('propagateActualValues', this.value, newValues);
+        if (!_.isEqual(this.value, newValues)) {
+          this.onChange(newValues);
+        }
+      });
   }
 
   public canClearNotMultiple(): boolean {
@@ -396,17 +422,13 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
 
   private valueToOptionsSelected(): void {
     this.optionsSelected.length = 0;
-    this.options.forEach((option: NgxSelectOptGroup | NgxSelectOption) => {
-      if (option instanceof NgxSelectOption && this.value.includes(option.value)) {
-        this.optionsSelected.push(option);
-      } else if (option instanceof NgxSelectOptGroup) {
-        option.options.forEach((subOption: NgxSelectOption) => {
-          if (this.value.includes(subOption.value)) {
-            this.optionsSelected.push(subOption);
-          }
-        });
-      }
-    });
+    Observable.from(this.options)
+      .flatMap((option: NgxSelectOptGroup | NgxSelectOption) => {
+        return option instanceof NgxSelectOption ? Observable.of(option) :
+          (option instanceof NgxSelectOptGroup ? Observable.from(option.options) : Observable.empty());
+      })
+      .filter((option: NgxSelectOption) => this.value.includes(option.value))
+      .subscribe((option: NgxSelectOption) => this.optionsSelected.push(option));
   }
 
   private valueFromOptionsSelected(): void {
