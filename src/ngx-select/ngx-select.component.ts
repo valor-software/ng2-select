@@ -62,7 +62,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     const defVal = this.defaultValue ? [].concat(this.defaultValue) : [];
     if (this.defaultValueDiffer.diff(defVal)) {
       this._defaultValue = defVal;
-      if (!this._value.length && this._defaultValue.length) {
+      if (/*!this._value.length &&*/ this._defaultValue.length) {
         this.valueToOptionsSelected();
         this.valueFromOptionsSelected();
       }
@@ -238,12 +238,14 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     return this._value.length ? this._value : this._defaultValue;
   }
 
-  private set value(val: any[]) {
+  private setValue(val: any[], isExternalValue: boolean = false) {
     const newVal = val ? [].concat(val) : [];
     this._value = _.isEqual(newVal, this._defaultValue) ? [] : newVal;
     this.valueToOptionsSelected();
-    this.onChange(this.value);
-    this.onTouched();
+    if (!isExternalValue || !_.isEqual(val, this.value)) {
+      this.onChange(this.value);
+      this.onTouched();
+    }
   }
 
   private optionActivateFirst(): void {
@@ -408,7 +410,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   }
 
   private valueFromOptionsSelected(): void {
-    this.value = this.optionsSelected.map((option: NgxSelectOption) => option.value);
+    this.setValue(this.optionsSelected.map((option: NgxSelectOption) => option.value));
   }
 
   //////////// interface ControlValueAccessor ////////////
@@ -417,12 +419,10 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   public onTouched: () => void = () => null;
 
   public writeValue(obj: any): void {
-    // console.log('writeValue', this.value);
-    this.value = obj;
+    this.setValue(obj, true);
   }
 
   public registerOnChange(fn: (_: any) => {}): void {
-    // console.log('registerOnChange', this.value);
     this.onChange = fn;
   }
 

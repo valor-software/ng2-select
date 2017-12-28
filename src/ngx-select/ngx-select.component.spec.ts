@@ -157,6 +157,48 @@ describe('NgxSelectComponent', () => {
     });
   });
 
+  describe('should change value by change defaultValue', () => {
+    let valueChanged;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(TestNgxSelectComponent);
+      fixture.componentInstance.select2.items = items1;
+
+      valueChanged = jasmine.createSpy('valueChanged');
+      fixture.componentInstance.select2.formControl.valueChanges.subscribe(v => valueChanged(v));
+
+      fixture.detectChanges();
+    });
+
+    it('with not multiple', () => {
+      expect(fixture.componentInstance.select2.formControl.value).toEqual([]);
+
+      fixture.componentInstance.select2.defaultValue = [3];
+      fixture.detectChanges();
+      expect(fixture.componentInstance.select2.formControl.value).toEqual([3]);
+
+      fixture.componentInstance.select2.formControl.setValue([2]);
+      fixture.detectChanges();
+      expect(fixture.componentInstance.select2.formControl.value).toEqual([2]);
+
+      fixture.componentInstance.select2.defaultValue = [1];
+      fixture.detectChanges();
+      expect(fixture.componentInstance.select2.formControl.value).toEqual([2]);
+
+      fixture.componentInstance.select2.defaultValue = [2];
+      fixture.detectChanges();
+      expect(fixture.componentInstance.select2.formControl.value).toEqual([2]);
+
+      fixture.componentInstance.select2.defaultValue = [4];
+      fixture.detectChanges();
+      expect(fixture.componentInstance.select2.formControl.value).toEqual([4]);
+    });
+
+    afterEach(() => {
+      expect(valueChanged).toHaveBeenCalledTimes(5);
+    });
+  });
+
   describe('should create with default property', () => {
     it('"allowClear" should be false', () => {
       expect(fixture.componentInstance.component2.allowClear).toBeFalsy();
