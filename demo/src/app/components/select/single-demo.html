@@ -5,7 +5,8 @@
     <ng-select [formControl]="ngControl"
                [allowClear]="true"
                [items]="items"
-               placeholder="No city selected">
+               placeholder="No city selected"
+               (typed)="inputTyped('ng-select', $event)">
     </ng-select>
     <p></p>
     <pre>{{ngControl.value | json}}</pre>
@@ -23,7 +24,8 @@
                 [allowClear]="true"
                 [defaultValue]="doNgxDefault()"
                 [items]="items"
-                placeholder="No city selected">
+                placeholder="No city selected"
+                (typed)="inputTyped('ngx-select', $event)">
     </ngx-select>
     <p></p>
     <pre>{{ngxControl.value | json}}</pre>

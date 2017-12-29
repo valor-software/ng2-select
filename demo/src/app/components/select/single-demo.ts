@@ -47,4 +47,8 @@ export class SingleDemoComponent implements OnInit, OnDestroy {
   public doNgxDefault(): any {
     return this._ngxDefault;
   }
+
+  public inputTyped(source: string, text: string) {
+    console.log('SingleDemoComponent.inputTyped', source, text);
+  }
 }

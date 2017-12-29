@@ -87,9 +87,10 @@ const items2 = [
   {uuid: 'uuid-10', name: 'v10'}
 ];
 
-const createKeyboardEvent = (typeArg: string, keyCode: number) => {
+const createKeyboardEvent = (typeArg: string, keyCode: number, key: string = '') => {
   const customEvent = new CustomEvent(typeArg, {bubbles: true, cancelable: true});
   customEvent['keyCode'] = keyCode;
+  customEvent['key'] = key;
   return customEvent;
 };
 
@@ -596,24 +597,24 @@ describe('NgxSelectComponent', () => {
   });
 
   describe('choice items should be filtered by input text', () => {
-    it('wth preload items', () => {
+    it('with preload items', () => {
       fixture.componentInstance.select1.items = items1;
       fixture.detectChanges();
       formControl(1).click();
       fixture.detectChanges();
       formControlInput(1).value = 'o';
-      formControlInput(1).dispatchEvent(new KeyboardEvent('keyup'));
+      formControlInput(1).dispatchEvent(createKeyboardEvent('keyup', 79, 'o'));
       fixture.detectChanges();
       expect(selectChoices(1).length).toBe(3);
     });
 
-    it('wth lazy load items', () => {
+    it('with lazy load items', () => {
       fixture.componentInstance.select1.items = [];
       fixture.detectChanges();
       formControl(1).click();
       fixture.detectChanges();
       formControlInput(1).value = 'o';
-      formControlInput(1).dispatchEvent(new KeyboardEvent('keyup'));
+      formControlInput(1).dispatchEvent(createKeyboardEvent('keyup', 79, 'o'));
       fixture.detectChanges();
       fixture.componentInstance.select1.items = items1;
       fixture.detectChanges();

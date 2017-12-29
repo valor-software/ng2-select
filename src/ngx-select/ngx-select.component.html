@@ -37,7 +37,7 @@
          *ngIf="checkInputVisibility()"
          [tabindex]="multiple === false? -1: 0"
          (keydown)="inputKeyDown($event)"
-         (keyup)="inputKeyUp(input.value)"
+         (keyup)="inputKeyUp($event, input.value)"
          [disabled]="inputIsDisabled()"
          [placeholder]="optionsSelected.length? '': placeholder"
          (click)="inputClick(input.value)"

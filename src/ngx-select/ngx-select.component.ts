@@ -1,4 +1,6 @@
-import { Component, DoCheck, ElementRef, forwardRef, Input, IterableDiffer, IterableDiffers, ViewChild } from '@angular/core';
+import {
+  Component, DoCheck, ElementRef, EventEmitter, forwardRef, Input, IterableDiffer, IterableDiffers, Output, ViewChild
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
 import { NgxSelectOptGroup, NgxSelectOption, TSelectOption } from './ngx-select.classes';
@@ -9,6 +11,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/toArray';
@@ -45,6 +48,8 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   @Input() public disabled: boolean = false;
   @Input() public defaultValue: any[] = [];
 
+  @Output() public typed = new EventEmitter<string>();
+
   @ViewChild('main') protected mainElRef: ElementRef;
   @ViewChild('input') protected inputElRef: ElementRef;
   @ViewChild('choiceMenu') protected choiceMenuElRef: ElementRef;
@@ -60,9 +65,10 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   private _defaultValue: any[] = [];
 
   public subjOptionsFiltered: Observable<TSelectOption[]>;
-  private subjOptions: BehaviorSubject<TSelectOption[]>;
-  private subjSearchText: BehaviorSubject<string>;
-  private subjSelectedOptions: BehaviorSubject<NgxSelectOption[]>;
+  private subjOptions = new BehaviorSubject<TSelectOption[]>([]);
+  private subjSearchText = new BehaviorSubject<string>('');
+  private subjSelectedOptions = new BehaviorSubject<NgxSelectOption[]>([]);
+  private subjDefaultValue = new BehaviorSubject<any[]>([]);
 
   private cacheOptions: Array<TSelectOption> = [];
   private cacheOptionsFiltered: TSelectOption[];
@@ -74,9 +80,22 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     this.defaultValueDiffer = iterableDiffers.find([]).create<any>(null);
 
     // observers
-    this.subjOptions = new BehaviorSubject([]);
-    this.subjSelectedOptions = new BehaviorSubject([]);
-    this.subjSearchText = new BehaviorSubject('');
+    this.subjSelectedOptions.subscribe(() => this.valueFromOptionsSelected());
+    this.typed.subscribe((text: string) => this.subjSearchText.next(text));
+
+    this.subjOptions.subscribe((options: TSelectOption[]) => {
+      this.cacheOptions = options;
+      this.valueToOptionsSelected();
+      this.propagateActualValues();
+    });
+
+    this.subjDefaultValue.subscribe((defVal: any[]) => {
+      this._defaultValue = defVal;
+      if (defVal.length) {
+        this.valueToOptionsSelected();
+        this.valueFromOptionsSelected();
+      }
+    });
 
     this.subjOptionsFiltered = this.subjSearchText
       .combineLatest(this.subjOptions, this.subjSelectedOptions,
@@ -91,9 +110,6 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
         this.cacheOptionsFiltered = filteredOptions;
         this.cacheOptionsFilteredFlat = null;
       });
-
-    this.subjOptions.subscribe((options: TSelectOption[]) => this.cacheOptions = options);
-    this.subjSelectedOptions.subscribe(() => this.valueFromOptionsSelected());
   }
 
   private navigateOption(navigation: ENavigation) {
@@ -125,17 +141,11 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   public ngDoCheck(): void {
     if (this.itemsDiffer.diff(this.items)) {
       this.subjOptions.next(this.buildOptions(this.items));
-      this.valueToOptionsSelected();
-      this.propagateActualValues();
     }
 
     const defVal = this.defaultValue ? [].concat(this.defaultValue) : [];
     if (this.defaultValueDiffer.diff(defVal)) {
-      this._defaultValue = defVal;
-      if (/*!this._value.length &&*/ this._defaultValue.length) {
-        this.valueToOptionsSelected();
-        this.valueFromOptionsSelected();
-      }
+      this.subjDefaultValue.next(defVal);
     }
   }
 
@@ -216,9 +226,11 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     return (this.multiple === true) || (this.optionsOpened && !this.noAutoComplete);
   }
 
-  protected inputKeyUp(value: string = '') {
+  protected inputKeyUp(event: KeyboardEvent, value: string = '') {
     if (this.optionsOpened) {
-      this.subjSearchText.next(value);
+      if (event.key && (event.key.length === 1 || event.key === 'Backspace')) {
+        this.typed.emit(value);
+      }
     } else if (value) {
       this.optionsOpen(value);
     }
