@@ -12,8 +12,8 @@ import { RichDemoComponent } from './components/select/rich-demo';
 import { SingleDemoComponent } from './components/select/single-demo';
 import { SampleSectionComponent } from './components/sample-section.component';
 
-import { SelectModule } from '../../../src';
-// import { SelectModule } from 'ng2-select-ex';
+// import { SelectModule } from '../../../src';
+import { SelectModule } from 'ng2-select-ex';
 
 @NgModule({
   declarations: [
