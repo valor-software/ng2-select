@@ -31,13 +31,13 @@ export class SingleDemoComponent implements OnInit, OnDestroy {
       this._ngxDefaultInterval = setInterval(() => {
         const idx = Math.floor(Math.random() * (this.items.length - 1));
         this._ngxDefault = this.items[idx];
-        console.log('new default value = ', this._ngxDefault);
+        // console.log('new default value = ', this._ngxDefault);
       }, 2000);
     }, 2000);
   }
 
   ngOnInit(): void {
-    this.ngxControl.valueChanges.subscribe(_ => console.log('ngxControl.valueChange', _));
+    // this.ngxControl.valueChanges.subscribe(_ => console.log('ngxControl.valueChange', _));
   }
 
   ngOnDestroy(): void {

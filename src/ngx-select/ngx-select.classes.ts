@@ -45,3 +45,5 @@ export class NgxSelectOptGroup implements INgxSelectOptGroup, INgxSelectOptionBa
     this.optionsFiltered = this.options.filter((option: NgxSelectOption) => callbackFn(option));
   }
 }
+
+export type TSelectOption = NgxSelectOptGroup | NgxSelectOption;

@@ -1,5 +1,5 @@
 <div #main [tabindex]="disabled? -1: 0" class="ui-select-container dropdown"
-     [class.open]="optionsOpened && optionsFiltered && optionsFiltered.length"
+     [class.open]="optionsOpened && (subjOptionsFiltered | async)?.length"
      [class.ui-select-multiple]="multiple === true" [class.form-control]="multiple === true"
      offClick (clickedOutside)="mainClickedOutside()"
      (focus)="focusToInput()" (keydown)="inputKeyDown($event)" (keyup)="hostKeyUp($event)">
@@ -49,7 +49,7 @@
 
   <!-- options template -->
   <ul #choiceMenu role="menu" class="ui-select-choices dropdown-menu">
-    <li *ngFor="let opt of (optionsFiltered); trackBy: trackByOption; let idx=index" role="menuitem">
+    <li *ngFor="let opt of subjOptionsFiltered | async; trackBy: trackByOption; let idx=index" role="menuitem">
       <div class="divider dropdown-divider" *ngIf="opt.type === 'optgroup' && (idx > 0)"></div>
       <div class="dropdown-header" *ngIf="opt.type === 'optgroup'">{{opt.label}}</div>
 

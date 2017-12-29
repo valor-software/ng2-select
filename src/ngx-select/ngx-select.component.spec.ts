@@ -4,6 +4,7 @@ import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectModule } from '../select.module';
 import { NgxSelectComponent } from './ngx-select.component';
+import createSpy = jasmine.createSpy;
 
 @Component({
   selector: 'select-test',
@@ -164,7 +165,7 @@ describe('NgxSelectComponent', () => {
       fixture = TestBed.createComponent(TestNgxSelectComponent);
       fixture.componentInstance.select2.items = items1;
 
-      valueChanged = jasmine.createSpy('valueChanged');
+      valueChanged = createSpy('valueChanged');
       fixture.componentInstance.select2.formControl.valueChanges.subscribe(v => valueChanged(v));
 
       fixture.detectChanges();
@@ -594,8 +595,8 @@ describe('NgxSelectComponent', () => {
     });
   });
 
-  describe('choice items should be filtered', () => {
-    beforeEach(() => {
+  describe('choice items should be filtered by input text', () => {
+    it('wth preload items', () => {
       fixture.componentInstance.select1.items = items1;
       fixture.detectChanges();
       formControl(1).click();
@@ -603,9 +604,19 @@ describe('NgxSelectComponent', () => {
       formControlInput(1).value = 'o';
       formControlInput(1).dispatchEvent(new KeyboardEvent('keyup'));
       fixture.detectChanges();
+      expect(selectChoices(1).length).toBe(3);
     });
 
-    it('by input text', () => {
+    it('wth lazy load items', () => {
+      fixture.componentInstance.select1.items = [];
+      fixture.detectChanges();
+      formControl(1).click();
+      fixture.detectChanges();
+      formControlInput(1).value = 'o';
+      formControlInput(1).dispatchEvent(new KeyboardEvent('keyup'));
+      fixture.detectChanges();
+      fixture.componentInstance.select1.items = items1;
+      fixture.detectChanges();
       expect(selectChoices(1).length).toBe(3);
     });
   });
