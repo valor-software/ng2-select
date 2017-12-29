@@ -73,6 +73,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   private cacheOptions: Array<TSelectOption> = [];
   private cacheOptionsFiltered: TSelectOption[];
   private cacheOptionsFilteredFlat: NgxSelectOption[];
+  private cacheOptionsFlat: NgxSelectOption[];
 
   constructor(private sanitizer: DomSanitizer, iterableDiffers: IterableDiffers) {
     // differs
@@ -85,6 +86,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
 
     this.subjOptions.subscribe((options: TSelectOption[]) => {
       this.cacheOptions = options;
+      this.cacheOptionsFlat = null;
       this.valueToOptionsSelected();
       this.propagateActualValues();
     });
@@ -100,11 +102,8 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     this.subjOptionsFiltered = this.subjSearchText
       .combineLatest(this.subjOptions, this.subjSelectedOptions,
         (search: string, options: TSelectOption[], selectedOptions: NgxSelectOption[]) => {
-          return {search: search, options: options, selectedOptions: selectedOptions};
+          return this.filterOptions(search, options, selectedOptions);
         }
-      )
-      .map((data: { search: string; options: TSelectOption[]; selectedOptions: NgxSelectOption[] }) =>
-        this.filterOptions(data.search, data.options, data.selectedOptions)
       )
       .do((filteredOptions: TSelectOption[]) => {
         this.cacheOptionsFiltered = filteredOptions;
@@ -150,7 +149,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   }
 
   private propagateActualValues() {
-    this.observableOptions()
+    this.obsOptionsFlat()
       .map((option: NgxSelectOption) => option.value)
       .toArray()
       .subscribe((values: any[]) => {
@@ -404,7 +403,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
 
   private valueToOptionsSelected(): void {
     this.optionsSelected.length = 0;
-    this.observableOptions()
+    this.obsOptionsFlat()
       .filter((option: NgxSelectOption) => this.value.includes(option.value))
       .subscribe((option: NgxSelectOption) => this.optionsSelected.push(option));
   }
@@ -426,16 +425,18 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
       .do((optionsFilteredFlat: NgxSelectOption[]) => this.cacheOptionsFilteredFlat = optionsFilteredFlat);
   }
 
-  /**
-   * @deprecated
-   * @returns {Observable<NgxSelectOption>}
-   */
-  private observableOptions(): Observable<NgxSelectOption> {
+  private obsOptionsFlat(): Observable<NgxSelectOption> {
+    if (this.cacheOptionsFlat) {
+      return Observable.from(this.cacheOptionsFlat);
+    }
     return Observable.from(this.cacheOptions)
       .flatMap((option: TSelectOption) =>
         option instanceof NgxSelectOption ? Observable.of(option) :
           (option instanceof NgxSelectOptGroup ? Observable.from(option.options) : Observable.empty())
-      );
+      )
+      .toArray()
+      .do((optionsFlat: NgxSelectOption[]) => this.cacheOptionsFlat = optionsFlat)
+      .flatMap((optionsFlat: NgxSelectOption[]) => Observable.from(optionsFlat));
   }
 
   //////////// interface ControlValueAccessor ////////////
