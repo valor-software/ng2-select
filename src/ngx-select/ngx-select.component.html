@@ -1,8 +1,8 @@
 <div #main [tabindex]="disabled? -1: 0" class="ui-select-container dropdown"
      [class.open]="optionsOpened && (subjOptionsFiltered | async)?.length"
      [class.ui-select-multiple]="multiple === true" [class.form-control]="multiple === true"
-     offClick (clickedOutside)="mainClickedOutside()"
-     (focus)="focusToInput()" (keydown)="inputKeyDown($event)" (keyup)="hostKeyUp($event)">
+     (click)="mainClicked($event)" (focus)="focusToInput()" (keydown)="inputKeyDown($event)"
+     (keyup)="mainKeyUp($event)">
   <div [class.ui-disabled]="disabled"></div>
 
   <!-- single selected item -->

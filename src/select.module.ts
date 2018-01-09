@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { HighlightPipe } from './common/select-pipes';
-import { OffClickDirective } from './common/off-click';
+import { HighlightPipe } from './select/select-pipes';
+import { OffClickDirective } from './select/off-click';
 import { SelectComponent } from './select/select.component';
 import { NgxSelectComponent } from './ngx-select/ngx-select.component';
 

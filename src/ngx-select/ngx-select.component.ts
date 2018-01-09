@@ -1,5 +1,5 @@
 import {
-  Component, DoCheck, ElementRef, EventEmitter, forwardRef, Input, IterableDiffer, IterableDiffers, Output, ViewChild
+  Component, DoCheck, ElementRef, EventEmitter, forwardRef, HostListener, Input, IterableDiffer, IterableDiffers, Output, ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
@@ -18,6 +18,10 @@ import 'rxjs/add/operator/toArray';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
+
+export interface INgxSelectComponentMouseEvent extends MouseEvent {
+  clickedSelectComponent?: NgxSelectComponent;
+}
 
 enum ENavigation {
   first, previous, next, last
@@ -109,6 +113,17 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
         this.cacheOptionsFiltered = filteredOptions;
         this.cacheOptionsFilteredFlat = null;
       });
+  }
+
+  protected mainClicked(event: INgxSelectComponentMouseEvent) {
+    event.clickedSelectComponent = this;
+  }
+
+  @HostListener('document:click', ['$event'])
+  protected offClickHandlerInternal(event: INgxSelectComponentMouseEvent) {
+    if (event.clickedSelectComponent !== this) {
+      this.optionsClose();
+    }
   }
 
   private navigateOption(navigation: ENavigation) {
@@ -204,7 +219,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     }
   }
 
-  public hostKeyUp(event: KeyboardEvent): void {
+  public mainKeyUp(event: KeyboardEvent): void {
     switch (event.keyCode) {
       case 27: // escape
         this.optionsClose(true);
