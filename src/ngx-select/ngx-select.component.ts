@@ -170,7 +170,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
       .subscribe((values: any[]) => {
         const newValues = this.value.filter(v => values.includes(v));
         if (!_.isEqual(this.value, newValues)) {
-          this.onChange(newValues);
+          this.propagateValue(newValues);
         }
       });
   }
@@ -230,10 +230,6 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   public trackByOption(index: number, option: TSelectOption) {
     return option instanceof NgxSelectOption ? option.value :
       (option instanceof NgxSelectOptGroup ? option.label : option);
-  }
-
-  public mainClickedOutside(): void {
-    this.optionsClose();
   }
 
   public checkInputVisibility(): boolean {
@@ -339,8 +335,8 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     const newVal = val ? [].concat(val) : [];
     this._value = _.isEqual(newVal, this._defaultValue) ? [] : newVal;
     this.valueToOptionsSelected();
-    if (!isExternalValue || !_.isEqual(val, this.value)) {
-      this.onChange(this.value);
+    if (!isExternalValue || !_.isEqual(newVal, this.value)) {
+      this.propagateValue(this.value);
       this.onTouched();
     }
   }
@@ -452,6 +448,14 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
       .toArray()
       .do((optionsFlat: NgxSelectOption[]) => this.cacheOptionsFlat = optionsFlat)
       .flatMap((optionsFlat: NgxSelectOption[]) => Observable.from(optionsFlat));
+  }
+
+  private propagateValue(value: any[]) {
+    if (this.multiple) {
+      this.onChange(value);
+    } else {
+      this.onChange(value.length ? value[0] : null);
+    }
   }
 
   //////////// interface ControlValueAccessor ////////////

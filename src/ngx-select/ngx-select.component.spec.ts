@@ -58,7 +58,7 @@ class TestNgxSelectComponent {
   };
 
   public select2: any = {
-    formControl: new FormControl([]),
+    formControl: new FormControl(null),
     defaultValue: [],
 
     allowClear: false,
@@ -134,11 +134,11 @@ describe('NgxSelectComponent', () => {
   describe('should have value', () => {
     describe('equal empty', () => {
       it('by ngModel', () => {
-        expect(fixture.componentInstance.select1.value).toEqual([]);
+        expect(fixture.componentInstance.select1.value).toEqual(null);
       });
 
       it('by FormControl', () => {
-        expect(fixture.componentInstance.select2.formControl.value).toEqual([]);
+        expect(fixture.componentInstance.select2.formControl.value).toEqual(null);
       });
     });
 
@@ -150,11 +150,11 @@ describe('NgxSelectComponent', () => {
       });
 
       it('by ngModel', () => {
-        expect(fixture.componentInstance.select1.value).toEqual([5]);
+        expect(fixture.componentInstance.select1.value).toEqual(5);
       });
 
       it('by FormControl', () => {
-        expect(fixture.componentInstance.select2.formControl.value).toEqual([5]);
+        expect(fixture.componentInstance.select2.formControl.value).toEqual(5);
       });
     });
   });
@@ -173,27 +173,27 @@ describe('NgxSelectComponent', () => {
     });
 
     it('with not multiple', () => {
-      expect(fixture.componentInstance.select2.formControl.value).toEqual([]);
+      expect(fixture.componentInstance.select2.formControl.value).toEqual(null);
 
       fixture.componentInstance.select2.defaultValue = [3];
       fixture.detectChanges();
-      expect(fixture.componentInstance.select2.formControl.value).toEqual([3]);
+      expect(fixture.componentInstance.select2.formControl.value).toEqual(3);
 
-      fixture.componentInstance.select2.formControl.setValue([2]);
+      fixture.componentInstance.select2.formControl.setValue(2);
       fixture.detectChanges();
-      expect(fixture.componentInstance.select2.formControl.value).toEqual([2]);
+      expect(fixture.componentInstance.select2.formControl.value).toEqual(2);
 
-      fixture.componentInstance.select2.defaultValue = [1];
+      fixture.componentInstance.select2.defaultValue = 1;
       fixture.detectChanges();
-      expect(fixture.componentInstance.select2.formControl.value).toEqual([2]);
+      expect(fixture.componentInstance.select2.formControl.value).toEqual(2);
 
-      fixture.componentInstance.select2.defaultValue = [2];
+      fixture.componentInstance.select2.defaultValue = 2;
       fixture.detectChanges();
-      expect(fixture.componentInstance.select2.formControl.value).toEqual([2]);
+      expect(fixture.componentInstance.select2.formControl.value).toEqual(2);
 
       fixture.componentInstance.select2.defaultValue = [4];
       fixture.detectChanges();
-      expect(fixture.componentInstance.select2.formControl.value).toEqual([4]);
+      expect(fixture.componentInstance.select2.formControl.value).toEqual(4);
     });
 
     afterEach(() => {
@@ -207,6 +207,7 @@ describe('NgxSelectComponent', () => {
     });
 
     it('by ngModel', fakeAsync(() => {
+      fixture.componentInstance.select1.multiple = true;
       fixture.componentInstance.select1.items = createItems([1, 2, 3, 4, 5]);
       fixture.componentInstance.select1.value = [1, 3, 4];
       fixture.detectChanges();
@@ -218,6 +219,7 @@ describe('NgxSelectComponent', () => {
     }));
 
     it('by FormControl', () => {
+      fixture.componentInstance.select2.multiple = true;
       fixture.componentInstance.select2.items = createItems([1, 2, 3, 4, 5]);
       fixture.componentInstance.select2.formControl.setValue([1, 3, 4]);
       fixture.detectChanges();
@@ -404,7 +406,7 @@ describe('NgxSelectComponent', () => {
       afterEach(() => {
         fixture.detectChanges();
         expect(selectedItem(1).innerHTML).toBe('item two');
-        expect(fixture.componentInstance.select1.value).toEqual([2]);
+        expect(fixture.componentInstance.select1.value).toEqual(2);
       });
     });
 
@@ -430,7 +432,7 @@ describe('NgxSelectComponent', () => {
       afterEach(() => {
         fixture.detectChanges();
         expect(selectedItem(2).innerHTML).toBe('item two');
-        expect(fixture.componentInstance.select2.formControl.value).toEqual([2]);
+        expect(fixture.componentInstance.select2.formControl.value).toEqual(2);
       });
     });
 
@@ -522,14 +524,14 @@ describe('NgxSelectComponent', () => {
         selectChoices(1)[0].click();
         fixture.detectChanges();
         expect(selectedItem(1).innerHTML).toBe('item one');
-        expect(fixture.componentInstance.select1.value).toEqual([1]);
+        expect(fixture.componentInstance.select1.value).toEqual(1);
       });
 
       it('a single item', () => {
         el(1).querySelector('.btn-link').click();
         fixture.detectChanges();
         expect(selectedItem(1)).toBeFalsy();
-        expect(fixture.componentInstance.select1.value).toEqual([]);
+        expect(fixture.componentInstance.select1.value).toEqual(null);
       });
 
       it('multiple items', () => {
@@ -552,14 +554,14 @@ describe('NgxSelectComponent', () => {
         selectChoices(2)[0].click();
         fixture.detectChanges();
         expect(selectedItem(2).innerHTML).toBe('item one');
-        expect(fixture.componentInstance.select2.formControl.value).toEqual([1]);
+        expect(fixture.componentInstance.select2.formControl.value).toEqual(1);
       });
 
       it('a single item', () => {
         el(2).querySelector('.btn-link').click();
         fixture.detectChanges();
         expect(selectedItem(2)).toBeFalsy();
-        expect(fixture.componentInstance.select2.formControl.value).toEqual([]);
+        expect(fixture.componentInstance.select2.formControl.value).toEqual(null);
       });
 
       it('multiple items', () => {
