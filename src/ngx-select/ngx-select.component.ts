@@ -8,6 +8,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
@@ -59,26 +60,24 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   @ViewChild('choiceMenu') protected choiceMenuElRef: ElementRef;
 
   public optionsOpened: boolean = false;
+  public optionsSelected: NgxSelectOption[] = [];
+
   private optionActive: NgxSelectOption;
   private itemsDiffer: IterableDiffer<any>;
   private defaultValueDiffer: IterableDiffer<any[]>;
-  private cacheElementOffsetTop: number;
-  private _value: any[] = [];
-  private _defaultValue: any[] = [];
+  private actualValue: any[] = [];
 
   public subjOptionsFiltered: Observable<TSelectOption[]>;
   private subjOptions = new BehaviorSubject<TSelectOption[]>([]);
   private subjSearchText = new BehaviorSubject<string>('');
-  private subjSelectedOptions = new BehaviorSubject<NgxSelectOption[]>([]);
+
+  private subjOptionsSelected = new BehaviorSubject<NgxSelectOption[]>([]);
+  private subjExternalValue = new BehaviorSubject<any[]>([]);
   private subjDefaultValue = new BehaviorSubject<any[]>([]);
 
   private cacheOptionsFiltered: TSelectOption[];
   private cacheOptionsFilteredFlat: NgxSelectOption[];
-  private cacheOptionsFlat: NgxSelectOption[];
-
-  public get optionsSelected(): NgxSelectOption[] {
-    return this.subjSelectedOptions.value;
-  };
+  private cacheElementOffsetTop: number;
 
   constructor(private sanitizer: DomSanitizer, iterableDiffers: IterableDiffers) {
     // differs
@@ -86,26 +85,51 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     this.defaultValueDiffer = iterableDiffers.find([]).create<any>(null);
 
     // observers
-    this.subjSelectedOptions.subscribe(() => this.valueFromOptionsSelected());
     this.typed.subscribe((text: string) => this.subjSearchText.next(text));
+    this.subjOptionsSelected.subscribe((o: NgxSelectOption[]) => this.optionsSelected = o);
 
-    this.subjOptions.subscribe((options: TSelectOption[]) => {
-      this.cacheOptionsFlat = null;
-      this.valueToOptionsSelected();
-      this.propagateActualValues();
-    });
+    const subjActualValue = Observable
+      .merge(
+        this.subjExternalValue.map((v: any[]) => v ? [].concat(v) : []),
+        this.subjOptionsSelected.map((options: NgxSelectOption[]) =>
+          options.map((o: NgxSelectOption) => o.value)
+        )
+      )
+      .combineLatest(this.subjDefaultValue, (eVal: any[], dVal: any[]) => {
+        const newVal = _.isEqual(eVal, this.subjDefaultValue.value) ? [] : eVal;
+        return newVal.length ? newVal : dVal;
+      })
+      .distinctUntilChanged((x, y) => _.isEqual(x, y))
+      .do((actualValue: any[]) => {
+        this.actualValue = actualValue;
+        if (this.multiple) {
+          this.onChange(actualValue);
+        } else {
+          this.onChange(actualValue.length ? actualValue[0] : null);
+        }
+      });
 
-    this.subjDefaultValue.subscribe((defVal: any[]) => {
-      this._defaultValue = defVal;
-      if (defVal.length) {
-        this.valueToOptionsSelected();
-        this.valueFromOptionsSelected();
-      }
-    });
+    this.subjOptions
+      .flatMap((options: TSelectOption[]) => {
+        return Observable.from(options)
+          .flatMap((option: TSelectOption) =>
+            option instanceof NgxSelectOption ? Observable.of(option) :
+              (option instanceof NgxSelectOptGroup ? Observable.from(option.options) : Observable.empty())
+          )
+          .toArray();
+      })
+      .combineLatest(subjActualValue, (optionsFlat: NgxSelectOption[], actualValue: any[]) => {
+        Observable.from(optionsFlat)
+          .filter((option: NgxSelectOption) => actualValue.includes(option.value))
+          .toArray()
+          .filter((options: NgxSelectOption[]) => !_.isEqual(options, this.subjOptionsSelected.value))
+          .subscribe((options: NgxSelectOption[]) => this.subjOptionsSelected.next(options));
+      })
+      .subscribe();
 
-    this.subjOptionsFiltered = this.subjSearchText
-      .combineLatest(this.subjOptions, this.subjSelectedOptions,
-        (search: string, options: TSelectOption[], selectedOptions: NgxSelectOption[]) => {
+    this.subjOptionsFiltered = this.subjOptions
+      .combineLatest(this.subjOptionsSelected, this.subjSearchText,
+        (options: TSelectOption[], selectedOptions: NgxSelectOption[], search: string) => {
           return this.filterOptions(search, options, selectedOptions);
         }
       )
@@ -127,7 +151,16 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   }
 
   private navigateOption(navigation: ENavigation) {
-    this.obsOptionsFilteredFlat()
+    (this.cacheOptionsFilteredFlat
+        ? Observable.of(this.cacheOptionsFilteredFlat)
+        : Observable.from(this.cacheOptionsFiltered)
+          .flatMap<TSelectOption, NgxSelectOption>((option: TSelectOption) =>
+            option instanceof NgxSelectOption ? Observable.of(option) :
+              (option instanceof NgxSelectOptGroup ? Observable.from(option.optionsFiltered) : Observable.empty())
+          )
+          .toArray()
+          .do((optionsFilteredFlat: NgxSelectOption[]) => this.cacheOptionsFilteredFlat = optionsFilteredFlat)
+    )
       .map((options: NgxSelectOption[]) => {
         let newActiveIdx;
         switch (navigation) {
@@ -163,21 +196,9 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     }
   }
 
-  private propagateActualValues() {
-    this.obsOptionsFlat()
-      .map((option: NgxSelectOption) => option.value)
-      .toArray()
-      .subscribe((values: any[]) => {
-        const newValues = this.value.filter(v => values.includes(v));
-        if (!_.isEqual(this.value, newValues)) {
-          this.propagateValue(newValues);
-        }
-      });
-  }
-
   public canClearNotMultiple(): boolean {
-    return this.allowClear && !!this.optionsSelected.length &&
-      (!this._defaultValue.length || this._defaultValue[0] !== this.value[0]);
+    return this.allowClear && !!this.subjOptionsSelected.value.length &&
+      (!this.subjDefaultValue.value.length || this.subjDefaultValue.value[0] !== this.actualValue[0]);
   }
 
   public focusToInput(): void {
@@ -201,29 +222,27 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
       event.preventDefault();
       event.stopPropagation();
       switch (event.keyCode) {
-        case 37: // arrow left
+        case 37: // key arrow_left
           this.navigateOption(ENavigation.first);
           break;
-        case 38: // arrow up
+        case 38: // key arrow_up
           this.navigateOption(ENavigation.previous);
           break;
-        case 39: // arrow right
+        case 39: // key arrow_right
           this.navigateOption(ENavigation.last);
           break;
-        case 40: // arrow down
+        case 40: // key arrow_down
           this.navigateOption(ENavigation.next);
           break;
       }
     } else if (!this.optionsOpened && event.keyCode === 46 /*key delete*/) {
-      this.optionRemove(this.optionsSelected[this.optionsSelected.length - 1], event);
+      this.optionRemove(this.subjOptionsSelected.value[this.subjOptionsSelected.value.length - 1], event);
     }
   }
 
   public mainKeyUp(event: KeyboardEvent): void {
-    switch (event.keyCode) {
-      case 27: // escape
-        this.optionsClose(true);
-        break;
+    if (event.keyCode === 27 /* key escape */) {
+      this.optionsClose(true);
     }
   }
 
@@ -252,24 +271,6 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     }
   }
 
-  private filterOptions(search: string, options: TSelectOption[], selectedOptions: NgxSelectOption[]): TSelectOption[] {
-    const multiple = this.multiple,
-      regExp = new RegExp(search, 'gi'),
-      filterOption = (option: NgxSelectOption) => {
-        return regExp.test(option.text) && (!multiple || !selectedOptions.includes(option));
-      };
-
-    return options.filter((option: TSelectOption) => {
-      if (option instanceof NgxSelectOption) {
-        return filterOption(<NgxSelectOption>option);
-      } else if (option instanceof NgxSelectOptGroup) {
-        const subOp = <NgxSelectOptGroup>option;
-        subOp.filter((subOption: NgxSelectOption) => filterOption(subOption));
-        return subOp.optionsFiltered.length;
-      }
-    });
-  }
-
   protected sanitize(html: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
@@ -292,26 +293,15 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     if (event) {
       event.stopPropagation();
     }
-    if (!this.multiple) {
-      this.optionsSelected.length = 0;
-    }
-    this.optionsSelected.push(option);
-
-    this.subjSelectedOptions.next(this.optionsSelected);
-
+    this.subjOptionsSelected.next((this.multiple ? this.subjOptionsSelected.value : []).concat([option]));
     this.optionsClose(true);
+    this.onTouched();
   }
 
   protected optionRemove(option: NgxSelectOption, event: Event): void {
     if (!this.disabled) {
       event.stopPropagation();
-      if (this.multiple) {
-        const optionIndex = this.optionsSelected.indexOf(option);
-        this.optionsSelected.splice(optionIndex, 1);
-      } else {
-        this.optionsSelected.length = 0;
-      }
-      this.subjSelectedOptions.next(this.optionsSelected);
+      this.subjOptionsSelected.next((this.multiple ? this.subjOptionsSelected.value : []).filter(o => o !== option));
     }
   }
 
@@ -327,18 +317,21 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     this.optionActive = option;
   }
 
-  private get value(): any[] {
-    return this._value.length ? this._value : this._defaultValue;
-  }
+  private filterOptions(search: string, options: TSelectOption[], selectedOptions: NgxSelectOption[]): TSelectOption[] {
+    const regExp = new RegExp(search, 'gi'),
+      filterOption = (option: NgxSelectOption) => {
+        return regExp.test(option.text) && (!this.multiple || !selectedOptions.includes(option));
+      };
 
-  private setValue(val: any[], isExternalValue: boolean = false) {
-    const newVal = val ? [].concat(val) : [];
-    this._value = _.isEqual(newVal, this._defaultValue) ? [] : newVal;
-    this.valueToOptionsSelected();
-    if (!isExternalValue || !_.isEqual(newVal, this.value)) {
-      this.propagateValue(this.value);
-      this.onTouched();
-    }
+    return options.filter((option: TSelectOption) => {
+      if (option instanceof NgxSelectOption) {
+        return filterOption(<NgxSelectOption>option);
+      } else if (option instanceof NgxSelectOptGroup) {
+        const subOp = <NgxSelectOptGroup>option;
+        subOp.filter((subOption: NgxSelectOption) => filterOption(subOption));
+        return subOp.optionsFiltered.length;
+      }
+    });
   }
 
   private ensureVisibleElement(element: HTMLElement) {
@@ -357,8 +350,8 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     if (!this.disabled) {
       this.optionsOpened = true;
       this.subjSearchText.next(search);
-      if (!this.multiple && this.optionsSelected.length) {
-        this.optionActivate(this.optionsSelected[0]);
+      if (!this.multiple && this.subjOptionsSelected.value.length) {
+        this.optionActivate(this.subjOptionsSelected.value[0]);
       } else {
         this.navigateOption(ENavigation.first);
       }
@@ -412,59 +405,13 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     return new NgxSelectOption(value, text, parent);
   }
 
-  private valueToOptionsSelected(): void {
-    this.optionsSelected.length = 0;
-    this.obsOptionsFlat()
-      .filter((option: NgxSelectOption) => this.value.includes(option.value))
-      .subscribe((option: NgxSelectOption) => this.optionsSelected.push(option));
-  }
-
-  private valueFromOptionsSelected(): void {
-    this.setValue(this.optionsSelected.map((option: NgxSelectOption) => option.value));
-  }
-
-  private obsOptionsFilteredFlat(): Observable<NgxSelectOption[]> {
-    if (this.cacheOptionsFilteredFlat) {
-      return Observable.of(this.cacheOptionsFilteredFlat);
-    }
-    return Observable.from(this.cacheOptionsFiltered)
-      .flatMap<TSelectOption, NgxSelectOption>((option: TSelectOption) =>
-        option instanceof NgxSelectOption ? Observable.of(option) :
-          (option instanceof NgxSelectOptGroup ? Observable.from(option.optionsFiltered) : Observable.empty())
-      )
-      .toArray()
-      .do((optionsFilteredFlat: NgxSelectOption[]) => this.cacheOptionsFilteredFlat = optionsFilteredFlat);
-  }
-
-  private obsOptionsFlat(): Observable<NgxSelectOption> {
-    if (this.cacheOptionsFlat) {
-      return Observable.from(this.cacheOptionsFlat);
-    }
-    return Observable.from(this.subjOptions.value)
-      .flatMap((option: TSelectOption) =>
-        option instanceof NgxSelectOption ? Observable.of(option) :
-          (option instanceof NgxSelectOptGroup ? Observable.from(option.options) : Observable.empty())
-      )
-      .toArray()
-      .do((optionsFlat: NgxSelectOption[]) => this.cacheOptionsFlat = optionsFlat)
-      .flatMap((optionsFlat: NgxSelectOption[]) => Observable.from(optionsFlat));
-  }
-
-  private propagateValue(value: any[]) {
-    if (this.multiple) {
-      this.onChange(value);
-    } else {
-      this.onChange(value.length ? value[0] : null);
-    }
-  }
-
   //////////// interface ControlValueAccessor ////////////
   public onChange = (_: any) => _;
 
   public onTouched: () => void = () => null;
 
   public writeValue(obj: any): void {
-    this.setValue(obj, true);
+    this.subjExternalValue.next(obj);
   }
 
   public registerOnChange(fn: (_: any) => {}): void {

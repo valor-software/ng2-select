@@ -193,11 +193,11 @@ describe('NgxSelectComponent', () => {
 
       fixture.componentInstance.select2.defaultValue = [4];
       fixture.detectChanges();
-      expect(fixture.componentInstance.select2.formControl.value).toEqual(4);
+      expect(fixture.componentInstance.select2.formControl.value).toEqual(2);
     });
 
     afterEach(() => {
-      expect(valueChanged).toHaveBeenCalledTimes(5);
+      expect(valueChanged).toHaveBeenCalledTimes(3);
     });
   });
 
@@ -220,6 +220,7 @@ describe('NgxSelectComponent', () => {
 
     it('by FormControl', () => {
       fixture.componentInstance.select2.multiple = true;
+      fixture.detectChanges();
       fixture.componentInstance.select2.items = createItems([1, 2, 3, 4, 5]);
       fixture.componentInstance.select2.formControl.setValue([1, 3, 4]);
       fixture.detectChanges();
