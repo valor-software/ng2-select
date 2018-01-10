@@ -59,9 +59,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   @ViewChild('choiceMenu') protected choiceMenuElRef: ElementRef;
 
   public optionsOpened: boolean = false;
-  public optionsFiltered: Array<TSelectOption> = [];
-  protected optionsSelected: Array<NgxSelectOption> = [];
-  protected optionActive: NgxSelectOption;
+  private optionActive: NgxSelectOption;
   private itemsDiffer: IterableDiffer<any>;
   private defaultValueDiffer: IterableDiffer<any[]>;
   private cacheElementOffsetTop: number;
@@ -74,10 +72,13 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   private subjSelectedOptions = new BehaviorSubject<NgxSelectOption[]>([]);
   private subjDefaultValue = new BehaviorSubject<any[]>([]);
 
-  private cacheOptions: Array<TSelectOption> = [];
   private cacheOptionsFiltered: TSelectOption[];
   private cacheOptionsFilteredFlat: NgxSelectOption[];
   private cacheOptionsFlat: NgxSelectOption[];
+
+  public get optionsSelected(): NgxSelectOption[] {
+    return this.subjSelectedOptions.value;
+  };
 
   constructor(private sanitizer: DomSanitizer, iterableDiffers: IterableDiffers) {
     // differs
@@ -89,7 +90,6 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     this.typed.subscribe((text: string) => this.subjSearchText.next(text));
 
     this.subjOptions.subscribe((options: TSelectOption[]) => {
-      this.cacheOptions = options;
       this.cacheOptionsFlat = null;
       this.valueToOptionsSelected();
       this.propagateActualValues();
@@ -440,7 +440,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     if (this.cacheOptionsFlat) {
       return Observable.from(this.cacheOptionsFlat);
     }
-    return Observable.from(this.cacheOptions)
+    return Observable.from(this.subjOptions.value)
       .flatMap((option: TSelectOption) =>
         option instanceof NgxSelectOption ? Observable.of(option) :
           (option instanceof NgxSelectOptGroup ? Observable.from(option.options) : Observable.empty())
