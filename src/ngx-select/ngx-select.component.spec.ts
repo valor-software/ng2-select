@@ -600,13 +600,15 @@ describe('NgxSelectComponent', () => {
   });
 
   describe('choice items should be filtered by input text', () => {
+    const items = ['Berlin', 'Birmingham', 'Bradford', 'Bremen', 'Brussels', 'Bucharest'];
+
     it('with preload items', () => {
-      fixture.componentInstance.select1.items = items1;
+      fixture.componentInstance.select1.items = items;
       fixture.detectChanges();
       formControl(1).click();
       fixture.detectChanges();
-      formControlInput(1).value = 'o';
-      formControlInput(1).dispatchEvent(createKeyboardEvent('keyup', 79, 'o'));
+      formControlInput(1).value = 'br';
+      formControlInput(1).dispatchEvent(createKeyboardEvent('keyup', 82, 'r'));
       fixture.detectChanges();
       expect(selectChoices(1).length).toBe(3);
     });
@@ -616,10 +618,10 @@ describe('NgxSelectComponent', () => {
       fixture.detectChanges();
       formControl(1).click();
       fixture.detectChanges();
-      formControlInput(1).value = 'o';
-      formControlInput(1).dispatchEvent(createKeyboardEvent('keyup', 79, 'o'));
+      formControlInput(1).value = 'br';
+      formControlInput(1).dispatchEvent(createKeyboardEvent('keyup', 82, 'r'));
       fixture.detectChanges();
-      fixture.componentInstance.select1.items = items1;
+      fixture.componentInstance.select1.items = items;
       fixture.detectChanges();
       expect(selectChoices(1).length).toBe(3);
     });

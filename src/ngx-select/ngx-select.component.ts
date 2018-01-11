@@ -61,13 +61,13 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
 
   public optionsOpened: boolean = false;
   public optionsSelected: NgxSelectOption[] = [];
+  public optionsFiltered: TSelectOption[];
 
   private optionActive: NgxSelectOption;
   private itemsDiffer: IterableDiffer<any>;
   private defaultValueDiffer: IterableDiffer<any[]>;
   private actualValue: any[] = [];
 
-  public subjOptionsFiltered: Observable<TSelectOption[]>;
   private subjOptions = new BehaviorSubject<TSelectOption[]>([]);
   private subjSearchText = new BehaviorSubject<string>('');
 
@@ -75,7 +75,6 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   private subjExternalValue = new BehaviorSubject<any[]>([]);
   private subjDefaultValue = new BehaviorSubject<any[]>([]);
 
-  private cacheOptionsFiltered: TSelectOption[];
   private cacheOptionsFilteredFlat: NgxSelectOption[];
   private cacheElementOffsetTop: number;
 
@@ -127,14 +126,14 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
       })
       .subscribe();
 
-    this.subjOptionsFiltered = this.subjOptions
+    this.subjOptions
       .combineLatest(this.subjOptionsSelected, this.subjSearchText,
         (options: TSelectOption[], selectedOptions: NgxSelectOption[], search: string) => {
           return this.filterOptions(search, options, selectedOptions);
         }
       )
-      .do((filteredOptions: TSelectOption[]) => {
-        this.cacheOptionsFiltered = filteredOptions;
+      .subscribe((filteredOptions: TSelectOption[]) => {
+        this.optionsFiltered = filteredOptions;
         this.cacheOptionsFilteredFlat = null;
       });
   }
@@ -153,7 +152,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   private navigateOption(navigation: ENavigation) {
     (this.cacheOptionsFilteredFlat
         ? Observable.of(this.cacheOptionsFilteredFlat)
-        : Observable.from(this.cacheOptionsFiltered)
+        : Observable.from(this.optionsFiltered)
           .flatMap<TSelectOption, NgxSelectOption>((option: TSelectOption) =>
             option instanceof NgxSelectOption ? Observable.of(option) :
               (option instanceof NgxSelectOptGroup ? Observable.from(option.optionsFiltered) : Observable.empty())
@@ -318,9 +317,9 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   }
 
   private filterOptions(search: string, options: TSelectOption[], selectedOptions: NgxSelectOption[]): TSelectOption[] {
-    const regExp = new RegExp(search, 'gi'),
+    const regExp = new RegExp(search, 'i'),
       filterOption = (option: NgxSelectOption) => {
-        return regExp.test(option.text) && (!this.multiple || !selectedOptions.includes(option));
+        return (!search || regExp.test(option.text)) && (!this.multiple || !selectedOptions.includes(option));
       };
 
     return options.filter((option: TSelectOption) => {
