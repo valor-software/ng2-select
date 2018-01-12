@@ -60,7 +60,6 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   @ViewChild('choiceMenu') protected choiceMenuElRef: ElementRef;
 
   public optionsOpened: boolean = false;
-  public optionsSelected: NgxSelectOption[] = [];
   public optionsFiltered: TSelectOption[];
 
   private optionActive: NgxSelectOption;
@@ -85,7 +84,6 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
 
     // observers
     this.typed.subscribe((text: string) => this.subjSearchText.next(text));
-    this.subjOptionsSelected.subscribe((o: NgxSelectOption[]) => this.optionsSelected = o);
 
     const subjActualValue = Observable
       .merge(
@@ -95,7 +93,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
         )
       )
       .combineLatest(this.subjDefaultValue, (eVal: any[], dVal: any[]) => {
-        const newVal = _.isEqual(eVal, this.subjDefaultValue.value) ? [] : eVal;
+        const newVal = _.isEqual(eVal, dVal) ? [] : eVal;
         return newVal.length ? newVal : dVal;
       })
       .distinctUntilChanged((x, y) => _.isEqual(x, y))
@@ -136,6 +134,10 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
         this.optionsFiltered = filteredOptions;
         this.cacheOptionsFilteredFlat = null;
       });
+  }
+
+  public get optionsSelected(): NgxSelectOption[] {
+    return this.subjOptionsSelected.value;
   }
 
   public mainClicked(event: INgxSelectComponentMouseEvent) {
