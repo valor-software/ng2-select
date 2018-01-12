@@ -197,7 +197,7 @@ describe('NgxSelectComponent', () => {
     });
 
     afterEach(() => {
-      expect(valueChanged).toHaveBeenCalledTimes(3);
+      expect(valueChanged).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -857,4 +857,26 @@ describe('NgxSelectComponent', () => {
     });
   });
 
+  describe('should not emit value after lazy load items', () => {
+    const valueChanged = createSpy('valueChanged');
+    let lazyItems: any[] = [];
+
+    beforeEach(fakeAsync(() => {
+      fixture.componentInstance.select2.items = lazyItems;
+      fixture.componentInstance.select2.formControl.valueChanges.subscribe((v) => {
+        console.log('valueChanges', v);
+        valueChanged(v);
+      });
+      fixture.detectChanges();
+      fixture.componentInstance.select2.formControl.setValue(3);
+      fixture.detectChanges();
+    }));
+
+    it('for single mode', fakeAsync(() => {
+      lazyItems = items1;
+      fixture.detectChanges();
+      expect(valueChanged).toHaveBeenCalledTimes(1);
+      expect(valueChanged).toHaveBeenCalledWith(3);
+    }));
+  });
 });

@@ -84,10 +84,12 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
 
     // observers
     this.typed.subscribe((text: string) => this.subjSearchText.next(text));
-
+    let cacheExternalValue: any[];
     const subjActualValue = Observable
       .merge(
-        this.subjExternalValue.map((v: any[]) => v ? [].concat(v) : []),
+        this.subjExternalValue
+          .map((v: any[]) => v ? [].concat(v) : [])
+          .do((v: any[]) => cacheExternalValue = v),
         this.subjOptionsSelected.map((options: NgxSelectOption[]) =>
           options.map((o: NgxSelectOption) => o.value)
         )
@@ -99,10 +101,13 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
       .distinctUntilChanged((x, y) => _.isEqual(x, y))
       .do((actualValue: any[]) => {
         this.actualValue = actualValue;
-        if (this.multiple) {
-          this.onChange(actualValue);
-        } else {
-          this.onChange(actualValue.length ? actualValue[0] : null);
+        if (!_.isEqual(actualValue, cacheExternalValue)) {
+          cacheExternalValue = actualValue;
+          if (this.multiple) {
+            this.onChange(actualValue);
+          } else {
+            this.onChange(actualValue.length ? actualValue[0] : null);
+          }
         }
       });
 
