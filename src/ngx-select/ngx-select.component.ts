@@ -8,7 +8,6 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
@@ -17,6 +16,8 @@ import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/toArray';
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/share';
+import 'rxjs/add/operator/merge';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 
@@ -85,20 +86,17 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     // observers
     this.typed.subscribe((text: string) => this.subjSearchText.next(text));
     let cacheExternalValue: any[];
-    const subjActualValue = Observable
-      .merge(
-        this.subjExternalValue
-          .map((v: any[]) => v ? [].concat(v) : [])
-          .do((v: any[]) => cacheExternalValue = v),
-        this.subjOptionsSelected.map((options: NgxSelectOption[]) =>
-          options.map((o: NgxSelectOption) => o.value)
-        )
-      )
+    const subjActualValue = this.subjExternalValue
+      .map((v: any[]) => v ? [].concat(v) : [])
+      .do((v: any[]) => cacheExternalValue = v)
+      .merge(this.subjOptionsSelected.map((options: NgxSelectOption[]) =>
+        options.map((o: NgxSelectOption) => o.value)
+      ))
       .combineLatest(this.subjDefaultValue, (eVal: any[], dVal: any[]) => {
         const newVal = _.isEqual(eVal, dVal) ? [] : eVal;
         return newVal.length ? newVal : dVal;
       })
-      .distinctUntilChanged((x, y) => _.isEqual(x, y))
+      // .distinctUntilChanged((x, y) => _.isEqual(x, y))
       .do((actualValue: any[]) => {
         this.actualValue = actualValue;
         if (!_.isEqual(actualValue, cacheExternalValue)) {

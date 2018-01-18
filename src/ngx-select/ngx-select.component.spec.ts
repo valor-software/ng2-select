@@ -58,7 +58,7 @@ class TestNgxSelectComponent {
   };
 
   public select2: any = {
-    formControl: new FormControl(null),
+    formControl: new FormControl(),
     defaultValue: [],
 
     allowClear: false,
@@ -143,18 +143,35 @@ describe('NgxSelectComponent', () => {
     });
 
     describe('equal default value', () => {
-      beforeEach(() => {
-        fixture.componentInstance.select1.defaultValue = [5];
-        fixture.componentInstance.select2.defaultValue = [5];
+      let valueChanged;
+
+      beforeEach(fakeAsync(() => {
+        fixture.componentInstance.select1.defaultValue = 3;
+        fixture.componentInstance.select1.multiple = false;
+        fixture.componentInstance.select1.items = items1;
         fixture.detectChanges();
-      });
+        fixture.componentInstance.select1.value = null;
+
+        valueChanged = createSpy('valueChanged');
+        fixture.componentInstance.select2.formControl.valueChanges.subscribe(v => valueChanged(v));
+
+        fixture.componentInstance.select2.defaultValue = 3;
+        fixture.componentInstance.select2.multiple = false;
+        fixture.componentInstance.select2.items = items1;
+        fixture.detectChanges();
+        fixture.componentInstance.select2.formControl.setValue(null);
+
+        fixture.detectChanges();
+      }));
 
       it('by ngModel', () => {
-        expect(fixture.componentInstance.select1.value).toEqual(5);
+        fixture.detectChanges();
+        expect(fixture.componentInstance.select1.value).toEqual(3);
       });
 
       it('by FormControl', () => {
-        expect(fixture.componentInstance.select2.formControl.value).toEqual(5);
+        expect(fixture.componentInstance.select2.formControl.value).toEqual(3);
+        expect(valueChanged).toHaveBeenCalledTimes(3);
       });
     });
   });
