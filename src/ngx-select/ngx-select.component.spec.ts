@@ -11,7 +11,6 @@ import createSpy = jasmine.createSpy;
   template: `
 
     <ngx-select id="sel-1" #component1
-                [(ngModel)]="select1.value"
                 [defaultValue]="select1.defaultValue"
                 [allowClear]="select1.allowClear"
                 [placeholder]="select1.placeholder"
@@ -22,9 +21,9 @@ import createSpy = jasmine.createSpy;
                 [multiple]="select1.multiple"
                 [noAutoComplete]="select1.noAutoComplete"
                 [items]="select1.items"
-                [disabled]="select1.disabled"></ngx-select>
+                [disabled]="select1.disabled"
+                [(ngModel)]="select1.value"></ngx-select>
     <ngx-select id="sel-2" #component2
-                [formControl]="select2.formControl"
                 [defaultValue]="select2.defaultValue"
                 [allowClear]="select2.allowClear"
                 [placeholder]="select2.placeholder"
@@ -34,7 +33,8 @@ import createSpy = jasmine.createSpy;
                 [optGroupOptionsField]="select2.optGroupOptionsField"
                 [multiple]="select2.multiple"
                 [noAutoComplete]="select2.noAutoComplete"
-                [items]="select2.items"></ngx-select>
+                [items]="select2.items"
+                [formControl]="select2.formControl"></ngx-select>
   `
 })
 class TestNgxSelectComponent {
@@ -132,47 +132,40 @@ describe('NgxSelectComponent', () => {
   });
 
   describe('should have value', () => {
-    describe('equal empty', () => {
-      it('by ngModel', () => {
-        expect(fixture.componentInstance.select1.value).toEqual(null);
-      });
-
-      it('by FormControl', () => {
-        expect(fixture.componentInstance.select2.formControl.value).toEqual(null);
-      });
+    beforeEach(() => {
+      fixture = TestBed.createComponent(TestNgxSelectComponent);
     });
 
-    describe('equal default value', () => {
-      let valueChanged;
+    it('equal empty by ngModel', () => {
+      expect(fixture.componentInstance.select1.value).toEqual(null);
+    });
 
-      beforeEach(fakeAsync(() => {
-        fixture.componentInstance.select1.defaultValue = 3;
-        fixture.componentInstance.select1.multiple = false;
-        fixture.componentInstance.select1.items = items1;
-        fixture.detectChanges();
-        fixture.componentInstance.select1.value = null;
+    it('equal empty by FormControl', () => {
+      expect(fixture.componentInstance.select2.formControl.value).toEqual(null);
+    });
 
-        valueChanged = createSpy('valueChanged');
-        fixture.componentInstance.select2.formControl.valueChanges.subscribe(v => valueChanged(v));
+    it('equal default value by FormControl', () => {
+      const valueChanged = createSpy('valueChanged');
+      fixture.componentInstance.select2.formControl.valueChanges.subscribe(v => valueChanged(v));
 
-        fixture.componentInstance.select2.defaultValue = 3;
-        fixture.componentInstance.select2.multiple = false;
-        fixture.componentInstance.select2.items = items1;
-        fixture.detectChanges();
-        fixture.componentInstance.select2.formControl.setValue(null);
+      fixture.componentInstance.select2.defaultValue = 3;
+      fixture.componentInstance.select2.multiple = false;
+      fixture.componentInstance.select2.items = items1;
+      fixture.componentInstance.select2.formControl.setValue(null, {emitEvent: false});
+      fixture.detectChanges();
+      expect(fixture.componentInstance.select2.formControl.value).toEqual(3);
+      expect(valueChanged).toHaveBeenCalledTimes(1);
+    });
 
-        fixture.detectChanges();
-      }));
+    it('equal default value by ngModel', () => {
+      fixture.detectChanges();
+      fixture.componentInstance.select1.defaultValue = 3;
+      fixture.componentInstance.select1.multiple = false;
+      fixture.componentInstance.select1.items = items1;
+      fixture.componentInstance.select1.value = null;
 
-      it('by ngModel', () => {
-        fixture.detectChanges();
-        expect(fixture.componentInstance.select1.value).toEqual(3);
-      });
-
-      it('by FormControl', () => {
-        expect(fixture.componentInstance.select2.formControl.value).toEqual(3);
-        expect(valueChanged).toHaveBeenCalledTimes(3);
-      });
+      fixture.detectChanges();
+      expect(fixture.componentInstance.select1.value).toEqual(3);
     });
   });
 

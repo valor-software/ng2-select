@@ -20,6 +20,7 @@ import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/merge';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
+import { Subject } from 'rxjs/Subject';
 
 export interface INgxSelectComponentMouseEvent extends MouseEvent {
   clickedSelectComponent?: NgxSelectComponent;
@@ -74,6 +75,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
   private subjOptionsSelected = new BehaviorSubject<NgxSelectOption[]>([]);
   private subjExternalValue = new BehaviorSubject<any[]>([]);
   private subjDefaultValue = new BehaviorSubject<any[]>([]);
+  private subjRegisterOnChange = new Subject();
 
   private cacheOptionsFilteredFlat: NgxSelectOption[];
   private cacheElementOffsetTop: number;
@@ -87,8 +89,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     this.typed.subscribe((text: string) => this.subjSearchText.next(text));
     let cacheExternalValue: any[];
     const subjActualValue = this.subjExternalValue
-      .map((v: any[]) => v ? [].concat(v) : [])
-      .do((v: any[]) => cacheExternalValue = v)
+      .map((v: any[]) => cacheExternalValue = v ? [].concat(v) : [])
       .merge(this.subjOptionsSelected.map((options: NgxSelectOption[]) =>
         options.map((o: NgxSelectOption) => o.value)
       ))
@@ -96,8 +97,12 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
         const newVal = _.isEqual(eVal, dVal) ? [] : eVal;
         return newVal.length ? newVal : dVal;
       })
-      // .distinctUntilChanged((x, y) => _.isEqual(x, y))
-      .do((actualValue: any[]) => {
+      .distinctUntilChanged((x, y) => _.isEqual(x, y))
+      .share();
+
+    subjActualValue
+      .combineLatest(this.subjRegisterOnChange, (actualValue: any[]) => actualValue)
+      .subscribe((actualValue: any[]) => {
         this.actualValue = actualValue;
         if (!_.isEqual(actualValue, cacheExternalValue)) {
           cacheExternalValue = actualValue;
@@ -110,14 +115,14 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
       });
 
     this.subjOptions
-      .flatMap((options: TSelectOption[]) => {
-        return Observable.from(options)
-          .flatMap((option: TSelectOption) =>
-            option instanceof NgxSelectOption ? Observable.of(option) :
-              (option instanceof NgxSelectOptGroup ? Observable.from(option.options) : Observable.empty())
-          )
-          .toArray();
-      })
+      .flatMap((options: TSelectOption[]) => Observable
+        .from(options)
+        .flatMap((option: TSelectOption) => option instanceof NgxSelectOption
+          ? Observable.of(option)
+          : (option instanceof NgxSelectOptGroup ? Observable.from(option.options) : Observable.empty())
+        )
+        .toArray()
+      )
       .combineLatest(subjActualValue, (optionsFlat: NgxSelectOption[], actualValue: any[]) => {
         Observable.from(optionsFlat)
           .filter((option: NgxSelectOption) => actualValue.includes(option.value))
@@ -420,6 +425,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
 
   public registerOnChange(fn: (_: any) => {}): void {
     this.onChange = fn;
+    this.subjRegisterOnChange.next();
   }
 
   public registerOnTouched(fn: () => {}): void {
