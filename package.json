@@ -1,6 +1,6 @@
 {
   "name": "ng2-select-ex-base",
-  "version": "3.0.14-rc",
+  "version": "3.0.15-rc",
   "private": true,
   "description": "Angular2 based replacement for select boxes",
   "scripts": {
