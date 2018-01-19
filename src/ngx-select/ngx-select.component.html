@@ -1,7 +1,8 @@
 <div #main [tabindex]="disabled? -1: 0" class="ui-select-container dropdown"
      [class.open]="optionsOpened && optionsFiltered.length"
      [class.ui-select-multiple]="multiple === true" [class.form-control]="multiple === true"
-     (click)="mainClicked($event)" (focus)="focusToInput()" (keydown)="inputKeyDown($event)"
+     (click)="mainClicked($event)" (focusin)="mainClicked($event)"
+     (focus)="focusToInput()" (keydown)="inputKeyDown($event)"
      (keyup)="mainKeyUp($event)">
   <div [class.ui-disabled]="disabled"></div>
 
@@ -39,7 +40,6 @@
          (keydown)="inputKeyDown($event)"
          (keyup)="inputKeyUp($event, input.value)"
          [disabled]="disabled"
-         (blur)="optionsClose()"
          [placeholder]="optionsSelected.length? '': placeholder"
          (click)="inputClick(input.value)"
          autocomplete="false"
