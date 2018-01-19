@@ -1,5 +1,6 @@
 import {
-  Component, DoCheck, ElementRef, EventEmitter, forwardRef, HostListener, Input, IterableDiffer, IterableDiffers, Output, ViewChild
+  AfterContentChecked, DoCheck, Input, Output, ViewChild,
+  Component, ElementRef, EventEmitter, forwardRef, HostListener, IterableDiffer, IterableDiffers
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
@@ -42,7 +43,7 @@ enum ENavigation {
     }
   ]
 })
-export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
+export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterContentChecked {
   @Input() public items: any[];
   @Input() public optionValueField: string = 'id';
   @Input() public optionTextField: string = 'text';
@@ -79,6 +80,8 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
 
   private cacheOptionsFilteredFlat: NgxSelectOption[];
   private cacheElementOffsetTop: number;
+
+  private _focusToInput: boolean = false;
 
   constructor(private sanitizer: DomSanitizer, iterableDiffers: IterableDiffers) {
     // differs
@@ -205,16 +208,21 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     }
   }
 
+  public ngAfterContentChecked(): void {
+    if (this._focusToInput && this.checkInputVisibility() && this.inputElRef &&
+      this.inputElRef.nativeElement !== document.activeElement) {
+      this._focusToInput = false;
+      this.inputElRef.nativeElement.focus();
+    }
+  }
+
   public canClearNotMultiple(): boolean {
     return this.allowClear && !!this.subjOptionsSelected.value.length &&
       (!this.subjDefaultValue.value.length || this.subjDefaultValue.value[0] !== this.actualValue[0]);
   }
 
   public focusToInput(): void {
-    if (this.checkInputVisibility() && this.inputElRef &&
-      this.inputElRef.nativeElement !== document.activeElement) {
-      this.inputElRef.nativeElement.focus();
-    }
+    this._focusToInput = true;
   }
 
   public inputKeyDown(event: KeyboardEvent) {
@@ -291,13 +299,6 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
     return option.renderText(this.sanitizer, '');
   }
 
-  protected inputIsDisabled(): boolean {
-    if (!this.disabled && this.optionsOpened) {
-      this.focusToInput();
-    }
-    return this.disabled;
-  }
-
   protected optionSelect(option: NgxSelectOption, event: Event = null): void {
     if (event) {
       event.stopPropagation();
@@ -364,6 +365,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck {
       } else {
         this.navigateOption(ENavigation.first);
       }
+      this.focusToInput();
     }
   }
 
