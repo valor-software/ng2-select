@@ -159,7 +159,6 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
   @HostListener('document:click', ['$event'])
   public documentClick(event: INgxSelectComponentMouseEvent) {
     if (this.optionsOpened && (event.clickedSelectComponent !== this)) {
-      console.log(event.type, this.optionsOpened);
       this.optionsClose();
     }
   }

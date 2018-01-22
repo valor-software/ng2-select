@@ -873,10 +873,7 @@ describe('NgxSelectComponent', () => {
 
     beforeEach(fakeAsync(() => {
       fixture.componentInstance.select2.items = lazyItems;
-      fixture.componentInstance.select2.formControl.valueChanges.subscribe((v) => {
-        console.log('valueChanges', v);
-        valueChanged(v);
-      });
+      fixture.componentInstance.select2.formControl.valueChanges.subscribe((v) => valueChanged(v));
       fixture.detectChanges();
       fixture.componentInstance.select2.formControl.setValue(3);
       fixture.detectChanges();
