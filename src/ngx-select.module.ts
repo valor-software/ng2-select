@@ -8,5 +8,5 @@ import { NgxSelectComponent } from './ngx-select/ngx-select.component';
   declarations: [NgxSelectComponent],
   exports: [NgxSelectComponent]
 })
-export class SelectModule {
+export class NgxSelectModule {
 }

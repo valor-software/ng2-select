@@ -2,7 +2,7 @@ import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core
 
 import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SelectModule } from '../select.module';
+import { NgxSelectModule } from '../ngx-select.module';
 import { NgxSelectComponent } from './ngx-select.component';
 import createSpy = jasmine.createSpy;
 
@@ -110,7 +110,7 @@ describe('NgxSelectComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, SelectModule],
+      imports: [FormsModule, ReactiveFormsModule, NgxSelectModule],
       declarations: [TestNgxSelectComponent]
     }).compileComponents();
   }));
