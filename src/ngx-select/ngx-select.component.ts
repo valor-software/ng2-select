@@ -92,7 +92,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     this.typed.subscribe((text: string) => this.subjSearchText.next(text));
     let cacheExternalValue: any[];
     const subjActualValue = this.subjExternalValue
-      .map((v: any[]) => cacheExternalValue = v ? [].concat(v) : [])
+      .map((v: any[]) => cacheExternalValue = v === null ? [] : [].concat(v))
       .merge(this.subjOptionsSelected.map((options: NgxSelectOption[]) =>
         options.map((o: NgxSelectOption) => o.value)
       ))
