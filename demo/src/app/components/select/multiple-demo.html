@@ -1,36 +1,18 @@
 <h3>Select multiple cities</h3>
 <div class="example-block">
-  <div class="example-block__item">
-    <h4>ng-select</h4>
-    <ng-select [multiple]="true"
-               [items]="items"
-               [disabled]="ngDisabled"
-               [(ngModel)]="ngValue"
-               placeholder="No city selected">
-    </ng-select>
-    <p></p>
-    <pre>{{ngValue | json}}</pre>
-    <div>
-      <button type="button" class="btn btn-primary" (click)="ngDisabled = !ngDisabled">
-        {{ngDisabled ? 'Enable' : 'Disable'}}
-      </button>
+    <div class="example-block__item">
+        <ngx-select [multiple]="true"
+                    [items]="items"
+                    [disabled]="ngxDisabled"
+                    [(ngModel)]="ngxValue"
+                    placeholder="No city selected">
+        </ngx-select>
+        <p></p>
+        <pre>{{ngxValue | json}}</pre>
+        <div>
+            <button class="btn btn-primary" (click)="ngxDisabled = !ngxDisabled">
+                {{ngxDisabled ? 'Enable' : 'Disable'}}
+            </button>
+        </div>
     </div>
-  </div>
-
-  <div class="example-block__item">
-    <h4>ngx-select</h4>
-    <ngx-select [multiple]="true"
-                [items]="items"
-                [disabled]="ngxDisabled"
-                [(ngModel)]="ngxValue"
-                placeholder="No city selected">
-    </ngx-select>
-    <p></p>
-    <pre>{{ngxValue | json}}</pre>
-    <div>
-      <button class="btn btn-primary" (click)="ngxDisabled = !ngxDisabled">
-        {{ngxDisabled ? 'Enable' : 'Disable'}}
-      </button>
-    </div>
-  </div>
 </div>

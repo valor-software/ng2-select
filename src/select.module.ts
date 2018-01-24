@@ -1,19 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { HighlightPipe } from './select/select-pipes';
-import { OffClickDirective } from './select/off-click';
-import { SelectComponent } from './select/select.component';
 import { NgxSelectComponent } from './ngx-select/ngx-select.component';
 
 @NgModule({
   imports: [CommonModule],
-  declarations: [
-    SelectComponent, NgxSelectComponent, HighlightPipe, OffClickDirective
-  ],
-  exports: [
-    SelectComponent, NgxSelectComponent, HighlightPipe, OffClickDirective
-  ]
+  declarations: [NgxSelectComponent],
+  exports: [NgxSelectComponent]
 })
 export class SelectModule {
 }

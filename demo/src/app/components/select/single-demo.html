@@ -1,39 +1,20 @@
 <h3>Select a single city</h3>
 <div class="example-block">
-  <div class="example-block__item">
-    <h4>ng-select</h4>
-    <ng-select [formControl]="ngControl"
-               [allowClear]="true"
-               [items]="items"
-               placeholder="No city selected"
-               (typed)="inputTyped('ng-select', $event)">
-    </ng-select>
-    <p></p>
-    <pre>{{ngControl.value | json}}</pre>
-    <div>
-      <button type="button" class="btn btn-primary"
-              (click)="ngControl.disabled? ngControl.enable(): ngControl.disable()">
-        {{ngControl.disabled ? 'Enable' : 'Disable'}}
-      </button>
+    <div class="example-block__item">
+        <ngx-select [formControl]="ngxControl"
+                    [allowClear]="true"
+                    [defaultValue]="doNgxDefault()"
+                    [items]="items"
+                    placeholder="No city selected"
+                    (typed)="inputTyped('ngx-select', $event)">
+        </ngx-select>
+        <p></p>
+        <pre>{{ngxControl.value | json}}</pre>
+        <div>
+            <button type="button" class="btn btn-primary"
+                    (click)="ngxControl.disabled? ngxControl.enable(): ngxControl.disable()">
+                {{ngxControl.disabled ? 'Enable' : 'Disable'}}
+            </button>
+        </div>
     </div>
-  </div>
-
-  <div class="example-block__item">
-    <h4>ngx-select</h4>
-    <ngx-select [formControl]="ngxControl"
-                [allowClear]="true"
-                [defaultValue]="doNgxDefault()"
-                [items]="items"
-                placeholder="No city selected"
-                (typed)="inputTyped('ngx-select', $event)">
-    </ngx-select>
-    <p></p>
-    <pre>{{ngxControl.value | json}}</pre>
-    <div>
-      <button type="button" class="btn btn-primary"
-              (click)="ngxControl.disabled? ngxControl.enable(): ngxControl.disable()">
-        {{ngxControl.disabled ? 'Enable' : 'Disable'}}
-      </button>
-    </div>
-  </div>
 </div>
