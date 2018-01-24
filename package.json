@@ -1,8 +1,8 @@
 {
   "name": "ng2-select-ex-base",
-  "version": "3.0.18-rc",
+  "version": "3.1.0",
   "private": true,
-  "description": "Angular2 based replacement for select boxes",
+  "description": "Angular based replacement for select boxes",
   "scripts": {
     "lite-server": "lite-server -c demo/bs-config.json",
     "demo.serve": "run-s build link demo.build lite-server",
@@ -27,12 +27,18 @@
   "module": "index.js",
   "typings": "index.d.ts",
   "keywords": [
+    "ngx-select",
+    "angular",
     "angular2",
+    "angular4",
+    "angular5",
     "select",
-    "selectify",
-    "angularjs"
+    "select2",
+    "ui-select",
+    "multiselect",
+    "multi-select"
   ],
-  "author": "Vyacheslav Chub <vyacheslav.chub@valor-software.com>",
+  "author": "Konstantin Polyntsov <optimistex@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -116,6 +122,11 @@
   },
   "contributors": [
     {
+      "name": "Konstantin Polyntsov",
+      "email": "optimistex@gmail.com",
+      "url": "https://github.com/optimistex"
+    },
+    {
       "name": "Vyacheslav Chub",
       "email": "vyacheslav.chub@valor-software.com",
       "url": "https://github.com/buchslava"
@@ -129,11 +140,6 @@
       "name": "Oleksandr Telnov",
       "email": "otelnov@gmail.com",
       "url": "https://github.com/otelnov"
-    },
-    {
-      "name": "Konstantin Polyntsov",
-      "email": "optimistex@gmail.com",
-      "url": "https://github.com/optimistex"
     }
   ]
 }
