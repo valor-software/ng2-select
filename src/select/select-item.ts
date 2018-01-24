@@ -1,5 +1,8 @@
 import { ISelectItem } from './select.interfaces';
 
+/**
+ * @deprecated
+ */
 export class SelectItem implements ISelectItem {
   public id: number | string;
   public text: string;

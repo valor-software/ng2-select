@@ -4,6 +4,9 @@ export interface IExtMouseEvent extends MouseEvent {
   path: HTMLElement[];
 }
 
+/**
+ * @deprecated
+ */
 @Directive({
   selector: '[offClick]'
 })

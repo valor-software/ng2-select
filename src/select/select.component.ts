@@ -14,6 +14,9 @@ function stripTags(input: string): string {
   return input.replace(commentsAndPhpTags, '').replace(tags, '');
 }
 
+/**
+ * @deprecated
+ */
 @Component({
   selector: 'ng-select',
   templateUrl: './select.component.html',
@@ -446,6 +449,9 @@ export class SelectComponent implements OnInit, DoCheck, ControlValueAccessor, A
   }
 }
 
+/**
+ * @deprecated
+ */
 export abstract class Behavior {
   public optionsMap: Map<string, number> = new Map<string, number>();
 
@@ -513,6 +519,9 @@ export abstract class Behavior {
   }
 }
 
+/**
+ * @deprecated
+ */
 export class GenericBehavior extends Behavior {
   public constructor(actor: SelectComponent) {
     super(actor);
@@ -561,6 +570,9 @@ export class GenericBehavior extends Behavior {
   }
 }
 
+/**
+ * @deprecated
+ */
 export class ChildrenBehavior extends Behavior {
   public constructor(actor: SelectComponent) {
     super(actor);
