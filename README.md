@@ -2,7 +2,7 @@
 ## ng2-select-ex 
 [![npm version](https://badge.fury.io/js/ng2-select-ex.svg)](http://badge.fury.io/js/ng2-select-ex) 
 [![npm downloads](https://img.shields.io/npm/dm/ng2-select-ex.svg)](https://npmjs.org/ng2-select-ex)
-[![Build Status](https://travis-ci.org/optimistex/ng2-select-ex.svg?branch=development)](https://travis-ci.org/optimistex/ng2-select-ex)
+[![Build Status](https://travis-ci.org/optimistex/ng2-select-ex.svg?branch=master)](https://travis-ci.org/optimistex/ng2-select-ex)
 [![Angular 2 Style Guide](https://mgechev.github.io/angular2-style-guide/images/badge.svg)](https://github.com/mgechev/angular2-style-guide)
 
 ## Usage
