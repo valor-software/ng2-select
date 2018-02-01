@@ -1,6 +1,6 @@
 {
   "name": "ng2-select-ex",
-  "version": "3.2.0-beta3",
+  "version": "3.2.0-beta4",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -55,9 +55,6 @@
     "core-js": "^2.4.1",
     "html-loader": "^0.5.5",
     "lodash": "^4.17.4",
-    "markdown-loader": "^2.0.2",
-    "ngx-bootstrap": "^2.0.2",
-    "pre-commit": "^1.2.2",
     "rxjs": "^5.5.6",
     "zone.js": "^0.8.19"
   },
@@ -68,6 +65,7 @@
     "@types/jasmine": "~2.8.3",
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "~6.0.60",
+    "codecov": "^3.0.0",
     "codelyzer": "^4.0.1",
     "jasmine-core": "~2.8.0",
     "jasmine-spec-reporter": "~4.2.1",
@@ -80,7 +78,10 @@
     "protractor": "~5.1.2",
     "ts-node": "~4.1.0",
     "tslint": "~5.9.1",
-    "typescript": "~2.5.3"
+    "typescript": "~2.5.3",
+    "markdown-loader": "^2.0.2",
+    "ngx-bootstrap": "^2.0.2",
+    "pre-commit": "^1.2.2"
   },
   "contributors": [
     {
