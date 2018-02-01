@@ -27,7 +27,6 @@ before_install:
 install:
   - npm install > /dev/null
   - npm run build > /dev/null
-  - npm i ./dist  > /dev/null
 
 jobs:
   fast_finish: true
