@@ -1,7 +1,0 @@
-{
-  "name": "ng2-select-ex",
-  "peerDependencies": {
-    "@angular/common": "*",
-    "@angular/core": "*"
-  }
-}

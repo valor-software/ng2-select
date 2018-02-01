@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/ng-packagr/ng-package.schema.json",
+  "lib": {
+    "languageLevel": [
+      "dom",
+      "es2017"
+    ],
+    "externals": {
+      "lodash": "./node_modules/lodash/index.js"
+    },
+    "entryFile": "public_api.ts"
+  }
+}
