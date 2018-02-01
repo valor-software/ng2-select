@@ -6,7 +6,9 @@
                     [defaultValue]="doNgxDefault()"
                     [items]="items"
                     placeholder="No city selected"
-                    (typed)="inputTyped('ngx-select', $event)">
+                    (typed)="inputTyped('ngx-select', $event)"
+                    (focus)="doFocus()"
+                    (blur)="doBlur()">
         </ngx-select>
         <p></p>
         <pre>{{ngxControl.value | json}}</pre>

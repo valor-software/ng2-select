@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve -op runtime",
     "build": "npm run lint && npm test && npm run build.package && npm run build.demo",
     "build.demo": "ng build --prod",
     "build.package": "ng-packagr -p ng-package.json",

@@ -57,6 +57,8 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     @Input() public defaultValue: any[] = [];
 
     @Output() public typed = new EventEmitter<string>();
+    @Output() public focus = new EventEmitter<void>();
+    @Output() public blur = new EventEmitter<void>();
 
     @ViewChild('main') protected mainElRef: ElementRef;
     @ViewChild('input') protected inputElRef: ElementRef;
@@ -82,6 +84,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     private cacheElementOffsetTop: number;
 
     private _focusToInput = false;
+    private isFocused = false;
 
     constructor(private sanitizer: DomSanitizer, iterableDiffers: IterableDiffers) {
         // differs
@@ -153,13 +156,23 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
 
     public mainClicked(event: INgxSelectComponentMouseEvent) {
         event.clickedSelectComponent = this;
+        if (!this.isFocused) {
+            this.isFocused = true;
+            this.focus.emit();
+        }
     }
 
     @HostListener('document:focusin', ['$event'])
     @HostListener('document:click', ['$event'])
     public documentClick(event: INgxSelectComponentMouseEvent) {
-        if (this.optionsOpened && (event.clickedSelectComponent !== this)) {
-            this.optionsClose();
+        if (event.clickedSelectComponent !== this) {
+            if (this.optionsOpened) {
+                this.optionsClose();
+            }
+            if (this.isFocused) {
+                this.isFocused = false;
+                this.blur.emit();
+            }
         }
     }
 

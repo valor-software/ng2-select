@@ -51,6 +51,8 @@
 ### Events
 
   - **`typed`** - It is fired after changing of search input. Returns `string` with that value.
+  - **`focus`** - It is fired after getting focus.
+  - **`blur`** - It is fired after lost focus.
 
 # Troubleshooting
 

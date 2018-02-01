@@ -45,4 +45,12 @@ export class SingleDemoComponent implements OnDestroy {
     public inputTyped(source: string, text: string) {
         console.log('SingleDemoComponent.inputTyped', source, text);
     }
+
+    public doFocus() {
+        console.log('SingleDemoComponent.doFocus');
+    }
+
+    public doBlur() {
+        console.log('SingleDemoComponent.doBlur');
+    }
 }
