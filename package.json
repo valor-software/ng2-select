@@ -8,7 +8,8 @@
     "build": "npm test && npm run build.package && npm run build.demo",
     "build.demo": "ng build --prod",
     "build.package": "ng-packagr -p ng-package.json",
-    "test": "ng test --single-run=true",
+    "test": "ng test -sr",
+    "test-coverage": "ng test -sr -cc",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
