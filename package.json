@@ -1,6 +1,6 @@
 {
   "name": "ng2-select-ex",
-  "version": "3.2.0-beta4",
+  "version": "3.2.1",
   "license": "MIT",
   "scripts": {
     "ng": "ng",

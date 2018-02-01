@@ -44,7 +44,7 @@
     max-height: 200px;
     overflow-x: hidden;
     margin-top: 0;
-    position: relative;
+    position: absolute;
 }
 
 .ui-select-multiple .ui-select-choices {
