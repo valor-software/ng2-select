@@ -16,5 +16,5 @@ export class MultipleDemoComponent {
         'Vilnius', 'Warsaw', 'Wrocław', 'Zagreb', 'Zaragoza'];
 
     public ngxValue: any = [];
-    public ngxDisabled: boolean = false;
+    public ngxDisabled = false;
 }

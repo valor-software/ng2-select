@@ -59,7 +59,7 @@ export class RichDemoComponent implements OnInit {
     public items: any[] = [];
 
     public ngxValue: any = [];
-    public ngxDisabled: boolean = false;
+    public ngxDisabled = false;
 
     public ngOnInit(): any {
         COLORS.forEach((color: { name: string, hex: string }) => {

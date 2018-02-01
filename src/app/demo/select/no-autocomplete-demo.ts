@@ -26,5 +26,5 @@ export class NoAutoCompleteDemoComponent {
 
     public items: string[] = [];
     public ngxValue: any = [];
-    public ngxDisabled: boolean = false;
+    public ngxDisabled = false;
 }

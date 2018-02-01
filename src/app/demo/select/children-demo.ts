@@ -206,5 +206,5 @@ export class ChildrenDemoComponent {
     ];
 
     public ngxValue: any[] = [];
-    public ngxDisabled: boolean = false;
+    public ngxDisabled = false;
 }

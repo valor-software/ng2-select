@@ -1,11 +1,11 @@
 {
   "name": "ng2-select-ex",
-  "version": "3.2.0-beta2",
+  "version": "3.2.0-beta3",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "npm test && npm run build.package && npm run build.demo",
+    "build": "npm run lint && npm test && npm run build.package && npm run build.demo",
     "build.demo": "ng build --prod",
     "build.package": "ng-packagr -p ng-package.json",
     "test": "ng test -sr",
