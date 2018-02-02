@@ -1,44 +1,17 @@
 {
-  "name": "ng2-select-ex",
-  "version": "3.2.2",
+  "name": "ng2-select-ex-demo",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve -op runtime",
     "build": "npm run lint && npm test && npm run build.package && npm run build.demo",
     "build.demo": "ng build --prod",
-    "build.package": "ng-packagr -p ng-package.json",
+    "build.package": "ng-packagr -p src/app/lib/package.json",
     "test": "ng test -sr",
     "test-coverage": "ng test -sr -cc",
     "lint": "ng lint",
     "e2e": "ng e2e"
-  },
-  "private": false,
-  "description": "Angular based replacement for select boxes",
-  "keywords": [
-    "ngx-select",
-    "angular",
-    "angular2",
-    "angular4",
-    "angular5",
-    "select",
-    "select2",
-    "ui-select",
-    "multiselect",
-    "multi-select"
-  ],
-  "author": "Konstantin Polyntsov <optimistex@gmail.com>",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com:optimistex/ng2-select-ex.git"
-  },
-  "bugs": {
-    "url": "https://github.com/optimistex/ng2-select-ex/issues"
-  },
-  "homepage": "https://github.com/optimistex/ng2-select-ex#readme",
-  "peerDependencies": {
-    "@angular/common": ">=4.3.0 || >5.0.0",
-    "@angular/core": ">=4.3.0 || >5.0.0"
   },
   "dependencies": {
     "@angular/animations": "^5.2.0",
@@ -74,35 +47,13 @@
     "karma-coverage-istanbul-reporter": "^1.2.1",
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
-    "ng-packagr": "^1.6.0",
+    "markdown-loader": "^2.0.2",
+    "ng-packagr": "^2.0.0-rc.12",
+    "ngx-bootstrap": "^2.0.2",
+    "pre-commit": "^1.2.2",
     "protractor": "~5.1.2",
     "ts-node": "~4.1.0",
     "tslint": "~5.9.1",
-    "typescript": "~2.5.3",
-    "markdown-loader": "^2.0.2",
-    "ngx-bootstrap": "^2.0.2",
-    "pre-commit": "^1.2.2"
-  },
-  "contributors": [
-    {
-      "name": "Konstantin Polyntsov",
-      "email": "optimistex@gmail.com",
-      "url": "https://github.com/optimistex"
-    },
-    {
-      "name": "Vyacheslav Chub",
-      "email": "vyacheslav.chub@valor-software.com",
-      "url": "https://github.com/buchslava"
-    },
-    {
-      "name": "Dmitriy Shekhovtsov",
-      "email": "valorkin@gmail.com",
-      "url": "https://github.com/valorkin"
-    },
-    {
-      "name": "Oleksandr Telnov",
-      "email": "otelnov@gmail.com",
-      "url": "https://github.com/otelnov"
-    }
-  ]
+    "typescript": "~2.5.3"
+  }
 }

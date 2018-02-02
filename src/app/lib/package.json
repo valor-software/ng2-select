@@ -1,0 +1,66 @@
+{
+  "ngPackage": {
+    "$schema": "./node_modules/ng-packagr/package.schema.json",
+    "dest": "../../../dist",
+    "lib": {
+      "languageLevel": [
+        "dom",
+        "es2017"
+      ],
+      "entryFile": "public_api.ts"
+    }
+  },
+  "name": "ng2-select-ex",
+  "version": "3.2.2",
+  "license": "MIT",
+  "private": false,
+  "description": "Angular based replacement for select boxes",
+  "keywords": [
+    "ngx-select",
+    "angular",
+    "angular2",
+    "angular4",
+    "angular5",
+    "select",
+    "select2",
+    "ui-select",
+    "multiselect",
+    "multi-select"
+  ],
+  "author": "Konstantin Polyntsov <optimistex@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:optimistex/ng2-select-ex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/optimistex/ng2-select-ex/issues"
+  },
+  "homepage": "https://github.com/optimistex/ng2-select-ex#readme",
+  "peerDependencies": {
+    "@angular/core": ">5.0.0",
+    "@angular/common": ">5.0.0",
+    "@angular/platform-browser": ">5.0.0"
+  },
+  "contributors": [
+    {
+      "name": "Konstantin Polyntsov",
+      "email": "optimistex@gmail.com",
+      "url": "https://github.com/optimistex"
+    },
+    {
+      "name": "Vyacheslav Chub",
+      "email": "vyacheslav.chub@valor-software.com",
+      "url": "https://github.com/buchslava"
+    },
+    {
+      "name": "Dmitriy Shekhovtsov",
+      "email": "valorkin@gmail.com",
+      "url": "https://github.com/valorkin"
+    },
+    {
+      "name": "Oleksandr Telnov",
+      "email": "otelnov@gmail.com",
+      "url": "https://github.com/otelnov"
+    }
+  ]
+}

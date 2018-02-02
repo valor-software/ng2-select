@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
-import {NgxSelectModule} from './lib';
+import {NgxSelectModule} from './lib/public_api';
 import {SampleSectionComponent} from './demo/sample-section.component';
 import {SelectSectionComponent} from './demo/select-section';
 import {ChildrenDemoComponent} from './demo/select/children-demo';
@@ -28,12 +28,12 @@ import {ButtonsModule, TabsModule} from 'ngx-bootstrap';
     ],
     imports: [
         BrowserModule,
+        CommonModule,
         FormsModule,
         ReactiveFormsModule,
         NgxSelectModule,
         TabsModule.forRoot(),
-        ButtonsModule.forRoot(),
-        CommonModule
+        ButtonsModule.forRoot()
     ],
     providers: [],
     bootstrap: [AppComponent]

@@ -1,13 +1,13 @@
-import { Component, AfterContentInit } from '@angular/core';
+import {Component, AfterContentInit} from '@angular/core';
 
-const pac = require('../../package.json');
+const pac = require('../app/lib/package.json');
 
 const gettingStarted = require('html-loader!markdown-loader!./getting-started.md');
 
 @Component({
-  selector: 'app-demo',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: 'app-demo',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
 })
 export class AppComponent implements AfterContentInit {
     public gettingStarted: string = gettingStarted;

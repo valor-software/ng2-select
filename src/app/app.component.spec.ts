@@ -4,7 +4,7 @@ import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {ButtonsModule, TabsModule} from 'ngx-bootstrap';
 import {AppComponent} from './app.component';
-import {NgxSelectModule} from './lib';
+import {NgxSelectModule} from './lib/public_api';
 import {SelectSectionComponent} from './demo/select-section';
 import {SampleSectionComponent} from './demo/sample-section.component';
 import {SingleDemoComponent} from './demo/select/single-demo';
