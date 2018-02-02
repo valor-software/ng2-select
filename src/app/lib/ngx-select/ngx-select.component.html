@@ -1,65 +1,68 @@
 <div #main [tabindex]="disabled? -1: 0" class="ui-select-container dropdown"
-     [class.open]="optionsOpened && optionsFiltered.length"
-     [class.ui-select-multiple]="multiple === true" [class.form-control]="multiple === true"
+     [ngClass]="{
+        'ui-select-multiple form-control': multiple === true,
+        'open': optionsOpened && optionsFiltered.length
+     }"
      (click)="mainClicked($event)" (focusin)="mainClicked($event)"
      (focus)="focusToInput()" (keydown)="inputKeyDown($event)"
      (keyup)="mainKeyUp($event)">
-  <div [class.ui-disabled]="disabled"></div>
+    <div [class.ui-disabled]="disabled"></div>
 
-  <!-- single selected item -->
-  <div class="ui-select-match" *ngIf="(multiple === false) && (!optionsOpened || noAutoComplete)">
-    <div class="btn btn-default btn-secondary form-control ui-select-toggle"
-         (click)="optionsOpen()" style="outline: 0;">
-      <span *ngIf="!optionsSelected.length" class="ui-select-placeholder text-muted">{{placeholder}}</span>
-      <span *ngIf="optionsSelected.length" class="ui-select-match-text pull-left"
-            [class.ui-select-allow-clear]="allowClear"
-            [innerHtml]="sanitize(optionsSelected[0].text)"></span>
-      <i class="dropdown-toggle pull-right"></i>
-      <i class="caret pull-right"></i>
-      <a *ngIf="canClearNotMultiple()" class="btn btn-xs btn-link pull-right"
-         style="margin-right: 10px; padding: 0;" (click)="optionRemove(optionsSelected[0], $event)">
-        <i class="glyphicon glyphicon-remove"></i>
-      </a>
+    <!-- single selected item -->
+    <div class="ui-select-match" *ngIf="(multiple === false) && (!optionsOpened || noAutoComplete)">
+        <div class="btn btn-default btn-secondary form-control ui-select-toggle"
+             (click)="optionsOpen()" style="outline: 0;">
+            <span [ngClass]="{
+                    'ui-select-placeholder text-muted': !optionsSelected.length,
+                    'ui-select-match-text pull-left': optionsSelected.length,
+                    'ui-select-allow-clear': optionsSelected.length && allowClear
+                  }" [innerHtml]="sanitize(optionsSelected.length? optionsSelected[0].text: placeholder)"></span>
+            <i class="dropdown-toggle pull-right"></i>
+            <i class="caret pull-right"></i>
+            <a *ngIf="canClearNotMultiple()" class="btn btn-sm btn-link pull-right"
+               style="margin-right: 10px; padding: 0;" (click)="optionRemove(optionsSelected[0], $event)">
+                <i class="glyphicon glyphicon-remove"></i>
+            </a>
+        </div>
     </div>
-  </div>
 
-  <!-- multiple selected items -->
-  <div class="ui-select-match" *ngIf="multiple === true">
+    <!-- multiple selected items -->
+    <div class="ui-select-match" *ngIf="multiple === true">
     <span *ngFor="let option of optionsSelected">
       <span tabindex="-1" class="btn btn-default btn-secondary btn-xs ui-select-match-item" type="button">
         <a class="close" style="margin-left: 5px; padding: 0;" (click)="optionRemove(option, $event)">&times;</a>
         <span [innerHtml]="sanitize(option.text)"></span>
       </span>
     </span>
-  </div>
+    </div>
 
-  <!-- live search an item from the list -->
-  <input #input type="text" class="form-control ui-select-search"
-         *ngIf="checkInputVisibility()"
-         [tabindex]="multiple === false? -1: 0"
-         (keydown)="inputKeyDown($event)"
-         (keyup)="inputKeyUp($event, input.value)"
-         [disabled]="disabled"
-         [placeholder]="optionsSelected.length? '': placeholder"
-         (click)="inputClick(input.value)"
-         autocomplete="false"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"
-         role="combobox">
+    <!-- live search an item from the list -->
+    <input #input type="text" class="form-control ui-select-search"
+           *ngIf="checkInputVisibility()"
+           [tabindex]="multiple === false? -1: 0"
+           (keydown)="inputKeyDown($event)"
+           (keyup)="inputKeyUp($event, input.value)"
+           [disabled]="disabled"
+           [placeholder]="optionsSelected.length? '': placeholder"
+           (click)="inputClick(input.value)"
+           autocomplete="false"
+           autocorrect="off"
+           autocapitalize="off"
+           spellcheck="false"
+           role="combobox">
 
-  <!-- options template -->
-  <ul #choiceMenu role="menu" class="ui-select-choices dropdown-menu">
-    <li *ngFor="let opt of optionsFiltered; trackBy: trackByOption; let idx=index" role="menuitem">
-      <div class="divider dropdown-divider" *ngIf="opt.type === 'optgroup' && (idx > 0)"></div>
-      <div class="dropdown-header" *ngIf="opt.type === 'optgroup'">{{opt.label}}</div>
+    <!-- options template -->
+    <ul #choiceMenu role="menu" class="ui-select-choices dropdown-menu">
+        <li *ngFor="let opt of optionsFiltered; trackBy: trackByOption; let idx=index" role="menuitem">
+            <div class="divider dropdown-divider" *ngIf="opt.type === 'optgroup' && (idx > 0)"></div>
+            <div class="dropdown-header" *ngIf="opt.type === 'optgroup'">{{opt.label}}</div>
 
-      <div #choiceItem *ngFor="let option of (opt.optionsFiltered || [opt]); trackBy: trackByOption"
-           class="ui-select-choices-row" [class.active]="isOptionActive(option, choiceItem)"
-           (mouseenter)="optionActivate(option)" (click)="optionSelect(option, $event)">
-        <div class="dropdown-item" [innerHtml]="highlightOption(option)"></div>
-      </div>
-    </li>
-  </ul>
+            <div #choiceItem *ngFor="let option of (opt.optionsFiltered || [opt]); trackBy: trackByOption"
+                 class="ui-select-choices-row" [class.active]="isOptionActive(option, choiceItem)"
+                 (mouseenter)="optionActivate(option)" (click)="optionSelect(option, $event)">
+                <div class="dropdown-item" [innerHtml]="highlightOption(option)"></div>
+            </div>
+        </li>
+    </ul>
 
 </div>
