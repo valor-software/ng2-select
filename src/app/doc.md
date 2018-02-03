@@ -56,3 +56,28 @@
   - **`typed`** - It is fired after changing of search input. Returns `string` with that value.
   - **`focus`** - It is fired after getting focus.
   - **`blur`** - It is fired after lost focus.
+
+### Styles and customization
+
+Currently, the component contains CSS classes named within [BEM Methodology](https://en.bem.info/methodology/). 
+As well it contains the "Bootstrap classes". Recommended use BEM classes for style customization.
+
+List of styles for customization:
+
+- **`ngx-select`** - Main class of the component.
+- **`ngx-select_multiple`** - Modifier of the multiple mode. It's available when the property multiple  is true.  
+- **`ngx-select__disabled`** - Layer for the disabled mode.
+- **`ngx-select__selected`** - The common container for displaying selected items.
+- **`ngx-select__toggle`** - The toggle for single mode. It's available when the property multiple  is false.
+- **`ngx-select__placeholder`** - The placeholder item. It's available when the property multiple  is false.
+- **`ngx-select__selected-single`** - The selected item with single mode. It's available when the property multiple  is false.
+- **`ngx-select__selected-plural`** - The multiple selected item. It's available when the property multiple is true.
+- **`ngx-select__allow-clear`** - The indicator that the selected single item can be removed. It's available while properties the multiple is false and the allowClear is true.
+- **`ngx-select__toggle-caret`** - The drop-down button of the single mode. It's available when the property multiple  is false.
+- **`ngx-select__clear`** - The button clear. 
+- **`ngx-select__clear-icon`** - The cross icon.
+- **`ngx-select__search`** - The input field for full text lives searching. 
+- **`ngx-select__choices`** - The common container of items.
+- **`ngx-select__item-group`** - The group of items.
+- **`ngx-select__item`** - An item. 
+- **`ngx-select__item_active`** - Modifier of the activated item.
