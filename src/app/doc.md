@@ -1,7 +1,39 @@
 ### Usage
-```typescript
-import {NgxSelectModule} from 'ng2-select-ex';
-```
+
+1. Install **ng2-select-ex** through [npm](https://www.npmjs.com/package/ng2-select-ex) package manager using the following command:
+
+    ```console
+    npm i ng2-select-ex --save
+    ```
+
+2. Add NgxSelectModule into your AppModule class. app.module.ts would look like this:
+
+    ```typescript
+    import {NgModule} from '@angular/core';
+    import {BrowserModule} from '@angular/platform-browser';
+    import {AppComponent} from './app.component';
+    import { NgxSelectModule } from 'ng2-select-ex';
+    
+    @NgModule({
+      imports: [BrowserModule, NgxSelectModule],
+      declarations: [AppComponent],
+      bootstrap: [AppComponent],
+    })
+    export class AppModule {    
+    }
+    ```
+3. Include Bootstrap styles. 
+    For example add to your index.html 
+
+    ```html
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    ``` 
+
+4. Add the tag <ngx-select> into some html 
+
+    ```html
+    <ngx-select [items]="items" [(ngModel)]="itemId">
+    ```
 
 ### Properties
 

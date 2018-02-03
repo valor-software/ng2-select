@@ -5,11 +5,17 @@
 [![Build Status](https://travis-ci.org/optimistex/ng2-select-ex.svg?branch=master)](https://travis-ci.org/optimistex/ng2-select-ex)
 [![Angular 2 Style Guide](https://mgechev.github.io/angular2-style-guide/images/badge.svg)](https://github.com/mgechev/angular2-style-guide)
 
+Native Angular2 component for Select
+
+Compatible with [Bootstrap 3](https://getbootstrap.com/docs/3.3/) and **[Bootstrap 4](https://getbootstrap.com/)**
+
 ## Usage
 
 1. Install **ng2-select-ex** through [npm](https://www.npmjs.com/package/ng2-select-ex) package manager using the following command:
 
-    `npm i ng2-select-ex --save`
+    ```console
+    npm i ng2-select-ex --save
+    ```
 
 2. Add NgxSelectModule into your AppModule class. app.module.ts would look like this:
 
@@ -27,10 +33,48 @@
     export class AppModule {    
     }
     ```
-    
-2. More information regarding of using **ng2-select-ex** is located in [demo](https://optimistex.github.io/ng2-select-ex/).
+3. Include Bootstrap styles. 
+    For example add to your index.html 
+
+    ```html
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    ``` 
+
+4. Add the tag <ngx-select> into some html 
+
+    ```html
+    <ngx-select [items]="items" [(ngModel)]="itemId">
+    ```
+
+5. More information regarding of using **ng2-select-ex** is located in [demo](https://optimistex.github.io/ng2-select-ex/).
 
 ## API
+
+### Usage
+#### Add NgxSelectModule to project
+```typescript
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {AppComponent} from './app.component';
+import { NgxSelectModule } from 'ng2-select-ex';
+
+@NgModule({
+  imports: [BrowserModule, NgxSelectModule],
+  declarations: [AppComponent],
+  bootstrap: [AppComponent],
+})
+export class AppModule {    
+}
+```
+#### Include Bootstrap CSS into `index.html`
+```html
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+```
+
+#### Use the tag <ngx-select> 
+```html
+<ngx-select [items]="items" [(ngModel)]="itemId">
+```
 
 ### Properties
 
