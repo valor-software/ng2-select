@@ -32,7 +32,6 @@
     <span *ngFor="let option of optionsSelected">
       <span type="button" tabindex="-1"
             class="ngx-select__selected btn btn-default btn-secondary btn-xs ui-select-match-item">
-        <!--<a class="ngx-select__selected-remove close" (click)="optionRemove(option, $event)">&times;</a>-->
         <span [innerHtml]="sanitize(option.text)"></span>
         <a class="ngx-select__clear btn btn-sm btn-link pull-right float-right" (click)="optionRemove(option, $event)">
           <i class="ngx-select__clear-icon"></i>
