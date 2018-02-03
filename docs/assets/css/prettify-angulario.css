@@ -6,10 +6,8 @@
   width: auto;
   overflow: auto;
   position: relative;
-  padding: 0;
   font-size: 13px;
   line-height: 24px;
-  margin-bottom: 24px;
   border-radius: 4px;
   padding: 16px 32px
 }
