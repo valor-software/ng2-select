@@ -50,32 +50,6 @@ Compatible with [Bootstrap 3](https://getbootstrap.com/docs/3.3/) and **[Bootstr
 
 ## API
 
-### Usage
-#### Add NgxSelectModule to project
-```typescript
-import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
-import {AppComponent} from './app.component';
-import { NgxSelectModule } from 'ng2-select-ex';
-
-@NgModule({
-  imports: [BrowserModule, NgxSelectModule],
-  declarations: [AppComponent],
-  bootstrap: [AppComponent],
-})
-export class AppModule {    
-}
-```
-#### Include Bootstrap CSS into `index.html`
-```html
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-```
-
-#### Use the tag <ngx-select> 
-```html
-<ngx-select [items]="items" [(ngModel)]="itemId">
-```
-
 ### Properties
 
   - **`items: any[]`** - (by default `[]`) - Array of items from which to select. Should be an array of objects with `id` and `text` properties.
