@@ -112,19 +112,22 @@
     cursor: pointer;
   }
 
+  &__item {
+    text-decoration: none;
+  }
+
   &__item_active {
     color: #fff;
-    text-decoration: none;
     outline: 0;
     background-color: #428bca;
   }
 
-  &__selected {
+  &__selected-single, &__selected-plural {
     display: inline-flex;
     align-items: center;
   }
 
-  &_multiple &__selected {
+  &__selected-plural {
     outline: 0;
     margin: 0 3px 3px 0;
   }

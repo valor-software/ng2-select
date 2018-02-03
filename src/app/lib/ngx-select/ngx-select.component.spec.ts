@@ -109,8 +109,8 @@ describe('NgxSelectComponent', () => {
     const selectChoices = (id: number) => fixture.debugElement.nativeElement
         .querySelectorAll(`#sel-${id} .ngx-select.open .ngx-select__item`);
     const selectChoiceActive = (id: number) => el(id).querySelector('.ngx-select__item.ngx-select__item_active');
-    const selectedItem = (id: number) => el(id).querySelector('.ngx-select__selected'); // select multiple = false
-    const selectedItems = (id: number) => el(id).querySelectorAll('.ngx-select__selected'); // select multiple = true
+    const selectedItem = (id: number) => el(id).querySelector('.ngx-select__selected-single'); // select multiple = false
+    const selectedItems = (id: number) => el(id).querySelectorAll('.ngx-select__selected-plural'); // select multiple = true
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
