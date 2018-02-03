@@ -23,7 +23,7 @@ section {
 }
 
 .bd-pageheader {
-    margin-top: 51px;
+    margin-top: 45px;
 }
 
 .page-header {
@@ -80,7 +80,7 @@ section {
 
 .bd-pageheader, .bs-docs-masthead {
     position: relative;
-    padding: 30px 0;
+    padding: 25px 0;
     color: #cdbfe3;
     text-align: center;
     text-shadow: 0 1px 0 rgba(0, 0, 0, .1);
@@ -241,6 +241,7 @@ section {
 }
 
 pre {
+    margin: 0;
     white-space: pre-wrap; /* CSS 3 */
     white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
     white-space: -pre-wrap; /* Opera 4-6 */
@@ -288,4 +289,18 @@ pre {
     border: lightgray;
     margin: 5px;
     border-radius: 5px;
+}
+
+.doc-api pre {
+    color: #383d41;
+    background-color: #e2e3e5;
+    position: relative;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid #d6d8db;
+    border-radius: .25rem;
+}
+
+.doc-api h3 {
+    margin: 10px 0;
 }

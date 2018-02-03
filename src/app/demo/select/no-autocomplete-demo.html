@@ -9,7 +9,9 @@
                     placeholder="No city selected">
         </ngx-select>
         <p></p>
-        <pre>{{ngxValue | json}}</pre>
+        <div class="alert alert-secondary">
+            <pre>{{ngxValue | json}}</pre>
+        </div>
         <div>
             <button class="btn btn-primary" (click)="ngxDisabled = !ngxDisabled">
                 {{ngxDisabled ? 'Enable' : 'Disable'}}

@@ -35,43 +35,44 @@ const tabDesc: any = {
 
 @Component({
     selector: 'select-section',
+    styles: [`:host {
+        display: block
+    }`],
     template: `
-        <section>
-            <div class="row">
-                <tabset>
-                    <tab heading="Single">
-                        <sample-section [desc]="tabDesc.single">
-                            <single-demo></single-demo>
-                        </sample-section>
-                    </tab>
-                    <tab heading="Multiple">
-                        <sample-section [desc]="tabDesc.multiple">
-                            <multiple-demo></multiple-demo>
-                        </sample-section>
-                    </tab>
-                    <tab heading="Children">
-                        <sample-section [desc]="tabDesc.children">
-                            <children-demo></children-demo>
-                        </sample-section>
-                    </tab>
-                    <tab heading="Rich">
-                        <sample-section [desc]="tabDesc.rich">
-                            <rich-demo></rich-demo>
-                        </sample-section>
-                    </tab>
-                    <tab heading="No autocomplete">
-                        <sample-section [desc]="tabDesc.noAutoComplete">
-                            <no-autocomplete-demo></no-autocomplete-demo>
-                        </sample-section>
-                    </tab>
-                </tabset>
-            </div>
+      <section>
+        <tabset>
+          <tab heading="Single">
+            <sample-section [desc]="tabDesc.single">
+              <single-demo></single-demo>
+            </sample-section>
+          </tab>
+          <tab heading="Multiple">
+            <sample-section [desc]="tabDesc.multiple">
+              <multiple-demo></multiple-demo>
+            </sample-section>
+          </tab>
+          <tab heading="Children">
+            <sample-section [desc]="tabDesc.children">
+              <children-demo></children-demo>
+            </sample-section>
+          </tab>
+          <tab heading="Rich">
+            <sample-section [desc]="tabDesc.rich">
+              <rich-demo></rich-demo>
+            </sample-section>
+          </tab>
+          <tab heading="No autocomplete">
+            <sample-section [desc]="tabDesc.noAutoComplete">
+              <no-autocomplete-demo></no-autocomplete-demo>
+            </sample-section>
+          </tab>
+        </tabset>
 
-            <div class="row">
-                <h2>API</h2>
-                <div class="card card-block panel panel-default panel-body" [innerHTML]="doc"></div>
-            </div>
-        </section>
+        <h2>API</h2>
+        <div class="card card-block panel panel-default panel-body">
+          <div class="card-body doc-api" [innerHTML]="doc"></div>
+        </div>
+      </section>
     `
 })
 export class SelectSectionComponent {

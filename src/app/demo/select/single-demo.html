@@ -11,7 +11,9 @@
                     (blur)="doBlur()">
         </ngx-select>
         <p></p>
-        <pre>{{ngxControl.value | json}}</pre>
+        <div class="alert alert-secondary">
+            <pre>{{ngxControl.value | json}}</pre>
+        </div>
         <div>
             <button type="button" class="btn btn-primary"
                     (click)="ngxControl.disabled? ngxControl.enable(): ngxControl.disable()">
