@@ -34,7 +34,7 @@ enum ENavigation {
 @Component({
     selector: 'ngx-select',
     templateUrl: './ngx-select.component.html',
-    styleUrls: ['./ngx-select.component.css'],
+    styleUrls: ['./ngx-select.component.scss'],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
@@ -303,7 +303,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     }
 
     protected sanitize(html: string): SafeHtml {
-        return this.sanitizer.bypassSecurityTrustHtml(html);
+        return html ? this.sanitizer.bypassSecurityTrustHtml(html) : null;
     }
 
     protected highlightOption(option: NgxSelectOption): SafeHtml {
@@ -315,6 +315,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
 
     protected optionSelect(option: NgxSelectOption, event: Event = null): void {
         if (event) {
+            event.preventDefault();
             event.stopPropagation();
         }
         this.subjOptionsSelected.next((this.multiple ? this.subjOptionsSelected.value : []).concat([option]));

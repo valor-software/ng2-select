@@ -102,16 +102,15 @@ const createKeyboardEvent = (typeArg: string, keyCode: number, key: string = '')
 
 describe('NgxSelectComponent', () => {
     let fixture: ComponentFixture<TestNgxSelectComponent>;
-    const el = (id: number) => fixture.debugElement.nativeElement.querySelector(`#sel-${id} .ui-select-container`);
+    const el = (id: number) => fixture.debugElement.nativeElement.querySelector(`#sel-${id} .ngx-select`);
     const formControl = (id: number) => el(id).querySelector('.form-control');
     const formControlInput = (id: number) => el(id).querySelector('input');
-    const selectChoicesContainer = (id: number) => el(id).querySelector('.ui-select-choices');
-    // const selectChoices = (id: number) => el(id).querySelectorAll('.ui-select-choices-row div');
+    const selectChoicesContainer = (id: number) => el(id).querySelector('.ngx-select__choices');
     const selectChoices = (id: number) => fixture.debugElement.nativeElement
-        .querySelectorAll(`#sel-${id} .ui-select-container.open .ui-select-choices-row div`);
-    const selectChoiceActive = (id: number) => el(id).querySelector('.ui-select-choices-row.active div');
-    const selectedItem = (id: number) => el(id).querySelector('.ui-select-match-text'); // select multiple = false
-    const selectedItems = (id: number) => el(id).querySelectorAll('.ui-select-match-item'); // select multiple = true
+        .querySelectorAll(`#sel-${id} .ngx-select.open .ngx-select__item`);
+    const selectChoiceActive = (id: number) => el(id).querySelector('.ngx-select__item.ngx-select__item_active');
+    const selectedItem = (id: number) => el(id).querySelector('.ngx-select__selected'); // select multiple = false
+    const selectedItems = (id: number) => el(id).querySelectorAll('.ngx-select__selected'); // select multiple = true
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -560,7 +559,7 @@ describe('NgxSelectComponent', () => {
             it('multiple items', () => {
                 fixture.componentInstance.select1.multiple = true;
                 fixture.detectChanges();
-                selectedItems(1)[0].querySelector('.close').click();
+                selectedItems(1)[0].querySelector('.ngx-select__clear').click();
                 fixture.detectChanges();
                 expect(selectedItems(1).length).toBe(0);
                 expect(fixture.componentInstance.select1.value).toEqual([]);
@@ -590,7 +589,7 @@ describe('NgxSelectComponent', () => {
             it('multiple items', () => {
                 fixture.componentInstance.select2.multiple = true;
                 fixture.detectChanges();
-                selectedItems(2)[0].querySelector('.close').click();
+                selectedItems(2)[0].querySelector('.ngx-select__clear').click();
                 fixture.detectChanges();
                 expect(selectedItems(2).length).toBe(0);
                 expect(fixture.componentInstance.select2.formControl.value).toEqual([]);
