@@ -106,6 +106,12 @@ Please follow this guidelines when reporting bugs and feature requests:
 
 Thanks for understanding!
 
+# Contribute
+
+* `npm start` - Run demo for local debugging.
+* `npm test` - Run unit tests only once. Use `ng test` for running tests with files watching.
+* `npm run build` - Build the demo & package for release & publishing.
+
 ### License
 
 The MIT License (see the [LICENSE](https://github.com/optimistex/ngx-select-ex/blob/master/LICENSE) file for the full text)
