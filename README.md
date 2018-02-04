@@ -112,6 +112,12 @@ Thanks for understanding!
 * `npm test` - Run unit tests only once. Use `ng test` for running tests with files watching.
 * `npm run build` - Build the demo & package for release & publishing.
 
+After build you will be able:
+* Install the component to another project by `npm install /path/to/ngx-select-ex/dist`.
+* Link another project to the component `npm link /path/to/ngx-select-ex/dist`. **Warning!** Then use the flag [--preserve-symlinks](https://github.com/optimistex/ngx-select-ex/issues/4)
+
+Do not forget make a pull request to the [ngx-select-ex](https://github.com/optimistex/ngx-select-ex)
+
 ### License
 
 The MIT License (see the [LICENSE](https://github.com/optimistex/ngx-select-ex/blob/master/LICENSE) file for the full text)
