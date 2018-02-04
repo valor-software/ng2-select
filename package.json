@@ -1,7 +1,12 @@
 {
-  "name": "ng2-select-ex-demo",
+  "name": "ngx-select-ex-demo",
   "version": "1.0.0",
   "license": "MIT",
+  "author": "Konstantin Polyntsov <optimistex@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:optimistex/ngx-select-ex.git"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve -op runtime",

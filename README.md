@@ -1,8 +1,8 @@
-# Native UI Select Angular component ([demo](https://optimistex.github.io/ng2-select-ex/))
-## ng2-select-ex 
-[![npm version](https://badge.fury.io/js/ng2-select-ex.svg)](http://badge.fury.io/js/ng2-select-ex) 
-[![npm downloads](https://img.shields.io/npm/dm/ng2-select-ex.svg)](https://npmjs.org/ng2-select-ex)
-[![Build Status](https://travis-ci.org/optimistex/ng2-select-ex.svg?branch=master)](https://travis-ci.org/optimistex/ng2-select-ex)
+# Native UI Select Angular component ([demo](https://optimistex.github.io/ngx-select-ex/))
+## ngx-select-ex 
+[![npm version](https://badge.fury.io/js/ngx-select-ex.svg)](http://badge.fury.io/js/ngx-select-ex) 
+[![npm downloads](https://img.shields.io/npm/dm/ngx-select-ex.svg)](https://npmjs.org/ngx-select-ex)
+[![Build Status](https://travis-ci.org/optimistex/ngx-select-ex.svg?branch=master)](https://travis-ci.org/optimistex/ngx-select-ex)
 [![Angular 2 Style Guide](https://mgechev.github.io/angular2-style-guide/images/badge.svg)](https://github.com/mgechev/angular2-style-guide)
 
 Native Angular2 component for Select
@@ -11,10 +11,10 @@ Compatible with [Bootstrap 3](https://getbootstrap.com/docs/3.3/) and **[Bootstr
 
 ## Usage
 
-1. Install **ng2-select-ex** through [npm](https://www.npmjs.com/package/ng2-select-ex) package manager using the following command:
+1. Install **ngx-select-ex** through [npm](https://www.npmjs.com/package/ngx-select-ex) package manager using the following command:
 
     ```console
-    npm i ng2-select-ex --save
+    npm i ngx-select-ex --save
     ```
 
 2. Add NgxSelectModule into your AppModule class. app.module.ts would look like this:
@@ -23,7 +23,7 @@ Compatible with [Bootstrap 3](https://getbootstrap.com/docs/3.3/) and **[Bootstr
     import {NgModule} from '@angular/core';
     import {BrowserModule} from '@angular/platform-browser';
     import {AppComponent} from './app.component';
-    import { NgxSelectModule } from 'ng2-select-ex';
+    import { NgxSelectModule } from 'ngx-select-ex';
     
     @NgModule({
       imports: [BrowserModule, NgxSelectModule],
@@ -46,7 +46,7 @@ Compatible with [Bootstrap 3](https://getbootstrap.com/docs/3.3/) and **[Bootstr
     <ngx-select [items]="items" [(ngModel)]="itemId">
     ```
 
-5. More information regarding of using **ng2-select-ex** is located in [demo](https://optimistex.github.io/ng2-select-ex/).
+5. More information regarding of using **ngx-select-ex** is located in [demo](https://optimistex.github.io/ngx-select-ex/).
 
 ## API
 
@@ -101,11 +101,11 @@ List of styles for customization:
 
 Please follow this guidelines when reporting bugs and feature requests:
 
-1. Use [GitHub Issues](https://github.com/optimistex/ng2-select-ex/issues) board to report bugs and feature requests (not our email address)
+1. Use [GitHub Issues](https://github.com/optimistex/ngx-select-ex/issues) board to report bugs and feature requests (not our email address)
 2. Please **always** write steps to reproduce the error. That way we can focus on fixing the bug, not scratching our heads trying to reproduce it.
 
 Thanks for understanding!
 
 ### License
 
-The MIT License (see the [LICENSE](https://github.com/optimistex/ng2-select-ex/blob/master/LICENSE) file for the full text)
+The MIT License (see the [LICENSE](https://github.com/optimistex/ngx-select-ex/blob/master/LICENSE) file for the full text)

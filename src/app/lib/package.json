@@ -10,7 +10,7 @@
       "entryFile": "public_api.ts"
     }
   },
-  "name": "ng2-select-ex",
+  "name": "ngx-select-ex",
   "version": "3.3.0-rc2",
   "license": "MIT",
   "private": false,
@@ -30,12 +30,12 @@
   "author": "Konstantin Polyntsov <optimistex@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com:optimistex/ng2-select-ex.git"
+    "url": "git+ssh://git@github.com:optimistex/ngx-select-ex.git"
   },
   "bugs": {
-    "url": "https://github.com/optimistex/ng2-select-ex/issues"
+    "url": "https://github.com/optimistex/ngx-select-ex/issues"
   },
-  "homepage": "https://github.com/optimistex/ng2-select-ex#readme",
+  "homepage": "https://github.com/optimistex/ngx-select-ex#readme",
   "peerDependencies": {
     "@angular/core": ">5.0.0",
     "@angular/common": ">5.0.0",

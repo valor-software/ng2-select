@@ -1,9 +1,9 @@
 ### Usage
 
-1. Install **ng2-select-ex** through [npm](https://www.npmjs.com/package/ng2-select-ex) package manager using the following command:
+1. Install **ngx-select-ex** through [npm](https://www.npmjs.com/package/ngx-select-ex) package manager using the following command:
 
     ```console
-    npm i ng2-select-ex --save
+    npm i ngx-select-ex --save
     ```
 
 2. Add NgxSelectModule into your AppModule class. app.module.ts would look like this:
@@ -12,7 +12,7 @@
     import {NgModule} from '@angular/core';
     import {BrowserModule} from '@angular/platform-browser';
     import {AppComponent} from './app.component';
-    import { NgxSelectModule } from 'ng2-select-ex';
+    import { NgxSelectModule } from 'ngx-select-ex';
     
     @NgModule({
       imports: [BrowserModule, NgxSelectModule],
