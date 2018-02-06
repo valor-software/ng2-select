@@ -7,6 +7,8 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {NgxSelectOptGroup, NgxSelectOption, TSelectOption} from './ngx-select.classes';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import * as _ from 'lodash';
+import * as escapeStringNs from 'escape-string-regexp';
+import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/observable/empty';
@@ -21,7 +23,8 @@ import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/merge';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
-import {Subject} from 'rxjs/Subject';
+
+const escapeString = escapeStringNs;
 
 export interface INgxSelectComponentMouseEvent extends MouseEvent {
     clickedSelectComponent?: NgxSelectComponent;
@@ -343,7 +346,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     }
 
     private filterOptions(search: string, options: TSelectOption[], selectedOptions: NgxSelectOption[]): TSelectOption[] {
-        const regExp = new RegExp(search, 'i'),
+        const regExp = new RegExp(escapeString(search), 'i'),
             filterOption = (option: NgxSelectOption) => {
                 return (!search || regExp.test(option.text)) && (!this.multiple || selectedOptions.indexOf(option) === -1);
             };
