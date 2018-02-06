@@ -7,11 +7,15 @@
         "dom",
         "es2017"
       ],
-      "entryFile": "public_api.ts"
+      "entryFile": "public_api.ts",
+      "umdModuleIds": {
+        "lodash": "_",
+        "escape-string-regexp": "escapeString"
+      }
     }
   },
   "name": "ngx-select-ex",
-  "version": "3.3.2",
+  "version": "3.3.3",
   "license": "MIT",
   "private": false,
   "description": "Angular based replacement for select boxes",
