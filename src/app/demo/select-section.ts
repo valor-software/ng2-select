@@ -68,7 +68,7 @@ const tabDesc: any = {
           </tab>
         </tabset>
 
-        <h2>API</h2>
+        <h2>Documentation</h2>
         <div class="card card-block panel panel-default panel-body">
           <div class="card-body doc-api" [innerHTML]="doc"></div>
         </div>

@@ -304,3 +304,29 @@ pre {
 .doc-api h3 {
     margin: 10px 0;
 }
+
+table {
+    display: block;
+    width: 100%;
+    overflow: auto;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+table tr {
+    background-color: #fff;
+    border-top: 1px solid #c6cbd1;
+}
+
+table th, table td {
+    padding: 6px 13px;
+    border: 1px solid #dfe2e5;
+}
+
+table tr:nth-child(2n) {
+    background-color: #f6f8fa;
+}
+
+code {
+    word-break: normal;
+}
