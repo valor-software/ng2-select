@@ -50,6 +50,8 @@ Compatible with [Bootstrap 3](https://getbootstrap.com/docs/3.3/) and **[Bootstr
 
 ## API
 
+Any item can be `disabled` for prevent selection. For disable an item add the property `disabled` to the item.
+
 | Input  | Type | Default |  Description |
 | -------- | -------- | -------- |  ------------- |
 | [items] | any[] | `[]` |   Items array. Should be an array of objects with `id` and `text` properties. As convenience, you may also pass an array of strings, in which case the same string is used for both the ID and the text. Items may be nested by adding a `options` property to any item, whose value should be another array of items. Items that have children may omit to have an ID. |
@@ -95,6 +97,7 @@ List of styles for customization:
 - **`ngx-select__choices`** - The common container of items.
 - **`ngx-select__item-group`** - The group of items.
 - **`ngx-select__item`** - An item. 
+- **`ngx-select__item_disabled`** - Modifier of a disabled item. 
 - **`ngx-select__item_active`** - Modifier of the activated item.
 
 # Troubleshooting

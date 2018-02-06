@@ -37,6 +37,8 @@
 
 ## API
 
+Any item can be `disabled` for prevent selection. For disable an item add the property `disabled` to the item.
+
 | Input  | Type | Default |  Description |
 | -------- | -------- | -------- |  ------------- |
 | [items] | any[] | `[]` |   Items array. Should be an array of objects with `id` and `text` properties. As convenience, you may also pass an array of strings, in which case the same string is used for both the ID and the text. Items may be nested by adding a `options` property to any item, whose value should be another array of items. Items that have children may omit to have an ID. |

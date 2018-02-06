@@ -55,7 +55,7 @@ export class ChildrenDemoComponent {
             children: [
                 {id: 6, text: 'Birmingham'},
                 {id: 7, text: 'Bradford'},
-                {id: 26, text: 'Leeds'},
+                {id: 26, text: 'Leeds', disabled: true},
                 {id: 30, text: 'London'},
                 {id: 34, text: 'Manchester'},
                 {id: 47, text: 'Sheffield'}
