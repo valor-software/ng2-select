@@ -53,4 +53,12 @@ export class SingleDemoComponent implements OnDestroy {
     public doBlur() {
         console.log('SingleDemoComponent.doBlur');
     }
+
+    public doOpen() {
+        console.log('SingleDemoComponent.doOpen');
+    }
+
+    public doClose() {
+        console.log('SingleDemoComponent.doClose');
+    }
 }

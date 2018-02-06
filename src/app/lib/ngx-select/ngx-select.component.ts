@@ -62,6 +62,8 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     @Output() public typed = new EventEmitter<string>();
     @Output() public focus = new EventEmitter<void>();
     @Output() public blur = new EventEmitter<void>();
+    @Output() public open = new EventEmitter<void>();
+    @Output() public close = new EventEmitter<void>();
 
     @ViewChild('main') protected mainElRef: ElementRef;
     @ViewChild('input') protected inputElRef: ElementRef;
@@ -384,6 +386,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
                 this.navigateOption(ENavigation.first);
             }
             this.focusToInput();
+            this.open.emit();
         }
     }
 
@@ -394,6 +397,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
             this.mainElRef.nativeElement.focus();
             window.scrollTo(x, y);
         }
+        this.close.emit();
     }
 
     private buildOptions(data: any[]): Array<NgxSelectOption | NgxSelectOptGroup> {

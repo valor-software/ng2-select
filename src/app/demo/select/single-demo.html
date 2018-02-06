@@ -8,7 +8,9 @@
                     placeholder="No city selected"
                     (typed)="inputTyped('ngx-select', $event)"
                     (focus)="doFocus()"
-                    (blur)="doBlur()">
+                    (blur)="doBlur()"
+                    (open)="doOpen()"
+                    (close)="doClose()">
         </ngx-select>
         <p></p>
         <div class="alert alert-secondary">

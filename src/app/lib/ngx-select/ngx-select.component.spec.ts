@@ -24,7 +24,9 @@ import createSpy = jasmine.createSpy;
                     [items]="select1.items"
                     [disabled]="select1.disabled"
                     (focus)="select1.doFocus()"
-                    (blur)="select1.doBlur()"></ngx-select>
+                    (blur)="select1.doBlur()"
+                    (open)="select1.doOpen()"
+                    (close)="select1.doClose()"></ngx-select>
         <ngx-select id="sel-2" #component2
                     [formControl]="select2.formControl"
                     [defaultValue]="select2.defaultValue"
@@ -59,7 +61,9 @@ class TestNgxSelectComponent {
         disabled: false,
 
         doFocus: () => null,
-        doBlur: () => null
+        doBlur: () => null,
+        doOpen: () => null,
+        doClose: () => null
     };
 
     public select2: any = {
@@ -899,11 +903,13 @@ describe('NgxSelectComponent', () => {
     });
 
     describe('should emit events focus & blur', () => {
-        let doFocus, doBlur;
+        let doFocus, doBlur, doOpen, doClose;
 
         beforeEach(() => {
             doFocus = spyOn(fixture.componentInstance.select1, 'doFocus');
             doBlur = spyOn(fixture.componentInstance.select1, 'doBlur');
+            doOpen = spyOn(fixture.componentInstance.select1, 'doOpen');
+            doClose = spyOn(fixture.componentInstance.select1, 'doClose');
             fixture.componentInstance.select1.items = items1;
             fixture.detectChanges();
         });
@@ -917,13 +923,19 @@ describe('NgxSelectComponent', () => {
         });
 
         afterEach(() => {
+            expect(doFocus).toHaveBeenCalledTimes(0);
+            expect(doBlur).toHaveBeenCalledTimes(0);
+            expect(doOpen).toHaveBeenCalledTimes(0);
+            expect(doClose).toHaveBeenCalledTimes(0);
             formControl(1).click();
             fixture.detectChanges();
             fixture.detectChanges();
             expect(doFocus).toHaveBeenCalledTimes(1);
+            expect(doOpen).toHaveBeenCalledTimes(1);
             fixture.debugElement.nativeElement.click();
             fixture.detectChanges();
             expect(doBlur).toHaveBeenCalledTimes(1);
+            expect(doClose).toHaveBeenCalledTimes(1);
         });
     });
 });
