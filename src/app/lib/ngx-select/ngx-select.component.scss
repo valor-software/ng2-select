@@ -31,6 +31,16 @@
     outline: 0;
     position: relative;
     text-align: left !important; /* Instead of center because of .btn */
+
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+
+    &:hover {
+      color: #333;
+      background-color: #e6e6e6;
+      border-color: #adadad;
+    }
   }
 
   &__toggle-caret {

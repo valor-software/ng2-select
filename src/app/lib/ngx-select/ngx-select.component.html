@@ -10,7 +10,7 @@
 
   <!-- single selected item -->
   <div class="ngx-select__selected ui-select-match" *ngIf="(multiple === false) && (!optionsOpened || noAutoComplete)">
-    <div class="ngx-select__toggle btn btn-outline-secondary btn-default form-control ui-select-toggle"
+    <div class="ngx-select__toggle btn form-control ui-select-toggle"
          (click)="optionsOpen()">
       <span [ngClass]="{
               'ngx-select__placeholder ui-select-placeholder text-muted': !optionsSelected.length,
