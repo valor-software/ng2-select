@@ -52,6 +52,7 @@ Any item can be `disabled` for prevent selection. For disable an item add the pr
 | [noAutoComplete] | boolean | `false` |  Set to `true` Set to `true` to hide the search input. This option only applies to single-value inputs |
 | [disabled] | boolean | `false` |  When `true`, it specifies that the component should be disabled |
 | [defaultValue] | any[] | `[]` |  Use to set default value |
+| autoSelectSingleOption | boolean | `false` | Auto select a non disabled single option |
 
 | Output  | Description |
 | ------------- | ------------- |

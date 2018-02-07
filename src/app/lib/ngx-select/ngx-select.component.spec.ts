@@ -23,6 +23,7 @@ import createSpy = jasmine.createSpy;
                     [noAutoComplete]="select1.noAutoComplete"
                     [items]="select1.items"
                     [disabled]="select1.disabled"
+                    [autoSelectSingleOption]="select1.autoSelectSingleOption"
                     (focus)="select1.doFocus()"
                     (blur)="select1.doBlur()"
                     (open)="select1.doOpen()"
@@ -59,6 +60,7 @@ class TestNgxSelectComponent {
         noAutoComplete: false,
         items: [],
         disabled: false,
+        autoSelectSingleOption: false,
 
         doFocus: () => null,
         doBlur: () => null,
@@ -936,6 +938,50 @@ describe('NgxSelectComponent', () => {
             fixture.detectChanges();
             expect(doBlur).toHaveBeenCalledTimes(1);
             expect(doClose).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('should auto selecting a single option', () => {
+        const itemList = [{value: 1, text: 't1', disabled: true}, {value: 2, text: 't2'}];
+
+        beforeEach(() => {
+            fixture.componentInstance.select1.autoSelectSingleOption = true;
+        });
+
+        it('for single select', () => {
+            fixture.componentInstance.select1.multiple = false;
+            fixture.componentInstance.select1.items = itemList;
+            fixture.detectChanges();
+            expect(fixture.componentInstance.select1.value).toBe(2);
+        });
+
+        it('for multiple select', () => {
+            fixture.componentInstance.select1.multiple = true;
+            fixture.componentInstance.select1.items = itemList;
+            fixture.detectChanges();
+            expect(fixture.componentInstance.select1.value).toEqual([2]);
+        });
+    });
+
+    describe('should not auto selecting a disable single option', () => {
+        const itemList = [{value: 1, text: 't1', disabled: true}];
+
+        beforeEach(() => {
+            fixture.componentInstance.select1.autoSelectSingleOption = true;
+        });
+
+        it('for single select when single option does not exists', () => {
+            fixture.componentInstance.select1.multiple = false;
+            fixture.componentInstance.select1.items = itemList;
+            fixture.detectChanges();
+            expect(fixture.componentInstance.select1.value).toBeNull();
+        });
+
+        it('for multiple select when single option does not exists', () => {
+            fixture.componentInstance.select1.multiple = true;
+            fixture.componentInstance.select1.items = itemList;
+            fixture.detectChanges();
+            expect(fixture.componentInstance.select1.value).toBeNull();
         });
     });
 });

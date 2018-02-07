@@ -58,6 +58,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     @Input() public noAutoComplete = false;
     @Input() public disabled = false;
     @Input() public defaultValue: any[] = [];
+    @Input() public autoSelectSingleOption = false;
 
     @Output() public typed = new EventEmitter<string>();
     @Output() public focus = new EventEmitter<void>();
@@ -146,13 +147,17 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
         this.subjOptions
             .combineLatest(this.subjOptionsSelected, this.subjSearchText,
                 (options: TSelectOption[], selectedOptions: NgxSelectOption[], search: string) => {
-                    return this.filterOptions(search, options, selectedOptions);
+                    this.optionsFiltered = this.filterOptions(search, options, selectedOptions);
+                    this.cacheOptionsFilteredFlat = null;
+
+                    this.optionsFilteredFlat()
+                        .filter((flatOptions: NgxSelectOption[]) =>
+                            this.autoSelectSingleOption && flatOptions.length === 1 && !selectedOptions.length
+                        )
+                        .subscribe((flatOptions: NgxSelectOption[]) => this.subjOptionsSelected.next(flatOptions));
                 }
             )
-            .subscribe((filteredOptions: TSelectOption[]) => {
-                this.optionsFiltered = filteredOptions;
-                this.cacheOptionsFilteredFlat = null;
-            });
+            .subscribe();
     }
 
     public get optionsSelected(): NgxSelectOption[] {
@@ -181,18 +186,23 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
         }
     }
 
+    private optionsFilteredFlat(): Observable<NgxSelectOption[]> {
+        if (this.cacheOptionsFilteredFlat) {
+            return Observable.of(this.cacheOptionsFilteredFlat);
+        }
+
+        return Observable.from(this.optionsFiltered)
+            .flatMap<TSelectOption, NgxSelectOption>((option: TSelectOption) =>
+                option instanceof NgxSelectOption ? Observable.of(option) :
+                    (option instanceof NgxSelectOptGroup ? Observable.from(option.optionsFiltered) : Observable.empty())
+            )
+            .filter((optionsFilteredFlat: NgxSelectOption) => !optionsFilteredFlat.disabled)
+            .toArray()
+            .do((optionsFilteredFlat: NgxSelectOption[]) => this.cacheOptionsFilteredFlat = optionsFilteredFlat);
+    }
+
     private navigateOption(navigation: ENavigation) {
-        (this.cacheOptionsFilteredFlat
-                ? Observable.of(this.cacheOptionsFilteredFlat)
-                : Observable.from(this.optionsFiltered)
-                    .flatMap<TSelectOption, NgxSelectOption>((option: TSelectOption) =>
-                        option instanceof NgxSelectOption ? Observable.of(option) :
-                            (option instanceof NgxSelectOptGroup ? Observable.from(option.optionsFiltered) : Observable.empty())
-                    )
-                    .filter((optionsFilteredFlat: NgxSelectOption) => !optionsFilteredFlat.disabled)
-                    .toArray()
-                    .do((optionsFilteredFlat: NgxSelectOption[]) => this.cacheOptionsFilteredFlat = optionsFilteredFlat)
-        )
+        this.optionsFilteredFlat()
             .map((options: NgxSelectOption[]) => {
                 let newActiveIdx;
                 switch (navigation) {
