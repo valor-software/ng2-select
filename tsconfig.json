@@ -15,5 +15,9 @@
       "es2017",
       "dom"
     ]
-  }
+  },
+  "exclude": [
+    ".ng_build",
+    ".ng_pkg_build"
+  ]
 }

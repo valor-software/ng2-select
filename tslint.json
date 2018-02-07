@@ -126,7 +126,7 @@
     "component-selector": [
       true,
       "element",
-      "",
+      [],
       "kebab-case"
     ],
     "no-output-on-prefix": true,
