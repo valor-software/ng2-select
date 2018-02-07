@@ -6,6 +6,12 @@
     npm i ngx-select-ex --save
     ```
 
+    For usage with Angular 4 install deprecated version 3.1.2:
+
+    ```console
+    npm i ngx-select-ex@3.1.2 --save
+    ```
+
 2. Add NgxSelectModule into your AppModule class. app.module.ts would look like this:
 
     ```typescript
@@ -13,27 +19,29 @@
     import {BrowserModule} from '@angular/platform-browser';
     import {AppComponent} from './app.component';
     import { NgxSelectModule } from 'ngx-select-ex';
-    
+
     @NgModule({
       imports: [BrowserModule, NgxSelectModule],
       declarations: [AppComponent],
       bootstrap: [AppComponent],
     })
-    export class AppModule {    
+    export class AppModule {
     }
     ```
-3. Include Bootstrap styles. 
-    For example add to your index.html 
+3. Include Bootstrap styles.
+    For example add to your index.html
 
     ```html
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    ``` 
+    ```
 
-4. Add the tag <ngx-select> into some html 
+4. Add the tag `<ngx-select>` into some html
 
     ```html
     <ngx-select [items]="items" [(ngModel)]="itemId">
     ```
+
+5. More information regarding of using **ngx-select-ex** is located in [demo](https://optimistex.github.io/ngx-select-ex/).
 
 ## API
 
@@ -64,13 +72,13 @@ Any item can be `disabled` for prevent selection. For disable an item add the pr
 
 ### Styles and customization
 
-Currently, the component contains CSS classes named within [BEM Methodology](https://en.bem.info/methodology/). 
+Currently, the component contains CSS classes named within [BEM Methodology](https://en.bem.info/methodology/).
 As well it contains the "Bootstrap classes". Recommended use BEM classes for style customization.
 
 List of styles for customization:
 
 - **`ngx-select`** - Main class of the component.
-- **`ngx-select_multiple`** - Modifier of the multiple mode. It's available when the property multiple  is true.  
+- **`ngx-select_multiple`** - Modifier of the multiple mode. It's available when the property multiple  is true.
 - **`ngx-select__disabled`** - Layer for the disabled mode.
 - **`ngx-select__selected`** - The common container for displaying selected items.
 - **`ngx-select__toggle`** - The toggle for single mode. It's available when the property multiple  is false.
@@ -79,11 +87,11 @@ List of styles for customization:
 - **`ngx-select__selected-plural`** - The multiple selected item. It's available when the property multiple is true.
 - **`ngx-select__allow-clear`** - The indicator that the selected single item can be removed. It's available while properties the multiple is false and the allowClear is true.
 - **`ngx-select__toggle-caret`** - The drop-down button of the single mode. It's available when the property multiple  is false.
-- **`ngx-select__clear`** - The button clear. 
+- **`ngx-select__clear`** - The button clear.
 - **`ngx-select__clear-icon`** - The cross icon.
-- **`ngx-select__search`** - The input field for full text lives searching. 
+- **`ngx-select__search`** - The input field for full text lives searching.
 - **`ngx-select__choices`** - The common container of items.
 - **`ngx-select__item-group`** - The group of items.
-- **`ngx-select__item`** - An item. 
-- **`ngx-select__item_disabled`** - Modifier of a disabled item. 
+- **`ngx-select__item`** - An item.
+- **`ngx-select__item_disabled`** - Modifier of a disabled item.
 - **`ngx-select__item_active`** - Modifier of the activated item.

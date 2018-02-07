@@ -9,7 +9,8 @@
 
 Native Angular component for Select
 
-Compatible with [Bootstrap 3](https://getbootstrap.com/docs/3.3/) and **[Bootstrap 4](https://getbootstrap.com/)**
+- Requires [Angular](https://angular.io/) version 5 or higher!
+- Compatible with [Bootstrap 3](https://getbootstrap.com/docs/3.3/) and **[Bootstrap 4](https://getbootstrap.com/)**
 
 ## Usage
 
@@ -17,6 +18,12 @@ Compatible with [Bootstrap 3](https://getbootstrap.com/docs/3.3/) and **[Bootstr
 
     ```console
     npm i ngx-select-ex --save
+    ```
+
+    For usage with Angular 4 install deprecated version 3.1.2:
+
+    ```console
+    npm i ngx-select-ex@3.1.2 --save
     ```
 
 2. Add NgxSelectModule into your AppModule class. app.module.ts would look like this:
