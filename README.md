@@ -1,11 +1,13 @@
 # Native UI Select Angular component ([demo](https://optimistex.github.io/ngx-select-ex/))
-## ngx-select-ex 
-[![npm version](https://badge.fury.io/js/ngx-select-ex.svg)](http://badge.fury.io/js/ngx-select-ex) 
+
+## ngx-select-ex
+
+[![npm version](https://badge.fury.io/js/ngx-select-ex.svg)](http://badge.fury.io/js/ngx-select-ex)
 [![npm downloads](https://img.shields.io/npm/dm/ngx-select-ex.svg)](https://npmjs.org/ngx-select-ex)
 [![Build Status](https://travis-ci.org/optimistex/ngx-select-ex.svg?branch=master)](https://travis-ci.org/optimistex/ngx-select-ex)
 [![Angular 2 Style Guide](https://mgechev.github.io/angular2-style-guide/images/badge.svg)](https://github.com/mgechev/angular2-style-guide)
 
-Native Angular2 component for Select
+Native Angular component for Select
 
 Compatible with [Bootstrap 3](https://getbootstrap.com/docs/3.3/) and **[Bootstrap 4](https://getbootstrap.com/)**
 
@@ -24,23 +26,23 @@ Compatible with [Bootstrap 3](https://getbootstrap.com/docs/3.3/) and **[Bootstr
     import {BrowserModule} from '@angular/platform-browser';
     import {AppComponent} from './app.component';
     import { NgxSelectModule } from 'ngx-select-ex';
-    
+
     @NgModule({
       imports: [BrowserModule, NgxSelectModule],
       declarations: [AppComponent],
       bootstrap: [AppComponent],
     })
-    export class AppModule {    
+    export class AppModule {
     }
     ```
-3. Include Bootstrap styles. 
-    For example add to your index.html 
+3. Include Bootstrap styles.
+    For example add to your index.html
 
     ```html
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    ``` 
+    ```
 
-4. Add the tag <ngx-select> into some html 
+4. Add the tag `<ngx-select>` into some html
 
     ```html
     <ngx-select [items]="items" [(ngModel)]="itemId">
@@ -77,13 +79,13 @@ Any item can be `disabled` for prevent selection. For disable an item add the pr
 
 ### Styles and customization
 
-Currently, the component contains CSS classes named within [BEM Methodology](https://en.bem.info/methodology/). 
+Currently, the component contains CSS classes named within [BEM Methodology](https://en.bem.info/methodology/).
 As well it contains the "Bootstrap classes". Recommended use BEM classes for style customization.
 
 List of styles for customization:
 
 - **`ngx-select`** - Main class of the component.
-- **`ngx-select_multiple`** - Modifier of the multiple mode. It's available when the property multiple  is true.  
+- **`ngx-select_multiple`** - Modifier of the multiple mode. It's available when the property multiple  is true.
 - **`ngx-select__disabled`** - Layer for the disabled mode.
 - **`ngx-select__selected`** - The common container for displaying selected items.
 - **`ngx-select__toggle`** - The toggle for single mode. It's available when the property multiple  is false.
@@ -92,16 +94,16 @@ List of styles for customization:
 - **`ngx-select__selected-plural`** - The multiple selected item. It's available when the property multiple is true.
 - **`ngx-select__allow-clear`** - The indicator that the selected single item can be removed. It's available while properties the multiple is false and the allowClear is true.
 - **`ngx-select__toggle-caret`** - The drop-down button of the single mode. It's available when the property multiple  is false.
-- **`ngx-select__clear`** - The button clear. 
+- **`ngx-select__clear`** - The button clear.
 - **`ngx-select__clear-icon`** - The cross icon.
-- **`ngx-select__search`** - The input field for full text lives searching. 
+- **`ngx-select__search`** - The input field for full text lives searching.
 - **`ngx-select__choices`** - The common container of items.
 - **`ngx-select__item-group`** - The group of items.
-- **`ngx-select__item`** - An item. 
-- **`ngx-select__item_disabled`** - Modifier of a disabled item. 
+- **`ngx-select__item`** - An item.
+- **`ngx-select__item_disabled`** - Modifier of a disabled item.
 - **`ngx-select__item_active`** - Modifier of the activated item.
 
-# Troubleshooting
+## Troubleshooting
 
 Please follow this guidelines when reporting bugs and feature requests:
 
@@ -110,15 +112,16 @@ Please follow this guidelines when reporting bugs and feature requests:
 
 Thanks for understanding!
 
-# Contribute
+## Contribute
 
-* `npm start` - Run demo for local debugging.
-* `npm test` - Run unit tests only once. Use `ng test` for running tests with files watching.
-* `npm run build` - Build the demo & package for release & publishing.
+- `npm start` - Run demo for local debugging.
+- `npm test` - Run unit tests only once. Use `ng test` for running tests with files watching.
+- `npm run build` - Build the demo & package for release & publishing.
 
 After build you will be able:
-* Install the component to another project by `npm install /path/to/ngx-select-ex/dist`.
-* Link another project to the component `npm link /path/to/ngx-select-ex/dist`. **Warning!** Then use the flag [--preserve-symlinks](https://github.com/optimistex/ngx-select-ex/issues/4)
+
+- Install the component to another project by `npm install /path/to/ngx-select-ex/dist`.
+- Link another project to the component `npm link /path/to/ngx-select-ex/dist`. **Warning!** Then use the flag [--preserve-symlinks](https://github.com/optimistex/ngx-select-ex/issues/4)
 
 Do not forget make a pull request to the [ngx-select-ex](https://github.com/optimistex/ngx-select-ex)
 
