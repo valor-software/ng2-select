@@ -59,7 +59,7 @@
 
     <!-- options template -->
     <ul #choiceMenu role="menu" class="ngx-select__choices ui-select-choices dropdown-menu"
-        [class.show]="optionsOpened && optionsFiltered.length">
+        [class.show]="optionsOpened ">
         <li class="ngx-select__item-group" role="menuitem"
             *ngFor="let opt of optionsFiltered; trackBy: trackByOption; let idx=index">
             <div class="divider dropdown-divider" *ngIf="opt.type === 'optgroup' && (idx > 0)"></div>
@@ -74,6 +74,9 @@
                (mouseenter)="optionActivate(option)" (click)="optionSelect(option, $event)"
                [innerHtml]="highlightOption(option)">
             </a>
+        </li>
+        <li class="ngx-select__item ngx-select__item_no-found dropdown-header" *ngIf="!optionsFiltered.length">
+            No results found
         </li>
     </ul>
 
