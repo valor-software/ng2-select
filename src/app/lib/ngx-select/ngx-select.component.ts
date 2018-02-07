@@ -58,6 +58,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     @Input() public noAutoComplete = false;
     @Input() public disabled = false;
     @Input() public defaultValue: any[] = [];
+    @Input() public autoSelectSingleOption = false;
 
     @Output() public typed = new EventEmitter<string>();
     @Output() public focus = new EventEmitter<void>();
@@ -146,13 +147,17 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
         this.subjOptions
             .combineLatest(this.subjOptionsSelected, this.subjSearchText,
                 (options: TSelectOption[], selectedOptions: NgxSelectOption[], search: string) => {
-                    return this.filterOptions(search, options, selectedOptions);
+                    this.optionsFiltered = this.filterOptions(search, options, selectedOptions);
+                    this.cacheOptionsFilteredFlat = null;
+
+                    this.optionsFilteredFlat()
+                        .filter((flatOptions: NgxSelectOption[]) =>
+                            this.autoSelectSingleOption && flatOptions.length === 1 && !selectedOptions.length
+                        )
+                        .subscribe((flatOptions: NgxSelectOption[]) => this.subjOptionsSelected.next(flatOptions));
                 }
             )
-            .subscribe((filteredOptions: TSelectOption[]) => {
-                this.optionsFiltered = filteredOptions;
-                this.cacheOptionsFilteredFlat = null;
-            });
+            .subscribe();
     }
 
     public get optionsSelected(): NgxSelectOption[] {
@@ -181,17 +186,23 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
         }
     }
 
+    private optionsFilteredFlat(): Observable<NgxSelectOption[]> {
+        if (this.cacheOptionsFilteredFlat) {
+            return Observable.of(this.cacheOptionsFilteredFlat);
+        }
+
+        return Observable.from(this.optionsFiltered)
+            .flatMap<TSelectOption, NgxSelectOption>((option: TSelectOption) =>
+                option instanceof NgxSelectOption ? Observable.of(option) :
+                    (option instanceof NgxSelectOptGroup ? Observable.from(option.optionsFiltered) : Observable.empty())
+            )
+            .filter((optionsFilteredFlat: NgxSelectOption) => !optionsFilteredFlat.disabled)
+            .toArray()
+            .do((optionsFilteredFlat: NgxSelectOption[]) => this.cacheOptionsFilteredFlat = optionsFilteredFlat);
+    }
+
     private navigateOption(navigation: ENavigation) {
-        (this.cacheOptionsFilteredFlat
-                ? Observable.of(this.cacheOptionsFilteredFlat)
-                : Observable.from(this.optionsFiltered)
-                    .flatMap<TSelectOption, NgxSelectOption>((option: TSelectOption) =>
-                        option instanceof NgxSelectOption ? Observable.of(option) :
-                            (option instanceof NgxSelectOptGroup ? Observable.from(option.optionsFiltered) : Observable.empty())
-                    )
-                    .toArray()
-                    .do((optionsFilteredFlat: NgxSelectOption[]) => this.cacheOptionsFilteredFlat = optionsFilteredFlat)
-        )
+        this.optionsFilteredFlat()
             .map((options: NgxSelectOption[]) => {
                 let newActiveIdx;
                 switch (navigation) {
@@ -213,7 +224,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
                         return options[options.length - 1];
                 }
             })
-            .subscribe((newActiveOption: NgxSelectOption) => this.optionActive = newActiveOption);
+            .subscribe((newActiveOption: NgxSelectOption) => this.optionActivate(newActiveOption));
     }
 
     public ngDoCheck(): void {
@@ -323,9 +334,11 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
             event.preventDefault();
             event.stopPropagation();
         }
-        this.subjOptionsSelected.next((this.multiple ? this.subjOptionsSelected.value : []).concat([option]));
-        this.optionsClose(true);
-        this.onTouched();
+        if (!option.disabled) {
+            this.subjOptionsSelected.next((this.multiple ? this.subjOptionsSelected.value : []).concat([option]));
+            this.optionsClose(true);
+            this.onTouched();
+        }
     }
 
     protected optionRemove(option: NgxSelectOption, event: Event): void {
@@ -344,7 +357,9 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     }
 
     protected optionActivate(option: NgxSelectOption): void {
-        this.optionActive = option;
+        if (!option.disabled) {
+            this.optionActive = option;
+        }
     }
 
     private filterOptions(search: string, options: TSelectOption[], selectedOptions: NgxSelectOption[]): TSelectOption[] {
@@ -425,17 +440,19 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     }
 
     private buildOption(data: any, parent: NgxSelectOptGroup): NgxSelectOption {
-        let value, text;
+        let value, text, disabled;
         if (typeof data === 'string' || typeof data === 'number') {
             value = text = data;
+            disabled = false;
         } else if (typeof data === 'object' && data !== null &&
             (data.hasOwnProperty(this.optionValueField) || data.hasOwnProperty(this.optionTextField))) {
             value = data.hasOwnProperty(this.optionValueField) ? data[this.optionValueField] : data[this.optionTextField];
             text = data.hasOwnProperty(this.optionTextField) ? data[this.optionTextField] : data[this.optionValueField];
+            disabled = data.hasOwnProperty('disabled') ? data['disabled'] : false;
         } else {
             return null;
         }
-        return new NgxSelectOption(value, text, parent);
+        return new NgxSelectOption(value, text, disabled, parent);
     }
 
     //////////// interface ControlValueAccessor ////////////

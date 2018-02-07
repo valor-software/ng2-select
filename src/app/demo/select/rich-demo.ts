@@ -3,7 +3,7 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 const COLORS = [
     {'name': 'Blue 10', 'hex': '#C0E6FF'},
     {'name': 'Blue 20', 'hex': '#7CC7FF'},
-    {'name': 'Blue 30', 'hex': '#5AAAFA'},
+    {'name': 'Blue 30', 'hex': '#5AAAFA', disabled: true},
     {'name': 'Blue 40', 'hex': '#5596E6'},
     {'name': 'Blue 50', 'hex': '#4178BE'},
     {'name': 'Blue 60', 'hex': '#325C80'},
@@ -62,10 +62,11 @@ export class RichDemoComponent implements OnInit {
     public ngxDisabled = false;
 
     public ngOnInit(): any {
-        COLORS.forEach((color: { name: string, hex: string }) => {
+        COLORS.forEach((color: { name: string, hex: string, disabled: boolean }) => {
             this.items.push({
                 id: color.hex,
-                text: `<colorbox style='background-color:${color.hex};'></colorbox>${color.name} (${color.hex})`
+                text: `<colorbox style='background-color:${color.hex};'></colorbox>${color.name} (${color.hex})`,
+                disabled: color.disabled
             });
         });
     }
