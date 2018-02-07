@@ -64,7 +64,7 @@ Any item can be `disabled` for prevent selection. For disable an item add the pr
 
 | Output  | Description |
 | ------------- | ------------- |
-| (typed)  | Fired on changing search input |
+| (typed)  | Fired on changing search input. Returns `string` with that value. |
 | (focus)  | Fired on select focus |
 | (blur)  | Fired on select blur |
 | (open)  | Fired on select dropdown open |
