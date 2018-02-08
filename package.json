@@ -15,17 +15,22 @@
   "homepage": "https://github.com/optimistex/ngx-select-ex#readme",
   "scripts": {
     "e2e": "ng e2e",
-    "cz": "git-cz",
-    "build": "npm run lint && npm run test && npm run build.package && npm run build.demo",
+    "cz": "git add -A && git status && git-cz",
+    "build": "npm run lint && npm run test && npm run build.package && npm run build.demo && git add -A",
     "build.demo": "ng build --prod",
     "build.package": "ng-packagr -p ng-package.json",
     "lint": "ng lint",
     "ng": "ng",
     "precommit": "npm run test",
-    "release": "standard-version",
+    "release": "standard-version --commit-all",
     "start": "ng serve -op runtime",
     "test": "ng test --watch false",
     "test-coverage": "ng test --watch false --code-coverage"
+  },
+  "standard-version": {
+    "scripts": {
+      "postbump": "npm run build"
+    }
   },
   "keywords": [
     "ngx-select",
