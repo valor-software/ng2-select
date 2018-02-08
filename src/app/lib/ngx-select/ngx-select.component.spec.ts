@@ -115,6 +115,7 @@ describe('NgxSelectComponent', () => {
     const selectItemList = (id: number) => fixture.debugElement.nativeElement
         .querySelectorAll(`#sel-${id} .ngx-select.open .ngx-select__item`);
     const selectItemActive = (id: number) => el(id).querySelector('.ngx-select__item_active');
+    const selectItemNoFound = (id: number) => el(id).querySelector('.ngx-select__item_no-found');
     const selectedItem = (id: number) => el(id).querySelector('.ngx-select__selected-single'); // select multiple = false
     const selectedItems = (id: number) => el(id).querySelectorAll('.ngx-select__selected-plural'); // select multiple = true
 
@@ -140,6 +141,14 @@ describe('NgxSelectComponent', () => {
     it('should create with closed menu', () => {
         expect(selectItemList(1).length).toBe(0);
         expect(selectItemList(2).length).toBe(0);
+    });
+
+    it('should to show "no found message" for empty items', () => {
+        fixture.componentInstance.select1.items = [];
+        fixture.detectChanges();
+        formControl(1).click();
+        fixture.detectChanges();
+        expect(selectItemNoFound(1)).toBeTruthy();
     });
 
     describe('should have value', () => {

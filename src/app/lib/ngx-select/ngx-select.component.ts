@@ -357,7 +357,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     }
 
     protected optionActivate(option: NgxSelectOption): void {
-        if (!option.disabled) {
+        if (!option || !option.disabled) {
             this.optionActive = option;
         }
     }
