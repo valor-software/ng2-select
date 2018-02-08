@@ -109,12 +109,12 @@ const createKeyboardEvent = (typeArg: string, keyCode: number, key: string = '')
 describe('NgxSelectComponent', () => {
     let fixture: ComponentFixture<TestNgxSelectComponent>;
     const el = (id: number) => fixture.debugElement.nativeElement.querySelector(`#sel-${id} .ngx-select`);
-    const formControl = (id: number) => el(id).querySelector('.form-control');
-    const formControlInput = (id: number) => el(id).querySelector('input');
+    const formControl = (id: number) => el(id).querySelector('.ngx-select__toggle, .ngx-select__search');
+    const formControlInput = (id: number) => el(id).querySelector('.ngx-select__search');
     const selectChoicesContainer = (id: number) => el(id).querySelector('.ngx-select__choices');
-    const selectChoices = (id: number) => fixture.debugElement.nativeElement
+    const selectItemList = (id: number) => fixture.debugElement.nativeElement
         .querySelectorAll(`#sel-${id} .ngx-select.open .ngx-select__item`);
-    const selectChoiceActive = (id: number) => el(id).querySelector('.ngx-select__item.ngx-select__item_active');
+    const selectItemActive = (id: number) => el(id).querySelector('.ngx-select__item_active');
     const selectedItem = (id: number) => el(id).querySelector('.ngx-select__selected-single'); // select multiple = false
     const selectedItems = (id: number) => el(id).querySelectorAll('.ngx-select__selected-plural'); // select multiple = true
 
@@ -138,8 +138,8 @@ describe('NgxSelectComponent', () => {
     });
 
     it('should create with closed menu', () => {
-        expect(selectChoices(1).length).toBe(0);
-        expect(selectChoices(2).length).toBe(0);
+        expect(selectItemList(1).length).toBe(0);
+        expect(selectItemList(2).length).toBe(0);
     });
 
     describe('should have value', () => {
@@ -314,7 +314,7 @@ describe('NgxSelectComponent', () => {
 
         it('by click', () => {
             // expect(fixture.componentInstance.component1.itemObjects.length).toBeGreaterThan(0);
-            expect(selectChoices(1).length).toBeGreaterThan(0);
+            expect(selectItemList(1).length).toBeGreaterThan(0);
         });
     });
 
@@ -325,7 +325,7 @@ describe('NgxSelectComponent', () => {
             fixture.detectChanges();
             formControl(1).click();
             fixture.detectChanges();
-            expect(selectChoices(1).length).toBeGreaterThan(0);
+            expect(selectItemList(1).length).toBeGreaterThan(0);
         });
 
         it('by off click', () => {
@@ -333,7 +333,7 @@ describe('NgxSelectComponent', () => {
         });
 
         it('by select item', () => {
-            selectChoices(1)[0].click();
+            selectItemList(1)[0].click();
         });
 
         it('by press button Escape', () => {
@@ -346,7 +346,7 @@ describe('NgxSelectComponent', () => {
 
         afterEach(() => {
             fixture.detectChanges();
-            expect(selectChoices(1).length).toBe(0);
+            expect(selectItemList(1).length).toBe(0);
         });
     });
 
@@ -356,11 +356,11 @@ describe('NgxSelectComponent', () => {
             fixture.detectChanges();
             formControl(1).click();
             fixture.detectChanges();
-            expect(selectChoices(1).length).toBeGreaterThan(0);
+            expect(selectItemList(1).length).toBeGreaterThan(0);
         });
 
         it('first item is active', () => {
-            expect(selectChoiceActive(1).innerHTML).toBe('item zero');
+            expect(selectItemActive(1).innerHTML).toBe('item zero');
         });
     });
 
@@ -374,39 +374,39 @@ describe('NgxSelectComponent', () => {
             fixture.detectChanges();
             formControl(1).click();
             fixture.detectChanges();
-            expect(selectChoices(1).length).toBeGreaterThan(0);
+            expect(selectItemList(1).length).toBeGreaterThan(0);
         });
 
         it('activate last item by press the button arrow right', () => {
             formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 39)); // arrow right
             fixture.detectChanges();
-            expect(selectChoiceActive(1).innerHTML).toBe('item 100');
+            expect(selectItemActive(1).innerHTML).toBe('item 100');
         });
 
         it('activate previous item by press the button arrow up', () => {
             formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 39)); // arrow right
             formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 38)); // arrow up
             fixture.detectChanges();
-            expect(selectChoiceActive(1).innerHTML).toBe('item 99');
+            expect(selectItemActive(1).innerHTML).toBe('item 99');
         });
 
         it('activate first item by press the button arrow left', () => {
             formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 39)); // arrow right
             formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 37)); // arrow left
             fixture.detectChanges();
-            expect(selectChoiceActive(1).innerHTML).toBe('item 1');
+            expect(selectItemActive(1).innerHTML).toBe('item 1');
         });
 
         it('activate next item by press the button arrow down', () => {
             formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
             fixture.detectChanges();
-            expect(selectChoiceActive(1).innerHTML).toBe('item 2');
+            expect(selectItemActive(1).innerHTML).toBe('item 2');
         });
 
         afterEach(() => {
             const viewPortHeight = selectChoicesContainer(1).clientHeight,
                 scrollTop = selectChoicesContainer(1).scrollTop,
-                activeItemTop = selectChoiceActive(1).offsetTop;
+                activeItemTop = selectItemActive(1).offsetTop;
             expect((scrollTop <= activeItemTop) && (activeItemTop <= scrollTop + viewPortHeight)).toBeTruthy();
         });
     });
@@ -419,11 +419,11 @@ describe('NgxSelectComponent', () => {
                 fixture.detectChanges();
                 formControl(1).click();
                 fixture.detectChanges();
-                expect(selectChoices(1).length).toBeGreaterThan(0);
+                expect(selectItemList(1).length).toBeGreaterThan(0);
             });
 
             it('by click on choice item', () => {
-                selectChoices(1)[1].click();
+                selectItemList(1)[1].click();
             });
 
             it('by press the key Enter on a choice item', () => {
@@ -445,11 +445,11 @@ describe('NgxSelectComponent', () => {
                 fixture.detectChanges();
                 formControl(2).click();
                 fixture.detectChanges();
-                expect(selectChoices(2).length).toBeGreaterThan(0);
+                expect(selectItemList(2).length).toBeGreaterThan(0);
             });
 
             it('by click on choice item', () => {
-                selectChoices(2)[1].click();
+                selectItemList(2)[1].click();
             });
 
             it('by press the key Enter on a choice item', () => {
@@ -471,15 +471,15 @@ describe('NgxSelectComponent', () => {
                 fixture.detectChanges();
                 formControl(1).click();
                 fixture.detectChanges();
-                expect(selectChoices(1).length).toBeGreaterThan(0);
+                expect(selectItemList(1).length).toBeGreaterThan(0);
             });
 
             it('by clicking on choice items', () => {
-                selectChoices(1)[1].click();
+                selectItemList(1)[1].click();
                 fixture.detectChanges();
                 formControl(1).click();
                 fixture.detectChanges();
-                selectChoices(1)[2].click();
+                selectItemList(1)[2].click();
             });
 
             it('by press the key Enter on choice items', () => {
@@ -509,15 +509,15 @@ describe('NgxSelectComponent', () => {
                 fixture.detectChanges();
                 formControl(2).click();
                 fixture.detectChanges();
-                expect(selectChoices(2).length).toBeGreaterThan(0);
+                expect(selectItemList(2).length).toBeGreaterThan(0);
             });
 
             it('by clicking on choice items', () => {
-                selectChoices(2)[1].click();
+                selectItemList(2)[1].click();
                 fixture.detectChanges();
                 formControl(2).click();
                 fixture.detectChanges();
-                selectChoices(2)[2].click();
+                selectItemList(2)[2].click();
             });
 
             it('by press the key Enter on choice items', () => {
@@ -549,7 +549,7 @@ describe('NgxSelectComponent', () => {
                 fixture.detectChanges();
                 formControl(1).click();
                 fixture.detectChanges();
-                selectChoices(1)[0].click();
+                selectItemList(1)[0].click();
                 fixture.detectChanges();
                 expect(selectedItem(1).innerHTML).toBe('item zero');
                 expect(fixture.componentInstance.select1.value).toEqual(0);
@@ -579,7 +579,7 @@ describe('NgxSelectComponent', () => {
                 fixture.detectChanges();
                 formControl(2).click();
                 fixture.detectChanges();
-                selectChoices(2)[0].click();
+                selectItemList(2)[0].click();
                 fixture.detectChanges();
                 expect(selectedItem(2).innerHTML).toBe('item zero');
                 expect(fixture.componentInstance.select2.formControl.value).toEqual(0);
@@ -637,7 +637,7 @@ describe('NgxSelectComponent', () => {
             formControlInput(1).value = 'br';
             formControlInput(1).dispatchEvent(createKeyboardEvent('keyup', 82, 'r'));
             fixture.detectChanges();
-            expect(selectChoices(1).length).toBe(3);
+            expect(selectItemList(1).length).toBe(3);
         });
 
         it('with lazy load items', () => {
@@ -650,7 +650,7 @@ describe('NgxSelectComponent', () => {
             fixture.detectChanges();
             fixture.componentInstance.select1.items = items;
             fixture.detectChanges();
-            expect(selectChoices(1).length).toBe(3);
+            expect(selectItemList(1).length).toBe(3);
         });
     });
 
@@ -665,7 +665,7 @@ describe('NgxSelectComponent', () => {
             formControl(1).click();
             fixture.detectChanges();
             expect(formControlInput(1)).toBeFalsy();
-            expect(selectChoices(1).length).toBe(0);
+            expect(selectItemList(1).length).toBe(0);
         });
 
         it('multiple select by attribute', () => {
@@ -675,14 +675,14 @@ describe('NgxSelectComponent', () => {
             fixture.detectChanges();
             expect(formControlInput(1)).toBeTruthy();
             expect(formControlInput(1).disabled).toBeTruthy();
-            expect(selectChoices(1).length).toBe(0);
+            expect(selectItemList(1).length).toBe(0);
         });
 
         it('single select by FormControl.disable()', () => {
             formControl(2).click();
             fixture.detectChanges();
             expect(formControlInput(2)).toBeFalsy();
-            expect(selectChoices(2).length).toBe(0);
+            expect(selectItemList(2).length).toBe(0);
         });
 
         it('multiple select by FormControl.disable()', () => {
@@ -692,7 +692,7 @@ describe('NgxSelectComponent', () => {
             fixture.detectChanges();
             expect(formControlInput(2)).toBeTruthy();
             expect(formControlInput(2).disabled).toBeTruthy();
-            expect(selectChoices(2).length).toBe(0);
+            expect(selectItemList(2).length).toBe(0);
         });
     });
 
@@ -702,7 +702,7 @@ describe('NgxSelectComponent', () => {
             fixture.detectChanges();
             formControl(1).click();
             fixture.detectChanges();
-            expect(selectChoices(1).length).toBe(items1.length);
+            expect(selectItemList(1).length).toBe(items1.length);
         });
 
         it('objects without default id & text fields ', () => {
@@ -712,7 +712,7 @@ describe('NgxSelectComponent', () => {
             fixture.detectChanges();
             formControl(1).click();
             fixture.detectChanges();
-            expect(selectChoices(1).length).toBe(items2.length);
+            expect(selectItemList(1).length).toBe(items2.length);
         });
 
         it('objects with mixed id & text fields', () => {
@@ -724,9 +724,9 @@ describe('NgxSelectComponent', () => {
             fixture.detectChanges();
             formControl(1).click();
             fixture.detectChanges();
-            expect(selectChoices(1).length).toBe(4);
-            expect(selectChoices(1)[0].innerHTML).toBe('i0');
-            expect(selectChoices(1)[1].innerHTML).toBe('i1');
+            expect(selectItemList(1).length).toBe(4);
+            expect(selectItemList(1)[0].innerHTML).toBe('i0');
+            expect(selectItemList(1)[1].innerHTML).toBe('i1');
         });
 
         it('objects with children fields by default field names', () => {
@@ -737,7 +737,7 @@ describe('NgxSelectComponent', () => {
             fixture.detectChanges();
             formControl(1).click();
             fixture.detectChanges();
-            expect(selectChoices(1).length).toBe(3);
+            expect(selectItemList(1).length).toBe(3);
         });
 
         it('objects with children fields by not default field names', () => {
@@ -752,7 +752,7 @@ describe('NgxSelectComponent', () => {
             fixture.detectChanges();
             formControl(1).click();
             fixture.detectChanges();
-            expect(selectChoices(1).length).toBe(3);
+            expect(selectItemList(1).length).toBe(3);
         });
 
         it('strings', () => {
@@ -760,7 +760,7 @@ describe('NgxSelectComponent', () => {
             fixture.detectChanges();
             formControl(1).click();
             fixture.detectChanges();
-            expect(selectChoices(1).length).toBe(3);
+            expect(selectItemList(1).length).toBe(3);
         });
     });
 
@@ -784,14 +784,14 @@ describe('NgxSelectComponent', () => {
                 expect(selectedItem(1).innerHTML).toBe(items1[0].text);
                 formControl(1).click();
                 fixture.detectChanges();
-                expect(selectChoiceActive(1).innerHTML).toBe(items1[0].text);
+                expect(selectItemActive(1).innerHTML).toBe(items1[0].text);
             });
 
             it('by a FormControl attribute and selected item must be active in menu', () => {
                 expect(selectedItem(2).innerHTML).toBe(items1[0].text);
                 formControl(2).click();
                 fixture.detectChanges();
-                expect(selectChoiceActive(2).innerHTML).toBe(items1[0].text);
+                expect(selectItemActive(2).innerHTML).toBe(items1[0].text);
             });
         });
 
@@ -843,14 +843,14 @@ describe('NgxSelectComponent', () => {
                 expect(selectedItem(1).innerHTML).toBe(items1[1].text);
                 formControl(1).click();
                 fixture.detectChanges();
-                expect(selectChoiceActive(1).innerHTML).toBe(items1[1].text);
+                expect(selectItemActive(1).innerHTML).toBe(items1[1].text);
             });
 
             it('by a FormControl attribute and selected item must be active in menu', () => {
                 expect(selectedItem(2).innerHTML).toBe(items1[1].text);
                 formControl(2).click();
                 fixture.detectChanges();
-                expect(selectChoiceActive(2).innerHTML).toBe(items1[1].text);
+                expect(selectItemActive(2).innerHTML).toBe(items1[1].text);
             });
         });
 
