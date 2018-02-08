@@ -27,7 +27,9 @@ import createSpy = jasmine.createSpy;
                     (focus)="select1.doFocus()"
                     (blur)="select1.doBlur()"
                     (open)="select1.doOpen()"
-                    (close)="select1.doClose()"></ngx-select>
+                    (close)="select1.doClose()"
+                    (select)="select1.doSelect($event)"
+                    (remove)="select1.doRemove($event)"></ngx-select>
         <ngx-select id="sel-2" #component2
                     [formControl]="select2.formControl"
                     [defaultValue]="select2.defaultValue"
@@ -39,7 +41,9 @@ import createSpy = jasmine.createSpy;
                     [optGroupOptionsField]="select2.optGroupOptionsField"
                     [multiple]="select2.multiple"
                     [noAutoComplete]="select2.noAutoComplete"
-                    [items]="select2.items"></ngx-select>
+                    [items]="select2.items"
+                    (select)="select2.doSelect($event)"
+                    (remove)="select2.doRemove($event)"></ngx-select>
     `
 })
 class TestNgxSelectComponent {
@@ -65,7 +69,9 @@ class TestNgxSelectComponent {
         doFocus: () => null,
         doBlur: () => null,
         doOpen: () => null,
-        doClose: () => null
+        doClose: () => null,
+        doSelect: () => null,
+        doRemove: () => null
     };
 
     public select2: any = {
@@ -80,7 +86,10 @@ class TestNgxSelectComponent {
         optGroupOptionsField: 'options',
         multiple: false,
         noAutoComplete: false,
-        items: []
+        items: [],
+
+        doSelect: () => null,
+        doRemove: () => null
     };
 }
 
@@ -551,8 +560,12 @@ describe('NgxSelectComponent', () => {
     });
 
     describe('should remove selected', () => {
+        let doSelect, doRemove;
+
         describe('from select with ngModel', () => {
             beforeEach(() => {
+                doSelect = spyOn(fixture.componentInstance.select1, 'doSelect');
+                doRemove = spyOn(fixture.componentInstance.select1, 'doRemove');
                 fixture.componentInstance.select1.items = items1;
                 fixture.componentInstance.select1.allowClear = true;
                 fixture.detectChanges();
@@ -565,7 +578,7 @@ describe('NgxSelectComponent', () => {
             });
 
             it('a single item', () => {
-                el(1).querySelector('.btn-link').click();
+                el(1).querySelector('.ngx-select__clear').click();
                 fixture.detectChanges();
                 expect(selectedItem(1)).toBeFalsy();
                 expect(fixture.componentInstance.select1.value).toEqual(null);
@@ -579,10 +592,19 @@ describe('NgxSelectComponent', () => {
                 expect(selectedItems(1).length).toBe(0);
                 expect(fixture.componentInstance.select1.value).toEqual([]);
             });
+
+            afterEach(() => {
+                expect(doSelect).toHaveBeenCalledTimes(1);
+                expect(doSelect).toHaveBeenCalledWith(0);
+                expect(doRemove).toHaveBeenCalledTimes(1);
+                expect(doRemove).toHaveBeenCalledWith(0);
+            });
         });
 
         describe('from select with FormControl', () => {
             beforeEach(() => {
+                doSelect = spyOn(fixture.componentInstance.select2, 'doSelect');
+                doRemove = spyOn(fixture.componentInstance.select2, 'doRemove');
                 fixture.componentInstance.select2.items = items1;
                 fixture.componentInstance.select2.allowClear = true;
                 fixture.detectChanges();
@@ -595,7 +617,7 @@ describe('NgxSelectComponent', () => {
             });
 
             it('a single item', () => {
-                el(2).querySelector('.btn-link').click();
+                el(2).querySelector('.ngx-select__clear').click();
                 fixture.detectChanges();
                 expect(selectedItem(2)).toBeFalsy();
                 expect(fixture.componentInstance.select2.formControl.value).toEqual(null);
@@ -608,6 +630,13 @@ describe('NgxSelectComponent', () => {
                 fixture.detectChanges();
                 expect(selectedItems(2).length).toBe(0);
                 expect(fixture.componentInstance.select2.formControl.value).toEqual([]);
+            });
+
+            afterEach(() => {
+                expect(doSelect).toHaveBeenCalledTimes(1);
+                expect(doSelect).toHaveBeenCalledWith(0);
+                expect(doRemove).toHaveBeenCalledTimes(1);
+                expect(doRemove).toHaveBeenCalledWith(0);
             });
         });
     });

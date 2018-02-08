@@ -69,6 +69,27 @@ Any item can be `disabled` for prevent selection. For disable an item add the pr
 | (blur)  | Fired on select blur |
 | (open)  | Fired on select dropdown open |
 | (close)  | Fired on select dropdown close |
+| (select)  | Fired on an item selected by user. Returns value of the selected item. |
+| (remove)  | Fired on an item removed by user. Returns value of the removed item. |
+
+**Warning!** Although the component contains the `select` and the `remove` events, the better solution is using `valueChanches` of the `FormControl`.
+
+```typescript
+import {Component} from '@angular/core';
+import {FormControl} from '@angular/forms';
+
+@Component({
+    selector: 'app-example',
+    template: `<ngx-select [items]="['111', '222']" [formControl]="selectControl"></ngx-select>`
+})
+class ExampleComponent {
+    public selectControl = new FormControl();
+    
+    constructor() {
+        this.selectControl.valueChanges.subscribe(value => console.log(value));
+    }
+}
+```
 
 ### Styles and customization
 

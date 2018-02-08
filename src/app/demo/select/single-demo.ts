@@ -61,4 +61,12 @@ export class SingleDemoComponent implements OnDestroy {
     public doClose() {
         console.log('SingleDemoComponent.doClose');
     }
+
+    public doSelect(value: any) {
+        console.log('SingleDemoComponent.doSelect', value);
+    }
+
+    public doRemove(value: any) {
+        console.log('SingleDemoComponent.doRemove', value);
+    }
 }

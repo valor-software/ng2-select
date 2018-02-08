@@ -65,6 +65,8 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     @Output() public blur = new EventEmitter<void>();
     @Output() public open = new EventEmitter<void>();
     @Output() public close = new EventEmitter<void>();
+    @Output() public select = new EventEmitter<any>();
+    @Output() public remove = new EventEmitter<any>();
 
     @ViewChild('main') protected mainElRef: ElementRef;
     @ViewChild('input') protected inputElRef: ElementRef;
@@ -336,6 +338,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
         }
         if (!option.disabled) {
             this.subjOptionsSelected.next((this.multiple ? this.subjOptionsSelected.value : []).concat([option]));
+            this.select.emit(option.value);
             this.optionsClose(true);
             this.onTouched();
         }
@@ -345,6 +348,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
         if (!this.disabled) {
             event.stopPropagation();
             this.subjOptionsSelected.next((this.multiple ? this.subjOptionsSelected.value : []).filter(o => o !== option));
+            this.remove.emit(option.value);
         }
     }
 

@@ -10,7 +10,9 @@
                     (focus)="doFocus()"
                     (blur)="doBlur()"
                     (open)="doOpen()"
-                    (close)="doClose()">
+                    (close)="doClose()"
+                    (select)="doSelect($event)"
+                    (remove)="doRemove($event)">
         </ngx-select>
         <p></p>
         <div class="alert alert-secondary">
