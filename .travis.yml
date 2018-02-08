@@ -21,6 +21,7 @@ stages:
   - name: precache
   - name: lint
   - name: test
+  - name: deploy  
 
 before_install:
   - export CHROME_BIN=chromium-browser
@@ -58,9 +59,13 @@ jobs:
         - ./node_modules/.bin/codecov
 #   deploy
       stage: deploy
-      on:
-        branch: master
-        tags: true 
+      deploy:
+        provider: npm
+        email: $NPM_EMAIL
+        api_key: $NPM_TOKEN
+        on:
+          branch: master
+          tags: true
 
 #
 cache:
