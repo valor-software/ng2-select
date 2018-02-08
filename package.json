@@ -26,7 +26,7 @@
     "start": "ng serve -op runtime",
     "test": "ng test",
     "test.single-run": "ng test --watch false",
-    "test-coverage": "ng test -sr -cc"
+    "test-coverage": "ng test --watch false --code-coverage"
   },
   "keywords": [
     "ngx-select",

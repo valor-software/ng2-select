@@ -16,13 +16,13 @@ Native Angular component for Select
 
 1. Install **ngx-select-ex** through [npm](https://www.npmjs.com/package/ngx-select-ex) package manager using the following command:
 
-    ```console
+    ```bash
     npm i ngx-select-ex --save
     ```
 
     For usage with Angular 4 install deprecated version 3.1.2:
 
-    ```console
+    ```bash
     npm i ngx-select-ex@3.1.2 --save
     ```
 
