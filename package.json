@@ -16,16 +16,15 @@
   "scripts": {
     "e2e": "ng e2e",
     "cz": "git-cz",
-    "build": "npm run lint && npm test && npm run build.package && npm run build.demo",
+    "build": "npm run lint && npm run test && npm run build.package && npm run build.demo",
     "build.demo": "ng build --prod",
     "build.package": "ng-packagr -p ng-package.json",
     "lint": "ng lint",
     "ng": "ng",
-    "precommit": "npm run test.single-run",
+    "precommit": "npm run test",
     "release": "standard-version",
     "start": "ng serve -op runtime",
-    "test": "ng test",
-    "test.single-run": "ng test --watch false",
+    "test": "ng test --watch false",
     "test-coverage": "ng test --watch false --code-coverage"
   },
   "keywords": [

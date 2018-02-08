@@ -31,7 +31,7 @@ before_install:
 
 install:
   - npm install > /dev/null
-  - npm run build
+  - npm run build > /dev/null
 
 jobs:
   fast_finish: true
@@ -53,12 +53,12 @@ jobs:
       install: true
       script: npm run lint
 #   test
-      stage: test
+    - stage: test
       script: npm run test-coverage
       after_success:
         - ./node_modules/.bin/codecov
 #   deploy
-      stage: deploy
+    - stage: deploy
       deploy:
         provider: npm
         email: $NPM_EMAIL
@@ -67,7 +67,7 @@ jobs:
           branch: master
           tags: true
 
-#
+# cache
 cache:
   apt: true
   npm: true
