@@ -15,7 +15,7 @@
   "homepage": "https://github.com/optimistex/ngx-select-ex#readme",
   "scripts": {
     "e2e": "ng e2e",
-    "commit": "git-cz",
+    "cz": "git-cz",
     "build": "npm run lint && npm test && npm run build.package && npm run build.demo",
     "build.demo": "ng build --prod",
     "build.package": "ng-packagr -p ng-package.json",
