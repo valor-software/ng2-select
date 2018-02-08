@@ -2,6 +2,10 @@ sudo: required
 language: node_js
 node_js: "9"
 
+branches:
+  only:
+    - master
+
 notifications:
   email: false
 
@@ -51,7 +55,13 @@ jobs:
       stage: test
       script: npm run test-coverage
       after_success:
-        - ./node_modules/.bin/codecov   
+        - ./node_modules/.bin/codecov
+#   deploy
+      stage: deploy
+      on:
+        branch: master
+        tags: true 
+
 #
 cache:
   apt: true
