@@ -3,11 +3,7 @@ import {
     Component, ElementRef, EventEmitter, forwardRef, HostListener, IterableDiffer, IterableDiffers
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-// import { KeyboardEvent } from 'ngx-bootstrap/utils/facade/browser';
-import {NgxSelectOptGroup, NgxSelectOption, TSelectOption} from './ngx-select.classes';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import * as _ from 'lodash';
-import * as escapeStringNs from 'escape-string-regexp';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
@@ -23,7 +19,11 @@ import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/merge';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
+import * as lodashNs from 'lodash';
+import * as escapeStringNs from 'escape-string-regexp';
+import {NgxSelectOptGroup, NgxSelectOption, TSelectOption} from './ngx-select.classes';
 
+const _ = lodashNs;
 const escapeString = escapeStringNs;
 
 export interface INgxSelectComponentMouseEvent extends MouseEvent {

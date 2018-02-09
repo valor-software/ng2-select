@@ -23,6 +23,8 @@
     "ng": "ng",
     "precommit": "npm run test",
     "release": "standard-version --commit-all",
+    "publish.ng4": "npm publish dist --tag ng4",
+    "publish": "npm publish dist",
     "start": "ng serve -op runtime",
     "test": "ng test --watch false",
     "test-coverage": "ng test --watch false --code-coverage"
@@ -87,6 +89,7 @@
     "markdown-loader": "^2.0.2",
     "ng-packagr": "^2.0.0",
     "ngx-bootstrap": "^2.0.2",
+    "pre-commit": "^1.2.2",
     "protractor": "~5.1.2",
     "rxjs": "^5.5.6",
     "standard-version": "^4.3.0",
