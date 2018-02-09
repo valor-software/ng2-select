@@ -80,7 +80,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     private defaultValueDiffer: IterableDiffer<any[]>;
     private actualValue: any[] = [];
 
-    private subjOptions = new BehaviorSubject<TSelectOption[]>([]);
+    public subjOptions = new BehaviorSubject<TSelectOption[]>([]);
     private subjSearchText = new BehaviorSubject<string>('');
 
     private subjOptionsSelected = new BehaviorSubject<NgxSelectOption[]>([]);

@@ -59,7 +59,7 @@
 
     <!-- options template -->
     <ul #choiceMenu role="menu" class="ngx-select__choices ui-select-choices dropdown-menu"
-        [class.show]="optionsOpened ">
+        [class.show]="optionsOpened && subjOptions.value.length">
         <li class="ngx-select__item-group" role="menuitem"
             *ngFor="let opt of optionsFiltered; trackBy: trackByOption; let idx=index">
             <div class="divider dropdown-divider" *ngIf="opt.type === 'optgroup' && (idx > 0)"></div>
