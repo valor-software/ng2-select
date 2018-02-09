@@ -10,6 +10,7 @@
 Native Angular component for Select
 
 - Requires [Angular](https://angular.io/) version 5 or higher!
+- Compatible with [Angular](https://angular.io/) version 4.
 - Compatible with [Bootstrap 3](https://getbootstrap.com/docs/3.3/) and **[Bootstrap 4](https://getbootstrap.com/)**
 
 ## Usage
@@ -20,10 +21,10 @@ Native Angular component for Select
     npm i ngx-select-ex --save
     ```
 
-    For usage with Angular 4 install deprecated version 3.1.2:
+    For usage with Angular 4 install using the following command:
 
     ```bash
-    npm i ngx-select-ex@3.1.2 --save
+    npm i ngx-select-ex@ng4 --save
     ```
 
 2. Add NgxSelectModule into your AppModule class. app.module.ts would look like this:

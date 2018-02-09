@@ -2,14 +2,14 @@
 
 1. Install **ngx-select-ex** through [npm](https://www.npmjs.com/package/ngx-select-ex) package manager using the following command:
 
-    ```console
+    ```bash
     npm i ngx-select-ex --save
     ```
 
-    For usage with Angular 4 install deprecated version 3.1.2:
+    For usage with Angular 4 install using the following command:
 
-    ```console
-    npm i ngx-select-ex@3.1.2 --save
+    ```bash
+    npm i ngx-select-ex@ng4 --save
     ```
 
 2. Add NgxSelectModule into your AppModule class. app.module.ts would look like this:
