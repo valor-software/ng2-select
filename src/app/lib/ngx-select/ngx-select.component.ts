@@ -34,6 +34,10 @@ enum ENavigation {
     first, previous, next, last
 }
 
+function propertyExists(obj: Object, propertyName: string) {
+    return propertyName in obj;
+}
+
 @Component({
     selector: 'ngx-select',
     templateUrl: './ngx-select.component.html',
@@ -425,7 +429,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
             let option: NgxSelectOption;
             data.forEach((item: any) => {
                 const isOptGroup = typeof item === 'object' && item !== null &&
-                    item.hasOwnProperty(this.optGroupLabelField) && item.hasOwnProperty(this.optGroupOptionsField) &&
+                    propertyExists(item, this.optGroupLabelField) && propertyExists(item, this.optGroupOptionsField) &&
                     Array.isArray(item[this.optGroupOptionsField]);
                 if (isOptGroup) {
                     const optGroup = new NgxSelectOptGroup(item[this.optGroupLabelField]);
@@ -449,10 +453,10 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
             value = text = data;
             disabled = false;
         } else if (typeof data === 'object' && data !== null &&
-            (data.hasOwnProperty(this.optionValueField) || data.hasOwnProperty(this.optionTextField))) {
-            value = data.hasOwnProperty(this.optionValueField) ? data[this.optionValueField] : data[this.optionTextField];
-            text = data.hasOwnProperty(this.optionTextField) ? data[this.optionTextField] : data[this.optionValueField];
-            disabled = data.hasOwnProperty('disabled') ? data['disabled'] : false;
+            (propertyExists(data, this.optionValueField) || propertyExists(data, this.optionTextField))) {
+            value = propertyExists(data, this.optionValueField) ? data[this.optionValueField] : data[this.optionTextField];
+            text = propertyExists(data, this.optionTextField) ? data[this.optionTextField] : data[this.optionValueField];
+            disabled = propertyExists(data, 'disabled') ? data['disabled'] : false;
         } else {
             return null;
         }
