@@ -1,6 +1,6 @@
 import {
     AfterContentChecked, DoCheck, Input, Output, ViewChild,
-    Component, ElementRef, EventEmitter, forwardRef, HostListener, IterableDiffer, IterableDiffers
+    Component, ElementRef, EventEmitter, forwardRef, HostListener, IterableDiffer, IterableDiffers, ChangeDetectorRef
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
@@ -98,7 +98,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     private _focusToInput = false;
     private isFocused = false;
 
-    constructor(private sanitizer: DomSanitizer, iterableDiffers: IterableDiffers) {
+    constructor(iterableDiffers: IterableDiffers, private sanitizer: DomSanitizer, private cd: ChangeDetectorRef) {
         // differs
         this.itemsDiffer = iterableDiffers.find([]).create<any>(null);
         this.defaultValueDiffer = iterableDiffers.find([]).create<any>(null);
@@ -184,6 +184,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
         if (event.clickedSelectComponent !== this) {
             if (this.optionsOpened) {
                 this.optionsClose();
+                this.cd.detectChanges(); // fix error because of delay between different events
             }
             if (this.isFocused) {
                 this.isFocused = false;
