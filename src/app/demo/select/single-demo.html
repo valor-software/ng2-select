@@ -1,0 +1,28 @@
+<h3>Select a single city</h3>
+<div class="example-block">
+    <div class="example-block__item">
+        <ngx-select [formControl]="ngxControl"
+                    [allowClear]="true"
+                    [defaultValue]="doNgxDefault()"
+                    [items]="items"
+                    placeholder="No city selected"
+                    (typed)="inputTyped('ngx-select', $event)"
+                    (focus)="doFocus()"
+                    (blur)="doBlur()"
+                    (open)="doOpen()"
+                    (close)="doClose()"
+                    (select)="doSelect($event)"
+                    (remove)="doRemove($event)">
+        </ngx-select>
+        <p></p>
+        <div class="alert alert-secondary">
+            <pre>{{ngxControl.value | json}}</pre>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary"
+                    (click)="ngxControl.disabled? ngxControl.enable(): ngxControl.disable()">
+                {{ngxControl.disabled ? 'Enable' : 'Disable'}}
+            </button>
+        </div>
+    </div>
+</div>

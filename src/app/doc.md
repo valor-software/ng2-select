@@ -1,18 +1,3 @@
-# Native UI Select Angular component ([demo](https://optimistex.github.io/ngx-select-ex/))
-
-## ngx-select-ex
-
-[![npm version](https://badge.fury.io/js/ngx-select-ex.svg)](http://badge.fury.io/js/ngx-select-ex)
-[![npm downloads](https://img.shields.io/npm/dm/ngx-select-ex.svg)](https://npmjs.org/ngx-select-ex)
-[![Build Status](https://travis-ci.org/optimistex/ngx-select-ex.svg?branch=master)](https://travis-ci.org/optimistex/ngx-select-ex)
-[![Angular 2 Style Guide](https://mgechev.github.io/angular2-style-guide/images/badge.svg)](https://github.com/mgechev/angular2-style-guide)
-
-Native Angular component for Select
-
-- Requires [Angular](https://angular.io/) version 5 or higher!
-- Compatible with [Angular](https://angular.io/) version 4.
-- Compatible with [Bootstrap 3](https://getbootstrap.com/docs/3.3/) and **[Bootstrap 4](https://getbootstrap.com/)**
-
 ## Usage
 
 1. Install **ngx-select-ex** through [npm](https://www.npmjs.com/package/ngx-select-ex) package manager using the following command:
@@ -53,7 +38,7 @@ Native Angular component for Select
 4. Add the tag `<ngx-select>` into some html
 
     ```html
-    <ngx-select [items]="items" [(ngModel)]="itemId"></ngx-select>
+    <ngx-select [items]="items" [(ngModel)]="itemId">
     ```
 
 5. More information regarding of using **ngx-select-ex** is located in [demo](https://optimistex.github.io/ngx-select-ex/).
@@ -131,29 +116,3 @@ List of styles for customization:
 - **`ngx-select__item`** - An item.
 - **`ngx-select__item_disabled`** - Modifier of a disabled item.
 - **`ngx-select__item_active`** - Modifier of the activated item.
-
-## Troubleshooting
-
-Please follow this guidelines when reporting bugs and feature requests:
-
-1. Use [GitHub Issues](https://github.com/optimistex/ngx-select-ex/issues) board to report bugs and feature requests (not our email address)
-2. Please **always** write steps to reproduce the error. That way we can focus on fixing the bug, not scratching our heads trying to reproduce it.
-
-Thanks for understanding!
-
-## Contribute
-
-- `npm start` - Run demo for local debugging.
-- `npm test` - Run unit tests only once. Use `ng test` for running tests with files watching.
-- `npm run build` - Build the demo & package for release & publishing.
-
-After build you will be able:
-
-- Install the component to another project by `npm install /path/to/ngx-select-ex/dist`.
-- Link another project to the component `npm link /path/to/ngx-select-ex/dist`. **Warning!** Then use the flag [--preserve-symlinks](https://github.com/optimistex/ngx-select-ex/issues/4)
-
-Do not forget make a pull request to the [ngx-select-ex](https://github.com/optimistex/ngx-select-ex)
-
-### License
-
-The MIT License (see the [LICENSE](https://github.com/optimistex/ngx-select-ex/blob/master/LICENSE) file for the full text)
