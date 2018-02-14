@@ -1,6 +1,7 @@
 import {
     AfterContentChecked, DoCheck, Input, Output, ViewChild,
-    Component, ElementRef, EventEmitter, forwardRef, HostListener, IterableDiffer, IterableDiffers, ChangeDetectorRef
+    Component, ElementRef, EventEmitter, forwardRef, HostListener, IterableDiffer, IterableDiffers, ChangeDetectorRef, ContentChild,
+    TemplateRef
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
@@ -22,6 +23,7 @@ import 'rxjs/add/operator/do';
 import * as lodashNs from 'lodash';
 import * as escapeStringNs from 'escape-string-regexp';
 import {NgxSelectOptGroup, NgxSelectOption, TSelectOption} from './ngx-select.classes';
+import {NgxSelectOptionDirective} from './ngx-templates.directive';
 
 const _ = lodashNs;
 const escapeString = escapeStringNs;
@@ -75,6 +77,8 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     @ViewChild('main') protected mainElRef: ElementRef;
     @ViewChild('input') protected inputElRef: ElementRef;
     @ViewChild('choiceMenu') protected choiceMenuElRef: ElementRef;
+
+    @ContentChild(NgxSelectOptionDirective, {read: TemplateRef}) templateOption: NgxSelectOptionDirective;
 
     public optionsOpened = false;
     public optionsFiltered: TSelectOption[];
@@ -461,7 +465,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
         } else {
             return null;
         }
-        return new NgxSelectOption(value, text, disabled, parent);
+        return new NgxSelectOption(value, text, disabled, data, parent);
     }
 
     //////////// interface ControlValueAccessor ////////////

@@ -378,7 +378,7 @@ describe('NgxSelectComponent', () => {
         });
 
         it('first item is active', () => {
-            expect(selectItemActive(1).innerHTML).toBe('item zero');
+            expect(selectItemActive(1).innerHTML).toContain('item zero');
         });
     });
 
@@ -398,27 +398,27 @@ describe('NgxSelectComponent', () => {
         it('activate last item by press the button arrow right', () => {
             formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 39)); // arrow right
             fixture.detectChanges();
-            expect(selectItemActive(1).innerHTML).toBe('item 100');
+            expect(selectItemActive(1).innerHTML).toContain('item 100');
         });
 
         it('activate previous item by press the button arrow up', () => {
             formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 39)); // arrow right
             formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 38)); // arrow up
             fixture.detectChanges();
-            expect(selectItemActive(1).innerHTML).toBe('item 99');
+            expect(selectItemActive(1).innerHTML).toContain('item 99');
         });
 
         it('activate first item by press the button arrow left', () => {
             formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 39)); // arrow right
             formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 37)); // arrow left
             fixture.detectChanges();
-            expect(selectItemActive(1).innerHTML).toBe('item 1');
+            expect(selectItemActive(1).innerHTML).toContain('item 1');
         });
 
         it('activate next item by press the button arrow down', () => {
             formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
             fixture.detectChanges();
-            expect(selectItemActive(1).innerHTML).toBe('item 2');
+            expect(selectItemActive(1).innerHTML).toContain('item 2');
         });
 
         afterEach(() => {
@@ -763,8 +763,8 @@ describe('NgxSelectComponent', () => {
             formControl(1).click();
             fixture.detectChanges();
             expect(selectItemList(1).length).toBe(4);
-            expect(selectItemList(1)[0].innerHTML).toBe('i0');
-            expect(selectItemList(1)[1].innerHTML).toBe('i1');
+            expect(selectItemList(1)[0].innerHTML).toContain('i0');
+            expect(selectItemList(1)[1].innerHTML).toContain('i1');
         });
 
         it('objects with children fields by default field names', () => {
@@ -822,14 +822,14 @@ describe('NgxSelectComponent', () => {
                 expect(selectedItem(1).innerHTML).toBe(items1[0].text);
                 formControl(1).click();
                 fixture.detectChanges();
-                expect(selectItemActive(1).innerHTML).toBe(items1[0].text);
+                expect(selectItemActive(1).innerHTML).toContain(items1[0].text);
             });
 
             it('by a FormControl attribute and selected item must be active in menu', () => {
                 expect(selectedItem(2).innerHTML).toBe(items1[0].text);
                 formControl(2).click();
                 fixture.detectChanges();
-                expect(selectItemActive(2).innerHTML).toBe(items1[0].text);
+                expect(selectItemActive(2).innerHTML).toContain(items1[0].text);
             });
         });
 
@@ -881,14 +881,14 @@ describe('NgxSelectComponent', () => {
                 expect(selectedItem(1).innerHTML).toBe(items1[1].text);
                 formControl(1).click();
                 fixture.detectChanges();
-                expect(selectItemActive(1).innerHTML).toBe(items1[1].text);
+                expect(selectItemActive(1).innerHTML).toContain(items1[1].text);
             });
 
             it('by a FormControl attribute and selected item must be active in menu', () => {
                 expect(selectedItem(2).innerHTML).toBe(items1[1].text);
                 formControl(2).click();
                 fixture.detectChanges();
-                expect(selectItemActive(2).innerHTML).toBe(items1[1].text);
+                expect(selectItemActive(2).innerHTML).toContain(items1[1].text);
             });
         });
 

@@ -10,6 +10,7 @@ export class NgxSelectOption implements INgxSelectOption, INgxSelectOptionBase {
     constructor(public value: number | string,
                 public text: string,
                 public disabled: boolean,
+                public data: any,
                 private _parent: NgxSelectOptGroup = null) {
     }
 

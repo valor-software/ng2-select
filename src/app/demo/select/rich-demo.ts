@@ -1,4 +1,5 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
+import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 
 const COLORS = [
     {'name': 'Blue 10', 'hex': '#C0E6FF'},
@@ -46,7 +47,7 @@ const COLORS = [
 @Component({
     selector: 'rich-demo',
     templateUrl: './rich-demo.html',
-    styles: [`colorbox, .colorbox {
+    styles: [`.color-box {
         display: inline-block;
         height: 14px;
         width: 14px;
@@ -55,19 +56,16 @@ const COLORS = [
     }`],
     encapsulation: ViewEncapsulation.None  // Enable dynamic HTML styles
 })
-export class RichDemoComponent implements OnInit {
-    public items: any[] = [];
+export class RichDemoComponent {
+    public items: any[] = COLORS;
 
     public ngxValue: any = [];
     public ngxDisabled = false;
 
-    public ngOnInit(): any {
-        COLORS.forEach((color: { name: string, hex: string, disabled: boolean }) => {
-            this.items.push({
-                id: color.hex,
-                text: `<colorbox style='background-color:${color.hex};'></colorbox>${color.name} (${color.hex})`,
-                disabled: color.disabled
-            });
-        });
+    constructor(public sanitizer: DomSanitizer) {
+    }
+
+    style(data: string): SafeStyle {
+        return this.sanitizer.bypassSecurityTrustStyle(data);
     }
 }

@@ -6,8 +6,9 @@ export interface INgxSelectOptionBase {
 
 export interface INgxSelectOption {
     value: number | string;
-    text: string;
+    text: string;       // text for displaying and searching
     disabled: boolean;
+    data: any;          // original data
 }
 
 export interface INgxSelectOptGroup {

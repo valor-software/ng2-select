@@ -2,10 +2,17 @@
 <div class="example-block">
     <div class="example-block__item">
         <ngx-select [allowClear]="true"
-                    [items]="items"
+                    [items]="items" optionValueField="hex" optionTextField="name"
                     [disabled]="ngxDisabled"
                     [(ngModel)]="ngxValue"
                     placeholder="No city selected">
+
+            <ng-template ngx-select-option let-option let-highlight="highlight">
+                <span class="color-box" [style]="style('background-color:' + option.value)"></span>
+                <span [innerHtml]="highlight"></span>
+                ({{option.data.hex}})
+            </ng-template>
+
         </ngx-select>
         <p></p>
         <div class="alert alert-secondary">
