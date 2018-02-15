@@ -88,7 +88,7 @@ Any item can be `disabled` for prevent selection. For disable an item add the pr
 | (remove)  | Fired on an item removed by user. Returns value of the removed item. |
 | (navigated)  | Fired on navigate by the dropdown list. Returns: `INgxOptionNavigated`. |
 
-**Warning!** Although the component contains the `select` and the `remove` events, the better solution is using `valueChanches` of the `FormControl`.
+**Warning!** Although the component contains the `select` and the `remove` events, the better solution is using `valueChanges` of the `FormControl`.
 
 ```typescript
 import {Component} from '@angular/core';
@@ -132,6 +132,61 @@ List of styles for customization:
 - **`ngx-select__item`** - An item.
 - **`ngx-select__item_disabled`** - Modifier of a disabled item.
 - **`ngx-select__item_active`** - Modifier of the activated item.
+
+### Templates
+
+For extended rendering customisation you are can use the `ng-template`:
+
+```html
+<ngx-select [items]="items" optionValueField="hex" optionTextField="name" [(ngModel)]="ngxValue">
+
+    <ng-template ngx-select-option-selected let-option let-text="text">
+        <span class="color-box" [style]="style('background-color:' + option.value)"></span>
+        <span [innerHtml]="text"></span>
+        ({{option.data.hex}})
+    </ng-template>
+
+    <ng-template ngx-select-option let-option let-text="text">
+        <span class="color-box" [style]="style('background-color:' + option.value)"></span>
+        <span [innerHtml]="text"></span>
+        ({{option.data.hex}})
+    </ng-template>
+
+    <ng-template ngx-select-option-not-found>
+        Nothing found
+    </ng-template>
+
+</ngx-select>
+``` 
+
+Also, you are can mix directives for reducing template:
+```html
+<ngx-select [items]="items" optionValueField="hex" optionTextField="name" [(ngModel)]="ngxValue">
+    <ng-template ngx-select-option-selected ngx-select-option let-option let-text="text">
+        <span class="color-box" [style]="style('background-color:' + option.value)"></span>
+        <span [innerHtml]="text"></span>
+        ({{option.data.hex}})
+    </ng-template>
+
+    <ng-template ngx-select-option-not-found>
+        Not found <button (click)="addItem()">(+) Add new item</button>
+    </ng-template>
+</ngx-select>
+``` 
+
+Description details of the directives:
+1. `ngx-select-option-selected` - Customization rendering selected options.
+    Representing variables:
+    - `option` (implicit) - object of type `INgxSelectOption`.
+    - `text` - The text defined by the property `optionTextField`.
+    - `index` - Number value of index the option in the select list. Always equal to zero for the single select. 
+2. `ngx-select-option` - Customization rendering options in the dropdown menu.
+    Representing variables:
+    - `option` (implicit) - object of type `INgxSelectOption`.
+    - `text` - The highlighted text defined by the property `optionTextField`. It is highlighted in the search. 
+    - `index` - Number value of index for the top level.  
+    - `subIndex` - Number value of index for the second level.
+3. `ngx-select-option-not-found` - Customization "not found text". Does not represent any variables.
 
 ## Troubleshooting
 
