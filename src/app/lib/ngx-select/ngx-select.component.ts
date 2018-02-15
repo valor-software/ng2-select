@@ -350,7 +350,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
             event.preventDefault();
             event.stopPropagation();
         }
-        if (!option.disabled) {
+        if (option && !option.disabled) {
             this.subjOptionsSelected.next((this.multiple ? this.subjOptionsSelected.value : []).concat([option]));
             this.select.emit(option.value);
             this.optionsClose(true);
