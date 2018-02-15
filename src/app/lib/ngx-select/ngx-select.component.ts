@@ -24,6 +24,7 @@ import * as lodashNs from 'lodash';
 import * as escapeStringNs from 'escape-string-regexp';
 import {NgxSelectOptGroup, NgxSelectOption, TSelectOption} from './ngx-select.classes';
 import {NgxSelectOptionDirective} from './ngx-templates.directive';
+import {INgxOptionNavigated} from './ngx-select.interfaces';
 
 const _ = lodashNs;
 const escapeString = escapeStringNs;
@@ -73,6 +74,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     @Output() public close = new EventEmitter<void>();
     @Output() public select = new EventEmitter<any>();
     @Output() public remove = new EventEmitter<any>();
+    @Output() public navigated = new EventEmitter<INgxOptionNavigated>();
 
     @ViewChild('main') protected mainElRef: ElementRef;
     @ViewChild('input') protected inputElRef: ElementRef;
@@ -214,28 +216,29 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
 
     private navigateOption(navigation: ENavigation) {
         this.optionsFilteredFlat()
-            .map((options: NgxSelectOption[]) => {
+            .map<NgxSelectOption[], INgxOptionNavigated>((options: NgxSelectOption[]) => {
+                const navigated: INgxOptionNavigated = {index: -1, activeOption: null, filteredOptionList: options};
                 let newActiveIdx;
                 switch (navigation) {
                     case ENavigation.first:
-                        return options[0];
+                        navigated.index = 0;
+                        break;
                     case ENavigation.previous:
                         newActiveIdx = options.indexOf(this.optionActive) - 1;
-                        if (newActiveIdx >= 0) {
-                            return options[newActiveIdx];
-                        }
-                        return options[options.length - 1];
+                        navigated.index = newActiveIdx >= 0 ? newActiveIdx : options.length - 1;
+                        break;
                     case ENavigation.next:
                         newActiveIdx = options.indexOf(this.optionActive) + 1;
-                        if (newActiveIdx < options.length) {
-                            return options[newActiveIdx];
-                        }
-                        return options[0];
+                        navigated.index = newActiveIdx < options.length ? newActiveIdx : 0;
+                        break;
                     case ENavigation.last:
-                        return options[options.length - 1];
+                        navigated.index = options.length - 1;
+                        break;
                 }
+                navigated.activeOption = options[navigated.index];
+                return navigated;
             })
-            .subscribe((newActiveOption: NgxSelectOption) => this.optionActivate(newActiveOption));
+            .subscribe((newNavigated: INgxOptionNavigated) => this.optionActivate(newNavigated));
     }
 
     public ngDoCheck(): void {
@@ -369,9 +372,10 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
         return false;
     }
 
-    protected optionActivate(option: NgxSelectOption): void {
-        if (!option || !option.disabled) {
-            this.optionActive = option;
+    protected optionActivate(navigated: INgxOptionNavigated): void {
+        if (!navigated.activeOption || !navigated.activeOption.disabled) {
+            this.optionActive = navigated.activeOption;
+            this.navigated.emit(navigated);
         }
     }
 
@@ -409,7 +413,11 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
             this.optionsOpened = true;
             this.subjSearchText.next(search);
             if (!this.multiple && this.subjOptionsSelected.value.length) {
-                this.optionActivate(this.subjOptionsSelected.value[0]);
+                this.optionsFilteredFlat().subscribe((options: NgxSelectOption[]) => this.optionActivate({
+                    activeOption: this.subjOptionsSelected.value[0],
+                    filteredOptionList: options,
+                    index: options.indexOf(this.subjOptionsSelected.value[0])
+                }));
             } else {
                 this.navigateOption(ENavigation.first);
             }

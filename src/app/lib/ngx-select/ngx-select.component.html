@@ -70,7 +70,13 @@
                [ngClass]="{
                     'ngx-select__item_active active': isOptionActive(option, choiceItem),
                     'ngx-select__item_disabled disabled': option.disabled
-               }" (mouseenter)="optionActivate(option)" (click)="optionSelect(option, $event)">
+               }"
+               (mouseenter)="optionActivate({
+                    activeOption: option,
+                    filteredOptionList: optionsFiltered,
+                    index: optionsFiltered.indexOf(option)
+               })"
+               (click)="optionSelect(option, $event)">
                 <ng-template #defaultTemplateOption let-option let-highlight="highlight">
                     <span [innerHtml]="highlight"></span>
                 </ng-template>

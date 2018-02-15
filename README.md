@@ -86,6 +86,7 @@ Any item can be `disabled` for prevent selection. For disable an item add the pr
 | (close)  | Fired on select dropdown close |
 | (select)  | Fired on an item selected by user. Returns value of the selected item. |
 | (remove)  | Fired on an item removed by user. Returns value of the removed item. |
+| (navigated)  | Fired on navigate by the dropdown list. Returns: `INgxOptionNavigated`. |
 
 **Warning!** Although the component contains the `select` and the `remove` events, the better solution is using `valueChanches` of the `FormControl`.
 
