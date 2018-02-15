@@ -23,7 +23,7 @@ import 'rxjs/add/operator/do';
 import * as lodashNs from 'lodash';
 import * as escapeStringNs from 'escape-string-regexp';
 import {NgxSelectOptGroup, NgxSelectOption, TSelectOption} from './ngx-select.classes';
-import {NgxSelectOptionDirective} from './ngx-templates.directive';
+import {NgxSelectOptionDirective, NgxSelectOptionNotFoundDirective, NgxSelectOptionSelectedDirective} from './ngx-templates.directive';
 import {INgxOptionNavigated} from './ngx-select.interfaces';
 
 const _ = lodashNs;
@@ -81,6 +81,8 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     @ViewChild('choiceMenu') protected choiceMenuElRef: ElementRef;
 
     @ContentChild(NgxSelectOptionDirective, {read: TemplateRef}) templateOption: NgxSelectOptionDirective;
+    @ContentChild(NgxSelectOptionSelectedDirective, {read: TemplateRef}) templateSelectedOption: NgxSelectOptionSelectedDirective;
+    @ContentChild(NgxSelectOptionNotFoundDirective, {read: TemplateRef}) templateOptionNotFound: NgxSelectOptionNotFoundDirective;
 
     public optionsOpened = false;
     public optionsFiltered: TSelectOption[];

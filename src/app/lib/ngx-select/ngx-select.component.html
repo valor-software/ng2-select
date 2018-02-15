@@ -13,12 +13,17 @@
          *ngIf="(multiple === false) && (!optionsOpened || noAutoComplete)">
         <div class="ngx-select__toggle btn form-control ui-select-toggle"
              (click)="optionsOpen()">
-      <span [ngClass]="{
-              'ngx-select__placeholder ui-select-placeholder text-muted': !optionsSelected.length,
-              'ngx-select__selected-single ui-select-match-text pull-left float-left': optionsSelected.length,
-              'ngx-select__allow-clear ui-select-allow-clear': optionsSelected.length && allowClear
-            }"
-            [innerHtml]="optionsSelected.length ? sanitize(optionsSelected[0].text) : placeholder"></span>
+
+            <span *ngIf="!optionsSelected.length" class="ngx-select__placeholder ui-select-placeholder text-muted"
+                  [innerHtml]="placeholder"></span>
+            <span *ngIf="optionsSelected.length"
+                  class="ngx-select__selected-single ui-select-match-text pull-left float-left"
+                  [ngClass]="{'ngx-select__allow-clear ui-select-allow-clear': allowClear}">
+                <ng-container [ngTemplateOutlet]="templateSelectedOption || defaultTemplateOption"
+                              [ngTemplateOutletContext]="{$implicit: optionsSelected[0], index: 0,
+                                                          text: sanitize(optionsSelected[0].text)}">
+                </ng-container>
+            </span>
             <i class="dropdown-toggle pull-right float-right"></i>
             <i class="ngx-select__toggle-caret caret pull-right float-right"></i>
             <a class="ngx-select__clear btn btn-sm btn-link pull-right float-right" *ngIf="canClearNotMultiple()"
@@ -30,15 +35,19 @@
 
     <!-- multiple selected items -->
     <div class="ngx-select__selected ui-select-match" *ngIf="multiple === true">
-        <span *ngFor="let option of optionsSelected">
-          <span type="button" tabindex="-1"
-                class="ngx-select__selected-plural btn btn-default btn-secondary btn-xs ui-select-match-item">
-            <span [innerHtml]="sanitize(option.text)"></span>
-            <a class="ngx-select__clear btn btn-sm btn-link pull-right float-right"
-               (click)="optionRemove(option, $event)">
-              <i class="ngx-select__clear-icon"></i>
-            </a>
-          </span>
+        <span *ngFor="let option of optionsSelected; let idx = index">
+            <span type="button" tabindex="-1"
+                  class="ngx-select__selected-plural btn btn-default btn-secondary btn-xs ui-select-match-item">
+
+                <ng-container [ngTemplateOutlet]="templateSelectedOption || defaultTemplateOption"
+                              [ngTemplateOutletContext]="{$implicit: option, index: idx, text: sanitize(option.text)}">
+                </ng-container>
+
+                <a class="ngx-select__clear btn btn-sm btn-link pull-right float-right"
+                   (click)="optionRemove(option, $event)">
+                    <i class="ngx-select__clear-icon"></i>
+                </a>
+            </span>
         </span>
     </div>
 
@@ -77,18 +86,23 @@
                     index: optionsFiltered.indexOf(option)
                })"
                (click)="optionSelect(option, $event)">
-                <ng-template #defaultTemplateOption let-option let-highlight="highlight">
-                    <span [innerHtml]="highlight"></span>
-                </ng-template>
-
                 <ng-container [ngTemplateOutlet]="templateOption || defaultTemplateOption"
-                              [ngTemplateOutletContext]="{$implicit: option, highlight: highlightOption(option),
+                              [ngTemplateOutletContext]="{$implicit: option, text: highlightOption(option),
                               index: idxGroup, subIndex: idxOption}"></ng-container>
             </a>
         </li>
         <li class="ngx-select__item ngx-select__item_no-found dropdown-header" *ngIf="!optionsFiltered.length">
-            No results found
+            <ng-container [ngTemplateOutlet]="templateOptionNotFound || defaultTemplateOptionNotFound"></ng-container>
         </li>
     </ul>
+
+    <!--Default templates-->
+    <ng-template #defaultTemplateOption let-text="text">
+        <span [innerHtml]="text"></span>
+    </ng-template>
+
+    <ng-template #defaultTemplateOptionNotFound>
+        No results found
+    </ng-template>
 
 </div>

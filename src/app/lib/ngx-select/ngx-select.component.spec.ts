@@ -451,7 +451,7 @@ describe('NgxSelectComponent', () => {
 
             afterEach(() => {
                 fixture.detectChanges();
-                expect(selectedItem(1).innerHTML).toBe('item one');
+                expect(selectedItem(1).innerHTML).toContain('item one');
                 expect(fixture.componentInstance.select1.value).toEqual(1);
             });
         });
@@ -477,7 +477,7 @@ describe('NgxSelectComponent', () => {
 
             afterEach(() => {
                 fixture.detectChanges();
-                expect(selectedItem(2).innerHTML).toBe('item one');
+                expect(selectedItem(2).innerHTML).toContain('item one');
                 expect(fixture.componentInstance.select2.formControl.value).toEqual(1);
             });
         });
@@ -573,7 +573,7 @@ describe('NgxSelectComponent', () => {
                 fixture.detectChanges();
                 selectItemList(1)[0].click();
                 fixture.detectChanges();
-                expect(selectedItem(1).innerHTML).toBe('item zero');
+                expect(selectedItem(1).innerHTML).toContain('item zero');
                 expect(fixture.componentInstance.select1.value).toEqual(0);
             });
 
@@ -612,7 +612,7 @@ describe('NgxSelectComponent', () => {
                 fixture.detectChanges();
                 selectItemList(2)[0].click();
                 fixture.detectChanges();
-                expect(selectedItem(2).innerHTML).toBe('item zero');
+                expect(selectedItem(2).innerHTML).toContain('item zero');
                 expect(fixture.componentInstance.select2.formControl.value).toEqual(0);
             });
 
@@ -819,14 +819,14 @@ describe('NgxSelectComponent', () => {
             }));
 
             it('by a ngModel attribute and selected item must be active in menu', () => {
-                expect(selectedItem(1).innerHTML).toBe(items1[0].text);
+                expect(selectedItem(1).innerHTML).toContain(items1[0].text);
                 formControl(1).click();
                 fixture.detectChanges();
                 expect(selectItemActive(1).innerHTML).toContain(items1[0].text);
             });
 
             it('by a FormControl attribute and selected item must be active in menu', () => {
-                expect(selectedItem(2).innerHTML).toBe(items1[0].text);
+                expect(selectedItem(2).innerHTML).toContain(items1[0].text);
                 formControl(2).click();
                 fixture.detectChanges();
                 expect(selectItemActive(2).innerHTML).toContain(items1[0].text);
@@ -878,14 +878,14 @@ describe('NgxSelectComponent', () => {
             }));
 
             it('by a ngModel attribute and selected item must be active in menu', () => {
-                expect(selectedItem(1).innerHTML).toBe(items1[1].text);
+                expect(selectedItem(1).innerHTML).toContain(items1[1].text);
                 formControl(1).click();
                 fixture.detectChanges();
                 expect(selectItemActive(1).innerHTML).toContain(items1[1].text);
             });
 
             it('by a FormControl attribute and selected item must be active in menu', () => {
-                expect(selectedItem(2).innerHTML).toBe(items1[1].text);
+                expect(selectedItem(2).innerHTML).toContain(items1[1].text);
                 formControl(2).click();
                 fixture.detectChanges();
                 expect(selectItemActive(2).innerHTML).toContain(items1[1].text);
