@@ -35,7 +35,7 @@
 
     <!-- multiple selected items -->
     <div class="ngx-select__selected ui-select-match" *ngIf="multiple === true">
-        <span *ngFor="let option of optionsSelected; let idx = index">
+        <span *ngFor="let option of optionsSelected; trackBy: trackByOption; let idx = index">
             <span type="button" tabindex="-1"
                   class="ngx-select__selected-plural btn btn-default btn-secondary btn-xs ui-select-match-item">
 
