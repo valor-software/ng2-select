@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MultipleDisplayMode } from 'ng2-select';
 
 @Component({
   selector: 'multiple-demo',
@@ -18,6 +19,12 @@ export class MultipleDemoComponent {
   public value:any = ['Athens'];
   public _disabledV:string = '0';
   public disabled:boolean = false;
+  public multipleDisplayMode: MultipleDisplayMode = MultipleDisplayMode.Checkbox;
+  public selectedDisplayMode: string = '';
+
+  constructor() {
+    this.selectedDisplayMode = MultipleDisplayMode[MultipleDisplayMode.Checkbox];
+  }
 
   public get disabledV():string {
     return this._disabledV;
@@ -37,13 +44,25 @@ export class MultipleDemoComponent {
   }
 
   public refreshValue(value:any):void {
+    console.log('Refreshed value is: ', value);
     this.value = value;
   }
 
-  public itemsToString(value:Array<any> = []):string {
-    return value
-      .map((item:any) => {
-        return item.text;
-      }).join(',');
+  public itemsToString(value:any[] = []):string {
+    return value.map(item => item.text).join(',');
+  }
+
+  public toggleMultipleMode(): void {
+    if (this.multipleDisplayMode === MultipleDisplayMode.Checkbox) {
+      this.multipleDisplayMode = MultipleDisplayMode.Default;
+      this.selectedDisplayMode = MultipleDisplayMode[this.multipleDisplayMode];
+      return;
+    }
+
+    if (this.multipleDisplayMode === MultipleDisplayMode.Default) {
+      this.multipleDisplayMode = MultipleDisplayMode.Checkbox;
+      this.selectedDisplayMode = MultipleDisplayMode[this.multipleDisplayMode];
+      return;
+    }
   }
 }

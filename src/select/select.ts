@@ -115,13 +115,13 @@ let styles = `
       /* tslint:disable */
       useExisting: forwardRef(() => SelectComponent),
       /* tslint:enable */
-      multi: true
+      multi: true,
     },
     {
       provide: NG_VALIDATORS,
       useExisting: forwardRef(() => SelectComponent),
       multi: true,
-    }
+    },
   ],
   template: `
   <div tabindex="0"
@@ -196,7 +196,7 @@ let styles = `
      [offClick]="clickedOutside"
      class="ui-select-container ui-select-multiple dropdown form-control open">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
-    <span class="ui-select-match">
+    <span class="ui-select-match" *ngIf="multipleDisplayMode === 1">
         <span *ngFor="let a of active">
             <span class="ui-select-match-item btn btn-default btn-secondary btn-xs"
                   tabindex="-1"
@@ -210,6 +210,7 @@ let styles = `
         </span>
     </span>
     <input type="text"
+           *ngIf="multipleDisplayMode === 1"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
            (click)="matchClick($event)"
@@ -221,16 +222,32 @@ let styles = `
            class="form-control ui-select-search"
            placeholder="{{active.length <= 0 ? placeholder : ''}}"
            role="combobox">
-     <!-- options template -->
+
+      <input type="text"
+          *ngIf="multipleDisplayMode === 2"
+           (keydown)="inputEvent($event)"
+           (keyup)="inputEvent($event, true)"
+           (click)="matchClick($event)"
+           [disabled]="disabled"
+           autocomplete="false"
+           autocorrect="off"
+           autocapitalize="off"
+           spellcheck="false"
+           class="form-control ui-select-search"
+           placeholder="{{active.length > 0 ? active.length + ' selected' : placeholder}}"
+           role="combobox">
+     <!-- options template --> 
      <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
         <li *ngFor="let o of options" role="menuitem">
+        
           <div class="ui-select-choices-row"
                [class.active]="isActive(o)"
                (mouseenter)="selectActive(o)"
                (click)="selectMatch(o, $event)">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+              <input name="cb1" type="checkbox" [checked]="o.selected" *ngIf="multipleDisplayMode === 2">
+              <span [innerHtml]="sanitize(o.text | highlight:inputValue)"></span>
             </a>
           </div>
         </li>
@@ -249,13 +266,14 @@ let styles = `
                (click)="selectMatch(o, $event)"
                [ngClass]="{'active': isActive(o)}">
             <a href="javascript:void(0)" class="dropdown-item">
-              <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+              <input name="cb1" type="checkbox" [checked]="o.selected" *ngIf="multipleDisplayMode === 2">
+              <span [innerHtml]="sanitize(o.text | highlight:inputValue)"></span>
             </a>
           </div>
         </li>
       </ul>
   </div>
-  `
+  `,
 })
 export class SelectComponent implements OnInit, ControlValueAccessor {
   @Input() public allowClear: boolean = false;
@@ -264,6 +282,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   @Input() public textField: string = 'text';
   @Input() public childrenField: string = 'children';
   @Input() public multiple: boolean = false;
+  @Input() public multipleDisplayMode: MultipleDisplayMode = MultipleDisplayMode.Default;
 
   @Input()
   public set items(value: Array<any>) {
@@ -271,11 +290,29 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       this._items = this.itemObjects = [];
     } else {
       this._items = value.filter((item: any) => {
-        if ((typeof item === 'string') || (typeof item === 'object' && item && item[this.textField] && item[this.idField])) {
+        if (
+          typeof item === 'string' ||
+          (typeof item === 'object') && item && item[this.textField] && (item[this.idField] || item.children)
+        ) {
           return item;
         }
       });
-      this.itemObjects = this._items.map((item: any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({ id: item[this.idField], text: item[this.textField], children: item[this.childrenField] })));
+
+      this.itemObjects = this._items.map((item: any) => {
+        let newItem: SelectItem = null;
+        let text = item[this.textField];
+        if (typeof item === 'string') {
+          item = new SelectItem(item);
+        } else {
+          item = new SelectItem({
+            id: item[this.idField],
+            text: item[this.textField],
+            children: item[this.childrenField],
+          });
+        }
+
+        return item;
+      });
     }
   }
 
@@ -297,12 +334,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       this._active = [];
     } else {
       let areItemsStrings = typeof selectedItems[0] === 'string';
-
       this._active = selectedItems.map((item: any) => {
-        let data = areItemsStrings
-          ? item
-          : { id: item[this.idField], text: item[this.textField] };
-
+        let data = areItemsStrings ? item : { id: item[this.idField], text: item[this.textField], selected: true };
         return new SelectItem(data);
       });
     }
@@ -323,12 +356,12 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     return this._active;
   }
 
-  private set optionsOpened(value: boolean) {
+  protected set optionsOpened(value: boolean) {
     this._optionsOpened = value;
     this.opened.emit(value);
   }
 
-  private get optionsOpened(): boolean {
+  protected get optionsOpened(): boolean {
     return this._optionsOpened;
   }
 
@@ -338,7 +371,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   private inputMode: boolean = false;
   private _optionsOpened: boolean = false;
   private behavior: OptionsBehavior;
-  private inputValue: string = '';
+  protected inputValue: string = '';
   private _items: Array<any> = [];
   private _disabled: boolean = false;
   private _active: Array<SelectItem> = [];
@@ -352,25 +385,33 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
+  public isSelectedItem(value: SelectItem): boolean {
+    let isSelected = this.active.find((item: SelectItem) => item.text === value.text);
+    return isSelected ? true : false;
+  }
+
   public inputEvent(e: any, isUpMode: boolean = false): void {
     // tab
     if (e.keyCode === 9) {
       return;
     }
-    if (isUpMode && (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 38 ||
-      e.keyCode === 40 || e.keyCode === 13)) {
+    if (
+      isUpMode &&
+      (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 38 || e.keyCode === 40 || e.keyCode === 13)
+    ) {
       e.preventDefault();
       return;
     }
     // backspace
-    if (!isUpMode && e.keyCode === 8) {
-      let el: any = this.element.nativeElement
-        .querySelector('div.ui-select-container > input');
-      if (!el.value || el.value.length <= 0) {
-        if (this.active.length > 0) {
-          this.remove(this.active[this.active.length - 1]);
+    if (!isUpMode && e.keyCode === 8) { 
+      if (this.multiple !== true && this.multipleDisplayMode !== MultipleDisplayMode.Checkbox) {
+        let el: any = this.element.nativeElement.querySelector('div.ui-select-container > input');
+        if (!el.value || el.value.length <= 0) {
+          if (this.active.length > 0) {
+            this.remove(this.active[this.active.length - 1]);
+          }
+          e.preventDefault();
         }
-        e.preventDefault();
       }
     }
     // esc
@@ -431,8 +472,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   }
 
   public ngOnInit(): any {
-    this.behavior = (this.firstItemHasChildren) ?
-      new ChildrenBehavior(this) : new GenericBehavior(this);
+    this.behavior = this.firstItemHasChildren ? new ChildrenBehavior(this) : new GenericBehavior(this);
   }
 
   public remove(item: SelectItem): void {
@@ -440,8 +480,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       return;
     }
     if (this.multiple === true && this.active) {
-      let index = this.active.indexOf(item);
-      this.active.splice(index, 1);
+      this.active = [...this.active.filter(i => i.text !== item.text)];
       this.data.next(this.active);
       this.doEvent('removed', item);
     }
@@ -483,15 +522,21 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       controlValue = [];
     }
 
-    return (controlValue.length > 0) ? null : {
-      ng2SelectEmptyError: {
-        valid: false
-      }
-    };
+    return controlValue.length > 0
+      ? null
+      : {
+          ng2SelectEmptyError: {
+            valid: false,
+          },
+        };
   }
 
-  public registerOnChange(fn: (_: any) => {}): void { this.onChange = fn; }
-  public registerOnTouched(fn: () => {}): void { this.onTouched = fn; }
+  public registerOnChange(fn: (_: any) => {}): void {
+    this.onChange = fn;
+  }
+  public registerOnTouched(fn: () => {}): void {
+    this.onTouched = fn;
+  }
 
   protected matchClick(e: any): void {
     if (this._disabled === true) {
@@ -518,15 +563,19 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       this.inputEvent(event, true);
       return;
     }
-    if (event.keyCode === 9 || event.keyCode === 13 ||
-      event.keyCode === 27 || (event.keyCode >= 37 && event.keyCode <= 40)) {
+    if (
+      event.keyCode === 9 ||
+      event.keyCode === 13 ||
+      event.keyCode === 27 ||
+      (event.keyCode >= 37 && event.keyCode <= 40)
+    ) {
       event.preventDefault();
       return;
     }
     this.inputMode = true;
-    let value = String
-      .fromCharCode(96 <= event.keyCode && event.keyCode <= 105 ? event.keyCode - 48 : event.keyCode)
-      .toLowerCase();
+    let value = String.fromCharCode(
+      96 <= event.keyCode && event.keyCode <= 105 ? event.keyCode - 48 : event.keyCode,
+    ).toLowerCase();
     this.focusToInput(value);
     this.open();
     let target = event.target || event.srcElement;
@@ -558,9 +607,18 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   }
 
   private open(): void {
-    this.options = this.itemObjects
-      .filter((option: SelectItem) => (this.multiple === false ||
-        this.multiple === true && !this.active.find((o: SelectItem) => option.text === o.text)));
+    if (this.multiple && this.multipleDisplayMode === MultipleDisplayMode.Checkbox) {
+      this.options = this.itemObjects.filter((item: SelectItem) => {
+        item.selected = this.active.filter((o: SelectItem) => { return o.text === item.text}).length > 0;
+        return item;
+      });
+    } else {
+      this.options = this.itemObjects.filter(
+        (option: SelectItem) =>
+          this.multiple === false ||
+          (this.multiple === true && !this.active.find((o: SelectItem) => option.text === o.text)),
+      );
+    }
 
     if (this.options.length > 0) {
       this.behavior.first();
@@ -585,21 +643,61 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     if (this.options.length <= 0) {
       return;
     }
-    if (this.multiple === true) {
+
+    // remove item
+    if (this.multiple === true && this.isSelectedItem(value)) {
+      this.setItemSelected(value.text, false);
+      this.remove(value);
+      this.inputValue = '';
+      return;
+    }
+
+    if (this.multiple === true && this.multipleDisplayMode === MultipleDisplayMode.Default) {
+      this.setItemSelected(value.text, true);
       this.active.push(value);
       this.data.next(this.active);
     }
+
+    if (this.multiple === true && !this.isSelectedItem(value) && this.multipleDisplayMode === MultipleDisplayMode.Checkbox) {
+      this.setItemSelected(value.text, true);
+      this.active.push(value);
+      this.data.next(this.active);
+      this.inputValue = '';
+    }
+
     if (this.multiple === false) {
+      this.setItemSelected(value.text, true);
       this.active[0] = value;
       this.data.next(this.active[0]);
     }
     this.doEvent('selected', value);
-    this.hideOptions();
+
+    if (this.multiple === false || (this.multiple === true && this.multipleDisplayMode === MultipleDisplayMode.Default)) {
+      this.hideOptions();
+    }
+
     if (this.multiple === true) {
       this.focusToInput('');
     } else {
       this.focusToInput(stripTags(value.text));
       this.element.nativeElement.querySelector('.ui-select-container').focus();
+    }
+  }
+
+  private setItemSelected(value: string, selected: boolean) {
+    let selectedItem = this.itemObjects.find((item: SelectItem) => item.text === value);
+    if (selectedItem) {
+      selectedItem.selected = selected;
+      return;
+    }
+
+    let itemsWithChildren = this.itemObjects.filter((item:SelectItem) => item.children);
+    for(let parent of itemsWithChildren) {
+      let child = parent.children.find((item:SelectItem) => item.text === value);
+      if (child) {
+        child.selected = selected;
+        break;
+      }
     }
   }
 }
@@ -616,10 +714,9 @@ export class Behavior {
   public fillOptionsMap(): void {
     this.optionsMap.clear();
     let startPos = 0;
-    this.actor.itemObjects
-      .map((item: SelectItem) => {
-        startPos = item.fillChildrenHash(this.optionsMap, startPos);
-      });
+    this.actor.itemObjects.map((item: SelectItem) => {
+      startPos = item.fillChildrenHash(this.optionsMap, startPos);
+    });
   }
 
   public ensureHighlightVisible(optionsMap: Map<string, number> = void 0): void {
@@ -674,25 +771,24 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
 
   public prev(): void {
     let index = this.actor.options.indexOf(this.actor.activeOption);
-    this.actor.activeOption = this.actor
-      .options[index - 1 < 0 ? this.actor.options.length - 1 : index - 1];
+    this.actor.activeOption = this.actor.options[index - 1 < 0 ? this.actor.options.length - 1 : index - 1];
     super.ensureHighlightVisible();
   }
 
   public next(): void {
     let index = this.actor.options.indexOf(this.actor.activeOption);
-    this.actor.activeOption = this.actor
-      .options[index + 1 > this.actor.options.length - 1 ? 0 : index + 1];
+    this.actor.activeOption = this.actor.options[index + 1 > this.actor.options.length - 1 ? 0 : index + 1];
     super.ensureHighlightVisible();
   }
 
   public filter(query: RegExp): void {
-    let options = this.actor.itemObjects
-      .filter((option: SelectItem) => {
-        return stripTags(option.text).match(query) &&
-          (this.actor.multiple === false ||
-            (this.actor.multiple === true && this.actor.active.map((item: SelectItem) => item.id).indexOf(option.id) < 0));
-      });
+    let options = this.actor.itemObjects.filter((option: SelectItem) => {
+      return (
+        stripTags(option.text).match(query) &&
+        (this.actor.multiple === false ||
+          (this.actor.multiple === true && this.actor.active.map((item: SelectItem) => item.id).indexOf(option.id) < 0))
+      );
+    });
     this.actor.options = options;
     if (this.actor.options.length > 0) {
       this.actor.activeOption = this.actor.options[0];
@@ -700,6 +796,12 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
     }
   }
 }
+
+export enum MultipleDisplayMode {
+  Default = 1,
+  Checkbox = 2
+}
+
 
 export class ChildrenBehavior extends Behavior implements OptionsBehavior {
   public constructor(actor: SelectComponent) {
@@ -713,25 +815,26 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
   }
 
   public last(): void {
-    this.actor.activeOption =
-      this.actor
-        .options[this.actor.options.length - 1]
-        .children[this.actor.options[this.actor.options.length - 1].children.length - 1];
+    this.actor.activeOption = this.actor.options[this.actor.options.length - 1].children[
+      this.actor.options[this.actor.options.length - 1].children.length - 1
+    ];
     this.fillOptionsMap();
     this.ensureHighlightVisible(this.optionsMap);
   }
 
   public prev(): void {
-    let indexParent = this.actor.options
-      .findIndex((option: SelectItem) => this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id);
-    let index = this.actor.options[indexParent].children
-      .findIndex((option: SelectItem) => this.actor.activeOption && this.actor.activeOption.id === option.id);
+    let indexParent = this.actor.options.findIndex(
+      (option: SelectItem) => this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id,
+    );
+    let index = this.actor.options[indexParent].children.findIndex(
+      (option: SelectItem) => this.actor.activeOption && this.actor.activeOption.id === option.id,
+    );
     this.actor.activeOption = this.actor.options[indexParent].children[index - 1];
     if (!this.actor.activeOption) {
       if (this.actor.options[indexParent - 1]) {
-        this.actor.activeOption = this.actor
-          .options[indexParent - 1]
-          .children[this.actor.options[indexParent - 1].children.length - 1];
+        this.actor.activeOption = this.actor.options[indexParent - 1].children[
+          this.actor.options[indexParent - 1].children.length - 1
+        ];
       }
     }
     if (!this.actor.activeOption) {
@@ -742,10 +845,12 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
   }
 
   public next(): void {
-    let indexParent = this.actor.options
-      .findIndex((option: SelectItem) => this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id);
-    let index = this.actor.options[indexParent].children
-      .findIndex((option: SelectItem) => this.actor.activeOption && this.actor.activeOption.id === option.id);
+    let indexParent = this.actor.options.findIndex(
+      (option: SelectItem) => this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id,
+    );
+    let index = this.actor.options[indexParent].children.findIndex(
+      (option: SelectItem) => this.actor.activeOption && this.actor.activeOption.id === option.id,
+    );
     this.actor.activeOption = this.actor.options[indexParent].children[index + 1];
     if (!this.actor.activeOption) {
       if (this.actor.options[indexParent + 1]) {
