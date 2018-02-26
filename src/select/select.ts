@@ -429,7 +429,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       this.open();
     }
     // Stopping further propagation of event. This was done in order to cater the bug
-    // http://bugs.awaaz.de/show_bug.cgi?id=892.
+    // https://github.com/valor-software/ng2-select/issues/945.
     e.stopPropagation()
   }
 
