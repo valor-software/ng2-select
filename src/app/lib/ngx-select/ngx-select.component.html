@@ -1,24 +1,24 @@
-<div #main [tabindex]="disabled? -1: 0" class="ngx-select ui-select-container dropdown"
+<div #main [tabindex]="disabled? -1: 0" class="ngx-select dropdown"
      [ngClass]="{
-        'ngx-select_multiple ui-select-multiple form-control': multiple === true,
+        'ngx-select_multiple form-control': multiple === true,
         'open show': optionsOpened && optionsFiltered.length
      }"
      (click)="mainClicked($event)" (focusin)="mainClicked($event)"
      (focus)="focusToInput()" (keydown)="inputKeyDown($event)"
      (keyup)="mainKeyUp($event)">
-    <div [ngClass]="{ 'ngx-select__disabled ui-disabled': disabled}"></div>
+    <div [ngClass]="{ 'ngx-select__disabled': disabled}"></div>
 
     <!-- single selected item -->
-    <div class="ngx-select__selected ui-select-match"
+    <div class="ngx-select__selected"
          *ngIf="(multiple === false) && (!optionsOpened || noAutoComplete)">
-        <div class="ngx-select__toggle btn form-control ui-select-toggle"
+        <div class="ngx-select__toggle btn form-control"
              (click)="optionsOpen()">
 
-            <span *ngIf="!optionsSelected.length" class="ngx-select__placeholder ui-select-placeholder text-muted"
+            <span *ngIf="!optionsSelected.length" class="ngx-select__placeholder text-muted"
                   [innerHtml]="placeholder"></span>
             <span *ngIf="optionsSelected.length"
-                  class="ngx-select__selected-single ui-select-match-text pull-left float-left"
-                  [ngClass]="{'ngx-select__allow-clear ui-select-allow-clear': allowClear}">
+                  class="ngx-select__selected-single pull-left float-left"
+                  [ngClass]="{'ngx-select__allow-clear': allowClear}">
                 <ng-container [ngTemplateOutlet]="templateSelectedOption || defaultTemplateOption"
                               [ngTemplateOutletContext]="{$implicit: optionsSelected[0], index: 0,
                                                           text: sanitize(optionsSelected[0].text)}">
@@ -34,10 +34,10 @@
     </div>
 
     <!-- multiple selected items -->
-    <div class="ngx-select__selected ui-select-match" *ngIf="multiple === true">
+    <div class="ngx-select__selected" *ngIf="multiple === true">
         <span *ngFor="let option of optionsSelected; trackBy: trackByOption; let idx = index">
             <span type="button" tabindex="-1"
-                  class="ngx-select__selected-plural btn btn-default btn-secondary btn-xs ui-select-match-item">
+                  class="ngx-select__selected-plural btn btn-default btn-secondary btn-xs">
 
                 <ng-container [ngTemplateOutlet]="templateSelectedOption || defaultTemplateOption"
                               [ngTemplateOutletContext]="{$implicit: option, index: idx, text: sanitize(option.text)}">
@@ -52,7 +52,7 @@
     </div>
 
     <!-- live search an item from the list -->
-    <input #input type="text" class="ngx-select__search form-control ui-select-search"
+    <input #input type="text" class="ngx-select__search form-control"
            *ngIf="checkInputVisibility()"
            [tabindex]="multiple === false? -1: 0"
            (keydown)="inputKeyDown($event)"
@@ -67,14 +67,14 @@
            role="combobox">
 
     <!-- options template -->
-    <ul #choiceMenu role="menu" class="ngx-select__choices ui-select-choices dropdown-menu"
+    <ul #choiceMenu role="menu" class="ngx-select__choices dropdown-menu"
         [class.show]="optionsOpened && subjOptions.value.length">
         <li class="ngx-select__item-group" role="menuitem"
             *ngFor="let opt of optionsFiltered; trackBy: trackByOption; let idxGroup=index">
             <div class="divider dropdown-divider" *ngIf="opt.type === 'optgroup' && (idxGroup > 0)"></div>
             <div class="dropdown-header" *ngIf="opt.type === 'optgroup'">{{opt.label}}</div>
 
-            <a href="#" #choiceItem class="ngx-select__item ui-select-choices-row dropdown-item"
+            <a href="#" #choiceItem class="ngx-select__item dropdown-item"
                *ngFor="let option of (opt.optionsFiltered || [opt]); trackBy: trackByOption; let idxOption = index"
                [ngClass]="{
                     'ngx-select__item_active active': isOptionActive(option, choiceItem),
