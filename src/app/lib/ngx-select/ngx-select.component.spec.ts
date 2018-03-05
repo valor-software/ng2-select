@@ -24,6 +24,7 @@ import createSpy = jasmine.createSpy;
                     [items]="select1.items"
                     [disabled]="select1.disabled"
                     [autoSelectSingleOption]="select1.autoSelectSingleOption"
+                    [autoClearSearch]="select1.autoClearSearch"
                     (focus)="select1.doFocus()"
                     (blur)="select1.doBlur()"
                     (open)="select1.doOpen()"
@@ -65,6 +66,7 @@ class TestNgxSelectComponent {
         items: [],
         disabled: false,
         autoSelectSingleOption: false,
+        autoClearSearch: false,
 
         doFocus: () => null,
         doBlur: () => null,
@@ -689,6 +691,34 @@ describe('NgxSelectComponent', () => {
             fixture.componentInstance.select1.items = items;
             fixture.detectChanges();
             expect(selectItemList(1).length).toBe(3);
+        });
+    });
+
+    describe('test autoClearSearch', () => {
+        beforeEach(() => {
+            fixture.componentInstance.select1.multiple = true;
+            fixture.componentInstance.select1.items = ['Berlin', 'Birmingham', 'Bradford', 'Bremen', 'Brussels', 'Bucharest'];
+            fixture.detectChanges();
+            formControl(1).click();
+            fixture.detectChanges();
+            formControlInput(1).value = 'br';
+            formControlInput(1).dispatchEvent(createKeyboardEvent('keyup', 82, 'r'));
+            fixture.detectChanges();
+            expect(selectItemList(1).length).toBe(3);
+        });
+
+        it('should not clear input after select', () => {
+            selectItemList(1)[0].click();
+            fixture.detectChanges();
+            expect(formControlInput(1).value).toBe('br');
+        });
+
+        it('should clear input after select', () => {
+            fixture.componentInstance.select1.autoClearSearch = true;
+            fixture.detectChanges();
+            selectItemList(1)[0].click();
+            fixture.detectChanges();
+            expect(formControlInput(1).value).toEqual('');
         });
     });
 

@@ -66,6 +66,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     @Input() public disabled = false;
     @Input() public defaultValue: any[] = [];
     @Input() public autoSelectSingleOption = false;
+    @Input() public autoClearSearch = false;
 
     @Output() public typed = new EventEmitter<string>();
     @Output() public focus = new EventEmitter<void>();
@@ -436,6 +437,10 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
             window.scrollTo(x, y);
         }
         this.close.emit();
+
+        if (this.autoClearSearch && this.multiple && this.inputElRef) {
+            this.inputElRef.nativeElement.value = null;
+        }
     }
 
     private buildOptions(data: any[]): Array<NgxSelectOption | NgxSelectOptGroup> {

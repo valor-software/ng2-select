@@ -76,6 +76,7 @@ Any item can be `disabled` for prevent selection. For disable an item add the pr
 | [disabled] | boolean | `false` |  When `true`, it specifies that the component should be disabled |
 | [defaultValue] | any[] | `[]` |  Use to set default value |
 | autoSelectSingleOption | boolean | `false` | Auto select a non disabled single option |
+| autoClearSearch | boolean | `false` | Auto clear a search text after select an option. Has effect for `multiple = true` |
 
 | Output  | Description |
 | ------------- | ------------- |
