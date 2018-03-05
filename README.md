@@ -43,6 +43,28 @@ Native Angular component for Select
     export class AppModule {
     }
     ```
+    
+    If you want to change the default options then use next code:
+    ```typescript
+    import {NgModule} from '@angular/core';
+    import {BrowserModule} from '@angular/platform-browser';
+    import {AppComponent} from './app.component';
+    import { NgxSelectModule, INgxSelectOptions } from 'ngx-select-ex';
+ 
+    const CustomSelectOptions: INgxSelectOptions = { // Check the interface fo more options
+        optionValueField: 'id',
+        optionTextField: 'name'
+    };
+
+    @NgModule({
+      imports: [BrowserModule, NgxSelectModule.forRoot(CustomSelectOptions)],
+      declarations: [AppComponent],
+      bootstrap: [AppComponent],
+    })
+    export class AppModule {
+    }
+    ```
+    
 3. Include Bootstrap styles.
     For example add to your index.html
 
@@ -77,6 +99,7 @@ Any item can be `disabled` for prevent selection. For disable an item add the pr
 | [defaultValue] | any[] | `[]` |  Use to set default value |
 | autoSelectSingleOption | boolean | `false` | Auto select a non disabled single option |
 | autoClearSearch | boolean | `false` | Auto clear a search text after select an option. Has effect for `multiple = true` |
+| noResultsFound | string | `'No results found'` | The default text showed when a search has no results |
 
 | Output  | Description |
 | ------------- | ------------- |

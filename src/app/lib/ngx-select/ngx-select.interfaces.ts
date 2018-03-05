@@ -23,3 +23,18 @@ export interface INgxOptionNavigated {
     activeOption: NgxSelectOption;
     filteredOptionList: NgxSelectOption[];
 }
+
+export interface INgxSelectOptions {
+    optionValueField?: string;
+    optionTextField?: string;
+    optGroupLabelField?: string;
+    optGroupOptionsField?: string;
+    multiple?: boolean;
+    allowClear?: boolean;
+    placeholder?: string;
+    noAutoComplete?: boolean;
+    disabled?: boolean;
+    autoSelectSingleOption?: boolean;
+    autoClearSearch?: boolean;
+    noResultsFound?: string;
+}

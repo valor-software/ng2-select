@@ -1,7 +1,7 @@
 import {
     AfterContentChecked, DoCheck, Input, Output, ViewChild,
     Component, ElementRef, EventEmitter, forwardRef, HostListener, IterableDiffer, IterableDiffers, ChangeDetectorRef, ContentChild,
-    TemplateRef
+    TemplateRef, Optional, Inject, InjectionToken
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
@@ -24,10 +24,12 @@ import * as lodashNs from 'lodash';
 import * as escapeStringNs from 'escape-string-regexp';
 import {NgxSelectOptGroup, NgxSelectOption, TSelectOption} from './ngx-select.classes';
 import {NgxSelectOptionDirective, NgxSelectOptionNotFoundDirective, NgxSelectOptionSelectedDirective} from './ngx-templates.directive';
-import {INgxOptionNavigated} from './ngx-select.interfaces';
+import {INgxOptionNavigated, INgxSelectOptions} from './ngx-select.interfaces';
 
 const _ = lodashNs;
 const escapeString = escapeStringNs;
+
+export const NGX_SELECT_OPTIONS = new InjectionToken<any>('NGX_SELECT_OPTIONS');
 
 export interface INgxSelectComponentMouseEvent extends MouseEvent {
     clickedSelectComponent?: NgxSelectComponent;
@@ -53,7 +55,7 @@ function propertyExists(obj: Object, propertyName: string) {
         }
     ]
 })
-export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterContentChecked {
+export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccessor, DoCheck, AfterContentChecked {
     @Input() public items: any[];
     @Input() public optionValueField = 'id';
     @Input() public optionTextField = 'text';
@@ -67,6 +69,7 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     @Input() public defaultValue: any[] = [];
     @Input() public autoSelectSingleOption = false;
     @Input() public autoClearSearch = false;
+    @Input() public noResultsFound = 'No results found';
 
     @Output() public typed = new EventEmitter<string>();
     @Output() public focus = new EventEmitter<void>();
@@ -107,7 +110,10 @@ export class NgxSelectComponent implements ControlValueAccessor, DoCheck, AfterC
     private _focusToInput = false;
     private isFocused = false;
 
-    constructor(iterableDiffers: IterableDiffers, private sanitizer: DomSanitizer, private cd: ChangeDetectorRef) {
+    constructor(iterableDiffers: IterableDiffers, private sanitizer: DomSanitizer, private cd: ChangeDetectorRef,
+                @Inject(NGX_SELECT_OPTIONS) @Optional() defaultOptions: INgxSelectOptions) {
+        Object.assign(this, defaultOptions);
+
         // differs
         this.itemsDiffer = iterableDiffers.find([]).create<any>(null);
         this.defaultValueDiffer = iterableDiffers.find([]).create<any>(null);

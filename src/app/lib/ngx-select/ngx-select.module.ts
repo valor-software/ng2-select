@@ -1,7 +1,8 @@
-import {NgModule} from '@angular/core';
+import {ModuleWithProviders, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {NgxSelectComponent} from './ngx-select.component';
+import {NGX_SELECT_OPTIONS, NgxSelectComponent} from './ngx-select.component';
 import {NgxSelectOptionDirective, NgxSelectOptionNotFoundDirective, NgxSelectOptionSelectedDirective} from './ngx-templates.directive';
+import {INgxSelectOptions} from './ngx-select.interfaces';
 
 @NgModule({
     imports: [
@@ -15,4 +16,10 @@ import {NgxSelectOptionDirective, NgxSelectOptionNotFoundDirective, NgxSelectOpt
     ]
 })
 export class NgxSelectModule {
+    static forRoot(options: INgxSelectOptions): ModuleWithProviders {
+        return {
+            ngModule: NgxSelectModule,
+            providers: [{provide: NGX_SELECT_OPTIONS, useValue: options}]
+        };
+    }
 }
