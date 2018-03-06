@@ -37,4 +37,5 @@ export interface INgxSelectOptions {
     autoSelectSingleOption?: boolean;
     autoClearSearch?: boolean;
     noResultsFound?: string;
+    size: 'small' | 'default' | 'large';
 }

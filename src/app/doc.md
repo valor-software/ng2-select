@@ -85,6 +85,7 @@ Any item can be `disabled` for prevent selection. For disable an item add the pr
 | autoSelectSingleOption | boolean | `false` | Auto select a non disabled single option |
 | autoClearSearch | boolean | `false` | Auto clear a search text after select an option. Has effect for `multiple = true` |
 | noResultsFound | string | `'No results found'` | The default text showed when a search has no results |
+| size | `'small'/'default'/'large'` | `'default'` | Adding bootstrap classes: form-control-sm, input-sm, form-control-lg input-lg, btn-sm, btn-lg |
 
 | Output  | Description |
 | ------------- | ------------- |

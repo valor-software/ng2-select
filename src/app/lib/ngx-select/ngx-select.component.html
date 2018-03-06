@@ -1,8 +1,8 @@
 <div #main [tabindex]="disabled? -1: 0" class="ngx-select dropdown"
-     [ngClass]="{
+     [ngClass]="setFormControlSize({
         'ngx-select_multiple form-control': multiple === true,
         'open show': optionsOpened && optionsFiltered.length
-     }"
+     }, multiple === true)"
      (click)="mainClicked($event)" (focusin)="mainClicked($event)"
      (focus)="focusToInput()" (keydown)="inputKeyDown($event)"
      (keyup)="mainKeyUp($event)">
@@ -11,7 +11,7 @@
     <!-- single selected item -->
     <div class="ngx-select__selected"
          *ngIf="(multiple === false) && (!optionsOpened || noAutoComplete)">
-        <div class="ngx-select__toggle btn form-control"
+        <div class="ngx-select__toggle btn form-control" [ngClass]="setFormControlSize(setBtnSize())"
              (click)="optionsOpen()">
 
             <span *ngIf="!optionsSelected.length" class="ngx-select__placeholder text-muted"
@@ -27,6 +27,7 @@
             <i class="dropdown-toggle pull-right float-right"></i>
             <i class="ngx-select__toggle-caret caret pull-right float-right"></i>
             <a class="ngx-select__clear btn btn-sm btn-link pull-right float-right" *ngIf="canClearNotMultiple()"
+               [ngClass]="setBtnSize()"
                (click)="optionRemove(optionsSelected[0], $event)">
                 <i class="ngx-select__clear-icon"></i>
             </a>
@@ -36,14 +37,14 @@
     <!-- multiple selected items -->
     <div class="ngx-select__selected" *ngIf="multiple === true">
         <span *ngFor="let option of optionsSelected; trackBy: trackByOption; let idx = index">
-            <span type="button" tabindex="-1"
+            <span type="button" tabindex="-1" [ngClass]="setBtnSize()"
                   class="ngx-select__selected-plural btn btn-default btn-secondary btn-xs">
 
                 <ng-container [ngTemplateOutlet]="templateSelectedOption || defaultTemplateOption"
                               [ngTemplateOutletContext]="{$implicit: option, index: idx, text: sanitize(option.text)}">
                 </ng-container>
 
-                <a class="ngx-select__clear btn btn-sm btn-link pull-right float-right"
+                <a class="ngx-select__clear btn btn-sm btn-link pull-right float-right" [ngClass]="setBtnSize()"
                    (click)="optionRemove(option, $event)">
                     <i class="ngx-select__clear-icon"></i>
                 </a>
@@ -52,7 +53,7 @@
     </div>
 
     <!-- live search an item from the list -->
-    <input #input type="text" class="ngx-select__search form-control"
+    <input #input type="text" class="ngx-select__search form-control" [ngClass]="setFormControlSize()"
            *ngIf="checkInputVisibility()"
            [tabindex]="multiple === false? -1: 0"
            (keydown)="inputKeyDown($event)"

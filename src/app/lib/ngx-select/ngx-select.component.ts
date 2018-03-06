@@ -70,6 +70,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Input() public autoSelectSingleOption = false;
     @Input() public autoClearSearch = false;
     @Input() public noResultsFound = 'No results found';
+    @Input() public size: 'small' | 'default' | 'large' = 'default';
 
     @Output() public typed = new EventEmitter<string>();
     @Output() public focus = new EventEmitter<void>();
@@ -179,6 +180,18 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                 }
             )
             .subscribe();
+    }
+
+    public setFormControlSize(otherClassNames: Object = {}, useFormControl: boolean = true) {
+        const formControlExtraClasses = useFormControl ? {
+            'form-control-sm input-sm': this.size === 'small',
+            'form-control-lg input-lg': this.size === 'large'
+        } : {};
+        return Object.assign(formControlExtraClasses, otherClassNames);
+    }
+
+    public setBtnSize() {
+        return {'btn-sm': this.size === 'small', 'btn-lg': this.size === 'large'};
     }
 
     public get optionsSelected(): NgxSelectOption[] {
