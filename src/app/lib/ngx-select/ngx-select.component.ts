@@ -71,6 +71,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Input() public autoClearSearch = false;
     @Input() public noResultsFound = 'No results found';
     @Input() public size: 'small' | 'default' | 'large' = 'default';
+    public keyCodeToRemoveSelected = 46; /*key delete*/
 
     @Output() public typed = new EventEmitter<string>();
     @Output() public focus = new EventEmitter<void>();
@@ -318,7 +319,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                     this.navigateOption(ENavigation.next);
                     break;
             }
-        } else if (!this.optionsOpened && event.keyCode === 46 /*key delete*/) {
+        } else if (!this.optionsOpened && event.keyCode === this.keyCodeToRemoveSelected) {
             this.optionRemove(this.subjOptionsSelected.value[this.subjOptionsSelected.value.length - 1], event);
         }
     }

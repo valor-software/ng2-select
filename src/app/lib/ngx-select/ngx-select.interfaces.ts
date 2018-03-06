@@ -37,5 +37,6 @@ export interface INgxSelectOptions {
     autoSelectSingleOption?: boolean;
     autoClearSearch?: boolean;
     noResultsFound?: string;
-    size: 'small' | 'default' | 'large';
+    size?: 'small' | 'default' | 'large';
+    keyCodeToRemoveSelected?: number;
 }
