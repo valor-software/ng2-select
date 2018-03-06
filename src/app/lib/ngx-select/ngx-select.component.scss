@@ -35,12 +35,21 @@
     color: #333;
     background-color: #fff;
     border-color: #ccc;
+    display: inline-flex;
+    align-items: stretch;
+    justify-content: space-between;
 
     &:hover {
       color: #333;
       background-color: #e6e6e6;
       border-color: #adadad;
     }
+  }
+
+  &__toggle-buttons {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
   }
 
   &__toggle-caret {
@@ -60,6 +69,7 @@
   &__clear {
     margin-right: 10px;
     padding: 0;
+    border: none;
   }
 
   &_multiple &__clear {
@@ -135,6 +145,12 @@
   &__selected-single, &__selected-plural {
     display: inline-flex;
     align-items: center;
+    overflow: hidden;
+
+    & span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   &__selected-plural {

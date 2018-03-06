@@ -133,6 +133,7 @@ List of styles for customization:
 - **`ngx-select__selected-single`** - The selected item with single mode. It's available when the property multiple  is false.
 - **`ngx-select__selected-plural`** - The multiple selected item. It's available when the property multiple is true.
 - **`ngx-select__allow-clear`** - The indicator that the selected single item can be removed. It's available while properties the multiple is false and the allowClear is true.
+- **`ngx-select__toggle-buttons`** - The container of buttons such as the clear and the toggle.
 - **`ngx-select__toggle-caret`** - The drop-down button of the single mode. It's available when the property multiple  is false.
 - **`ngx-select__clear`** - The button clear.
 - **`ngx-select__clear-icon`** - The cross icon.

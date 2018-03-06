@@ -14,8 +14,9 @@
         <div class="ngx-select__toggle btn form-control" [ngClass]="setFormControlSize(setBtnSize())"
              (click)="optionsOpen()">
 
-            <span *ngIf="!optionsSelected.length" class="ngx-select__placeholder text-muted"
-                  [innerHtml]="placeholder"></span>
+            <span *ngIf="!optionsSelected.length" class="ngx-select__placeholder text-muted">
+                <span [innerHtml]="placeholder"></span>
+            </span>
             <span *ngIf="optionsSelected.length"
                   class="ngx-select__selected-single pull-left float-left"
                   [ngClass]="{'ngx-select__allow-clear': allowClear}">
@@ -24,13 +25,15 @@
                                                           text: sanitize(optionsSelected[0].text)}">
                 </ng-container>
             </span>
-            <i class="dropdown-toggle pull-right float-right"></i>
-            <i class="ngx-select__toggle-caret caret pull-right float-right"></i>
-            <a class="ngx-select__clear btn btn-sm btn-link pull-right float-right" *ngIf="canClearNotMultiple()"
-               [ngClass]="setBtnSize()"
-               (click)="optionRemove(optionsSelected[0], $event)">
-                <i class="ngx-select__clear-icon"></i>
-            </a>
+            <span class="ngx-select__toggle-buttons">
+                <a class="ngx-select__clear btn btn-sm btn-link" *ngIf="canClearNotMultiple()"
+                   [ngClass]="setBtnSize()"
+                   (click)="optionRemove(optionsSelected[0], $event)">
+                    <i class="ngx-select__clear-icon"></i>
+                </a>
+                <i class="dropdown-toggle"></i>
+                <i class="ngx-select__toggle-caret caret"></i>
+            </span>
         </div>
     </div>
 
