@@ -37,7 +37,7 @@
     <!-- multiple selected items -->
     <div class="ngx-select__selected" *ngIf="multiple === true">
         <span *ngFor="let option of optionsSelected; trackBy: trackByOption; let idx = index">
-            <span type="button" tabindex="-1" [ngClass]="setBtnSize()"
+            <span tabindex="-1" [ngClass]="setBtnSize()"
                   class="ngx-select__selected-plural btn btn-default btn-secondary btn-xs">
 
                 <ng-container [ngTemplateOutlet]="templateSelectedOption || defaultTemplateOption"
