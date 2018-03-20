@@ -72,8 +72,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Input() public noResultsFound = 'No results found';
     @Input() public size: 'small' | 'default' | 'large' = 'default';
     @Input() public searchCallback: (search: string, item: INgxSelectOption) => boolean;
-    public keyCodeToRemoveSelected = 46;
-    /*key delete*/
+    public keyCodeToRemoveSelected = 46; /*key delete*/
 
     @Output() public typed = new EventEmitter<string>();
     @Output() public focus = new EventEmitter<void>();
