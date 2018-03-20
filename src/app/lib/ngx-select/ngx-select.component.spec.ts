@@ -675,7 +675,7 @@ describe('NgxSelectComponent', () => {
             formControl(1).click();
             fixture.detectChanges();
             formControlInput(1).value = 'br';
-            formControlInput(1).dispatchEvent(createKeyboardEvent('keyup', 82, 'r'));
+            formControlInput(1).dispatchEvent(createKeyboardEvent('input', 82, 'r'));
             fixture.detectChanges();
             expect(selectItemList(1).length).toBe(3);
         });
@@ -686,7 +686,7 @@ describe('NgxSelectComponent', () => {
             formControl(1).click();
             fixture.detectChanges();
             formControlInput(1).value = 'br';
-            formControlInput(1).dispatchEvent(createKeyboardEvent('keyup', 82, 'r'));
+            formControlInput(1).dispatchEvent(createKeyboardEvent('input', 82, 'r'));
             fixture.detectChanges();
             fixture.componentInstance.select1.items = items;
             fixture.detectChanges();
@@ -702,7 +702,7 @@ describe('NgxSelectComponent', () => {
             formControl(1).click();
             fixture.detectChanges();
             formControlInput(1).value = 'br';
-            formControlInput(1).dispatchEvent(createKeyboardEvent('keyup', 82, 'r'));
+            formControlInput(1).dispatchEvent(createKeyboardEvent('input', 82, 'r'));
             fixture.detectChanges();
             expect(selectItemList(1).length).toBe(3);
         });

@@ -71,8 +71,9 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Input() public autoClearSearch = false;
     @Input() public noResultsFound = 'No results found';
     @Input() public size: 'small' | 'default' | 'large' = 'default';
-    @Input() searchCallback: (search: string, item: INgxSelectOption) => boolean;
-    public keyCodeToRemoveSelected = 46; /*key delete*/
+    @Input() public searchCallback: (search: string, item: INgxSelectOption) => boolean;
+    public keyCodeToRemoveSelected = 46;
+    /*key delete*/
 
     @Output() public typed = new EventEmitter<string>();
     @Output() public focus = new EventEmitter<void>();
@@ -340,13 +341,15 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
         return (this.multiple === true) || (this.optionsOpened && !this.noAutoComplete);
     }
 
-    protected inputKeyUp(event: KeyboardEvent, value: string = '') {
-        if (this.optionsOpened) {
-            if (event.key && (event.key.length === 1 || event.key === 'Backspace')) {
-                this.typed.emit(value);
-            }
-        } else if (value) {
+    protected inputKeyUp(value: string = '') {
+        if (!this.optionsOpened && value) {
             this.optionsOpen(value);
+        }
+    }
+
+    protected doInputText(value: string) {
+        if (this.optionsOpened) {
+            this.typed.emit(value);
         }
     }
 
