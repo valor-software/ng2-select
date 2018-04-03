@@ -38,12 +38,12 @@ export interface INgxSelectOptions {
     autoClearSearch?: boolean;
     noResultsFound?: string;
     size?: 'small' | 'default' | 'large';
-    keyCodeToRemoveSelected?: number;
-    keyCodeToOptionsOpen?: number;
-    keyCodeToOptionsClose?: number;
-    keyCodeToOptionsSelect?: number;
-    keyCodeToNavigateFirst?: number;
-    keyCodeToNavigatePrevious?: number;
-    keyCodeToNavigateNext?: number;
-    keyCodeToNavigateLast?: number;
+    keyCodeToRemoveSelected?: string;
+    keyCodeToOptionsOpen?: string;
+    keyCodeToOptionsClose?: string;
+    keyCodeToOptionsSelect?: string;
+    keyCodeToNavigateFirst?: string;
+    keyCodeToNavigatePrevious?: string;
+    keyCodeToNavigateNext?: string;
+    keyCodeToNavigateLast?: string;
 }

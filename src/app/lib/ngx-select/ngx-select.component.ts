@@ -72,14 +72,14 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Input() public noResultsFound = 'No results found';
     @Input() public size: 'small' | 'default' | 'large' = 'default';
     @Input() public searchCallback: (search: string, item: INgxSelectOption) => boolean;
-    public keyCodeToRemoveSelected = 46;
-    public keyCodeToOptionsOpen = 13;
-    public keyCodeToOptionsClose = 27;
-    public keyCodeToOptionsSelect = 13;
-    public keyCodeToNavigateFirst = 37;
-    public keyCodeToNavigatePrevious = 38;
-    public keyCodeToNavigateNext = 40;
-    public keyCodeToNavigateLast = 39;
+    public keyCodeToRemoveSelected = 'Delete';
+    public keyCodeToOptionsOpen = 'Enter';
+    public keyCodeToOptionsClose = 'Escape';
+    public keyCodeToOptionsSelect = 'Enter';
+    public keyCodeToNavigateFirst = 'ArrowLeft';
+    public keyCodeToNavigatePrevious = 'ArrowUp';
+    public keyCodeToNavigateNext = 'ArrowDown';
+    public keyCodeToNavigateLast = 'ArrowRight';
 
     @Output() public typed = new EventEmitter<string>();
     @Output() public focus = new EventEmitter<void>();
@@ -301,6 +301,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     }
 
     public inputKeyDown(event: KeyboardEvent) {
+        console.log(event.keyCode, event);
         const keysForOpenedState = [
             this.keyCodeToOptionsSelect,
             this.keyCodeToNavigateFirst,
@@ -310,10 +311,10 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
         ];
         const keysForClosedState = [this.keyCodeToOptionsOpen, this.keyCodeToRemoveSelected];
 
-        if (this.optionsOpened && keysForOpenedState.indexOf(event.keyCode) !== -1) {
+        if (this.optionsOpened && keysForOpenedState.indexOf(event.code) !== -1) {
             event.preventDefault();
             event.stopPropagation();
-            switch (event.keyCode) {
+            switch (event.code) {
                 case this.keyCodeToOptionsSelect:
                     this.optionSelect(this.optionActive);
                     this.navigateOption(ENavigation.next);
@@ -331,10 +332,10 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                     this.navigateOption(ENavigation.next);
                     break;
             }
-        } else if (!this.optionsOpened && keysForClosedState.indexOf(event.keyCode) !== -1) {
+        } else if (!this.optionsOpened && keysForClosedState.indexOf(event.code) !== -1) {
             event.preventDefault();
             event.stopPropagation();
-            switch (event.keyCode) {
+            switch (event.code) {
                 case this.keyCodeToOptionsOpen:
                     this.optionsOpen();
                     break;
@@ -346,7 +347,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     }
 
     public mainKeyUp(event: KeyboardEvent): void {
-        if (event.keyCode === this.keyCodeToOptionsClose) {
+        if (event.code === this.keyCodeToOptionsClose) {
             this.optionsClose(true);
         }
     }

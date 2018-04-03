@@ -110,10 +110,10 @@ const items2 = [
     {uuid: 'uuid-10', name: 'v10'}
 ];
 
-const createKeyboardEvent = (typeArg: string, keyCode: number, key: string = '') => {
+const createKeyboardEvent = (typeArg: string, code: string) => {
     const customEvent = new CustomEvent(typeArg, {bubbles: true, cancelable: true});
-    customEvent['keyCode'] = keyCode;
-    customEvent['key'] = key;
+    customEvent['code'] = code;
+    // customEvent['key'] = key;
     return customEvent;
 };
 
@@ -357,7 +357,7 @@ describe('NgxSelectComponent', () => {
         });
 
         it('by press button Escape', () => {
-            formControl(1).dispatchEvent(createKeyboardEvent('keyup', 27)); // key Escape
+            formControl(1).dispatchEvent(createKeyboardEvent('keyup', 'Escape'));
         });
 
         it('by open other menu', () => {
@@ -398,27 +398,27 @@ describe('NgxSelectComponent', () => {
         });
 
         it('activate last item by press the button arrow right', () => {
-            formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 39)); // arrow right
+            formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 'ArrowRight'));
             fixture.detectChanges();
             expect(selectItemActive(1).innerHTML).toContain('item 100');
         });
 
         it('activate previous item by press the button arrow up', () => {
-            formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 39)); // arrow right
-            formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 38)); // arrow up
+            formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 'ArrowRight'));
+            formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 'ArrowUp'));
             fixture.detectChanges();
             expect(selectItemActive(1).innerHTML).toContain('item 99');
         });
 
         it('activate first item by press the button arrow left', () => {
-            formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 39)); // arrow right
-            formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 37)); // arrow left
+            formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 'ArrowRight'));
+            formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 'ArrowLeft'));
             fixture.detectChanges();
             expect(selectItemActive(1).innerHTML).toContain('item 1');
         });
 
         it('activate next item by press the button arrow down', () => {
-            formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
+            formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 'ArrowDown'));
             fixture.detectChanges();
             expect(selectItemActive(1).innerHTML).toContain('item 2');
         });
@@ -447,8 +447,8 @@ describe('NgxSelectComponent', () => {
             });
 
             it('by press the key Enter on a choice item', () => {
-                formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
-                formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 13)); // key Enter
+                formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 'ArrowDown'));
+                formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 'Enter'));
             });
 
             afterEach(() => {
@@ -473,8 +473,8 @@ describe('NgxSelectComponent', () => {
             });
 
             it('by press the key Enter on a choice item', () => {
-                formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
-                formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 13)); // key Enter
+                formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 'ArrowDown'));
+                formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 'Enter'));
             });
 
             afterEach(() => {
@@ -503,14 +503,14 @@ describe('NgxSelectComponent', () => {
             });
 
             it('by press the key Enter on choice items', () => {
-                formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
-                formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 13)); // key Enter
+                formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 'ArrowDown'));
+                formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 'Enter'));
                 fixture.detectChanges();
                 formControl(1).click();
                 fixture.detectChanges();
-                formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
-                formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
-                formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 13)); // key Enter
+                formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 'ArrowDown'));
+                formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 'ArrowDown'));
+                formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 'Enter'));
             });
 
             afterEach(() => {
@@ -541,14 +541,14 @@ describe('NgxSelectComponent', () => {
             });
 
             it('by press the key Enter on choice items', () => {
-                formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
-                formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 13)); // key Enter
+                formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 'ArrowDown'));
+                formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 'Enter'));
                 fixture.detectChanges();
                 formControl(2).click();
                 fixture.detectChanges();
-                formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
-                formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 40)); // arrow down
-                formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 13)); // key Enter
+                formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 'ArrowDown'));
+                formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 'ArrowDown'));
+                formControlInput(2).dispatchEvent(createKeyboardEvent('keydown', 'Enter'));
             });
 
             afterEach(() => {
@@ -675,7 +675,7 @@ describe('NgxSelectComponent', () => {
             formControl(1).click();
             fixture.detectChanges();
             formControlInput(1).value = 'br';
-            formControlInput(1).dispatchEvent(createKeyboardEvent('input', 82, 'r'));
+            formControlInput(1).dispatchEvent(createKeyboardEvent('input', 'keyR'));
             fixture.detectChanges();
             expect(selectItemList(1).length).toBe(3);
         });
@@ -686,7 +686,7 @@ describe('NgxSelectComponent', () => {
             formControl(1).click();
             fixture.detectChanges();
             formControlInput(1).value = 'br';
-            formControlInput(1).dispatchEvent(createKeyboardEvent('input', 82, 'r'));
+            formControlInput(1).dispatchEvent(createKeyboardEvent('input', 'keyR'));
             fixture.detectChanges();
             fixture.componentInstance.select1.items = items;
             fixture.detectChanges();
@@ -702,7 +702,7 @@ describe('NgxSelectComponent', () => {
             formControl(1).click();
             fixture.detectChanges();
             formControlInput(1).value = 'br';
-            formControlInput(1).dispatchEvent(createKeyboardEvent('input', 82, 'r'));
+            formControlInput(1).dispatchEvent(createKeyboardEvent('input', 'keyR'));
             fixture.detectChanges();
             expect(selectItemList(1).length).toBe(3);
         });
