@@ -110,7 +110,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     private cacheElementOffsetTop: number;
 
     private _focusToInput = false;
-    private isFocused = false;
+    public isFocused = false;
 
     constructor(iterableDiffers: IterableDiffers, private sanitizer: DomSanitizer, private cd: ChangeDetectorRef,
                 @Inject(NGX_SELECT_OPTIONS) @Optional() defaultOptions: INgxSelectOptions) {
