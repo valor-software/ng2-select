@@ -72,7 +72,7 @@
            role="combobox">
 
     <!-- options template -->
-    <ul #choiceMenu role="menu" class="ngx-select__choices dropdown-menu"
+    <ul #choiceMenu role="menu" *ngIf="isFocused" class="ngx-select__choices dropdown-menu"
         [class.show]="optionsOpened && subjOptions.value.length">
         <li class="ngx-select__item-group" role="menuitem"
             *ngFor="let opt of optionsFiltered; trackBy: trackByOption; let idxGroup=index">
