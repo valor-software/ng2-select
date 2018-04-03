@@ -1,6 +1,6 @@
 {
   "name": "ngx-select-ex",
-  "version": "3.4.2-dev",
+  "version": "3.4.3",
   "description": "Angular based replacement for select boxes",
   "license": "MIT",
   "private": false,
