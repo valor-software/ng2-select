@@ -72,7 +72,14 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Input() public noResultsFound = 'No results found';
     @Input() public size: 'small' | 'default' | 'large' = 'default';
     @Input() public searchCallback: (search: string, item: INgxSelectOption) => boolean;
-    public keyCodeToRemoveSelected = 46; /*key delete*/
+    public keyCodeToRemoveSelected = 46;
+    public keyCodeToOptionsOpen = 13;
+    public keyCodeToOptionsClose = 27;
+    public keyCodeToOptionsSelect = 13;
+    public keyCodeToNavigateFirst = 37;
+    public keyCodeToNavigatePrevious = 38;
+    public keyCodeToNavigateNext = 40;
+    public keyCodeToNavigateLast = 39;
 
     @Output() public typed = new EventEmitter<string>();
     @Output() public focus = new EventEmitter<void>();
@@ -294,39 +301,52 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     }
 
     public inputKeyDown(event: KeyboardEvent) {
-        if (event.keyCode === 13 /*key enter*/) {
-            event.preventDefault();
-            event.stopPropagation();
-            if (this.optionsOpened) {
-                this.optionSelect(this.optionActive);
-                this.navigateOption(ENavigation.next);
-            } else {
-                this.optionsOpen();
-            }
-        } else if (this.optionsOpened && [37, 38, 39, 40].indexOf(event.keyCode) !== -1) {
+        const keysForOpenedState = [
+            this.keyCodeToOptionsSelect,
+            this.keyCodeToNavigateFirst,
+            this.keyCodeToNavigatePrevious,
+            this.keyCodeToNavigateNext,
+            this.keyCodeToNavigateLast,
+        ];
+        const keysForClosedState = [this.keyCodeToOptionsOpen, this.keyCodeToRemoveSelected];
+
+        if (this.optionsOpened && keysForOpenedState.indexOf(event.keyCode) !== -1) {
             event.preventDefault();
             event.stopPropagation();
             switch (event.keyCode) {
-                case 37: // key arrow_left
+                case this.keyCodeToOptionsSelect:
+                    this.optionSelect(this.optionActive);
+                    this.navigateOption(ENavigation.next);
+                    break;
+                case this.keyCodeToNavigateFirst:
                     this.navigateOption(ENavigation.first);
                     break;
-                case 38: // key arrow_up
+                case this.keyCodeToNavigatePrevious:
                     this.navigateOption(ENavigation.previous);
                     break;
-                case 39: // key arrow_right
+                case this.keyCodeToNavigateLast:
                     this.navigateOption(ENavigation.last);
                     break;
-                case 40: // key arrow_down
+                case this.keyCodeToNavigateNext:
                     this.navigateOption(ENavigation.next);
                     break;
             }
-        } else if (!this.optionsOpened && event.keyCode === this.keyCodeToRemoveSelected) {
-            this.optionRemove(this.subjOptionsSelected.value[this.subjOptionsSelected.value.length - 1], event);
+        } else if (!this.optionsOpened && keysForClosedState.indexOf(event.keyCode) !== -1) {
+            event.preventDefault();
+            event.stopPropagation();
+            switch (event.keyCode) {
+                case this.keyCodeToOptionsOpen:
+                    this.optionsOpen();
+                    break;
+                case this.keyCodeToRemoveSelected:
+                    this.optionRemove(this.subjOptionsSelected.value[this.subjOptionsSelected.value.length - 1], event);
+                    break;
+            }
         }
     }
 
     public mainKeyUp(event: KeyboardEvent): void {
-        if (event.keyCode === 27 /* key escape */) {
+        if (event.keyCode === this.keyCodeToOptionsClose) {
             this.optionsClose(true);
         }
     }

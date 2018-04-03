@@ -39,4 +39,11 @@ export interface INgxSelectOptions {
     noResultsFound?: string;
     size?: 'small' | 'default' | 'large';
     keyCodeToRemoveSelected?: number;
+    keyCodeToOptionsOpen?: number;
+    keyCodeToOptionsClose?: number;
+    keyCodeToOptionsSelect?: number;
+    keyCodeToNavigateFirst?: number;
+    keyCodeToNavigatePrevious?: number;
+    keyCodeToNavigateNext?: number;
+    keyCodeToNavigateLast?: number;
 }
