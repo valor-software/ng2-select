@@ -403,7 +403,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     }
 
     protected optionRemove(option: NgxSelectOption, event: Event): void {
-        if (!this.disabled) {
+        if (!this.disabled && option) {
             event.stopPropagation();
             this.subjOptionsSelected.next((this.multiple ? this.subjOptionsSelected.value : []).filter(o => o !== option));
             this.remove.emit(option.value);
