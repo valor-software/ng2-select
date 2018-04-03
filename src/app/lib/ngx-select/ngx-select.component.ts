@@ -301,7 +301,6 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     }
 
     public inputKeyDown(event: KeyboardEvent) {
-        console.log(event.keyCode, event);
         const keysForOpenedState = [
             this.keyCodeToOptionsSelect,
             this.keyCodeToNavigateFirst,

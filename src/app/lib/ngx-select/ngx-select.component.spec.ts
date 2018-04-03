@@ -692,6 +692,17 @@ describe('NgxSelectComponent', () => {
             fixture.detectChanges();
             expect(selectItemList(1).length).toBe(3);
         });
+
+        it('with items contained numbers for texts', () => {
+            fixture.componentInstance.select1.items = [40, 50, 65, 70, 80];
+            fixture.detectChanges();
+            formControl(1).click();
+            fixture.detectChanges();
+            formControlInput(1).value = '5';
+            formControlInput(1).dispatchEvent(createKeyboardEvent('input', 'key5'));
+            fixture.detectChanges();
+            expect(selectItemList(1).length).toBe(2);
+        });
     });
 
     describe('test autoClearSearch', () => {

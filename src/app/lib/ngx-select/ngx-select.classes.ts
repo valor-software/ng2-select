@@ -25,7 +25,7 @@ export class NgxSelectOption implements INgxSelectOption, INgxSelectOptionBase {
         if (this.cacheHighlightText !== highlightText || this.cacheRenderedText === null) {
             this.cacheHighlightText = highlightText;
             if (this.cacheHighlightText) {
-                this.cacheRenderedText = sanitizer.bypassSecurityTrustHtml(this.text.replace(
+                this.cacheRenderedText = sanitizer.bypassSecurityTrustHtml((this.text + '').replace(
                     new RegExp(escapeString(this.cacheHighlightText), 'gi'), '<strong>$&</strong>'
                 ));
             } else {
