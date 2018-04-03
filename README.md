@@ -51,7 +51,7 @@ Native Angular component for Select
     import {AppComponent} from './app.component';
     import { NgxSelectModule, INgxSelectOptions } from 'ngx-select-ex';
  
-    const CustomSelectOptions: INgxSelectOptions = { // Check the interface fo more options
+    const CustomSelectOptions: INgxSelectOptions = { // Check the interface for more options
         optionValueField: 'id',
         optionTextField: 'name'
     };
