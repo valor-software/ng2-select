@@ -12,7 +12,8 @@
                     (open)="doOpen()"
                     (close)="doClose()"
                     (select)="doSelect($event)"
-                    (remove)="doRemove($event)">
+                    (remove)="doRemove($event)"
+                    (selectionChanges)="doSelectOptions($event)">
         </ngx-select>
         <p></p>
         <div class="alert alert-secondary">

@@ -5,7 +5,8 @@
                     [items]="items"
                     [disabled]="ngxDisabled"
                     [(ngModel)]="ngxValue"
-                    placeholder="No city selected">
+                    placeholder="No city selected"
+                    (selectionChanges)="doSelectOptions($event)">
         </ngx-select>
         <p></p>
         <div class="alert alert-secondary">

@@ -89,6 +89,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Output() public select = new EventEmitter<any>();
     @Output() public remove = new EventEmitter<any>();
     @Output() public navigated = new EventEmitter<INgxOptionNavigated>();
+    @Output() public selectionChanges = new EventEmitter<INgxSelectOption[]>();
 
     @ViewChild('main') protected mainElRef: ElementRef;
     @ViewChild('input') protected inputElRef: ElementRef;
@@ -130,6 +131,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
 
         // observers
         this.typed.subscribe((text: string) => this.subjSearchText.next(text));
+        this.subjOptionsSelected.subscribe((options: NgxSelectOption[]) => this.selectionChanges.emit(options));
         let cacheExternalValue: any[];
         const subjActualValue = this.subjExternalValue
             .map((v: any[]) => cacheExternalValue = v === null ? [] : [].concat(v))

@@ -1,5 +1,6 @@
 import {Component, OnDestroy} from '@angular/core';
 import {FormControl} from '@angular/forms';
+import {INgxSelectOption} from '../../lib/ngx-select/ngx-select.interfaces';
 
 @Component({
     selector: 'single-demo',
@@ -42,31 +43,19 @@ export class SingleDemoComponent implements OnDestroy {
         return this._ngxDefault;
     }
 
-    public inputTyped(source: string, text: string) {
-        console.log('SingleDemoComponent.inputTyped', source, text);
-    }
+    public inputTyped = (source: string, text: string) => console.log('SingleDemoComponent.inputTyped', source, text);
 
-    public doFocus() {
-        console.log('SingleDemoComponent.doFocus');
-    }
+    public doFocus = () => console.log('SingleDemoComponent.doFocus');
 
-    public doBlur() {
-        console.log('SingleDemoComponent.doBlur');
-    }
+    public doBlur = () => console.log('SingleDemoComponent.doBlur');
 
-    public doOpen() {
-        console.log('SingleDemoComponent.doOpen');
-    }
+    public doOpen = () => console.log('SingleDemoComponent.doOpen');
 
-    public doClose() {
-        console.log('SingleDemoComponent.doClose');
-    }
+    public doClose = () => console.log('SingleDemoComponent.doClose');
 
-    public doSelect(value: any) {
-        console.log('SingleDemoComponent.doSelect', value);
-    }
+    public doSelect = (value: any) => console.log('SingleDemoComponent.doSelect', value);
 
-    public doRemove(value: any) {
-        console.log('SingleDemoComponent.doRemove', value);
-    }
+    public doRemove = (value: any) => console.log('SingleDemoComponent.doRemove', value);
+
+    public doSelectOptions = (options: INgxSelectOption[]) => console.log('SingleDemoComponent.doSelectOptions', options);
 }

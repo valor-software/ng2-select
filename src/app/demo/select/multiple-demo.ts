@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {INgxSelectOption} from '../../lib/ngx-select/ngx-select.interfaces';
 
 @Component({
     selector: 'multiple-demo',
@@ -17,4 +18,6 @@ export class MultipleDemoComponent {
 
     public ngxValue: any = [];
     public ngxDisabled = false;
+
+    public doSelectOptions = (options: INgxSelectOption[]) => console.log('MultipleDemoComponent.doSelectOptions', options);
 }
