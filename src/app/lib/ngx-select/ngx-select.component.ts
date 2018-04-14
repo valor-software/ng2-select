@@ -37,7 +37,7 @@ export interface INgxSelectComponentMouseEvent extends MouseEvent {
 
 enum ENavigation {
     first, previous, next, last,
-    firstSelected
+    firstSelected, firstIfOptionActiveInvisible
 }
 
 function propertyExists(obj: Object, propertyName: string) {
@@ -182,11 +182,12 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
             .combineLatest(this.subjOptionsSelected, this.subjSearchText,
                 (options: TSelectOption[], selectedOptions: NgxSelectOption[], search: string) => {
                     this.optionsFiltered = this.filterOptions(search, options, selectedOptions);
+                    this.cacheOptionsFilteredFlat = null;
+                    this.navigateOption(ENavigation.firstIfOptionActiveInvisible);
                     return selectedOptions;
                 }
             )
             .flatMap((selectedOptions: NgxSelectOption[]) => {
-                this.cacheOptionsFilteredFlat = null;
                 return this.optionsFilteredFlat().filter((flatOptions: NgxSelectOption[]) =>
                     this.autoSelectSingleOption && flatOptions.length === 1 && !selectedOptions.length
                 );
@@ -272,6 +273,10 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                         if (this.subjOptionsSelected.value.length) {
                             navigated.index = options.indexOf(this.subjOptionsSelected.value[0]);
                         }
+                        break;
+                    case ENavigation.firstIfOptionActiveInvisible:
+                        const idxOfOptionActive = options.indexOf(this.optionActive);
+                        navigated.index = idxOfOptionActive > 0 ? idxOfOptionActive : 0;
                         break;
                 }
                 navigated.activeOption = options[navigated.index];
@@ -427,7 +432,8 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     }
 
     protected optionActivate(navigated: INgxOptionNavigated): void {
-        if (!navigated.activeOption || !navigated.activeOption.disabled) {
+        if ((this.optionActive !== navigated.activeOption) &&
+            (!navigated.activeOption || !navigated.activeOption.disabled)) {
             this.optionActive = navigated.activeOption;
             this.navigated.emit(navigated);
         }

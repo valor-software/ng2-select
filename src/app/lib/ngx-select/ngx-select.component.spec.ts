@@ -678,6 +678,7 @@ describe('NgxSelectComponent', () => {
             formControlInput(1).dispatchEvent(createKeyboardEvent('input', 'keyR'));
             fixture.detectChanges();
             expect(selectItemList(1).length).toBe(3);
+            expect(selectItemList(1)[0]).toEqual(selectItemActive(1));
         });
 
         it('with lazy load items', () => {
