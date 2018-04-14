@@ -36,7 +36,8 @@ export interface INgxSelectComponentMouseEvent extends MouseEvent {
 }
 
 enum ENavigation {
-    first, previous, next, last
+    first, previous, next, last,
+    firstSelected
 }
 
 function propertyExists(obj: Object, propertyName: string) {
@@ -181,16 +182,16 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
             .combineLatest(this.subjOptionsSelected, this.subjSearchText,
                 (options: TSelectOption[], selectedOptions: NgxSelectOption[], search: string) => {
                     this.optionsFiltered = this.filterOptions(search, options, selectedOptions);
-                    this.cacheOptionsFilteredFlat = null;
-
-                    this.optionsFilteredFlat()
-                        .filter((flatOptions: NgxSelectOption[]) =>
-                            this.autoSelectSingleOption && flatOptions.length === 1 && !selectedOptions.length
-                        )
-                        .subscribe((flatOptions: NgxSelectOption[]) => this.subjOptionsSelected.next(flatOptions));
+                    return selectedOptions;
                 }
             )
-            .subscribe();
+            .flatMap((selectedOptions: NgxSelectOption[]) => {
+                this.cacheOptionsFilteredFlat = null;
+                return this.optionsFilteredFlat().filter((flatOptions: NgxSelectOption[]) =>
+                    this.autoSelectSingleOption && flatOptions.length === 1 && !selectedOptions.length
+                );
+            })
+            .subscribe((flatOptions: NgxSelectOption[]) => this.subjOptionsSelected.next(flatOptions));
     }
 
     public setFormControlSize(otherClassNames: Object = {}, useFormControl: boolean = true) {
@@ -266,6 +267,11 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                         break;
                     case ENavigation.last:
                         navigated.index = options.length - 1;
+                        break;
+                    case ENavigation.firstSelected:
+                        if (this.subjOptionsSelected.value.length) {
+                            navigated.index = options.indexOf(this.subjOptionsSelected.value[0]);
+                        }
                         break;
                 }
                 navigated.activeOption = options[navigated.index];
@@ -464,11 +470,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
             this.optionsOpened = true;
             this.subjSearchText.next(search);
             if (!this.multiple && this.subjOptionsSelected.value.length) {
-                this.optionsFilteredFlat().subscribe((options: NgxSelectOption[]) => this.optionActivate({
-                    activeOption: this.subjOptionsSelected.value[0],
-                    filteredOptionList: options,
-                    index: options.indexOf(this.subjOptionsSelected.value[0])
-                }));
+                this.navigateOption(ENavigation.firstSelected);
             } else {
                 this.navigateOption(ENavigation.first);
             }
