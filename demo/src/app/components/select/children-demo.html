@@ -1,19 +1,26 @@
 <div class="selectivity-input example-input"
-     style="width: 300px; margin-bottom: 20px;">
+  style="width: 300px; margin-bottom: 20px;">
   <h3>Select a city by country</h3>
-  <ng-select [allowClear]="true"
-             [items]="items"
-             [disabled]="disabled"
-             (data)="refreshValue($event)"
-             (selected)="selected($event)"
-             (removed)="removed($event)"
-             placeholder="No city selected"></ng-select>
+  <ng-select 
+    [childrenField]="'children'"
+    [allowClear]="true"
+    [items]="items"
+    [disabled]="disabled"
+    (data)="refreshValue($event)"
+    (selected)="selected($event)"
+    (removed)="removed($event)"
+    placeholder="No city selected"></ng-select>
   <p></p>
-  <pre>{{value.text}}</pre>
+  <pre>Selected: {{itemsToString(selectedValue)}}</pre>
+  <pre>Removed: {{itemsToString(removedValue)}}</pre>
+  <pre>Refreshed: {{itemsToString(refreshedValue)}}</pre>
   <div>
-    <button type="button" class="btn btn-primary"
-            [(ngModel)]="disabledV" btnCheckbox
-            btnCheckboxTrue="1" btnCheckboxFalse="0">
+    <button type="button"
+      class="btn btn-primary"
+      [(ngModel)]="disabledV"
+      btnCheckbox
+      btnCheckboxTrue="1"
+      btnCheckboxFalse="0">
       {{disabled ? 'Enable' : 'Disable'}}
     </button>
   </div>

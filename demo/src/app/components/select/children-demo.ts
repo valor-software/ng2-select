@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 @Component({
   selector: 'children-demo',
   templateUrl: './children-demo.html'
@@ -181,7 +180,10 @@ export class ChildrenDemoComponent {
       ]
     }
   ];
-  public value:any = {};
+  
+  public selectedValue:any = [];
+  public removedValue:any = [];
+  public refreshedValue:any = [];
   public _disabledV:string = '0';
   public disabled:boolean = false;
 
@@ -194,15 +196,26 @@ export class ChildrenDemoComponent {
     this.disabled = this._disabledV === '1';
   }
 
+  public itemsToString(value:any | Array<any>):string {
+    if(Array.isArray(value)){
+      return value.map(item => item.text).join(',');
+    }
+
+    return value.text;
+  }
+
   public selected(value:any):void {
+    this.selectedValue = value;
     console.log('Selected value is: ', value);
   }
 
   public removed(value:any):void {
+    this.removedValue = value;
     console.log('Removed value is: ', value);
   }
 
   public refreshValue(value:any):void {
-    this.value = value;
+    console.log('Refreshed value is: ', value)
+    this.refreshedValue = value;
   }
 }

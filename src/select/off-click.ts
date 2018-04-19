@@ -13,10 +13,33 @@ export class OffClickDirective implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): any {
-    setTimeout(() => { if(typeof document !== 'undefined') { document.addEventListener('click', this.offClickHandler); } }, 0);
+    setTimeout(() => {
+      if (typeof document !== 'undefined') {
+        document.addEventListener('click', () => {
+          this.offClickHandler(-1);
+        });
+
+        let spans = document.getElementsByClassName('ui-select-toggle');
+        for (let i = 0; i < spans.length; i++) {
+          spans[i].removeEventListener('click', this.offClickHandler);
+
+          let id = parseInt(spans[i].id);
+          spans[i].addEventListener('click', () => {
+            this.offClickHandler(id);
+          });
+        }
+      }
+    }, 0);
   }
 
   public ngOnDestroy(): any {
-    if(typeof document !== 'undefined') { document.removeEventListener('click', this.offClickHandler); }
+    if (typeof document !== 'undefined') {
+      document.removeEventListener('click', this.offClickHandler);
+
+      let spans = document.getElementsByClassName('ui-select-toggle');
+      for (let i = 0; i < spans.length; i++) {
+        spans[i].removeEventListener('click', this.offClickHandler);
+      }
+    }
   }
 }
