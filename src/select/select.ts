@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef, Renderer2 } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SelectItem } from './select-item';
@@ -131,8 +131,9 @@ let styles = `
      class="ui-select-container dropdown open">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
     <div class="ui-select-match"
-         *ngIf="!inputMode">
+         [hidden]="inputMode">
       <span tabindex="-1"
+          [id]="id"
           class="btn btn-default btn-secondary form-control ui-select-toggle"
           (click)="matchClick($event)"
           style="outline: 0;">
@@ -168,7 +169,6 @@ let styles = `
           </div>
         </li>
       </ul>
-  
       <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
         <li *ngFor="let c of options; let index=index" role="menuitem">
@@ -351,6 +351,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   public itemObjects: Array<SelectItem> = [];
   public activeOption: SelectItem;
   public element: ElementRef;
+  public id: number;
+  public inputMode: boolean = false;
 
   public get active(): Array<any> {
     return this._active;
@@ -367,17 +369,17 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
   protected onChange: any = Function.prototype;
   protected onTouched: any = Function.prototype;
+  protected inputValue: string = '';
 
-  private inputMode: boolean = false;
   private _optionsOpened: boolean = false;
   private behavior: OptionsBehavior;
-  protected inputValue: string = '';
   private _items: Array<any> = [];
   private _disabled: boolean = false;
   private _active: Array<SelectItem> = [];
 
-  public constructor(element: ElementRef, private sanitizer: DomSanitizer) {
+  public constructor(element: ElementRef, private sanitizer: DomSanitizer, private renderer: Renderer2) {
     this.element = element;
+    this.id = Math.round(Math.random() * 100);
     this.clickedOutside = this.clickedOutside.bind(this);
   }
 
@@ -502,9 +504,11 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
   }
 
-  public clickedOutside(): void {
-    this.inputMode = false;
-    this.optionsOpened = false;
+  public clickedOutside(id: number): void {
+    if (this.id !== id || id === -1) {
+      this.inputMode = false;
+      this.optionsOpened = false;
+    }
   }
 
   public get firstItemHasChildren(): boolean {
@@ -542,6 +546,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     if (this._disabled === true) {
       return;
     }
+
     this.inputMode = !this.inputMode;
     if (this.inputMode === true && ((this.multiple === true && e) || this.multiple === false)) {
       this.focusToInput();
