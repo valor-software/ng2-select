@@ -360,7 +360,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
 
     public mainKeyUp(event: KeyboardEvent): void {
         if (event.code === this.keyCodeToOptionsClose) {
-            this.optionsClose(true);
+            this.optionsClose(/*true*/);
         }
     }
 
@@ -410,7 +410,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
         if (option && !option.disabled) {
             this.subjOptionsSelected.next((this.multiple ? this.subjOptionsSelected.value : []).concat([option]));
             this.select.emit(option.value);
-            this.optionsClose(true);
+            this.optionsClose(/*true*/);
             this.onTouched();
         }
     }
@@ -485,13 +485,13 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
         }
     }
 
-    public optionsClose(focusToHost: boolean = false) {
+    public optionsClose(/*focusToHost: boolean = false*/) {
         this.optionsOpened = false;
-        if (focusToHost) {
-            const x = window.scrollX, y = window.scrollY;
-            this.mainElRef.nativeElement.focus();
-            window.scrollTo(x, y);
-        }
+        // if (focusToHost) {
+        //     const x = window.scrollX, y = window.scrollY;
+        //     this.mainElRef.nativeElement.focus();
+        //     window.scrollTo(x, y);
+        // }
         this.close.emit();
 
         if (this.autoClearSearch && this.multiple && this.inputElRef) {
