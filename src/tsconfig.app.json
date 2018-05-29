@@ -6,6 +6,9 @@
     "module": "es2015",
     "types": []
   },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true
+  },
   "exclude": [
     "test.ts",
     "**/*.spec.ts"

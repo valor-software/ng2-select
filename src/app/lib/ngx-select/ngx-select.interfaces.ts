@@ -1,4 +1,4 @@
-import {NgxSelectOption} from './ngx-select.classes';
+import {NgxSelectOption, TSelectOption} from './ngx-select.classes';
 
 export type TNgxSelectOptionType = 'option' | 'optgroup';
 
@@ -21,7 +21,7 @@ export interface INgxSelectOptGroup {
 export interface INgxOptionNavigated {
     index: number;
     activeOption: NgxSelectOption;
-    filteredOptionList: NgxSelectOption[];
+    filteredOptionList: TSelectOption[];
 }
 
 export interface INgxSelectOptions {

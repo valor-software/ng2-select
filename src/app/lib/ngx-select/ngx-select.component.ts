@@ -373,36 +373,42 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
         return (this.multiple === true) || (this.optionsOpened && !this.noAutoComplete);
     }
 
-    protected inputKeyUp(value: string = '') {
+    /** @internal */
+    public inputKeyUp(value: string = '') {
         if (!this.optionsOpened && value) {
             this.optionsOpen(value);
         }
     }
 
-    protected doInputText(value: string) {
+    /** @internal */
+    public doInputText(value: string) {
         if (this.optionsOpened) {
             this.typed.emit(value);
         }
     }
 
-    protected inputClick(value: string = '') {
+    /** @internal */
+    public inputClick(value: string = '') {
         if (!this.optionsOpened) {
             this.optionsOpen(value);
         }
     }
 
-    protected sanitize(html: string): SafeHtml {
+    /** @internal */
+    public sanitize(html: string): SafeHtml {
         return html ? this.sanitizer.bypassSecurityTrustHtml(html) : null;
     }
 
-    protected highlightOption(option: NgxSelectOption): SafeHtml {
+    /** @internal */
+    public highlightOption(option: NgxSelectOption): SafeHtml {
         if (this.inputElRef) {
             return option.renderText(this.sanitizer, this.inputElRef.nativeElement.value);
         }
         return option.renderText(this.sanitizer, '');
     }
 
-    protected optionSelect(option: NgxSelectOption, event: Event = null): void {
+    /** @internal */
+    public optionSelect(option: NgxSelectOption, event: Event = null): void {
         if (event) {
             event.preventDefault();
             event.stopPropagation();
@@ -415,7 +421,8 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
         }
     }
 
-    protected optionRemove(option: NgxSelectOption, event: Event): void {
+    /** @internal */
+    public optionRemove(option: NgxSelectOption, event: Event): void {
         if (!this.disabled && option) {
             event.stopPropagation();
             this.subjOptionsSelected.next((this.multiple ? this.subjOptionsSelected.value : []).filter(o => o !== option));
@@ -423,7 +430,8 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
         }
     }
 
-    protected isOptionActive(option: NgxSelectOption, element: HTMLElement) {
+    /** @internal */
+    public isOptionActive(option: NgxSelectOption, element: HTMLElement) {
         if (this.optionActive === option) {
             this.ensureVisibleElement(element);
             return true;
@@ -431,7 +439,8 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
         return false;
     }
 
-    protected optionActivate(navigated: INgxOptionNavigated): void {
+    /** @internal */
+    public optionActivate(navigated: INgxOptionNavigated): void {
         if ((this.optionActive !== navigated.activeOption) &&
             (!navigated.activeOption || !navigated.activeOption.disabled)) {
             this.optionActive = navigated.activeOption;
