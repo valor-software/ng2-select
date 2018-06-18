@@ -63,6 +63,9 @@
   /* Fix caret going into new line in Firefox */
   &__placeholder {
     float: left;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
     //color: inherit !important;
   }
 
