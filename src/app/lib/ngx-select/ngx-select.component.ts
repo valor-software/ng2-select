@@ -74,9 +74,9 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Input() public size: 'small' | 'default' | 'large' = 'default';
     @Input() public searchCallback: (search: string, item: INgxSelectOption) => boolean;
     public keyCodeToRemoveSelected = 'Delete';
-    public keyCodeToOptionsOpen = 'Enter';
+    public keyCodeToOptionsOpen = ['Enter', 'NumpadEnter'];
     public keyCodeToOptionsClose = 'Escape';
-    public keyCodeToOptionsSelect = 'Enter';
+    public keyCodeToOptionsSelect = ['Enter', 'NumpadEnter'];
     public keyCodeToNavigateFirst = 'ArrowLeft';
     public keyCodeToNavigatePrevious = 'ArrowUp';
     public keyCodeToNavigateNext = 'ArrowDown';
@@ -314,20 +314,20 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     }
 
     public inputKeyDown(event: KeyboardEvent) {
-        const keysForOpenedState = [
+        const keysForOpenedState = [].concat(
             this.keyCodeToOptionsSelect,
             this.keyCodeToNavigateFirst,
             this.keyCodeToNavigatePrevious,
             this.keyCodeToNavigateNext,
-            this.keyCodeToNavigateLast,
-        ];
-        const keysForClosedState = [this.keyCodeToOptionsOpen, this.keyCodeToRemoveSelected];
+            this.keyCodeToNavigateLast
+        );
+        const keysForClosedState = [].concat(this.keyCodeToOptionsOpen, this.keyCodeToRemoveSelected);
 
         if (this.optionsOpened && keysForOpenedState.indexOf(event.code) !== -1) {
             event.preventDefault();
             event.stopPropagation();
             switch (event.code) {
-                case this.keyCodeToOptionsSelect:
+                case ([].concat(this.keyCodeToOptionsSelect).indexOf(event.code) + 1) && event.code:
                     this.optionSelect(this.optionActive);
                     this.navigateOption(ENavigation.next);
                     break;
@@ -348,7 +348,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
             event.preventDefault();
             event.stopPropagation();
             switch (event.code) {
-                case this.keyCodeToOptionsOpen:
+                case ([].concat(this.keyCodeToOptionsOpen).indexOf(event.code) + 1) && event.code:
                     this.optionsOpen();
                     break;
                 case this.keyCodeToRemoveSelected:
