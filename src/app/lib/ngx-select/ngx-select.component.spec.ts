@@ -21,6 +21,7 @@ import createSpy = jasmine.createSpy;
                     [optGroupOptionsField]="select1.optGroupOptionsField"
                     [multiple]="select1.multiple"
                     [noAutoComplete]="select1.noAutoComplete"
+                    [keepSelectedItems]="select1.keepSelectedItems"
                     [items]="select1.items"
                     [disabled]="select1.disabled"
                     [autoSelectSingleOption]="select1.autoSelectSingleOption"
@@ -63,6 +64,7 @@ class TestNgxSelectComponent {
         optGroupOptionsField: 'options',
         multiple: false,
         noAutoComplete: false,
+        keepSelectedItems: false,
         items: [],
         disabled: false,
         autoSelectSingleOption: false,
@@ -1062,6 +1064,36 @@ describe('NgxSelectComponent', () => {
             fixture.componentInstance.select1.items = itemList;
             fixture.detectChanges();
             expect(fixture.componentInstance.select1.value).toBeNull();
+        });
+    });
+
+    describe('the selected item should be kept on change items', () => {
+        beforeEach(() => {
+            fixture.componentInstance.select1.keepSelectedItems = true;
+            fixture.componentInstance.select1.items = items1;
+            fixture.detectChanges();
+            formControl(1).click();
+            fixture.detectChanges();
+            expect(selectItemList(1).length).toBeGreaterThan(0);
+            selectItemList(1)[1].click();
+        });
+
+        it('for single option', () => {
+            fixture.componentInstance.select1.multiple = false;
+            fixture.componentInstance.select1.items = items2;
+
+            fixture.detectChanges();
+            expect(selectedItem(1).innerHTML).toContain('item one');
+            expect(fixture.componentInstance.select1.value).toEqual(1);
+        });
+
+        it('for multiple options', () => {
+            fixture.componentInstance.select1.multiple = true;
+            fixture.componentInstance.select1.items = items2;
+
+            fixture.detectChanges();
+            expect(selectedItems(1)[0].querySelector('span').innerHTML).toContain('item one');
+            expect(fixture.componentInstance.select1.value).toEqual(1);
         });
     });
 });

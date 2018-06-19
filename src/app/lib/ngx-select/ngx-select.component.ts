@@ -71,6 +71,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Input() public autoSelectSingleOption = false;
     @Input() public autoClearSearch = false;
     @Input() public noResultsFound = 'No results found';
+    @Input() public keepSelectedItems: false;
     @Input() public size: 'small' | 'default' | 'large' = 'default';
     @Input() public searchCallback: (search: string, item: INgxSelectOption) => boolean;
     public keyCodeToRemoveSelected = 'Delete';
@@ -170,11 +171,13 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                 .toArray()
             )
             .combineLatest(subjActualValue, (optionsFlat: NgxSelectOption[], actualValue: any[]) => {
-                Observable.from(optionsFlat)
-                    .filter((option: NgxSelectOption) => actualValue.indexOf(option.value) !== -1)
-                    .toArray()
-                    .filter((options: NgxSelectOption[]) => !_.isEqual(options, this.subjOptionsSelected.value))
-                    .subscribe((options: NgxSelectOption[]) => this.subjOptionsSelected.next(options));
+                if (!this.keepSelectedItems) {
+                    Observable.from(optionsFlat)
+                        .filter((option: NgxSelectOption) => actualValue.indexOf(option.value) !== -1)
+                        .toArray()
+                        .filter((options: NgxSelectOption[]) => !_.isEqual(options, this.subjOptionsSelected.value))
+                        .subscribe((options: NgxSelectOption[]) => this.subjOptionsSelected.next(options));
+                }
             })
             .subscribe();
 
