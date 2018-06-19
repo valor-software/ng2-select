@@ -1068,24 +1068,31 @@ describe('NgxSelectComponent', () => {
     });
 
     describe('the selected item should be kept on change items', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fixture.componentInstance.select1.keepSelectedItems = true;
             fixture.componentInstance.select1.items = items1;
+            fixture.componentInstance.select1.value = 2;
             fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(selectedItem(1).innerHTML).toContain('item two');
+            expect(fixture.componentInstance.select1.value).toEqual(2);
+
             formControl(1).click();
             fixture.detectChanges();
             expect(selectItemList(1).length).toBeGreaterThan(0);
             selectItemList(1)[1].click();
-        });
+        }));
 
-        it('for single option', () => {
+        it('for single option', fakeAsync(() => {
             fixture.componentInstance.select1.multiple = false;
             fixture.componentInstance.select1.items = items2;
 
             fixture.detectChanges();
             expect(selectedItem(1).innerHTML).toContain('item one');
             expect(fixture.componentInstance.select1.value).toEqual(1);
-        });
+        }));
 
         it('for multiple options', () => {
             fixture.componentInstance.select1.multiple = true;

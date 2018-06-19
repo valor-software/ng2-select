@@ -127,14 +127,16 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                 @Inject(NGX_SELECT_OPTIONS) @Optional() defaultOptions: INgxSelectOptions) {
         Object.assign(this, defaultOptions);
 
-        // differs
+        // DIFFERS
         this.itemsDiffer = iterableDiffers.find([]).create<any>(null);
         this.defaultValueDiffer = iterableDiffers.find([]).create<any>(null);
 
-        // observers
+        // OBSERVERS
         this.typed.subscribe((text: string) => this.subjSearchText.next(text));
         this.subjOptionsSelected.subscribe((options: NgxSelectOption[]) => this.selectionChanges.emit(options));
         let cacheExternalValue: any[];
+
+        // Get actual value
         const subjActualValue = this.subjExternalValue
             .map((v: any[]) => cacheExternalValue = v === null ? [] : [].concat(v))
             .merge(this.subjOptionsSelected.map((options: NgxSelectOption[]) =>
@@ -147,6 +149,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
             .distinctUntilChanged((x, y) => _.isEqual(x, y))
             .share();
 
+        // Export actual value
         subjActualValue
             .combineLatest(this.subjRegisterOnChange, (actualValue: any[]) => actualValue)
             .subscribe((actualValue: any[]) => {
@@ -161,6 +164,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                 }
             });
 
+        // Correct selected options when the options changed
         this.subjOptions
             .flatMap((options: TSelectOption[]) => Observable
                 .from(options)
@@ -171,16 +175,23 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                 .toArray()
             )
             .combineLatest(subjActualValue, (optionsFlat: NgxSelectOption[], actualValue: any[]) => {
-                if (!this.keepSelectedItems) {
-                    Observable.from(optionsFlat)
-                        .filter((option: NgxSelectOption) => actualValue.indexOf(option.value) !== -1)
-                        .toArray()
-                        .filter((options: NgxSelectOption[]) => !_.isEqual(options, this.subjOptionsSelected.value))
-                        .subscribe((options: NgxSelectOption[]) => this.subjOptionsSelected.next(options));
-                }
+                Observable.from(optionsFlat)
+                    .filter((option: NgxSelectOption) => actualValue.indexOf(option.value) !== -1)
+                    .toArray()
+                    .filter((options: NgxSelectOption[]) => {
+                        if (this.keepSelectedItems) {
+                            const optionValues = options.map((option: NgxSelectOption) => option.value);
+                            const keptSelectedOptions = this.subjOptionsSelected.value
+                                .filter((selOption: NgxSelectOption) => optionValues.indexOf(selOption.value) === -1);
+                            options = keptSelectedOptions.concat(options);
+                        }
+                        return !_.isEqual(options, this.subjOptionsSelected.value);
+                    })
+                    .subscribe((options: NgxSelectOption[]) => this.subjOptionsSelected.next(options));
             })
             .subscribe();
 
+        // Ensure working filter by a search text
         this.subjOptions
             .combineLatest(this.subjOptionsSelected, this.subjSearchText,
                 (options: TSelectOption[], selectedOptions: NgxSelectOption[], search: string) => {
