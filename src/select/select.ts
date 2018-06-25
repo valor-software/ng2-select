@@ -663,7 +663,11 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
   }
 
   public first(): void {
-    this.actor.activeOption = this.actor.options[0];
+    if (this.actor._active.length > 0) {
+        this.actor.activeOption = this.actor._active[0];
+    } else {
+        this.actor.activeOption = this.actor.options[0];
+    }
     super.ensureHighlightVisible();
   }
 
