@@ -442,10 +442,17 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
 
     /** @internal */
     public optionActivate(navigated: INgxOptionNavigated): void {
-        if (this.autoActiveOnMouseEnter && (this.optionActive !== navigated.activeOption) &&
+        if ((this.optionActive !== navigated.activeOption) &&
             (!navigated.activeOption || !navigated.activeOption.disabled)) {
             this.optionActive = navigated.activeOption;
             this.navigated.emit(navigated);
+        }
+    }
+
+    /** @internal */
+    public onMouseEnter(navigated: INgxOptionNavigated): void {
+        if (this.autoActiveOnMouseEnter) {
+            this.optionActivate(navigated);
         }
     }
 

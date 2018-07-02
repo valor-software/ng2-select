@@ -85,7 +85,7 @@
                     'ngx-select__item_active active': isOptionActive(option, choiceItem),
                     'ngx-select__item_disabled disabled': option.disabled
                }"
-               (mouseenter)="optionActivate({
+               (mouseenter)="onMouseEnter({
                     activeOption: option,
                     filteredOptionList: optionsFiltered,
                     index: optionsFiltered.indexOf(option)
