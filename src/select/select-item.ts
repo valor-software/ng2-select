@@ -3,6 +3,7 @@ export class SelectItem {
   public text:string;
   public children:Array<SelectItem>;
   public parent:SelectItem;
+  public cutomObj:any;
 
   public constructor(source:any) {
     if (typeof source === 'string') {
