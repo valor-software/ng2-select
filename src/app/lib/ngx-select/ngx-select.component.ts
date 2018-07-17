@@ -1,7 +1,7 @@
 import {
     AfterContentChecked, DoCheck, Input, Output, ViewChild,
     Component, ElementRef, EventEmitter, forwardRef, HostListener, IterableDiffer, IterableDiffers, ChangeDetectorRef, ContentChild,
-    TemplateRef, Optional, Inject, InjectionToken
+    TemplateRef, Optional, Inject, InjectionToken, ChangeDetectionStrategy
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
@@ -48,6 +48,7 @@ function propertyExists(obj: Object, propertyName: string) {
     selector: 'ngx-select',
     templateUrl: './ngx-select.component.html',
     styleUrls: ['./ngx-select.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
@@ -175,7 +176,10 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                     .filter((option: NgxSelectOption) => actualValue.indexOf(option.value) !== -1)
                     .toArray()
                     .filter((options: NgxSelectOption[]) => !_.isEqual(options, this.subjOptionsSelected.value))
-                    .subscribe((options: NgxSelectOption[]) => this.subjOptionsSelected.next(options));
+                    .subscribe((options: NgxSelectOption[]) => {
+                      this.subjOptionsSelected.next(options);
+                      this.cd.markForCheck();
+                    });
             })
             .subscribe();
 
@@ -193,7 +197,10 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                     this.autoSelectSingleOption && flatOptions.length === 1 && !selectedOptions.length
                 );
             })
-            .subscribe((flatOptions: NgxSelectOption[]) => this.subjOptionsSelected.next(flatOptions));
+            .subscribe((flatOptions: NgxSelectOption[]) => {
+              this.subjOptionsSelected.next(flatOptions);
+              this.cd.markForCheck();
+            });
     }
 
     public setFormControlSize(otherClassNames: Object = {}, useFormControl: boolean = true) {
