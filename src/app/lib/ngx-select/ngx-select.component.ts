@@ -122,6 +122,14 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     private _focusToInput = false;
     public isFocused = false;
 
+    /** @internal */
+    public get inputText() {
+      if (this.inputElRef && this.inputElRef.nativeElement) {
+        return this.inputElRef.nativeElement.value;
+      }
+      return '';
+    }
+
     constructor(iterableDiffers: IterableDiffers, private sanitizer: DomSanitizer, private cd: ChangeDetectorRef,
                 @Inject(NGX_SELECT_OPTIONS) @Optional() defaultOptions: INgxSelectOptions) {
         Object.assign(this, defaultOptions);
