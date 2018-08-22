@@ -13,8 +13,8 @@
                 ({{option.data.hex}})
             </ng-template>
 
-            <ng-template ngx-select-option-not-found>
-                Nothing found
+            <ng-template ngx-select-option-not-found let-input>
+                "{{input}}" not found
             </ng-template>
 
         </ngx-select>

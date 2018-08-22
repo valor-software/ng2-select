@@ -97,7 +97,8 @@
             </a>
         </li>
         <li class="ngx-select__item ngx-select__item_no-found dropdown-header" *ngIf="!optionsFiltered.length">
-            <ng-container [ngTemplateOutlet]="templateOptionNotFound || defaultTemplateOptionNotFound"></ng-container>
+            <ng-container [ngTemplateOutlet]="templateOptionNotFound || defaultTemplateOptionNotFound"
+                          [ngTemplateOutletContext]="{$implicit: (inputElRef?.nativeElement?.value || '')}"></ng-container>
         </li>
     </ul>
 
