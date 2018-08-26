@@ -225,6 +225,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                       });
                     this.cacheOptionsFilteredFlat = null;
                     this.navigateOption(ENavigation.firstIfOptionActiveInvisible);
+                    this.cd.markForCheck();
                     return selectedOptions;
                 }
             )
@@ -346,6 +347,16 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
             this._focusToInput = false;
             this.inputElRef.nativeElement.focus();
         }
+
+        if (this.choiceMenuElRef) {
+          const ulElement = this.choiceMenuElRef.nativeElement as HTMLUListElement;
+          const element = ulElement.querySelector('a.ngx-select__item_active.active') as HTMLLinkElement;
+
+          if (element && element.offsetHeight > 0) {
+              this.ensureVisibleElement(element);
+          }
+
+        }
     }
 
     public canClearNotMultiple(): boolean {
@@ -402,12 +413,6 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
         }
     }
 
-    public mainKeyUp(event: KeyboardEvent): void {
-        if (event.code === this.keyCodeToOptionsClose) {
-            this.optionsClose(/*true*/);
-        }
-    }
-
     public trackByOption(index: number, option: TSelectOption) {
         return option instanceof NgxSelectOption ? option.value :
             (option instanceof NgxSelectOptGroup ? option.label : option);
@@ -418,16 +423,13 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     }
 
     /** @internal */
-    public inputKeyUp(value: string = '') {
-        if (!this.optionsOpened && value) {
-            this.optionsOpen(value);
-        }
-    }
-
-    /** @internal */
-    public doInputText(value: string) {
+    public inputKeyUp(value: string = '', event: KeyboardEvent ) {
         if (this.optionsOpened) {
-            this.typed.emit(value);
+          this.typed.emit(value);
+        } else if (!this.optionsOpened && value) {
+            this.optionsOpen(value);
+        } else if (event.code === this.keyCodeToOptionsClose) {
+            this.optionsClose(/*true*/);
         }
     }
 
@@ -475,20 +477,20 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     }
 
     /** @internal */
-    public isOptionActive(option: NgxSelectOption, element: HTMLElement) {
-        if (this.optionActive === option) {
-            this.ensureVisibleElement(element);
-            return true;
-        }
-        return false;
-    }
-
-    /** @internal */
     public optionActivate(navigated: INgxOptionNavigated): void {
         if ((this.optionActive !== navigated.activeOption) &&
             (!navigated.activeOption || !navigated.activeOption.disabled)) {
+            if (this.optionActive) {
+              this.optionActive.active = false;
+            }
+
             this.optionActive = navigated.activeOption;
+
+            if (this.optionActive) {
+              this.optionActive.active = true;
+            }
             this.navigated.emit(navigated);
+            this.cd.detectChanges();
         }
     }
 
@@ -520,6 +522,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     }
 
     private ensureVisibleElement(element: HTMLElement) {
+      setTimeout(()=>{
         if (this.choiceMenuElRef && this.cacheElementOffsetTop !== element.offsetTop) {
             this.cacheElementOffsetTop = element.offsetTop;
             const container: HTMLElement = this.choiceMenuElRef.nativeElement;
@@ -529,6 +532,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                 container.scrollTop = this.cacheElementOffsetTop + element.offsetHeight - container.clientHeight;
             }
         }
+      })
     }
 
     public optionsOpen(search: string = '') {
@@ -542,6 +546,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
             }
             this.focusToInput();
             this.open.emit();
+            this.cd.markForCheck();
         }
     }
 

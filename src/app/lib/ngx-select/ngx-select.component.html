@@ -4,8 +4,7 @@
         'open show': optionsOpened && optionsFiltered.length
      }, multiple === true)"
      (click)="mainClicked($event)" (focusin)="mainClicked($event)"
-     (focus)="focusToInput()" (keydown)="inputKeyDown($event)"
-     (keyup)="mainKeyUp($event)">
+     (focus)="focusToInput()" (keydown)="inputKeyDown($event)">
     <div [ngClass]="{ 'ngx-select__disabled': disabled}"></div>
 
     <!-- single selected item -->
@@ -59,9 +58,7 @@
     <input #input type="text" class="ngx-select__search form-control" [ngClass]="setFormControlSize()"
            *ngIf="checkInputVisibility()"
            [tabindex]="multiple === false? -1: 0"
-           (keydown)="inputKeyDown($event)"
-           (keyup)="inputKeyUp(input.value)"
-           (input)="doInputText(input.value)"
+           (keyup)="inputKeyUp(input.value, $event)"
            [disabled]="disabled"
            [placeholder]="optionsSelected.length? '': placeholder"
            (click)="inputClick(input.value)"
@@ -82,13 +79,13 @@
             <a href="#" #choiceItem class="ngx-select__item dropdown-item"
                *ngFor="let option of (opt.optionsFiltered || [opt]); trackBy: trackByOption; let idxOption = index"
                [ngClass]="{
-                    'ngx-select__item_active active': isOptionActive(option, choiceItem),
+                    'ngx-select__item_active active': option.active,
                     'ngx-select__item_disabled disabled': option.disabled
                }"
                (mouseenter)="onMouseEnter({
                     activeOption: option,
                     filteredOptionList: optionsFiltered,
-                    index: optionsFiltered.indexOf(option)
+                    index: idxOption
                })"
                (click)="optionSelect(option, $event)">
                 <ng-container [ngTemplateOutlet]="templateOption || defaultTemplateOption"
