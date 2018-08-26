@@ -185,22 +185,24 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                 .toArray()
             )
             .combineLatest(subjActualValue, (optionsFlat: NgxSelectOption[], actualValue: any[]) => {
-                Observable.from(optionsFlat)
-                    .filter((option: NgxSelectOption) => actualValue.indexOf(option.value) !== -1)
-                    .toArray()
-                    .filter((options: NgxSelectOption[]) => {
-                        if (this.keepSelectedItems) {
-                            const optionValues = options.map((option: NgxSelectOption) => option.value);
-                            const keptSelectedOptions = this.subjOptionsSelected.value
-                                .filter((selOption: NgxSelectOption) => optionValues.indexOf(selOption.value) === -1);
-                            options = keptSelectedOptions.concat(options);
-                        }
-                        return !_.isEqual(options, this.subjOptionsSelected.value);
-                    })
-                    .subscribe((options: NgxSelectOption[]) => {
-                      this.subjOptionsSelected.next(options);
-                      this.cd.markForCheck();
-                    });
+              const optionsSelected = [];
+              for (const option of optionsFlat) {
+                if (actualValue.indexOf(option.value) > -1) {
+                  optionsSelected.push(option);
+                }
+              }
+
+              if (this.keepSelectedItems) {
+                const optionValues = optionsSelected.map((option: NgxSelectOption) => option.value);
+                const keptSelectedOptions = this.subjOptionsSelected.value
+                  .filter((selOption: NgxSelectOption) => optionValues.indexOf(selOption.value) === -1);
+                optionsSelected.push(...keptSelectedOptions);
+              }
+
+              if (!_.isEqual(optionsSelected, this.subjOptionsSelected.value)) {
+                this.subjOptionsSelected.next(optionsSelected);
+                this.cd.markForCheck();
+              }
             })
             .subscribe();
 
