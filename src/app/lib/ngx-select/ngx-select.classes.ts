@@ -7,7 +7,9 @@ const escapeString = escapeStringNs;
 export class NgxSelectOption implements INgxSelectOption, INgxSelectOptionBase {
     readonly type: TNgxSelectOptionType = 'option';
 
-    constructor(public value: number | string,
+  highlightedText: SafeHtml;
+
+  constructor(public value: number | string,
                 public text: string,
                 public disabled: boolean,
                 public data: any,

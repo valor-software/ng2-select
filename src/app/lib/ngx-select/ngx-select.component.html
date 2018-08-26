@@ -92,7 +92,7 @@
                })"
                (click)="optionSelect(option, $event)">
                 <ng-container [ngTemplateOutlet]="templateOption || defaultTemplateOption"
-                              [ngTemplateOutletContext]="{$implicit: option, text: highlightOption(option),
+                              [ngTemplateOutletContext]="{$implicit: option, text: option.highlightedText,
                               index: idxGroup, subIndex: idxOption}"></ng-container>
             </a>
         </li>

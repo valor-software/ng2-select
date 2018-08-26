@@ -208,7 +208,19 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
         this.subjOptions
             .combineLatest(this.subjOptionsSelected, this.subjSearchText,
                 (options: TSelectOption[], selectedOptions: NgxSelectOption[], search: string) => {
-                    this.optionsFiltered = this.filterOptions(search, options, selectedOptions);
+                    this.optionsFiltered = this.filterOptions(search, options, selectedOptions)
+                      .map(option => {
+                        if (option instanceof NgxSelectOption) {
+                          option.highlightedText = this.highlightOption(option);
+                        } else if (option instanceof NgxSelectOptGroup) {
+                          option.options.map(x => {
+                            x.highlightedText = this.highlightOption(x);
+                            return x;
+                          });
+                        }
+
+                        return option;
+                      });
                     this.cacheOptionsFilteredFlat = null;
                     this.navigateOption(ENavigation.firstIfOptionActiveInvisible);
                     return selectedOptions;
