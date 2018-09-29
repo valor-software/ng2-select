@@ -5,9 +5,7 @@ import {
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {Subject} from 'rxjs/Subject';
-import {Observable} from 'rxjs/Observable';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Observable, Subject, BehaviorSubject, of, from, EMPTY} from 'rxjs';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
@@ -179,13 +177,13 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
             .flatMap((options: TSelectOption[]) => Observable
                 .from(options)
                 .flatMap((option: TSelectOption) => option instanceof NgxSelectOption
-                    ? Observable.of(option)
-                    : (option instanceof NgxSelectOptGroup ? Observable.from(option.options) : Observable.empty())
+                    ? of(option)
+                    : (option instanceof NgxSelectOptGroup ? from(option.options) : EMPTY)
                 )
                 .toArray()
             )
             .combineLatest(subjActualValue, (optionsFlat: NgxSelectOption[], actualValue: any[]) => {
-                Observable.from(optionsFlat)
+                from(optionsFlat)
                     .filter((option: NgxSelectOption) => actualValue.indexOf(option.value) !== -1)
                     .toArray()
                     .filter((options: NgxSelectOption[]) => {
@@ -266,13 +264,13 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
 
     private optionsFilteredFlat(): Observable<NgxSelectOption[]> {
         if (this.cacheOptionsFilteredFlat) {
-            return Observable.of(this.cacheOptionsFilteredFlat);
+            return of(this.cacheOptionsFilteredFlat);
         }
 
-        return Observable.from(this.optionsFiltered)
+        return from(this.optionsFiltered)
             .flatMap<TSelectOption, NgxSelectOption>((option: TSelectOption) =>
-                option instanceof NgxSelectOption ? Observable.of(option) :
-                    (option instanceof NgxSelectOptGroup ? Observable.from(option.optionsFiltered) : Observable.empty())
+                option instanceof NgxSelectOption ? of(option) :
+                    (option instanceof NgxSelectOptGroup ? from(option.optionsFiltered) : EMPTY)
             )
             .filter((optionsFilteredFlat: NgxSelectOption) => !optionsFilteredFlat.disabled)
             .toArray()
