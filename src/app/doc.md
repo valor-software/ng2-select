@@ -182,7 +182,7 @@ Also, you are can mix directives for reducing template:
     </ng-template>
 
     <ng-template ngx-select-option-not-found let-input>
-        Not found <button (click)="addItem(input)">(+) Add "{{input}} as new item</button>
+        Not found <button (click)="addItem(input)">(+) Add "{{input}}" as new item</button>
     </ng-template>
 </ngx-select>
 ``` 
