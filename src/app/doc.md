@@ -88,6 +88,7 @@ Any item can be `disabled` for prevent selection. For disable an item add the pr
 | noResultsFound | string | `'No results found'` | The default text showed when a search has no results |
 | size | `'small'/'default'/'large'` | `'default'` | Adding bootstrap classes: form-control-sm, input-sm, form-control-lg input-lg, btn-sm, btn-lg |
 | searchCallback | `(search: string, item: INgxSelectOption) => boolean` | `null` | The callback function for custom filtering the select list |
+| autoActiveOnMouseEnter | boolean | true | Automatically activate item when mouse enter on it |
 
 | Output  | Description |
 | ------------- | ------------- |
