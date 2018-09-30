@@ -522,7 +522,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     }
 
     private ensureVisibleElement(element: HTMLElement) {
-      setTimeout(()=>{
+      setTimeout(() => {
         if (this.choiceMenuElRef && this.cacheElementOffsetTop !== element.offsetTop) {
             this.cacheElementOffsetTop = element.offsetTop;
             const container: HTMLElement = this.choiceMenuElRef.nativeElement;
@@ -532,7 +532,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                 container.scrollTop = this.cacheElementOffsetTop + element.offsetHeight - container.clientHeight;
             }
         }
-      })
+      });
     }
 
     public optionsOpen(search: string = '') {
