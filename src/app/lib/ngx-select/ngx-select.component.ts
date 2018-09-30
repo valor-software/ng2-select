@@ -424,12 +424,12 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
 
     /** @internal */
     public inputKeyUp(value: string = '', event: KeyboardEvent ) {
-        if (this.optionsOpened) {
+        if (event.code === this.keyCodeToOptionsClose) {
+          this.optionsClose(/*true*/);
+        } else if (this.optionsOpened) {
           this.typed.emit(value);
         } else if (!this.optionsOpened && value) {
             this.optionsOpen(value);
-        } else if (event.code === this.keyCodeToOptionsClose) {
-            this.optionsClose(/*true*/);
         }
     }
 
@@ -522,7 +522,6 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     }
 
     private ensureVisibleElement(element: HTMLElement) {
-      setTimeout(() => {
         if (this.choiceMenuElRef && this.cacheElementOffsetTop !== element.offsetTop) {
             this.cacheElementOffsetTop = element.offsetTop;
             const container: HTMLElement = this.choiceMenuElRef.nativeElement;
@@ -532,7 +531,6 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                 container.scrollTop = this.cacheElementOffsetTop + element.offsetHeight - container.clientHeight;
             }
         }
-      });
     }
 
     public optionsOpen(search: string = '') {

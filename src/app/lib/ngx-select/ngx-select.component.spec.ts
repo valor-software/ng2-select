@@ -119,6 +119,12 @@ const createKeyboardEvent = (typeArg: string, code: string) => {
     return customEvent;
 };
 
+const createKeyupEvent = (key: string) => {
+  return new KeyboardEvent('keyup', {
+    key
+  });
+};
+
 describe('NgxSelectComponent', () => {
     let fixture: ComponentFixture<TestNgxSelectComponent>;
     const el = (id: number) => fixture.debugElement.nativeElement.querySelector(`#sel-${id} .ngx-select`);
@@ -677,7 +683,7 @@ describe('NgxSelectComponent', () => {
             formControl(1).click();
             fixture.detectChanges();
             formControlInput(1).value = 'br';
-            formControlInput(1).dispatchEvent(createKeyboardEvent('input', 'keyR'));
+            formControlInput(1).dispatchEvent(createKeyupEvent(''));
             fixture.detectChanges();
             expect(selectItemList(1).length).toBe(3);
             expect(selectItemList(1)[0]).toEqual(selectItemActive(1));
@@ -689,7 +695,7 @@ describe('NgxSelectComponent', () => {
             formControl(1).click();
             fixture.detectChanges();
             formControlInput(1).value = 'br';
-            formControlInput(1).dispatchEvent(createKeyboardEvent('input', 'keyR'));
+            formControlInput(1).dispatchEvent(createKeyupEvent(''));
             fixture.detectChanges();
             fixture.componentInstance.select1.items = items;
             fixture.detectChanges();
@@ -702,7 +708,7 @@ describe('NgxSelectComponent', () => {
             formControl(1).click();
             fixture.detectChanges();
             formControlInput(1).value = '5';
-            formControlInput(1).dispatchEvent(createKeyboardEvent('input', 'key5'));
+            formControlInput(1).dispatchEvent(createKeyupEvent(''));
             fixture.detectChanges();
             expect(selectItemList(1).length).toBe(2);
         });
@@ -716,7 +722,7 @@ describe('NgxSelectComponent', () => {
             formControl(1).click();
             fixture.detectChanges();
             formControlInput(1).value = 'br';
-            formControlInput(1).dispatchEvent(createKeyboardEvent('input', 'keyR'));
+            formControlInput(1).dispatchEvent(createKeyupEvent(''));
             fixture.detectChanges();
             expect(selectItemList(1).length).toBe(3);
         });
