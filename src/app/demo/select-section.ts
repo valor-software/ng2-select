@@ -1,5 +1,7 @@
 import {Component} from '@angular/core';
 
+declare const require: any;
+
 const doc = require('html-loader!markdown-loader!../doc.md');
 
 const tabDesc: any = {

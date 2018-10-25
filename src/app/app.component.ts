@@ -1,5 +1,7 @@
 import { Component, AfterContentInit } from '@angular/core';
 
+declare const require: any;
+
 const pac = require('../../package.json');
 
 const gettingStarted = require('html-loader!markdown-loader!./getting-started.md');

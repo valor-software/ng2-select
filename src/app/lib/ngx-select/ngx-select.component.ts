@@ -5,9 +5,7 @@ import {
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {Subject} from 'rxjs/Subject';
-import {Observable} from 'rxjs/Observable';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Observable, Subject, BehaviorSubject, of, from, EMPTY} from 'rxjs';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
@@ -127,10 +125,10 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
 
     /** @internal */
     public get inputText() {
-      if (this.inputElRef && this.inputElRef.nativeElement) {
-        return this.inputElRef.nativeElement.value;
-      }
-      return '';
+        if (this.inputElRef && this.inputElRef.nativeElement) {
+            return this.inputElRef.nativeElement.value;
+        }
+        return '';
     }
 
     constructor(iterableDiffers: IterableDiffers, private sanitizer: DomSanitizer, private cd: ChangeDetectorRef,
@@ -179,30 +177,30 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
             .flatMap((options: TSelectOption[]) => Observable
                 .from(options)
                 .flatMap((option: TSelectOption) => option instanceof NgxSelectOption
-                    ? Observable.of(option)
-                    : (option instanceof NgxSelectOptGroup ? Observable.from(option.options) : Observable.empty())
+                    ? of(option)
+                    : (option instanceof NgxSelectOptGroup ? from(option.options) : EMPTY)
                 )
                 .toArray()
             )
             .combineLatest(subjActualValue, (optionsFlat: NgxSelectOption[], actualValue: any[]) => {
-              const optionsSelected = [];
-              for (const option of optionsFlat) {
-                if (actualValue.indexOf(option.value) > -1) {
-                  optionsSelected.push(option);
+                const optionsSelected = [];
+                for (const option of optionsFlat) {
+                    if (actualValue.indexOf(option.value) > -1) {
+                        optionsSelected.push(option);
+                    }
                 }
-              }
 
-              if (this.keepSelectedItems) {
-                const optionValues = optionsSelected.map((option: NgxSelectOption) => option.value);
-                const keptSelectedOptions = this.subjOptionsSelected.value
-                  .filter((selOption: NgxSelectOption) => optionValues.indexOf(selOption.value) === -1);
-                optionsSelected.push(...keptSelectedOptions);
-              }
+                if (this.keepSelectedItems) {
+                    const optionValues = optionsSelected.map((option: NgxSelectOption) => option.value);
+                    const keptSelectedOptions = this.subjOptionsSelected.value
+                        .filter((selOption: NgxSelectOption) => optionValues.indexOf(selOption.value) === -1);
+                    optionsSelected.push(...keptSelectedOptions);
+                }
 
-              if (!_.isEqual(optionsSelected, this.subjOptionsSelected.value)) {
-                this.subjOptionsSelected.next(optionsSelected);
-                this.cd.markForCheck();
-              }
+                if (!_.isEqual(optionsSelected, this.subjOptionsSelected.value)) {
+                    this.subjOptionsSelected.next(optionsSelected);
+                    this.cd.markForCheck();
+                }
             })
             .subscribe();
 
@@ -211,18 +209,18 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
             .combineLatest(this.subjOptionsSelected, this.subjSearchText,
                 (options: TSelectOption[], selectedOptions: NgxSelectOption[], search: string) => {
                     this.optionsFiltered = this.filterOptions(search, options, selectedOptions)
-                      .map(option => {
-                        if (option instanceof NgxSelectOption) {
-                          option.highlightedText = this.highlightOption(option);
-                        } else if (option instanceof NgxSelectOptGroup) {
-                          option.options.map(x => {
-                            x.highlightedText = this.highlightOption(x);
-                            return x;
-                          });
-                        }
+                        .map(option => {
+                            if (option instanceof NgxSelectOption) {
+                                option.highlightedText = this.highlightOption(option);
+                            } else if (option instanceof NgxSelectOptGroup) {
+                                option.options.map(subOption => {
+                                    subOption.highlightedText = this.highlightOption(subOption);
+                                    return subOption;
+                                });
+                            }
 
-                        return option;
-                      });
+                            return option;
+                        });
                     this.cacheOptionsFilteredFlat = null;
                     this.navigateOption(ENavigation.firstIfOptionActiveInvisible);
                     this.cd.markForCheck();
@@ -235,8 +233,8 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                 );
             })
             .subscribe((flatOptions: NgxSelectOption[]) => {
-              this.subjOptionsSelected.next(flatOptions);
-              this.cd.markForCheck();
+                this.subjOptionsSelected.next(flatOptions);
+                this.cd.markForCheck();
             });
     }
 
@@ -281,13 +279,13 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
 
     private optionsFilteredFlat(): Observable<NgxSelectOption[]> {
         if (this.cacheOptionsFilteredFlat) {
-            return Observable.of(this.cacheOptionsFilteredFlat);
+            return of(this.cacheOptionsFilteredFlat);
         }
 
-        return Observable.from(this.optionsFiltered)
+        return from(this.optionsFiltered)
             .flatMap<TSelectOption, NgxSelectOption>((option: TSelectOption) =>
-                option instanceof NgxSelectOption ? Observable.of(option) :
-                    (option instanceof NgxSelectOptGroup ? Observable.from(option.optionsFiltered) : Observable.empty())
+                option instanceof NgxSelectOption ? of(option) :
+                    (option instanceof NgxSelectOptGroup ? from(option.optionsFiltered) : EMPTY)
             )
             .filter((optionsFilteredFlat: NgxSelectOption) => !optionsFilteredFlat.disabled)
             .toArray()
@@ -349,12 +347,12 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
         }
 
         if (this.choiceMenuElRef) {
-          const ulElement = this.choiceMenuElRef.nativeElement as HTMLUListElement;
-          const element = ulElement.querySelector('a.ngx-select__item_active.active') as HTMLLinkElement;
+            const ulElement = this.choiceMenuElRef.nativeElement as HTMLUListElement;
+            const element = ulElement.querySelector('a.ngx-select__item_active.active') as HTMLLinkElement;
 
-          if (element && element.offsetHeight > 0) {
-              this.ensureVisibleElement(element);
-          }
+            if (element && element.offsetHeight > 0) {
+                this.ensureVisibleElement(element);
+            }
 
         }
     }
@@ -423,11 +421,11 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     }
 
     /** @internal */
-    public inputKeyUp(value: string = '', event: KeyboardEvent ) {
+    public inputKeyUp(value: string = '', event: KeyboardEvent) {
         if (event.code === this.keyCodeToOptionsClose) {
-          this.optionsClose(/*true*/);
+            this.optionsClose(/*true*/);
         } else if (this.optionsOpened) {
-          this.typed.emit(value);
+            this.typed.emit(value);
         } else if (!this.optionsOpened && value) {
             this.optionsOpen(value);
         }
@@ -481,13 +479,13 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
         if ((this.optionActive !== navigated.activeOption) &&
             (!navigated.activeOption || !navigated.activeOption.disabled)) {
             if (this.optionActive) {
-              this.optionActive.active = false;
+                this.optionActive.active = false;
             }
 
             this.optionActive = navigated.activeOption;
 
             if (this.optionActive) {
-              this.optionActive.active = true;
+                this.optionActive.active = true;
             }
             this.navigated.emit(navigated);
             this.cd.detectChanges();
