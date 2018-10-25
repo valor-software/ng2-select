@@ -1,6 +1,6 @@
 {
   "name": "ngx-select-ex",
-  "version": "3.6.1",
+  "version": "3.6.2-dev",
   "description": "Angular based replacement for select boxes",
   "license": "MIT",
   "private": false,
@@ -24,8 +24,8 @@
     "precommit": "npm run test",
     "release": "standard-version --commit-all",
     "publish.ng4": "npm publish dist --tag ng4",
-    "publish.ng5": "npm publish dist",
-    "publish.ng5-dev": "npm publish dist --tag dev",
+    "publish.ng6": "npm publish dist",
+    "publish.ng6-dev": "npm publish dist --tag dev",
     "start": "ng serve",
     "test": "ng test --watch false",
     "test-coverage": "ng test --watch false --code-coverage"
