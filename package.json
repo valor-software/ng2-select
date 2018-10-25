@@ -94,7 +94,7 @@
     "ngx-bootstrap": "^3.0.1",
     "pre-commit": "^1.2.2",
     "protractor": "~5.4.0",
-    "rxjs": "~6.2.0",
+    "rxjs": "^6.3.3",
     "rxjs-compat": "^6.3.3",
     "standard-version": "^4.3.0",
     "ts-node": "~7.0.0",
