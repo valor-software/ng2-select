@@ -184,11 +184,13 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
             )
             .combineLatest(subjActualValue, (optionsFlat: NgxSelectOption[], actualValue: any[]) => {
                 const optionsSelected = [];
-                for (const option of optionsFlat) {
-                    if (actualValue.indexOf(option.value) > -1) {
-                        optionsSelected.push(option);
+
+                actualValue.forEach((value: any) => {
+                    const selectedOption = optionsFlat.find((option: NgxSelectOption) => option.value === value);
+                    if (selectedOption) {
+                        optionsSelected.push(selectedOption);
                     }
-                }
+                });
 
                 if (this.keepSelectedItems) {
                     const optionValues = optionsSelected.map((option: NgxSelectOption) => option.value);

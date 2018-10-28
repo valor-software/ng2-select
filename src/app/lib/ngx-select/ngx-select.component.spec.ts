@@ -120,9 +120,9 @@ const createKeyboardEvent = (typeArg: string, code: string) => {
 };
 
 const createKeyupEvent = (key: string) => {
-  return new KeyboardEvent('keyup', {
-    key
-  });
+    return new KeyboardEvent('keyup', {
+        key
+    });
 };
 
 describe('NgxSelectComponent', () => {
@@ -1109,4 +1109,22 @@ describe('NgxSelectComponent', () => {
             expect(fixture.componentInstance.select1.value).toEqual(1);
         });
     });
+
+    it('For the multiple mode the selection order has to be kept', fakeAsync(() => {
+        fixture.componentInstance.select1.items = items1;
+        fixture.componentInstance.select1.multiple = true;
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        formControl(1).click();
+        fixture.detectChanges();
+        selectItemList(1)[2].click();
+        expect(fixture.componentInstance.select1.value).toEqual([2]);
+
+        formControl(1).click();
+        fixture.detectChanges();
+        selectItemList(1)[1].click();
+        expect(fixture.componentInstance.select1.value).toEqual([2, 1]);
+    }));
 });
