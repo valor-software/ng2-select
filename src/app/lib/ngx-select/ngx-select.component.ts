@@ -145,8 +145,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
             ),
             this.subjDefaultValue
         ).pipe(
-            map((values: [any[], any[]]) => {
-                const eVal = values[0], dVal = values[1];
+            map(([eVal, dVal]: [any[], any[]]) => {
                 const newVal = _.isEqual(eVal, dVal) ? [] : eVal;
                 return newVal.length ? newVal : dVal;
             }),
@@ -156,7 +155,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
 
         // Export actual value
         combineLatest(subjActualValue, this.subjRegisterOnChange)
-            .pipe(map((values: any[]) => values[0]))
+            .pipe(map(([actualValue]: [any[], any[]]) => actualValue))
             .subscribe((actualValue: any[]) => {
                 this.actualValue = actualValue;
                 if (!_.isEqual(actualValue, cacheExternalValue)) {
@@ -182,9 +181,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
             ),
             subjActualValue
         ).pipe(
-            map((values: any[]) => {
-                const optionsFlat: NgxSelectOption[] = values[0], actualValue: any[] = values[1];
-
+            map(([optionsFlat, actualValue]: [NgxSelectOption[], any[]]) => {
                 const optionsSelected = [];
 
                 actualValue.forEach((value: any) => {
@@ -211,21 +208,18 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
 
         // Ensure working filter by a search text
         combineLatest(this.subjOptions, this.subjOptionsSelected, this.subjSearchText).pipe(
-            map((values: any[]) => {
-                const options: TSelectOption[] = values[0], selectedOptions: NgxSelectOption[] = values[1], search: string = values[2];
-                this.optionsFiltered = this.filterOptions(search, options, selectedOptions)
-                    .map(option => {
-                        if (option instanceof NgxSelectOption) {
-                            option.highlightedText = this.highlightOption(option);
-                        } else if (option instanceof NgxSelectOptGroup) {
-                            option.options.map(subOption => {
-                                subOption.highlightedText = this.highlightOption(subOption);
-                                return subOption;
-                            });
-                        }
-
-                        return option;
-                    });
+            map(([options, selectedOptions, search]: [TSelectOption[], NgxSelectOption[], string]) => {
+                this.optionsFiltered = this.filterOptions(search, options, selectedOptions).map(option => {
+                    if (option instanceof NgxSelectOption) {
+                        option.highlightedText = this.highlightOption(option);
+                    } else if (option instanceof NgxSelectOptGroup) {
+                        option.options.map(subOption => {
+                            subOption.highlightedText = this.highlightOption(subOption);
+                            return subOption;
+                        });
+                    }
+                    return option;
+                });
                 this.cacheOptionsFilteredFlat = null;
                 this.navigateOption(ENavigation.firstIfOptionActiveInvisible);
                 this.cd.markForCheck();
