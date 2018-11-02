@@ -617,5 +617,6 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
 
     public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
+        this.cd.markForCheck();
     }
 }
