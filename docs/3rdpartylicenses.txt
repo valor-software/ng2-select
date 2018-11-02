@@ -48,7 +48,7 @@ maintained libraries used by this software which have their own
 licenses; we recommend you read them, as their terms may differ from the
 terms above.
 
-webpack@4.20.2
+webpack@4.24.0
 MIT
 Copyright JS Foundation and other contributors
 
