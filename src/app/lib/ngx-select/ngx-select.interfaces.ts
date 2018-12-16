@@ -47,4 +47,5 @@ export interface INgxSelectOptions {
     keyCodeToNavigatePrevious?: string;
     keyCodeToNavigateNext?: string;
     keyCodeToNavigateLast?: string;
+    isFocused?: boolean;
 }

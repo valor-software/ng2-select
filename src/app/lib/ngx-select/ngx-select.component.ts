@@ -63,6 +63,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Input() public size: 'small' | 'default' | 'large' = 'default';
     @Input() public searchCallback: (search: string, item: INgxSelectOption) => boolean;
     @Input() public autoActiveOnMouseEnter = true;
+    @Input() public isFocused = false;
     public keyCodeToRemoveSelected = 'Delete';
     public keyCodeToOptionsOpen = ['Enter', 'NumpadEnter'];
     public keyCodeToOptionsClose = 'Escape';
@@ -110,7 +111,6 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     private cacheElementOffsetTop: number;
 
     private _focusToInput = false;
-    public isFocused = false;
 
     /** @internal */
     public get inputText() {
