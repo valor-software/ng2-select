@@ -315,7 +315,10 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                         }
                         break;
                     case ENavigation.firstIfOptionActiveInvisible:
-                        const idxOfOptionActive = options.indexOf(this.optionActive);
+                        let idxOfOptionActive = -1;
+                        if (this.optionActive) {
+                            idxOfOptionActive = options.indexOf(options.find(x => x.value === this.optionActive.value));
+                        }
                         navigated.index = idxOfOptionActive > 0 ? idxOfOptionActive : 0;
                         break;
                 }
@@ -421,7 +424,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     public inputKeyUp(value: string = '', event: KeyboardEvent) {
         if (event.code === this.keyCodeToOptionsClose) {
             this.optionsClose(/*true*/);
-        } else if (this.optionsOpened) {
+        } else if (this.optionsOpened && (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowDown'].indexOf(event.code) === -1)/*ignore arrows*/) {
             this.typed.emit(value);
         } else if (!this.optionsOpened && value) {
             this.optionsOpen(value);
@@ -491,9 +494,11 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
 
     /** @internal */
     public onMouseEnter(navigated: INgxOptionNavigated): void {
-        if (this.autoActiveOnMouseEnter) {
-            this.optionActivate(navigated);
-        }
+        document.onmousemove = () => {
+            if (this.autoActiveOnMouseEnter) {
+                this.optionActivate(navigated);
+            }
+        };
     }
 
     private filterOptions(search: string, options: TSelectOption[], selectedOptions: NgxSelectOption[]): TSelectOption[] {
