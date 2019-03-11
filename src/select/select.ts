@@ -147,7 +147,7 @@ let styles = `
         </a>
       </span>
     </div>
-    <input type="text" autocomplete="false" tabindex="-1"
+    <input type="text" autocomplete="off" tabindex="-1"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
            [disabled]="disabled"
@@ -214,7 +214,7 @@ let styles = `
            (keyup)="inputEvent($event, true)"
            (click)="matchClick($event)"
            [disabled]="disabled"
-           autocomplete="false"
+           autocomplete="off"
            autocorrect="off"
            autocapitalize="off"
            spellcheck="false"
