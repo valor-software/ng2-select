@@ -105,6 +105,7 @@ Any item can be `disabled` for prevent selection. For disable an item add the pr
 | searchCallback | `(search: string, item: INgxSelectOption) => boolean` | `null` | The callback function for custom filtering the select list |
 | autoActiveOnMouseEnter | boolean | true | Automatically activate item when mouse enter on it |
 | isFocused | boolean | false | Makes the component focused |
+| keepSelectMenuOpened | boolean | false | Keeps the select menu opened |
 
 | Output  | Description |
 | ------------- | ------------- |

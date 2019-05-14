@@ -64,6 +64,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Input() public searchCallback: (search: string, item: INgxSelectOption) => boolean;
     @Input() public autoActiveOnMouseEnter = true;
     @Input() public isFocused = false;
+    @Input() public keepSelectMenuOpened = false;
     public keyCodeToRemoveSelected = 'Delete';
     public keyCodeToOptionsOpen = ['Enter', 'NumpadEnter'];
     public keyCodeToOptionsClose = 'Escape';
@@ -460,7 +461,9 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
         if (option && !option.disabled) {
             this.subjOptionsSelected.next((this.multiple ? this.subjOptionsSelected.value : []).concat([option]));
             this.select.emit(option.value);
-            this.optionsClose(/*true*/);
+            if (!this.keepSelectMenuOpened) {
+                this.optionsClose(/*true*/);
+            }
             this.onTouched();
         }
     }
