@@ -84,7 +84,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Output() public selectionChanges = new EventEmitter<INgxSelectOption[]>();
 
     @ViewChild('main') protected mainElRef: ElementRef;
-    @ViewChild('input') protected inputElRef: ElementRef;
+    @ViewChild('input') public inputElRef: ElementRef;
     @ViewChild('choiceMenu') protected choiceMenuElRef: ElementRef;
 
     @ContentChild(NgxSelectOptionDirective, {read: TemplateRef}) templateOption: NgxSelectOptionDirective;
