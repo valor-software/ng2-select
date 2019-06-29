@@ -1,6 +1,6 @@
 {
   "name": "ngx-select-ex",
-  "version": "3.6.12-dev",
+  "version": "3.7.0",
   "description": "Angular based replacement for select boxes",
   "license": "MIT",
   "private": false,
@@ -24,8 +24,8 @@
     "precommit": "npm run test",
     "release": "standard-version --commit-all",
     "publish.ng4": "npm publish dist --tag ng4",
-    "publish.ng6": "npm publish dist",
-    "publish.ng6-dev": "npm publish dist --tag dev",
+    "publish.ng8": "npm publish dist",
+    "publish.ng8-dev": "npm publish dist --tag dev",
     "start": "ng serve",
     "test": "ng test --watch false",
     "test-coverage": "ng test --watch false --code-coverage"
@@ -87,7 +87,7 @@
     "karma-jasmine-html-reporter": "^1.4.0",
     "lodash": "^4.17.11",
     "markdown-loader": "^5.0.0",
-    "ng-packagr": "^4.4.0",
+    "ng-packagr": "^5.3.0",
     "ngx-bootstrap": "^5.0.0",
     "pre-commit": "^1.2.2",
     "protractor": "~5.4.0",
