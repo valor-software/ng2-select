@@ -5,6 +5,7 @@
                     [items]="items"
                     [disabled]="ngxDisabled"
                     [(ngModel)]="ngxValue"
+                    [autoClearSearch]="true"
                     placeholder="No city selected"
                     (selectionChanges)="doSelectOptions($event)">
         </ngx-select>

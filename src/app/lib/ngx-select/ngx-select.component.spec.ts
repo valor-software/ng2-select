@@ -49,8 +49,8 @@ import createSpy = jasmine.createSpy;
     `
 })
 class TestNgxSelectComponent {
-    @ViewChild('component1') public component1: NgxSelectComponent;
-    @ViewChild('component2') public component2: NgxSelectComponent;
+    @ViewChild('component1', {static: true}) public component1: NgxSelectComponent;
+    @ViewChild('component2', {static: true}) public component2: NgxSelectComponent;
 
     public select1: any = {
         value: null,
@@ -250,7 +250,7 @@ describe('NgxSelectComponent', () => {
         });
     });
 
-    describe('should return values from items only when items is not contain some values', function () {
+    describe('should return values from items only when items is not contain some values', () => {
         const createItems = (values: number[]) => values.map(v => {
             return {value: v, text: 'val ' + v};
         });

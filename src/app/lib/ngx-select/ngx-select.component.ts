@@ -27,7 +27,7 @@ enum ENavigation {
     firstSelected, firstIfOptionActiveInvisible
 }
 
-function propertyExists(obj: Object, propertyName: string) {
+function propertyExists(obj: object, propertyName: string) {
     return propertyName in obj;
 }
 
@@ -84,13 +84,17 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Output() public navigated = new EventEmitter<INgxOptionNavigated>();
     @Output() public selectionChanges = new EventEmitter<INgxSelectOption[]>();
 
-    @ViewChild('main') protected mainElRef: ElementRef;
-    @ViewChild('input') public inputElRef: ElementRef;
-    @ViewChild('choiceMenu') protected choiceMenuElRef: ElementRef;
+    @ViewChild('main', {static: true}) protected mainElRef: ElementRef;
+    @ViewChild('input', {static: false}) public inputElRef: ElementRef;
+    @ViewChild('choiceMenu', {static: false}) protected choiceMenuElRef: ElementRef;
 
-    @ContentChild(NgxSelectOptionDirective, {read: TemplateRef}) templateOption: NgxSelectOptionDirective;
-    @ContentChild(NgxSelectOptionSelectedDirective, {read: TemplateRef}) templateSelectedOption: NgxSelectOptionSelectedDirective;
-    @ContentChild(NgxSelectOptionNotFoundDirective, {read: TemplateRef}) templateOptionNotFound: NgxSelectOptionNotFoundDirective;
+    @ContentChild(NgxSelectOptionDirective, {read: TemplateRef, static: true}) templateOption: NgxSelectOptionDirective;
+
+    @ContentChild(NgxSelectOptionSelectedDirective, {read: TemplateRef, static: true})
+    templateSelectedOption: NgxSelectOptionSelectedDirective;
+
+    @ContentChild(NgxSelectOptionNotFoundDirective, {read: TemplateRef, static: true})
+    templateOptionNotFound: NgxSelectOptionNotFoundDirective;
 
     public optionsOpened = false;
     public optionsFiltered: TSelectOption[];
@@ -235,7 +239,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
         });
     }
 
-    public setFormControlSize(otherClassNames: Object = {}, useFormControl: boolean = true) {
+    public setFormControlSize(otherClassNames: object = {}, useFormControl: boolean = true) {
         const formControlExtraClasses = useFormControl ? {
             'form-control-sm input-sm': this.size === 'small',
             'form-control-lg input-lg': this.size === 'large'
@@ -280,7 +284,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
         }
 
         return from(this.optionsFiltered).pipe(
-            flatMap<TSelectOption, NgxSelectOption>((option: TSelectOption) =>
+            flatMap<TSelectOption, any>((option: TSelectOption) =>
                 option instanceof NgxSelectOption ? of(option) :
                     (option instanceof NgxSelectOptGroup ? from(option.optionsFiltered) : EMPTY)
             ),
@@ -515,9 +519,9 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
 
         return options.filter((option: TSelectOption) => {
             if (option instanceof NgxSelectOption) {
-                return filterOption(<NgxSelectOption>option);
+                return filterOption(option as NgxSelectOption);
             } else if (option instanceof NgxSelectOptGroup) {
-                const subOp = <NgxSelectOptGroup>option;
+                const subOp = option as NgxSelectOptGroup;
                 subOp.filter((subOption: NgxSelectOption) => filterOption(subOption));
                 return subOp.optionsFiltered.length;
             }
@@ -568,7 +572,6 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     private buildOptions(data: any[]): Array<NgxSelectOption | NgxSelectOptGroup> {
         const result: Array<NgxSelectOption | NgxSelectOptGroup> = [];
         if (Array.isArray(data)) {
-            let option: NgxSelectOption;
             data.forEach((item: any) => {
                 const isOptGroup = typeof item === 'object' && item !== null &&
                     propertyExists(item, this.optGroupLabelField) && propertyExists(item, this.optGroupOptionsField) &&
@@ -576,13 +579,17 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                 if (isOptGroup) {
                     const optGroup = new NgxSelectOptGroup(item[this.optGroupLabelField]);
                     item[this.optGroupOptionsField].forEach((subOption: NgxSelectOption) => {
-                        if (option = this.buildOption(subOption, optGroup)) {
-                            optGroup.options.push(option);
+                        const opt = this.buildOption(subOption, optGroup);
+                        if (opt) {
+                            optGroup.options.push(opt);
                         }
                     });
                     result.push(optGroup);
-                } else if (option = this.buildOption(item, null)) {
-                    result.push(option);
+                } else {
+                    const option = this.buildOption(item, null);
+                    if (option) {
+                        result.push(option);
+                    }
                 }
             });
         }
