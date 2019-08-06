@@ -106,6 +106,7 @@ Any item can be `disabled` for prevent selection. For disable an item add the pr
 | autoActiveOnMouseEnter | boolean | true | Automatically activate item when mouse enter on it |
 | isFocused | boolean | false | Makes the component focused |
 | keepSelectMenuOpened | boolean | false | Keeps the select menu opened |
+| showOptionNotFoundForEmptyItems | boolean | false | Shows the "Not Found" menu option in case of out of items at all |
 
 | Output  | Description |
 | ------------- | ------------- |

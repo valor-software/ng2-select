@@ -63,6 +63,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Input() public size: 'small' | 'default' | 'large' = 'default';
     @Input() public searchCallback: (search: string, item: INgxSelectOption) => boolean;
     @Input() public autoActiveOnMouseEnter = true;
+    @Input() public showOptionNotFoundForEmptyItems = false;
     @Input() public isFocused = false;
     @Input() public keepSelectMenuOpened = false;
     public keyCodeToRemoveSelected = 'Delete';
@@ -538,6 +539,10 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                 container.scrollTop = this.cacheElementOffsetTop + element.offsetHeight - container.clientHeight;
             }
         }
+    }
+
+    public showChoiceMenu(): boolean {
+        return this.optionsOpened && (!!this.subjOptions.value.length || this.showOptionNotFoundForEmptyItems);
     }
 
     public optionsOpen(search: string = '') {

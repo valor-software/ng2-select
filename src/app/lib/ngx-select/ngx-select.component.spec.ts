@@ -26,6 +26,7 @@ import createSpy = jasmine.createSpy;
                     [disabled]="select1.disabled"
                     [autoSelectSingleOption]="select1.autoSelectSingleOption"
                     [autoClearSearch]="select1.autoClearSearch"
+                    [showOptionNotFoundForEmptyItems]="select1.showOptionNotFoundForEmptyItems"
                     (focus)="select1.doFocus()"
                     (blur)="select1.doBlur()"
                     (open)="select1.doOpen()"
@@ -69,6 +70,7 @@ class TestNgxSelectComponent {
         disabled: false,
         autoSelectSingleOption: false,
         autoClearSearch: false,
+        showOptionNotFoundForEmptyItems: false,
 
         doFocus: () => null,
         doBlur: () => null,
@@ -162,12 +164,23 @@ describe('NgxSelectComponent', () => {
         expect(selectItemList(2).length).toBe(0);
     });
 
-    it('should to show "no found message" for empty items', () => {
+    it('should NOT show "no found message" for empty items by default', () => {
+        fixture.componentInstance.select1.items = [];
+        fixture.detectChanges();
+        formControl(2).click();
+        fixture.detectChanges();
+        expect(selectItemNoFound(2)).toBeTruthy();
+        expect(selectChoicesContainer(2).classList.contains('show')).toBeFalsy();
+    });
+
+    it('should show "no found message" for empty items', () => {
+        fixture.componentInstance.select1.showOptionNotFoundForEmptyItems = true;
         fixture.componentInstance.select1.items = [];
         fixture.detectChanges();
         formControl(1).click();
         fixture.detectChanges();
         expect(selectItemNoFound(1)).toBeTruthy();
+        expect(selectChoicesContainer(1).classList.contains('show')).toBeTruthy();
     });
 
     describe('should have value', () => {

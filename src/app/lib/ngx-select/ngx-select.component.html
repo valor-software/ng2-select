@@ -70,7 +70,7 @@
 
     <!-- options template -->
     <ul #choiceMenu role="menu" *ngIf="isFocused" class="ngx-select__choices dropdown-menu"
-        [class.show]="optionsOpened && subjOptions.value.length">
+        [class.show]="showChoiceMenu()">
         <li class="ngx-select__item-group" role="menuitem"
             *ngFor="let opt of optionsFiltered; trackBy: trackByOption; let idxGroup=index">
             <div class="divider dropdown-divider" *ngIf="opt.type === 'optgroup' && (idxGroup > 0)"></div>
