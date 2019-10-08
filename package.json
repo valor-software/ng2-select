@@ -92,7 +92,7 @@
     "pre-commit": "^1.2.2",
     "protractor": "~5.4.0",
     "rxjs": "~6.4.0",
-    "standard-version": "^4.3.0",
+    "standard-version": "^7.0.0",
     "ts-node": "~7.0.0",
     "tslib": "^1.9.0",
     "tslint": "~5.15.0",
