@@ -1,6 +1,24 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [3.7.3](https://github.com/optimistex/ngx-select-ex/compare/v3.6.7...v3.7.3) (2019-10-08)
+
+### 3.7.2 (2019-08-06)
+
+### 3.7.1 (2019-08-06)
+
+## 3.7.0 (2019-06-29)
+
+### 3.6.12-dev (2019-05-14)
+
+### 3.6.11-dev (2019-05-14)
+
+### 3.6.10 (2019-05-14)
+
+### 3.6.9-dev (2019-01-24)
+
+### 3.6.8 (2018-12-17)
 
 <a name="3.6.7"></a>
 ## [3.6.7](https://github.com/optimistex/ngx-select-ex/compare/v2.0.0...v3.6.7) (2018-11-02)
