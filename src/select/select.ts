@@ -594,10 +594,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       this.data.next(this.active[0]);
     }
     this.doEvent('selected', value);
-    this.hideOptions();
     if (this.multiple === true) {
       this.focusToInput('');
     } else {
+      this.hideOptions();
       this.focusToInput(stripTags(value.text));
       this.element.nativeElement.querySelector('.ui-select-container').focus();
     }
