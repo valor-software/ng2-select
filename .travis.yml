@@ -1,6 +1,6 @@
 sudo: required
 language: node_js
-node_js: "11"
+node_js: "12"
 
 branches:
   only:
@@ -21,7 +21,6 @@ stages:
   - name: precache
   - name: lint
   - name: test
-#  - name: deploy
 
 before_install:
   - export CHROME_BIN=chromium-browser
@@ -34,7 +33,6 @@ install:
   - npm run build > /dev/null
 
 jobs:
-  fast_finish: true
   include:
 # precache npm and apt dependencies
     - stage: precache
@@ -57,15 +55,6 @@ jobs:
       script: npm run test-coverage
       after_success:
         - ./node_modules/.bin/codecov
-#   deploy
-#    - stage: deploy
-#      deploy:
-#        provider: npm
-#        email: $NPM_EMAIL
-#        api_key: $NPM_TOKEN
-#        on:
-#          branch: master
-#          tags: true
 
 # cache
 #cache:
