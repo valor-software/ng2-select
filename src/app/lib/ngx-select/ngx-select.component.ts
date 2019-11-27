@@ -1,7 +1,7 @@
 import {
     AfterContentChecked, DoCheck, Input, Output, ViewChild,
     Component, ElementRef, EventEmitter, forwardRef, HostListener, IterableDiffer, IterableDiffers, ChangeDetectorRef, ContentChild,
-    TemplateRef, Optional, Inject, InjectionToken, ChangeDetectionStrategy
+    TemplateRef, Optional, Inject, InjectionToken, ChangeDetectionStrategy, OnDestroy
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
@@ -44,7 +44,7 @@ function propertyExists(obj: object, propertyName: string) {
         }
     ]
 })
-export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccessor, DoCheck, AfterContentChecked {
+export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccessor, DoCheck, AfterContentChecked, OnDestroy {
     @Input() public items: any[];
     @Input() public optionValueField = 'id';
     @Input() public optionTextField = 'text';
@@ -361,6 +361,10 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
             }
 
         }
+    }
+    
+    public ngOnDestroy(): void {
+        this.cd.detach(); 
     }
 
     public canClearNotMultiple(): boolean {
