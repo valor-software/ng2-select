@@ -40,7 +40,7 @@
     <div class="ngx-select__selected" *ngIf="multiple === true" (click)="inputClick(inputElRef && inputElRef['value'])">
         <span *ngFor="let option of optionsSelected; trackBy: trackByOption; let idx = index">
             <span tabindex="-1" [ngClass]="setBtnSize()" (click)="$event.stopPropagation()"
-                  class="ngx-select__selected-plural btn btn-default btn-secondary btn-xs">
+                  class="ngx-select__selected-plural btn btn-default btn-secondary btn-sm btn-xs">
 
                 <ng-container [ngTemplateOutlet]="templateSelectedOption || defaultTemplateOption"
                               [ngTemplateOutletContext]="{$implicit: option, index: idx, text: sanitize(option.text)}">
