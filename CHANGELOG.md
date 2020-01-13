@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.7.4](https://github.com/optimistex/ngx-select-ex/compare/v3.7.3...v3.7.4) (2019-12-07)
+
+
+### Bug Fixes
+
+* removed whitespaces for linting ([cd0faae](https://github.com/optimistex/ngx-select-ex/commit/cd0faae))
+* ViewDestroyedError: detectChanges ([a4de144](https://github.com/optimistex/ngx-select-ex/commit/a4de144))
+
 ### [3.7.3](https://github.com/optimistex/ngx-select-ex/compare/v3.6.7...v3.7.3) (2019-10-08)
 
 ### 3.7.2 (2019-08-06)
