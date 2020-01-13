@@ -2,6 +2,7 @@ import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/t
 
 import {Component, ViewChild} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {BehaviorSubject} from 'rxjs';
 import {NgxSelectModule} from './ngx-select.module';
 import {NgxSelectComponent} from './ngx-select.component';
 import createSpy = jasmine.createSpy;
@@ -47,11 +48,13 @@ import createSpy = jasmine.createSpy;
                     [items]="select2.items"
                     (select)="select2.doSelect($event)"
                     (remove)="select2.doRemove($event)"></ngx-select>
+        <ngx-select id="sel-3" #component3 [items]="select3.items$ | async"></ngx-select>
     `
 })
 class TestNgxSelectComponent {
     @ViewChild('component1', {static: true}) public component1: NgxSelectComponent;
     @ViewChild('component2', {static: true}) public component2: NgxSelectComponent;
+    @ViewChild('component3', {static: true}) public component3: NgxSelectComponent;
 
     public select1: any = {
         value: null,
@@ -96,6 +99,10 @@ class TestNgxSelectComponent {
 
         doSelect: () => null,
         doRemove: () => null
+    };
+
+    public select3 = {
+        items$: new BehaviorSubject<any[]>([])
     };
 }
 
@@ -474,10 +481,101 @@ describe('NgxSelectComponent', () => {
             expect(selectItemActive(1).innerHTML).not.toContain('item 10');
         });
 
+        it('should keep active element when dynamically add/remove items', () => {
+            selectItemList(1)[10].dispatchEvent(createMouseEvent('mouseenter', 5, 4));
+            selectItemList(1)[10].dispatchEvent(createMouseEvent('mousemove', 5, 4));
+            fixture.detectChanges();
+            expect(selectItemActive(1).innerHTML).toContain('item 11');
+            expect(selectItemList(1).length).toBe(100);
+
+            fixture.componentInstance.component1.items.length = 12;
+
+            fixture.detectChanges();
+            expect(selectItemActive(1).innerHTML).toContain('item 11');
+            expect(selectItemList(1).length).toBe(12);
+            selectItemList(1)[10].dispatchEvent(createMouseEvent('mousemove', 6, 4));
+            expect(selectItemActive(1).innerHTML).toContain('item 11');
+            expect(selectItemList(1).length).toBe(12);
+
+            const items = fixture.componentInstance.component1.items;
+            fixture.componentInstance.component1.items = items.concat([
+                {id: items.length + 1, text: 'item ' + items.length + 1},
+                {id: items.length + 2, text: 'item ' + items.length + 2},
+                {id: items.length + 3, text: 'item ' + items.length + 3},
+                {id: items.length + 4, text: 'item ' + items.length + 4},
+            ]);
+
+            fixture.detectChanges();
+            expect(selectItemActive(1).innerHTML).toContain('item 11');
+            expect(selectItemList(1).length).toBe(16);
+            selectItemList(1)[10].dispatchEvent(createMouseEvent('mousemove', 7, 4));
+            expect(selectItemActive(1).innerHTML).toContain('item 11');
+            expect(selectItemList(1).length).toBe(16);
+        });
+
         afterEach(() => {
             const viewPortHeight = selectChoicesContainer(1).clientHeight,
                 scrollTop = selectChoicesContainer(1).scrollTop,
                 activeItemTop = selectItemActive(1).offsetTop;
+            expect((scrollTop <= activeItemTop) && (activeItemTop <= scrollTop + viewPortHeight)).toBeTruthy();
+        });
+    });
+
+    describe('test activating menu items for async items', () => {
+        beforeEach(() => {
+            const items: Array<{ id: number; text: string }> = [];
+            for (let i = 1; i <= 100; i++) {
+                items.push({id: i, text: 'item ' + i});
+            }
+            fixture.componentInstance.select3.items$.next(items);
+            fixture.detectChanges();
+            formControl(3).click();
+            fixture.detectChanges();
+            expect(selectItemList(3).length).toBeGreaterThan(0);
+        });
+
+        it('should keep active element when dynamically add/remove items', () => {
+            selectItemList(3)[10].dispatchEvent(createMouseEvent('mouseenter', 5, 4));
+            selectItemList(3)[10].dispatchEvent(createMouseEvent('mousemove', 5, 4));
+            fixture.detectChanges();
+            expect(selectItemList(3).length).toBe(100);
+            expect(selectItemActive(3).innerHTML).toContain('item 11');
+
+            {
+                const items = fixture.componentInstance.select3.items$.value;
+                items.length = 12;
+                fixture.componentInstance.select3.items$.next(items);
+            }
+
+            fixture.detectChanges();
+            expect(selectItemList(3).length).toBe(12);
+            expect(selectItemActive(3).innerHTML).toContain('item 11');
+            selectItemList(3)[10].dispatchEvent(createMouseEvent('mousemove', 6, 4));
+            fixture.detectChanges();
+            expect(selectItemList(3).length).toBe(12);
+            expect(selectItemActive(3).innerHTML).toContain('item 11');
+
+            {
+                const items = fixture.componentInstance.select3.items$.value;
+                fixture.componentInstance.select3.items$.next(items.concat([
+                    {id: items.length + 1, text: 'item ' + items.length + 1},
+                    {id: items.length + 2, text: 'item ' + items.length + 2},
+                ]));
+            }
+
+            fixture.detectChanges();
+            expect(selectItemList(3).length).toBe(14);
+            expect(selectItemActive(3).innerHTML).toContain('item 11');
+            selectItemList(3)[10].dispatchEvent(createMouseEvent('mousemove', 7, 4));
+            fixture.detectChanges();
+            expect(selectItemList(3).length).toBe(14);
+            expect(selectItemActive(3).innerHTML).toContain('item 11');
+        });
+
+        afterEach(() => {
+            const viewPortHeight = selectChoicesContainer(3).clientHeight,
+                scrollTop = selectChoicesContainer(3).scrollTop,
+                activeItemTop = selectItemActive(3).offsetTop;
             expect((scrollTop <= activeItemTop) && (activeItemTop <= scrollTop + viewPortHeight)).toBeTruthy();
         });
     });

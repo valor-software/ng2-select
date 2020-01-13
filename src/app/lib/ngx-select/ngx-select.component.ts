@@ -527,11 +527,9 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
 
     /** @internal */
     public onMouseEnter(navigated: INgxOptionNavigated): void {
-        document.onmousemove = () => {
-            if (this.autoActiveOnMouseEnter) {
-                this.optionActivate(navigated);
-            }
-        };
+        if (this.autoActiveOnMouseEnter) {
+            this.optionActivate(navigated);
+        }
     }
 
     private filterOptions(search: string, options: TSelectOption[], selectedOptions: NgxSelectOption[]): TSelectOption[] {
