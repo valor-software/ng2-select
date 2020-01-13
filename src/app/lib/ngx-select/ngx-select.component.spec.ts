@@ -127,6 +127,10 @@ const createKeyupEvent = (key: string) => {
     });
 };
 
+const createMouseEvent = (typeArg: string, clientX: number, clientY: number) => {
+    return new MouseEvent(typeArg, {bubbles: true, cancelable: true, clientX, clientY});
+};
+
 describe('NgxSelectComponent', () => {
     let fixture: ComponentFixture<TestNgxSelectComponent>;
     const el = (id: number) => fixture.debugElement.nativeElement.querySelector(`#sel-${id} .ngx-select`);
@@ -442,6 +446,32 @@ describe('NgxSelectComponent', () => {
             formControlInput(1).dispatchEvent(createKeyboardEvent('keydown', 'ArrowDown'));
             fixture.detectChanges();
             expect(selectItemActive(1).innerHTML).toContain('item 2');
+        });
+
+        it('should activate items by mouse enter/move', () => {
+            selectItemList(1)[10].dispatchEvent(createMouseEvent('mouseenter', 5, 4));
+            selectItemList(1)[10].dispatchEvent(createMouseEvent('mousemove', 5, 4));
+            fixture.detectChanges();
+            expect(selectItemActive(1).innerHTML).toContain('item 11');
+
+            selectItemList(1)[9].dispatchEvent(createMouseEvent('mouseenter', 5, 4));
+            selectItemList(1)[9].dispatchEvent(createMouseEvent('mousemove', 5, 4));
+            fixture.detectChanges();
+            expect(selectItemActive(1).innerHTML).toContain('item 10');
+        });
+
+        it('should not activate items by mouse enter/move', () => {
+            fixture.componentInstance.component1.autoActiveOnMouseEnter = false;
+
+            selectItemList(1)[10].dispatchEvent(createMouseEvent('mouseenter', 5, 4));
+            selectItemList(1)[10].dispatchEvent(createMouseEvent('mousemove', 5, 4));
+            fixture.detectChanges();
+            expect(selectItemActive(1).innerHTML).not.toContain('item 11');
+
+            selectItemList(1)[9].dispatchEvent(createMouseEvent('mouseenter', 5, 4));
+            selectItemList(1)[9].dispatchEvent(createMouseEvent('mousemove', 5, 4));
+            fixture.detectChanges();
+            expect(selectItemActive(1).innerHTML).not.toContain('item 10');
         });
 
         afterEach(() => {

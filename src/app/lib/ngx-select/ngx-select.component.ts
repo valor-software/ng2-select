@@ -1,7 +1,24 @@
 import {
-    AfterContentChecked, DoCheck, Input, Output, ViewChild,
-    Component, ElementRef, EventEmitter, forwardRef, HostListener, IterableDiffer, IterableDiffers, ChangeDetectorRef, ContentChild,
-    TemplateRef, Optional, Inject, InjectionToken, ChangeDetectionStrategy, OnDestroy
+    AfterContentChecked,
+    DoCheck,
+    Input,
+    Output,
+    ViewChild,
+    Component,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    HostListener,
+    IterableDiffer,
+    IterableDiffers,
+    ChangeDetectorRef,
+    ContentChild,
+    TemplateRef,
+    Optional,
+    Inject,
+    InjectionToken,
+    ChangeDetectionStrategy,
+    OnDestroy
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
@@ -10,7 +27,11 @@ import {tap, filter, map, share, flatMap, toArray, distinctUntilChanged} from 'r
 import * as lodashNs from 'lodash';
 import * as escapeStringNs from 'escape-string-regexp';
 import {NgxSelectOptGroup, NgxSelectOption, TSelectOption} from './ngx-select.classes';
-import {NgxSelectOptionDirective, NgxSelectOptionNotFoundDirective, NgxSelectOptionSelectedDirective} from './ngx-templates.directive';
+import {
+    NgxSelectOptionDirective,
+    NgxSelectOptionNotFoundDirective,
+    NgxSelectOptionSelectedDirective
+} from './ngx-templates.directive';
 import {INgxOptionNavigated, INgxSelectOption, INgxSelectOptions} from './ngx-select.interfaces';
 
 const _ = lodashNs;
