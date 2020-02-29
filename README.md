@@ -94,7 +94,7 @@ Any item can be `disabled` for prevent selection. For disable an item add the pr
 | [multiple] | boolean | `false` |  Mode of this component. If set `true` user can select more than one option |
 | [allowClear] | boolean | `false` |  Set to `true` to allow the selection to be cleared. This option only applies to single-value inputs |
 | [placeholder] | string | `''` |  Set to `true` Placeholder text to display when the element has no focus and selected items |
-| [noAutoComplete] | boolean | `false` |  Set to `true` Set to `true` to hide the search input. This option only applies to single-value inputs |
+| [noAutoComplete] | boolean | `false` |  Set to `true` to hide the search input. This option only applies to single-value inputs |
 | [keepSelectedItems] | boolean | `false` | Storing the selected items when the item list is changed |
 | [disabled] | boolean | `false` |  When `true`, it specifies that the component should be disabled |
 | [defaultValue] | any[] | `[]` |  Use to set default value |
@@ -106,6 +106,7 @@ Any item can be `disabled` for prevent selection. For disable an item add the pr
 | autoActiveOnMouseEnter | boolean | true | Automatically activate item when mouse enter on it |
 | isFocused | boolean | false | Makes the component focused |
 | keepSelectMenuOpened | boolean | false | Keeps the select menu opened |
+| autocomplete | string | `'off'` | Sets an autocomplete value for the input field |
 | showOptionNotFoundForEmptyItems | boolean | false | Shows the "Not Found" menu option in case of out of items at all |
 
 | Output  | Description |

@@ -62,7 +62,7 @@
            [disabled]="disabled"
            [placeholder]="optionsSelected.length? '': placeholder"
            (click)="inputClick(input.value)"
-           autocomplete="off"
+           [autocomplete]="autocomplete"
            autocorrect="off"
            autocapitalize="off"
            spellcheck="false"

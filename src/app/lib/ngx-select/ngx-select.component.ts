@@ -87,6 +87,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Input() public showOptionNotFoundForEmptyItems = false;
     @Input() public isFocused = false;
     @Input() public keepSelectMenuOpened = false;
+    @Input() public autocomplete = 'off';
     public keyCodeToRemoveSelected = 'Delete';
     public keyCodeToOptionsOpen = ['Enter', 'NumpadEnter'];
     public keyCodeToOptionsClose = 'Escape';
