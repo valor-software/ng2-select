@@ -49,4 +49,5 @@ export interface INgxSelectOptions {
     keyCodeToNavigateLast?: string;
     isFocused?: boolean;
     autocomplete?: string;
+    dropDownMenuOtherClasses?: string;
 }

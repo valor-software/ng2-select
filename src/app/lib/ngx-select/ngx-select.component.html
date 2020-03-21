@@ -70,6 +70,7 @@
 
     <!-- options template -->
     <ul #choiceMenu role="menu" *ngIf="isFocused" class="ngx-select__choices dropdown-menu"
+        [ngClass]="dropDownMenuOtherClasses"
         [class.show]="showChoiceMenu()">
         <li class="ngx-select__item-group" role="menuitem"
             *ngFor="let opt of optionsFiltered; trackBy: trackByOption; let idxGroup=index">
