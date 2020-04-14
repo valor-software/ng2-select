@@ -12,7 +12,8 @@ import {RichDemoComponent} from './demo/select/rich-demo';
 import {SingleDemoComponent} from './demo/select/single-demo';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ButtonsModule, TabsModule} from 'ngx-bootstrap';
+import {TabsModule} from 'ngx-bootstrap/tabs';
+import {ButtonsModule} from 'ngx-bootstrap/buttons';
 
 
 @NgModule({

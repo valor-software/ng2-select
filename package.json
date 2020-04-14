@@ -1,6 +1,6 @@
 {
   "name": "ngx-select-ex",
-  "version": "3.7.8",
+  "version": "4.0.0",
   "description": "Angular based replacement for select boxes",
   "license": "MIT",
   "private": false,
@@ -49,31 +49,27 @@
     "multiselect",
     "multi-select"
   ],
-  "peerDependencies": {
-    "@angular/core": ">5.0.0",
-    "@angular/common": ">5.0.0",
-    "@angular/platform-browser": ">5.0.0"
-  },
+  "peerDependencies": {},
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.803.22",
-    "@angular/animations": "~8.0.1",
-    "@angular/cli": "~8.0.3",
-    "@angular/common": "~8.0.1",
-    "@angular/compiler": "~8.0.1",
-    "@angular/compiler-cli": "~8.0.1",
-    "@angular/core": "~8.0.1",
-    "@angular/forms": "~8.0.1",
-    "@angular/language-service": "~8.0.1",
-    "@angular/platform-browser": "~8.0.1",
-    "@angular/platform-browser-dynamic": "~8.0.1",
-    "@angular/router": "~8.0.1",
+    "@angular-devkit/build-angular": "~0.901.1",
+    "@angular/animations": "~9.1.1",
+    "@angular/cli": "~9.1.1",
+    "@angular/common": "~9.1.1",
+    "@angular/compiler": "~9.1.1",
+    "@angular/compiler-cli": "~9.1.1",
+    "@angular/core": "~9.1.1",
+    "@angular/forms": "~9.1.1",
+    "@angular/language-service": "~9.1.1",
+    "@angular/platform-browser": "~9.1.1",
+    "@angular/platform-browser-dynamic": "~9.1.1",
+    "@angular/router": "~9.1.1",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/marked": "^0.3.0",
-    "@types/node": "~8.9.4",
+    "@types/node": "^12.11.1",
     "@types/webpack": "^4.4.34",
     "codecov": "^3.0.0",
-    "codelyzer": "^5.0.0",
+    "codelyzer": "^5.1.2",
     "core-js": "^2.5.4",
     "escape-string-regexp": "^1.0.5",
     "html-loader": "^0.5.5",
@@ -87,17 +83,16 @@
     "karma-jasmine-html-reporter": "^1.4.0",
     "lodash": "^4.17.15",
     "markdown-loader": "^5.1.0",
-    "ng-packagr": "^5.3.0",
-    "ngx-bootstrap": "^5.0.0",
+    "ng-packagr": "^9.0.0",
+    "ngx-bootstrap": "^5.6.1",
     "pre-commit": "^1.2.2",
     "protractor": "~5.4.0",
-    "rxjs": "~6.4.0",
+    "rxjs": "~6.5.5",
     "standard-version": "^7.0.0",
     "ts-node": "~7.0.0",
-    "tslib": "^1.9.0",
     "tslint": "~5.15.0",
-    "typescript": "~3.4.3",
-    "zone.js": "~0.9.1"
+    "typescript": "~3.8.3",
+    "zone.js": "~0.10.2"
   },
   "contributors": [
     {
@@ -120,5 +115,8 @@
       "email": "otelnov@gmail.com",
       "url": "https://github.com/otelnov"
     }
-  ]
+  ],
+  "dependencies": {
+    "tslib": "^1.10.0"
+  }
 }
