@@ -24,8 +24,8 @@
     "precommit": "npm run test",
     "release": "standard-version --commit-all",
     "publish.ng4": "npm publish dist --tag ng4",
-    "publish.ng8": "npm publish dist",
-    "publish.ng8-dev": "npm publish dist --tag dev",
+    "publish.ng9": "npm publish dist",
+    "publish.ng9-dev": "npm publish dist --tag dev",
     "start": "ng serve",
     "test": "ng test --watch false",
     "test-coverage": "ng test --watch false --code-coverage"
