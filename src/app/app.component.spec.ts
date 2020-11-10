@@ -2,7 +2,6 @@ import {TestBed, async, fakeAsync, tick} from '@angular/core/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
-import {ButtonsModule, TabsModule} from 'ngx-bootstrap';
 import {AppComponent} from './app.component';
 import {NgxSelectModule} from './lib/public_api';
 import {SelectSectionComponent} from './demo/select-section';
@@ -12,6 +11,8 @@ import {RichDemoComponent} from './demo/select/rich-demo';
 import {MultipleDemoComponent} from './demo/select/multiple-demo';
 import {ChildrenDemoComponent} from './demo/select/children-demo';
 import {NoAutoCompleteDemoComponent} from './demo/select/no-autocomplete-demo';
+import {TabsModule} from 'ngx-bootstrap/tabs';
+import {ButtonsModule} from 'ngx-bootstrap/buttons';
 
 describe('AppComponent', () => {
     beforeEach(async(() => {

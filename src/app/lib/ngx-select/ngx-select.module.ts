@@ -16,7 +16,7 @@ import {INgxSelectOptions} from './ngx-select.interfaces';
     ]
 })
 export class NgxSelectModule {
-    static forRoot(options: INgxSelectOptions): ModuleWithProviders {
+    static forRoot(options: INgxSelectOptions): ModuleWithProviders<NgxSelectModule> {
         return {
             ngModule: NgxSelectModule,
             providers: [{provide: NGX_SELECT_OPTIONS, useValue: options}]

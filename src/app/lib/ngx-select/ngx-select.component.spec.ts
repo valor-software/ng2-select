@@ -227,7 +227,7 @@ describe('NgxSelectComponent', () => {
             fixture.componentInstance.select1.items = items1;
             fixture.componentInstance.select1.value = null;
 
-            fixture.detectChanges();
+            fixture.detectChanges(false);
             expect(fixture.componentInstance.select1.value).toEqual(3);
         });
     });
@@ -287,7 +287,7 @@ describe('NgxSelectComponent', () => {
             tick();
             expect(fixture.componentInstance.select1.value).toEqual([1, 3, 4]);
             fixture.componentInstance.select1.items = createItems([1, 2, 4, 5, 6]);
-            fixture.detectChanges();
+            fixture.detectChanges(false);
             expect(fixture.componentInstance.select1.value).toEqual([1, 4]);
         }));
 
@@ -1180,14 +1180,14 @@ describe('NgxSelectComponent', () => {
         it('for single select', () => {
             fixture.componentInstance.select1.multiple = false;
             fixture.componentInstance.select1.items = itemList;
-            fixture.detectChanges();
+            fixture.detectChanges(false);
             expect(fixture.componentInstance.select1.value).toBe(2);
         });
 
         it('for multiple select', () => {
             fixture.componentInstance.select1.multiple = true;
             fixture.componentInstance.select1.items = itemList;
-            fixture.detectChanges();
+            fixture.detectChanges(false);
             expect(fixture.componentInstance.select1.value).toEqual([2]);
         });
     });
