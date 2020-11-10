@@ -5,11 +5,9 @@
     "lib": {
         "entryFile": "./src/app/lib/public_api.ts",
         "externals": {
-            "lodash": "./node_modules/lodash/index.js",
             "escape-string-regexp": "./node_modules/escape-string-regexp/index.js"
         },
         "umdModuleIds": {
-            "lodash": "_",
             "escape-string-regexp": "escapeString"
         }
     }

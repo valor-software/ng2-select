@@ -20,21 +20,20 @@ import {
     ChangeDetectionStrategy,
     OnDestroy
 } from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {Observable, Subject, BehaviorSubject, EMPTY, of, from, merge, combineLatest} from 'rxjs';
-import {tap, filter, map, share, flatMap, toArray, distinctUntilChanged} from 'rxjs/operators';
-import * as lodashNs from 'lodash';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Observable, Subject, BehaviorSubject, EMPTY, of, from, merge, combineLatest } from 'rxjs';
+import { tap, filter, map, share, flatMap, toArray, distinctUntilChanged } from 'rxjs/operators';
+import isEqual from 'lodash.isequal';
 import * as escapeStringNs from 'escape-string-regexp';
-import {NgxSelectOptGroup, NgxSelectOption, TSelectOption} from './ngx-select.classes';
+import { NgxSelectOptGroup, NgxSelectOption, TSelectOption } from './ngx-select.classes';
 import {
     NgxSelectOptionDirective,
     NgxSelectOptionNotFoundDirective,
     NgxSelectOptionSelectedDirective
 } from './ngx-templates.directive';
-import {INgxOptionNavigated, INgxSelectOption, INgxSelectOptions} from './ngx-select.interfaces';
+import { INgxOptionNavigated, INgxSelectOption, INgxSelectOptions } from './ngx-select.interfaces';
 
-const _ = lodashNs;
 const escapeString = escapeStringNs;
 
 export const NGX_SELECT_OPTIONS = new InjectionToken<any>('NGX_SELECT_OPTIONS');
@@ -108,16 +107,16 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Output() public navigated = new EventEmitter<INgxOptionNavigated>();
     @Output() public selectionChanges = new EventEmitter<INgxSelectOption[]>();
 
-    @ViewChild('main', {static: true}) protected mainElRef: ElementRef;
-    @ViewChild('input', {static: false}) public inputElRef: ElementRef;
-    @ViewChild('choiceMenu', {static: false}) protected choiceMenuElRef: ElementRef;
+    @ViewChild('main', { static: true }) protected mainElRef: ElementRef;
+    @ViewChild('input', { static: false }) public inputElRef: ElementRef;
+    @ViewChild('choiceMenu', { static: false }) protected choiceMenuElRef: ElementRef;
 
-    @ContentChild(NgxSelectOptionDirective, {read: TemplateRef, static: true}) templateOption: NgxSelectOptionDirective;
+    @ContentChild(NgxSelectOptionDirective, { read: TemplateRef, static: true }) templateOption: NgxSelectOptionDirective;
 
-    @ContentChild(NgxSelectOptionSelectedDirective, {read: TemplateRef, static: true})
+    @ContentChild(NgxSelectOptionSelectedDirective, { read: TemplateRef, static: true })
     templateSelectedOption: NgxSelectOptionSelectedDirective;
 
-    @ContentChild(NgxSelectOptionNotFoundDirective, {read: TemplateRef, static: true})
+    @ContentChild(NgxSelectOptionNotFoundDirective, { read: TemplateRef, static: true })
     templateOptionNotFound: NgxSelectOptionNotFoundDirective;
 
     public optionsOpened = false;
@@ -175,10 +174,10 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
             this.subjDefaultValue
         ).pipe(
             map(([eVal, dVal]: [any[], any[]]) => {
-                const newVal = _.isEqual(eVal, dVal) ? [] : eVal;
+                const newVal = isEqual(eVal, dVal) ? [] : eVal;
                 return newVal.length ? newVal : dVal;
             }),
-            distinctUntilChanged((x, y) => _.isEqual(x, y)),
+            distinctUntilChanged((x, y) => isEqual(x, y)),
             share()
         );
 
@@ -187,7 +186,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
             .pipe(map(([actualValue]: [any[], any[]]) => actualValue))
             .subscribe((actualValue: any[]) => {
                 this.actualValue = actualValue;
-                if (!_.isEqual(actualValue, cacheExternalValue)) {
+                if (!isEqual(actualValue, cacheExternalValue)) {
                     cacheExternalValue = actualValue;
                     if (this.multiple) {
                         this.onChange(actualValue);
@@ -227,7 +226,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                     optionsSelected.push(...keptSelectedOptions);
                 }
 
-                if (!_.isEqual(optionsSelected, this.subjOptionsSelected.value)) {
+                if (!isEqual(optionsSelected, this.subjOptionsSelected.value)) {
                     this.subjOptionsSelected.next(optionsSelected);
                     this.cd.markForCheck();
                 }
@@ -272,7 +271,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     }
 
     public setBtnSize() {
-        return {'btn-sm': this.size === 'small', 'btn-lg': this.size === 'large'};
+        return { 'btn-sm': this.size === 'small', 'btn-lg': this.size === 'large' };
     }
 
     public get optionsSelected(): NgxSelectOption[] {
@@ -321,7 +320,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     private navigateOption(navigation: ENavigation) {
         this.optionsFilteredFlat().pipe(
             map<NgxSelectOption[], INgxOptionNavigated>((options: NgxSelectOption[]) => {
-                const navigated: INgxOptionNavigated = {index: -1, activeOption: null, filteredOptionList: options};
+                const navigated: INgxOptionNavigated = { index: -1, activeOption: null, filteredOptionList: options };
                 let newActiveIdx;
                 switch (navigation) {
                     case ENavigation.first:
