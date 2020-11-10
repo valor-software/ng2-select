@@ -1,10 +1,10 @@
-import {Component, OnDestroy} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {INgxSelectOption} from '../../lib/ngx-select/ngx-select.interfaces';
+import { Component, OnDestroy } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { INgxSelectOption } from '../../lib/ngx-select/ngx-select.interfaces';
 
 @Component({
     selector: 'single-demo',
-    templateUrl: './single-demo.html'
+    templateUrl: './single-demo.html',
 })
 export class SingleDemoComponent implements OnDestroy {
     public items: string[] = ['Amsterdam', 'Antwerp', 'Athens', 'Barcelona',
@@ -34,7 +34,7 @@ export class SingleDemoComponent implements OnDestroy {
         }, 2000);
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         clearTimeout(this._ngxDefaultTimeout);
         clearInterval(this._ngxDefaultInterval);
     }

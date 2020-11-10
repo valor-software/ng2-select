@@ -1,5 +1,5 @@
-import {Component, ViewEncapsulation} from '@angular/core';
-import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
+import { Component, ViewEncapsulation } from '@angular/core';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 const COLORS = [
     {name: 'Blue 10', hex: '#C0E6FF'},
@@ -41,7 +41,7 @@ const COLORS = [
     {name: 'Yellow 70', hex: '#574A00'},
     {name: 'Yellow 80', hex: '#3C3200'},
     {name: 'Yellow 90', hex: '#281E00'},
-    {name: 'Yellow 100', hex: '#020100'}
+    {name: 'Yellow 100', hex: '#020100'},
 ];
 
 @Component({
@@ -54,7 +54,7 @@ const COLORS = [
         margin-right: 4px;
         border: 1px solid #000;
     }`],
-    encapsulation: ViewEncapsulation.None  // Enable dynamic HTML styles
+    encapsulation: ViewEncapsulation.None,  // Enable dynamic HTML styles
 })
 export class RichDemoComponent {
     public items: any[] = COLORS;
@@ -65,7 +65,7 @@ export class RichDemoComponent {
     constructor(public sanitizer: DomSanitizer) {
     }
 
-    style(data: string): SafeStyle {
+    public style(data: string): SafeStyle {
         return this.sanitizer.bypassSecurityTrustStyle(data);
     }
 }

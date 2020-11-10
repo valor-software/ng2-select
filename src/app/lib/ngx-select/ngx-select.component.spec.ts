@@ -1,10 +1,9 @@
-import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-
-import {Component, ViewChild} from '@angular/core';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {BehaviorSubject} from 'rxjs';
-import {NgxSelectModule} from './ngx-select.module';
-import {NgxSelectComponent} from './ngx-select.component';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { Component, ViewChild } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
+import { NgxSelectModule } from './ngx-select.module';
+import { NgxSelectComponent } from './ngx-select.component';
 import createSpy = jasmine.createSpy;
 
 @Component({
@@ -49,14 +48,14 @@ import createSpy = jasmine.createSpy;
                     (select)="select2.doSelect($event)"
                     (remove)="select2.doRemove($event)"></ngx-select>
         <ngx-select id="sel-3" #component3 [items]="select3.items$ | async"></ngx-select>
-    `
+    `,
 })
 class TestNgxSelectComponent {
     @ViewChild('component1', {static: true}) public component1: NgxSelectComponent;
     @ViewChild('component2', {static: true}) public component2: NgxSelectComponent;
     @ViewChild('component3', {static: true}) public component3: NgxSelectComponent;
 
-    public select1: any = {
+    public select1 = {
         value: null,
         defaultValue: [],
 
@@ -79,11 +78,11 @@ class TestNgxSelectComponent {
         doBlur: () => null,
         doOpen: () => null,
         doClose: () => null,
-        doSelect: () => null,
-        doRemove: () => null
+        doSelect: event => null,
+        doRemove: event => null,
     };
 
-    public select2: any = {
+    public select2 = {
         formControl: new FormControl(),
         defaultValue: [],
 
@@ -97,12 +96,12 @@ class TestNgxSelectComponent {
         noAutoComplete: false,
         items: [],
 
-        doSelect: () => null,
-        doRemove: () => null
+        doSelect: event => null,
+        doRemove: event => null,
     };
 
     public select3 = {
-        items$: new BehaviorSubject<any[]>([])
+        items$: new BehaviorSubject<any[]>([]),
     };
 }
 
@@ -118,19 +117,19 @@ const items2 = [
     {uuid: 'uuid-7', name: 'v7'},
     {uuid: 'uuid-8', name: 'v8'},
     {uuid: 'uuid-9', name: 'v9'},
-    {uuid: 'uuid-10', name: 'v10'}
+    {uuid: 'uuid-10', name: 'v10'},
 ];
 
 const createKeyboardEvent = (typeArg: string, code: string) => {
     const customEvent = new CustomEvent(typeArg, {bubbles: true, cancelable: true});
-    customEvent['code'] = code;
+    (customEvent as any).code = code;
     // customEvent['key'] = key;
     return customEvent;
 };
 
 const createKeyupEvent = (key: string) => {
     return new KeyboardEvent('keyup', {
-        key
+        key,
     });
 };
 
@@ -140,25 +139,27 @@ const createMouseEvent = (typeArg: string, clientX: number, clientY: number) => 
 
 describe('NgxSelectComponent', () => {
     let fixture: ComponentFixture<TestNgxSelectComponent>;
-    const el = (id: number) => fixture.debugElement.nativeElement.querySelector(`#sel-${id} .ngx-select`);
-    const formControl = (id: number) => el(id).querySelector('.ngx-select__toggle, .ngx-select__search');
-    const formControlInput = (id: number) => el(id).querySelector('.ngx-select__search');
-    const selectChoicesContainer = (id: number) => el(id).querySelector('.ngx-select__choices');
-    const selectItemList = (id: number) => fixture.debugElement.nativeElement
-        .querySelectorAll(`#sel-${id} .ngx-select.open .ngx-select__item`);
-    const selectItemActive = (id: number) => el(id).querySelector('.ngx-select__item_active');
-    const selectItemNoFound = (id: number) => el(id).querySelector('.ngx-select__item_no-found');
-    const selectedItem = (id: number) => el(id).querySelector('.ngx-select__selected-single'); // select multiple = false
-    const selectedItems = (id: number) => el(id).querySelectorAll('.ngx-select__selected-plural'); // select multiple = true
+    const querySelector = (element: HTMLElement, selector: string) => element.querySelector(selector) as HTMLElement;
+    const querySelectorAll = (element: HTMLElement, selector: string) => element.querySelectorAll(selector) as NodeListOf<HTMLElement>;
 
-    beforeEach(async(() => {
+    const el = (id: number) => querySelector(fixture.debugElement.nativeElement, `#sel-${id} .ngx-select`);
+    const formControl = (id: number) => querySelector(el(id), '.ngx-select__toggle, .ngx-select__search');
+    const formControlInput = (id: number) => querySelector(el(id), '.ngx-select__search') as HTMLInputElement;
+    const selectChoicesContainer = (id: number) => querySelector(el(id), '.ngx-select__choices');
+    const selectItemList = (id: number) => querySelectorAll(fixture.debugElement.nativeElement, `#sel-${id} .ngx-select.open .ngx-select__item`);
+    const selectItemActive = (id: number) => querySelector(el(id), '.ngx-select__item_active');
+    const selectItemNoFound = (id: number) => querySelector(el(id), '.ngx-select__item_no-found');
+    const selectedItem = (id: number) => querySelector(el(id), '.ngx-select__selected-single'); // select multiple = false
+    const selectedItems = (id: number) => querySelectorAll(el(id), '.ngx-select__selected-plural'); // select multiple = true
+
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [FormsModule, ReactiveFormsModule, NgxSelectModule],
-            declarations: [TestNgxSelectComponent]
+            declarations: [TestNgxSelectComponent],
         }).compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(TestNgxSelectComponent);
         fixture.detectChanges();
         // tick(200);
@@ -211,7 +212,7 @@ describe('NgxSelectComponent', () => {
             const valueChanged = createSpy('valueChanged');
             fixture.componentInstance.select2.formControl.valueChanges.subscribe(v => valueChanged(v));
 
-            fixture.componentInstance.select2.defaultValue = 3;
+            fixture.componentInstance.select2.defaultValue = 3 as any;
             fixture.componentInstance.select2.multiple = false;
             fixture.componentInstance.select2.items = items1;
             fixture.componentInstance.select2.formControl.setValue(null, {emitEvent: false});
@@ -222,7 +223,7 @@ describe('NgxSelectComponent', () => {
 
         it('equal default value by ngModel', () => {
             fixture.detectChanges();
-            fixture.componentInstance.select1.defaultValue = 3;
+            fixture.componentInstance.select1.defaultValue = 3 as any;
             fixture.componentInstance.select1.multiple = false;
             fixture.componentInstance.select1.items = items1;
             fixture.componentInstance.select1.value = null;
@@ -256,11 +257,11 @@ describe('NgxSelectComponent', () => {
             fixture.detectChanges();
             expect(fixture.componentInstance.select2.formControl.value).toEqual(2);
 
-            fixture.componentInstance.select2.defaultValue = 1;
+            fixture.componentInstance.select2.defaultValue = 1 as any;
             fixture.detectChanges();
             expect(fixture.componentInstance.select2.formControl.value).toEqual(2);
 
-            fixture.componentInstance.select2.defaultValue = 2;
+            fixture.componentInstance.select2.defaultValue = 2 as any;
             fixture.detectChanges();
             expect(fixture.componentInstance.select2.formControl.value).toEqual(2);
 
@@ -514,9 +515,9 @@ describe('NgxSelectComponent', () => {
         });
 
         afterEach(() => {
-            const viewPortHeight = selectChoicesContainer(1).clientHeight,
-                scrollTop = selectChoicesContainer(1).scrollTop,
-                activeItemTop = selectItemActive(1).offsetTop;
+            const viewPortHeight = selectChoicesContainer(1).clientHeight;
+            const scrollTop = selectChoicesContainer(1).scrollTop;
+            const activeItemTop = selectItemActive(1).offsetTop;
             expect((scrollTop <= activeItemTop) && (activeItemTop <= scrollTop + viewPortHeight)).toBeTruthy();
         });
     });
@@ -573,9 +574,9 @@ describe('NgxSelectComponent', () => {
         });
 
         afterEach(() => {
-            const viewPortHeight = selectChoicesContainer(3).clientHeight,
-                scrollTop = selectChoicesContainer(3).scrollTop,
-                activeItemTop = selectItemActive(3).offsetTop;
+            const viewPortHeight = selectChoicesContainer(3).clientHeight;
+            const scrollTop = selectChoicesContainer(3).scrollTop;
+            const activeItemTop = selectItemActive(3).offsetTop;
             expect((scrollTop <= activeItemTop) && (activeItemTop <= scrollTop + viewPortHeight)).toBeTruthy();
         });
     });
@@ -711,7 +712,8 @@ describe('NgxSelectComponent', () => {
     });
 
     describe('should remove selected', () => {
-        let doSelect, doRemove;
+        let doSelect;
+        let doRemove;
 
         describe('from select with ngModel', () => {
             beforeEach(() => {
@@ -729,7 +731,7 @@ describe('NgxSelectComponent', () => {
             });
 
             it('a single item', () => {
-                el(1).querySelector('.ngx-select__clear').click();
+                querySelector(el(1), '.ngx-select__clear').click();
                 fixture.detectChanges();
                 expect(selectedItem(1)).toBeFalsy();
                 expect(fixture.componentInstance.select1.value).toEqual(null);
@@ -738,7 +740,7 @@ describe('NgxSelectComponent', () => {
             it('multiple items', () => {
                 fixture.componentInstance.select1.multiple = true;
                 fixture.detectChanges();
-                selectedItems(1)[0].querySelector('.ngx-select__clear').click();
+                querySelector(selectedItems(1)[0], '.ngx-select__clear').click();
                 fixture.detectChanges();
                 expect(selectedItems(1).length).toBe(0);
                 expect(fixture.componentInstance.select1.value).toEqual([]);
@@ -768,7 +770,7 @@ describe('NgxSelectComponent', () => {
             });
 
             it('a single item', () => {
-                el(2).querySelector('.ngx-select__clear').click();
+                querySelector(el(2), '.ngx-select__clear').click();
                 fixture.detectChanges();
                 expect(selectedItem(2)).toBeFalsy();
                 expect(fixture.componentInstance.select2.formControl.value).toEqual(null);
@@ -777,7 +779,7 @@ describe('NgxSelectComponent', () => {
             it('multiple items', () => {
                 fixture.componentInstance.select2.multiple = true;
                 fixture.detectChanges();
-                selectedItems(2)[0].querySelector('.ngx-select__clear').click();
+                querySelector(selectedItems(2)[0], '.ngx-select__clear').click();
                 fixture.detectChanges();
                 expect(selectedItems(2).length).toBe(0);
                 expect(fixture.componentInstance.select2.formControl.value).toEqual([]);
@@ -811,7 +813,7 @@ describe('NgxSelectComponent', () => {
             fixture.detectChanges();
             fixture.detectChanges();
             expect(formControlInput(1)).toBeTruthy();
-            expect(formControlInput(1)).toBe(document.activeElement);
+            expect(formControlInput(1) as Element).toBe(document.activeElement);
         });
     });
 
@@ -935,7 +937,6 @@ describe('NgxSelectComponent', () => {
         });
 
         it('objects without default id & text fields ', () => {
-            fixture.componentInstance.select1.idField = 'uuid';
             fixture.componentInstance.select1.optionTextField = 'name';
             fixture.componentInstance.select1.items = items2;
             fixture.detectChanges();
@@ -961,7 +962,7 @@ describe('NgxSelectComponent', () => {
         it('objects with children fields by default field names', () => {
             fixture.componentInstance.select1.items = [
                 {label: '1', options: [{value: 11, text: '11'}]},
-                {label: '2', options: [{value: 21, text: '21'}, {value: 22, text: '22'}]}
+                {label: '2', options: [{value: 21, text: '21'}, {value: 22, text: '22'}]},
             ];
             fixture.detectChanges();
             formControl(1).click();
@@ -976,7 +977,7 @@ describe('NgxSelectComponent', () => {
             fixture.componentInstance.select1.optionTextField = 'xText';
             fixture.componentInstance.select1.items = [
                 {xText: '1', xChildren: {xId: 11, xText: '11'}},
-                {xText: '2', xChildren: [{xId: 21, xText: '21'}, {xId: 22, xText: '22'}]}
+                {xText: '2', xChildren: [{xId: 21, xText: '21'}, {xId: 22, xText: '22'}]},
             ];
             fixture.detectChanges();
             formControl(1).click();
@@ -1119,7 +1120,7 @@ describe('NgxSelectComponent', () => {
 
         beforeEach(fakeAsync(() => {
             fixture.componentInstance.select2.items = lazyItems;
-            fixture.componentInstance.select2.formControl.valueChanges.subscribe((v) => valueChanged(v));
+            fixture.componentInstance.select2.formControl.valueChanges.subscribe(v => valueChanged(v));
             fixture.detectChanges();
             fixture.componentInstance.select2.formControl.setValue(3);
             fixture.detectChanges();
@@ -1134,7 +1135,10 @@ describe('NgxSelectComponent', () => {
     });
 
     describe('should emit events focus & blur', () => {
-        let doFocus, doBlur, doOpen, doClose;
+        let doFocus;
+        let doBlur;
+        let doOpen;
+        let doClose;
 
         beforeEach(() => {
             doFocus = spyOn(fixture.componentInstance.select1, 'doFocus');

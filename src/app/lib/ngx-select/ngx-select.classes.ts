@@ -1,14 +1,14 @@
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import * as escapeStringNs from 'escape-string-regexp';
-import {INgxSelectOptGroup, INgxSelectOption, INgxSelectOptionBase, TNgxSelectOptionType} from './ngx-select.interfaces';
+import { INgxSelectOptGroup, INgxSelectOption, INgxSelectOptionBase, TNgxSelectOptionType } from './ngx-select.interfaces';
 
 const escapeString = escapeStringNs;
 
 export class NgxSelectOption implements INgxSelectOption, INgxSelectOptionBase {
-    readonly type: TNgxSelectOptionType = 'option';
+    public readonly type: TNgxSelectOptionType = 'option';
 
-    highlightedText: SafeHtml;
-    active: boolean;
+    public highlightedText: SafeHtml;
+    public active: boolean;
 
     constructor(public value: number | string,
                 public text: string,
@@ -40,7 +40,7 @@ export class NgxSelectOption implements INgxSelectOption, INgxSelectOptionBase {
 }
 
 export class NgxSelectOptGroup implements INgxSelectOptGroup, INgxSelectOptionBase {
-    readonly type: TNgxSelectOptionType = 'optgroup';
+    public readonly type: TNgxSelectOptionType = 'optgroup';
 
     public optionsFiltered: NgxSelectOption[];
 

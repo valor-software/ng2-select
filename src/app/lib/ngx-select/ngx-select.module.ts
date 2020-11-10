@@ -1,25 +1,25 @@
-import {ModuleWithProviders, NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {NGX_SELECT_OPTIONS, NgxSelectComponent} from './ngx-select.component';
-import {NgxSelectOptionDirective, NgxSelectOptionNotFoundDirective, NgxSelectOptionSelectedDirective} from './ngx-templates.directive';
-import {INgxSelectOptions} from './ngx-select.interfaces';
+import { ModuleWithProviders, NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { NGX_SELECT_OPTIONS, NgxSelectComponent } from './ngx-select.component';
+import { NgxSelectOptionDirective, NgxSelectOptionNotFoundDirective, NgxSelectOptionSelectedDirective } from './ngx-templates.directive';
+import { INgxSelectOptions } from './ngx-select.interfaces';
 
 @NgModule({
     imports: [
-        CommonModule
+        CommonModule,
     ],
     declarations: [NgxSelectComponent,
-        NgxSelectOptionDirective, NgxSelectOptionSelectedDirective, NgxSelectOptionNotFoundDirective
+        NgxSelectOptionDirective, NgxSelectOptionSelectedDirective, NgxSelectOptionNotFoundDirective,
     ],
     exports: [NgxSelectComponent,
-        NgxSelectOptionDirective, NgxSelectOptionSelectedDirective, NgxSelectOptionNotFoundDirective
-    ]
+        NgxSelectOptionDirective, NgxSelectOptionSelectedDirective, NgxSelectOptionNotFoundDirective,
+    ],
 })
 export class NgxSelectModule {
-    static forRoot(options: INgxSelectOptions): ModuleWithProviders<NgxSelectModule> {
+    public static forRoot(options: INgxSelectOptions): ModuleWithProviders<NgxSelectModule> {
         return {
             ngModule: NgxSelectModule,
-            providers: [{provide: NGX_SELECT_OPTIONS, useValue: options}]
+            providers: [{provide: NGX_SELECT_OPTIONS, useValue: options}],
         };
     }
 }

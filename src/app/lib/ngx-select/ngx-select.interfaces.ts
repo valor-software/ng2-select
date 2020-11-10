@@ -1,4 +1,4 @@
-import {NgxSelectOption, TSelectOption} from './ngx-select.classes';
+import { NgxSelectOption, TSelectOption } from './ngx-select.classes';
 
 export type TNgxSelectOptionType = 'option' | 'optgroup';
 

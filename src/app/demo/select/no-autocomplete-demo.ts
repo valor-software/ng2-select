@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'no-autocomplete-demo',
-    templateUrl: './no-autocomplete-demo.html'
+    templateUrl: './no-autocomplete-demo.html',
 })
 export class NoAutoCompleteDemoComponent {
     public _items: string[] = ['Amsterdam', 'Antwerp', 'Athens', 'Barcelona',

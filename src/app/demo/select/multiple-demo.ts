@@ -1,9 +1,9 @@
-import {Component} from '@angular/core';
-import {INgxSelectOption} from '../../lib/ngx-select/ngx-select.interfaces';
+import { Component } from '@angular/core';
+import { INgxSelectOption } from '../../lib/ngx-select/ngx-select.interfaces';
 
 @Component({
     selector: 'multiple-demo',
-    templateUrl: './multiple-demo.html'
+    templateUrl: './multiple-demo.html',
 })
 export class MultipleDemoComponent {
     public items: string[] = ['Amsterdam', 'Antwerp', 'Athens', 'Barcelona',

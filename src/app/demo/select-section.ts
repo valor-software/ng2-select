@@ -1,35 +1,36 @@
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 
 declare const require: any;
 
+// tslint:disable-next-line:no-var-requires
 const doc = require('html-loader!markdown-loader!../doc.md');
 
-const tabDesc: any = {
+const tabDesc = {
     single: {
         heading: 'Single',
         ts: require('!!raw-loader!./select/single-demo.ts'),
-        html: require('!!raw-loader!./select/single-demo.html')
+        html: require('!!raw-loader!./select/single-demo.html'),
     },
     multiple: {
         heading: 'Multiple',
         ts: require('!!raw-loader!./select/multiple-demo.ts'),
-        html: require('!!raw-loader!./select/multiple-demo.html')
+        html: require('!!raw-loader!./select/multiple-demo.html'),
     },
     children: {
         heading: 'Children',
         ts: require('!!raw-loader!./select/children-demo.ts'),
-        html: require('!!raw-loader!./select/children-demo.html')
+        html: require('!!raw-loader!./select/children-demo.html'),
     },
     rich: {
         heading: 'Rich',
         ts: require('!!raw-loader!./select/rich-demo.ts'),
-        html: require('!!raw-loader!./select/rich-demo.html')
+        html: require('!!raw-loader!./select/rich-demo.html'),
     },
     noAutoComplete: {
         heading: 'noAutoComplete',
         ts: require('!!raw-loader!./select/no-autocomplete-demo.ts'),
-        html: require('!!raw-loader!./select/no-autocomplete-demo.html')
-    }
+        html: require('!!raw-loader!./select/no-autocomplete-demo.html'),
+    },
 };
 
 @Component({
@@ -72,10 +73,10 @@ const tabDesc: any = {
                 <div class="card-body doc-api" [innerHTML]="doc"></div>
             </div>
         </section>
-    `
+    `,
 })
 export class SelectSectionComponent {
     public currentHeading = 'Single';
-    public tabDesc: any = tabDesc;
+    public tabDesc = tabDesc;
     public doc: string = doc;
 }
