@@ -437,7 +437,9 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
                     this.optionsOpen();
                     break;
                 case this.keyCodeToRemoveSelected:
-                    this.optionRemove(this.subjOptionsSelected.value[this.subjOptionsSelected.value.length - 1], event);
+                    if (this.multiple || this.canClearNotMultiple()) {
+                        this.optionRemove(this.subjOptionsSelected.value[this.subjOptionsSelected.value.length - 1], event);
+                    }
                     break;
             }
         }
