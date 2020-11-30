@@ -792,6 +792,28 @@ describe('NgxSelectComponent', () => {
                 expect(doRemove).toHaveBeenCalledWith(0);
             });
         });
+
+        it('should not remove items on `allowClear=false` for non multiselect', () => {
+            // issue: https://github.com/optimistex/ngx-select-ex/issues/191
+
+            doRemove = spyOn(fixture.componentInstance.select2, 'doRemove');
+            fixture.componentInstance.select2.items = items1;
+            fixture.componentInstance.select2.allowClear = false;
+            fixture.detectChanges();
+            formControl(2).click();
+            fixture.detectChanges();
+            selectItemList(2)[0].click();
+            fixture.detectChanges();
+            expect(selectedItem(2).innerHTML).toContain('item zero');
+            expect(fixture.componentInstance.select2.formControl.value).toEqual(0);
+
+            el(2).dispatchEvent(createKeyboardEvent('keydown', 'Delete'));
+            fixture.detectChanges();
+            expect(selectedItem(2).innerHTML).toContain('item zero');
+            expect(fixture.componentInstance.select2.formControl.value).toEqual(0);
+
+            expect(doRemove).not.toHaveBeenCalled();
+        });
     });
 
     describe('after click', () => {
