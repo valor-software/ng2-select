@@ -1,116 +1,435 @@
-<a name="2.0.0"></a>
-# [2.0.0](https://github.com/valor-software/ng2-select/compare/v1.2.0...v2.0.0) (2017-11-23)
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [6.0.1](https://github.com/optimistex/ngx-select-ex/compare/v5.0.3...v6.0.1) (2020-12-01)
+
+### [5.0.3](https://github.com/optimistex/ngx-select-ex/compare/v5.0.2...v5.0.3) (2020-11-30)
+
+### [5.0.2](https://github.com/optimistex/ngx-select-ex/compare/v5.0.1...v5.0.2) (2020-11-10)
+
+### [5.0.1](https://github.com/optimistex/ngx-select-ex/compare/v4.0.0...v5.0.1) (2020-11-10)
+
+### [3.7.8](https://github.com/optimistex/ngx-select-ex/compare/v3.7.7...v3.7.8) (2020-04-14)
+
+### [3.7.7](https://github.com/optimistex/ngx-select-ex/compare/v3.7.6...v3.7.7) (2020-03-11)
+
+### [3.7.6](https://github.com/optimistex/ngx-select-ex/compare/v3.7.5...v3.7.6) (2020-01-13)
 
 
 ### Bug Fixes
 
-* **demo:** update dependencies, fix aot build ([#902](https://github.com/valor-software/ng2-select/issues/902)) ([6328439](https://github.com/valor-software/ng2-select/commit/6328439))
-* **test:** add tsconfig for specs ([#904](https://github.com/valor-software/ng2-select/issues/904)) ([ce84518](https://github.com/valor-software/ng2-select/commit/ce84518))
+* NgxSelectComponent.onMouseEnter ([a95d11a](https://github.com/optimistex/ngx-select-ex/commit/a95d11a))
+
+### [3.7.5](https://github.com/optimistex/ngx-select-ex/compare/v3.7.4...v3.7.5) (2020-01-13)
+
+### [3.7.4](https://github.com/optimistex/ngx-select-ex/compare/v3.7.3...v3.7.4) (2019-12-07)
+
+
+### Bug Fixes
+
+* removed whitespaces for linting ([cd0faae](https://github.com/optimistex/ngx-select-ex/commit/cd0faae))
+* ViewDestroyedError: detectChanges ([a4de144](https://github.com/optimistex/ngx-select-ex/commit/a4de144))
+
+### [3.7.3](https://github.com/optimistex/ngx-select-ex/compare/v3.6.7...v3.7.3) (2019-10-08)
+
+### 3.7.2 (2019-08-06)
+
+### 3.7.1 (2019-08-06)
+
+## 3.7.0 (2019-06-29)
+
+### 3.6.12-dev (2019-05-14)
+
+### 3.6.11-dev (2019-05-14)
+
+### 3.6.10 (2019-05-14)
+
+### 3.6.9-dev (2019-01-24)
+
+### 3.6.8 (2018-12-17)
+
+<a name="3.6.7"></a>
+## [3.6.7](https://github.com/optimistex/ngx-select-ex/compare/v2.0.0...v3.6.7) (2018-11-02)
+
+
+### Bug Fixes
+
+* ngx-select-ex enable() doesn't work ([b68aa6f](https://github.com/optimistex/ngx-select-ex/commit/b68aa6f))
+
+
+
+<a name="3.6.5-dev"></a>
+## 3.6.5-dev (2018-10-30)
+
+
+
+<a name="3.6.4-dev"></a>
+## 3.6.4-dev (2018-10-30)
+
+
+
+<a name="3.6.3"></a>
+## 3.6.3 (2018-10-28)
+
+
+### Bug Fixes
+
+* Multi selections are always sorted in alphabetical order. [#121](https://github.com/optimistex/ngx-select-ex/issues/121) ([be6badf](https://github.com/optimistex/ngx-select-ex/commit/be6badf))
+
+
+
+<a name="3.6.2-dev"></a>
+## 3.6.2-dev (2018-10-25)
+
+
+
+<a name="3.6.1"></a>
+## 3.6.1 (2018-10-25)
+
+
+### Bug Fixes
+
+* highlighted text calculation ([ad2f9a1](https://github.com/optimistex/ngx-select-ex/commit/ad2f9a1))
+* improve performance ([512b87f](https://github.com/optimistex/ngx-select-ex/commit/512b87f))
+* improve the speed of the subjOptionsSelected calculation ([dd574d7](https://github.com/optimistex/ngx-select-ex/commit/dd574d7))
+* keyAction order ([35b920a](https://github.com/optimistex/ngx-select-ex/commit/35b920a))
+
+
+
+<a name="3.6.0-dev"></a>
+# 3.6.0-dev (2018-09-29)
+
+
+### Bug Fixes
+
+* fixed inputElRef accessibility problem ([f0043ca](https://github.com/optimistex/ngx-select-ex/commit/f0043ca))
+* highlight selected item ([a660d86](https://github.com/optimistex/ngx-select-ex/commit/a660d86))
 
 
 ### Features
 
-* **forms:** adds functionality to make ng2-select compatible with form-controls ([#881](https://github.com/valor-software/ng2-select/issues/881)) ([201c6e2](https://github.com/valor-software/ng2-select/commit/201c6e2))
+* add option to auto activate element on mouse enter ([0b70a1b](https://github.com/optimistex/ngx-select-ex/commit/0b70a1b))
+* use OnPush change detection ([73e15bb](https://github.com/optimistex/ngx-select-ex/commit/73e15bb))
 
 
 
-<a name="1.2.0"></a>
-# [1.2.0](https://github.com/valor-software/ng2-select/compare/v1.1.2...v1.2.0) (2017-01-18)
+<a name="3.5.13-dev"></a>
+## 3.5.13-dev (2018-06-19)
 
 
 ### Bug Fixes
 
-* add checking for not udefined document object ([#541](https://github.com/valor-software/ng2-select/issues/541)) ([7330f47](https://github.com/valor-software/ng2-select/commit/7330f47))
-* **demo:** Removed duplicated attribute (data)="value" from multiple-demo.html ([#516](https://github.com/valor-software/ng2-select/issues/516)) ([7cbeb46](https://github.com/valor-software/ng2-select/commit/7cbeb46))
-* **forms:** Validation compliant to ngModel ([#575](https://github.com/valor-software/ng2-select/issues/575)) ([aaadcbb](https://github.com/valor-software/ng2-select/commit/aaadcbb))
-* **select:** compare the ID of a SelectItem instead of its text ([#358](https://github.com/valor-software/ng2-select/issues/358)) ([5c3a4e1](https://github.com/valor-software/ng2-select/commit/5c3a4e1))
+* wrong behaviour with the keepSelectedItems option ([5eaf544](https://github.com/optimistex/ngx-select-ex/commit/5eaf544))
+
+
+
+<a name="3.5.12-dev"></a>
+## 3.5.12-dev (2018-06-19)
+
+
+
+<a name="3.5.11-dev"></a>
+## 3.5.11-dev (2018-06-18)
+
+
+### Bug Fixes
+
+* placeholder out of the edges https://github.com/optimistex/ngx-select-ex/issues/87 ([8feec36](https://github.com/optimistex/ngx-select-ex/commit/8feec36))
+
+
+
+<a name="3.5.10-dev"></a>
+## 3.5.10-dev (2018-06-18)
+
+
+
+<a name="3.5.9"></a>
+## 3.5.9 (2018-06-07)
+
+
+
+<a name="3.5.8"></a>
+## 3.5.8 (2018-06-07)
+
+
+
+<a name="3.5.7-dev"></a>
+## 3.5.7-dev (2018-06-04)
+
+
+### Bug Fixes
+
+* If 'items' contains no data, option-not-found template not showing https://github.com/optimistex/ngx-select-ex/issues/81 ([0bfddaa](https://github.com/optimistex/ngx-select-ex/commit/0bfddaa))
+
+
+
+<a name="3.5.6-dev"></a>
+## 3.5.6-dev (2018-05-29)
+
+
+
+<a name="3.5.5-dev"></a>
+## 3.5.5-dev (2018-05-25)
+
+
+### Bug Fixes
+
+* Selection causing page to scroll to top in IE https://github.com/optimistex/ngx-select-ex/issues/75 ([08ca700](https://github.com/optimistex/ngx-select-ex/commit/08ca700))
+
+
+
+<a name="3.5.4"></a>
+## 3.5.4 (2018-04-14)
+
+
+### Bug Fixes
+
+* The enter key works wrong when used immediately after filtering https://github.com/optimistex/ngx-select-ex/issues/60 ([f219709](https://github.com/optimistex/ngx-select-ex/commit/f219709))
+
+
+
+<a name="3.5.3"></a>
+## 3.5.3 (2018-04-07)
+
+
+
+<a name="3.5.2"></a>
+## 3.5.2 (2018-04-03)
+
+
+
+<a name="3.5.1"></a>
+## 3.5.1 (2018-04-03)
+
+
+
+<a name="3.5.0"></a>
+# 3.5.0 (2018-04-03)
+
+
+
+<a name="3.4.3"></a>
+## 3.4.3 (2018-04-03)
+
+
+### Bug Fixes
+
+* The text filter does not work in Chrome Mobile (Android Version) https://github.com/optimistex/ngx-select-ex/issues/41 ([e2fb6fc](https://github.com/optimistex/ngx-select-ex/commit/e2fb6fc))
+
+
+
+<a name="3.4.0"></a>
+# 3.4.0 (2018-03-06)
+
+
+### Bug Fixes
+
+* When the dropdown item is too long, the textbox breaks - https://github.com/optimistex/ngx-select-ex/issues/29 ([d8f7127](https://github.com/optimistex/ngx-select-ex/commit/d8f7127))
+
+
+
+<a name="3.3.12"></a>
+## 3.3.12 (2018-02-15)
+
+
+### Bug Fixes
+
+* error on pressing the key Enter when items is empty. ([fe79b3a](https://github.com/optimistex/ngx-select-ex/commit/fe79b3a))
+
+
+
+<a name="3.3.11"></a>
+## 3.3.11 (2018-02-15)
+
+
+### Bug Fixes
+
+* ERROR Error: ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked. Previous value: 'open show: 58'. Current value: 'open show: false'. ([32ba202](https://github.com/optimistex/ngx-select-ex/commit/32ba202))
 
 
 ### Features
 
-* **select:** update to ng v2.3+ ([#590](https://github.com/valor-software/ng2-select/issues/590)) ([71536bc](https://github.com/valor-software/ng2-select/commit/71536bc))
+* Implement custom template for an option https://github.com/optimistex/ngx-select-ex/issues/20 ([0ad0271](https://github.com/optimistex/ngx-select-ex/commit/0ad0271))
+* implemented NgxSelectComponent.navigated - https://github.com/optimistex/ngx-select-ex/issues/21#issuecomment-365211682 ([034ae8e](https://github.com/optimistex/ngx-select-ex/commit/034ae8e)), closes [/github.com/optimistex/ngx-select-ex/issues/21#issuecomment-365211682](https://github.com//github.com/optimistex/ngx-select-ex/issues/21/issues/issuecomment-365211682)
+* implemented templates for "option selected" and "option not found" ([633c73c](https://github.com/optimistex/ngx-select-ex/commit/633c73c)), closes [/github.com/optimistex/ngx-select-ex/issues/22#issuecomment-365724438](https://github.com//github.com/optimistex/ngx-select-ex/issues/22/issues/issuecomment-365724438)
 
 
 
-<a name="1.1.2"></a>
-## [1.1.2](https://github.com/valor-software/ng2-select/compare/v1.1.1...v1.1.2) (2016-11-11)
-
-
-### Bug Fixes
-
-* **close:** dropdown by missclick ([#515](https://github.com/valor-software/ng2-select/issues/515)) ([43b4c10](https://github.com/valor-software/ng2-select/commit/43b4c10))
-
-
-
-<a name="1.1.1"></a>
-## [1.1.1](https://github.com/valor-software/ng2-select/compare/v1.0.3...v1.1.1) (2016-10-18)
+<a name="3.3.10"></a>
+## 3.3.10 (2018-02-10)
 
 
 ### Bug Fixes
 
-* firefox issue ([#273](https://github.com/valor-software/ng2-select/issues/273)) ([f83764f](https://github.com/valor-software/ng2-select/commit/f83764f))
-* **docs:** updated property name for active items ([#318](https://github.com/valor-software/ng2-select/issues/318)) ([d39def2](https://github.com/valor-software/ng2-select/commit/d39def2)), closes [#307](https://github.com/valor-software/ng2-select/issues/307)
-* **filter:** possible dupes in filter ([#212](https://github.com/valor-software/ng2-select/issues/212)) ([7f4e9f6](https://github.com/valor-software/ng2-select/commit/7f4e9f6))
-* **options:** fixed the disabled state ([#225](https://github.com/valor-software/ng2-select/issues/225)) ([388506f](https://github.com/valor-software/ng2-select/commit/388506f))
-* **README:** Update docs with correct selector ng-select ([#148](https://github.com/valor-software/ng2-select/issues/148)) ([8aee01c](https://github.com/valor-software/ng2-select/commit/8aee01c))
-* **select:**  issue [#437](https://github.com/valor-software/ng2-select/issues/437) ([#454](https://github.com/valor-software/ng2-select/issues/454)) ([926e14d](https://github.com/valor-software/ng2-select/commit/926e14d))
-* **select:** allow empty items ([2c090f3](https://github.com/valor-software/ng2-select/commit/2c090f3))
+* Not working with custom getter https://github.com/optimistex/ngx-select-ex/issues/19 ([0710e0e](https://github.com/optimistex/ngx-select-ex/commit/0710e0e))
+
+
+
+<a name="3.3.9"></a>
+## 3.3.9 (2018-02-09)
+
+
+### Bug Fixes
+
+* show the message "No results found" only when the items contain some items but all of them are filtered ([26af3ab](https://github.com/optimistex/ngx-select-ex/commit/26af3ab)), closes [/github.com/optimistex/ngx-select-ex/issues/11#issuecomment-364243799](https://github.com//github.com/optimistex/ngx-select-ex/issues/11/issues/issuecomment-364243799)
+
+
+
+<a name="3.3.7"></a>
+## 3.3.7 (2018-02-08)
+
+
+### Bug Fixes
+
+* Error on disabled option with an empty array https://github.com/optimistex/ngx-select-ex/issues/13 ([7904729](https://github.com/optimistex/ngx-select-ex/commit/7904729))
 
 
 ### Features
 
-* **css:** removed most hardcoded css, instead rely on bootstrap css classes ([#214](https://github.com/valor-software/ng2-select/issues/214)) ([c178431](https://github.com/valor-software/ng2-select/commit/c178431))
-* **input:** Added selectable inputfields instead of forcing id and text. ([#213](https://github.com/valor-software/ng2-select/issues/213)) ([cf7f110](https://github.com/valor-software/ng2-select/commit/cf7f110))
-* programmatically select active items ([#223](https://github.com/valor-software/ng2-select/issues/223)) ([1ddbcd9](https://github.com/valor-software/ng2-select/commit/1ddbcd9))
-* **package:** update to angular 2.0.0 ([#412](https://github.com/valor-software/ng2-select/issues/412)) ([10aeaba](https://github.com/valor-software/ng2-select/commit/10aeaba))
-* **package:** updated to rc.4 and new forms ([#311](https://github.com/valor-software/ng2-select/issues/311)) ([5b992e9](https://github.com/valor-software/ng2-select/commit/5b992e9))
+* **$browser:** add the `select` and `remove` events ([93cd4be](https://github.com/optimistex/ngx-select-ex/commit/93cd4be))
 
 
 
-<a name="1.1.0"></a>
-# [1.1.0](https://github.com/valor-software/ng2-select/compare/v1.0.3...v1.1.0) (2016-09-21)
+<a name="3.3.6"></a>
+## 3.3.6 (2018-02-07)
+
+
+
+<a name="3.3.5"></a>
+## 3.3.5 (2018-02-07)
+
+
+
+<a name="3.3.3"></a>
+## 3.3.3 (2018-02-06)
+
+
+
+<a name="3.3.2"></a>
+## 3.3.2 (2018-02-04)
+
+
+
+<a name="3.3.0-rc2"></a>
+# 3.3.0-rc2 (2018-02-03)
+
+
+
+<a name="3.3.0-rc1"></a>
+# 3.3.0-rc1 (2018-02-03)
+
+
+
+<a name="3.2.2"></a>
+## 3.2.2 (2018-02-01)
+
+
+
+<a name="3.2.1"></a>
+## 3.2.1 (2018-02-01)
+
+
+
+<a name="3.1.1"></a>
+## 3.1.1 (2018-01-25)
+
+
+
+<a name="3.0.18-rc"></a>
+## 3.0.18-rc (2018-01-24)
+
+
+
+<a name="3.0.17-rc"></a>
+## 3.0.17-rc (2018-01-19)
+
+
+
+<a name="3.0.15-rc"></a>
+## 3.0.15-rc (2018-01-19)
+
+
+
+<a name="3.0.13-rc"></a>
+## 3.0.13-rc (2018-01-12)
+
+
+
+<a name="3.0.12-rc"></a>
+## 3.0.12-rc (2018-01-11)
+
+
+
+<a name="3.0.11-rc"></a>
+## 3.0.11-rc (2018-01-11)
+
+
+
+<a name="3.0.10-beta"></a>
+## 3.0.10-beta (2018-01-09)
+
+
+
+<a name="3.0.4-beta"></a>
+## 3.0.4-beta (2017-12-28)
 
 
 ### Bug Fixes
 
-* firefox issue ([#273](https://github.com/valor-software/ng2-select/issues/273)) ([f83764f](https://github.com/valor-software/ng2-select/commit/f83764f))
-* **docs:** updated property name for active items ([#318](https://github.com/valor-software/ng2-select/issues/318)) ([d39def2](https://github.com/valor-software/ng2-select/commit/d39def2)), closes [#307](https://github.com/valor-software/ng2-select/issues/307)
-* **filter:** possible dupes in filter ([#212](https://github.com/valor-software/ng2-select/issues/212)) ([7f4e9f6](https://github.com/valor-software/ng2-select/commit/7f4e9f6))
-* **options:** fixed the disabled state ([#225](https://github.com/valor-software/ng2-select/issues/225)) ([388506f](https://github.com/valor-software/ng2-select/commit/388506f))
-* **select:** allow empty items ([2c090f3](https://github.com/valor-software/ng2-select/commit/2c090f3))
-
-
-### Features
-
-* **css:** removed most hardcoded css, instead rely on bootstrap css classes ([#214](https://github.com/valor-software/ng2-select/issues/214)) ([c178431](https://github.com/valor-software/ng2-select/commit/c178431))
-* **input:** Added selectable inputfields instead of forcing id and text. ([#213](https://github.com/valor-software/ng2-select/issues/213)) ([cf7f110](https://github.com/valor-software/ng2-select/commit/cf7f110))
-* programmatically select active items ([#223](https://github.com/valor-software/ng2-select/issues/223)) ([1ddbcd9](https://github.com/valor-software/ng2-select/commit/1ddbcd9))
-* **package:** update to angular 2.0.0 ([#412](https://github.com/valor-software/ng2-select/issues/412)) ([10aeaba](https://github.com/valor-software/ng2-select/commit/10aeaba))
-* **package:** updated to rc.4 and new forms ([#311](https://github.com/valor-software/ng2-select/issues/311)) ([5b992e9](https://github.com/valor-software/ng2-select/commit/5b992e9))
+* should be disabled by FormControl.disable() ([ff4f42b](https://github.com/optimistex/ngx-select-ex/commit/ff4f42b))
 
 
 
-<a name="1.0.3"></a>
-## 1.0.3 (2016-05-18)
+<a name="3.0.3-alpha"></a>
+## 3.0.3-alpha (2017-12-27)
+
+
+
+<a name="3.0.2-alpha"></a>
+## 3.0.2-alpha (2017-12-27)
+
+
+
+<a name="3.0.1-alpha"></a>
+## 3.0.1-alpha (2017-12-27)
+
+
+
+<a name="3.0.0-alpha"></a>
+# 3.0.0-alpha (2017-12-26)
+
+
+
+<a name="2.1.5"></a>
+## 2.1.5 (2017-12-23)
+
+
+
+<a name="2.1.4"></a>
+## 2.1.4 (2017-12-23)
+
+
+
+<a name="2.1.3"></a>
+## 2.1.3 (2017-12-22)
+
+
+
+<a name="2.1.2"></a>
+## 2.1.2 (2017-12-20)
+
+
+
+<a name="2.1.1"></a>
+## 2.1.1 (2017-12-20)
+
+
+
+<a name="2.1.0"></a>
+# 2.1.0 (2017-12-17)
 
 
 ### Bug Fixes
 
-* ready for publish with ng2 0.42.0 ([8065308](https://github.com/valor-software/ng2-select/commit/8065308))
-* **misprint:** replaced hightlight with highlight ([6266d98](https://github.com/valor-software/ng2-select/commit/6266d98))
-* **multi select:** duplicates, select by Enter in multiple mode ([6fd0067](https://github.com/valor-software/ng2-select/commit/6fd0067))
-* **package:** updated code style\fixed ng2 imports ([7fbe339](https://github.com/valor-software/ng2-select/commit/7fbe339))
-* **Regex:** escape all characters to prevent exception ([3103352](https://github.com/valor-software/ng2-select/commit/3103352))
-* **select:** clicking on the input now causes the item list to appear ([#154](https://github.com/valor-software/ng2-select/issues/154)) ([c46c0ff](https://github.com/valor-software/ng2-select/commit/c46c0ff))
-* **select:** using string.match not regexp.test (fixes [#57](https://github.com/valor-software/ng2-select/issues/57), fixes [#54](https://github.com/valor-software/ng2-select/issues/54), fixes [#56](https://github.com/valor-software/ng2-select/issues/56)) ([5c96c2d](https://github.com/valor-software/ng2-select/commit/5c96c2d)), closes [#57](https://github.com/valor-software/ng2-select/issues/57) [#54](https://github.com/valor-software/ng2-select/issues/54) [#56](https://github.com/valor-software/ng2-select/issues/56)
-
-
-### Features
-
-* **build:** added codecov integration ([749ac97](https://github.com/valor-software/ng2-select/commit/749ac97))
-* **build:** enabled tslinting ([4718b0f](https://github.com/valor-software/ng2-select/commit/4718b0f))
-* **package:** update to angular 2 rc1  ([d59368d](https://github.com/valor-software/ng2-select/commit/d59368d))
-* **package:** updated to angular2 beta.15 ([393674c](https://github.com/valor-software/ng2-select/commit/393674c)), closes [#106](https://github.com/valor-software/ng2-select/issues/106)
-
-
-
+* **ci:** fix travis ([#906](https://github.com/optimistex/ngx-select-ex/issues/906)) ([855ac2f](https://github.com/optimistex/ngx-select-ex/commit/855ac2f))
