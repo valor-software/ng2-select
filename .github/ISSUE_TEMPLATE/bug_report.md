@@ -11,8 +11,8 @@ assignees: ''
 A clear and concise description of what the bug is.
 
 **To Reproduce**
-Please, make an example there https://stackblitz.com/ to reproduce the bug and share a link to the example.
-You can fork the blank project and make your own example: https://stackblitz.com/edit/ngx-select-ex-scratch
+Please, make an online example there to reproduce the bug and share a link to the example.
+You can fork the blank project and make your own example: https://codesandbox.io/s/ngx-select-ex--angular-11-ebefy
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
