@@ -47,7 +47,7 @@ import createSpy = jasmine.createSpy;
                     [items]="select2.items"
                     (select)="select2.doSelect($event)"
                     (remove)="select2.doRemove($event)"></ngx-select>
-        <ngx-select id="sel-3" #component3 [items]="select3.items$ | async"></ngx-select>
+        <ngx-select id="sel-3" #component3 [items]="select3.items$ | async" [formControl]="select3.formControl"></ngx-select>
     `,
 })
 class TestNgxSelectComponent {
@@ -101,6 +101,7 @@ class TestNgxSelectComponent {
     };
 
     public select3 = {
+        formControl: new FormControl(),
         items$: new BehaviorSubject<any[]>([]),
     };
 }
@@ -286,24 +287,32 @@ describe('NgxSelectComponent', () => {
             fixture.componentInstance.select1.value = [1, 3, 4];
             fixture.detectChanges();
             tick();
+
             expect(fixture.componentInstance.select1.value).toEqual([1, 3, 4]);
+
             fixture.componentInstance.select1.items = createItems([1, 2, 4, 5, 6]);
             fixture.detectChanges(false);
+            tick();
+
             expect(fixture.componentInstance.select1.value).toEqual([1, 4]);
         }));
 
-        it('by FormControl', () => {
+        it('by FormControl', fakeAsync(() => {
             fixture.componentInstance.select2.multiple = true;
             fixture.detectChanges();
             fixture.componentInstance.select2.items = createItems([1, 2, 3, 4, 5]);
             fixture.componentInstance.select2.formControl.setValue([1, 3, 4]);
             fixture.detectChanges();
-            // tick();
+            tick();
+
             expect(fixture.componentInstance.select2.formControl.value).toEqual([1, 3, 4]);
+
             fixture.componentInstance.select2.items = createItems([1, 2, 4, 5, 6]);
             fixture.detectChanges();
+            tick();
+
             expect(fixture.componentInstance.select2.formControl.value).toEqual([1, 4]);
-        });
+        }));
     });
 
     describe('should create with default property', () => {
@@ -417,7 +426,7 @@ describe('NgxSelectComponent', () => {
         });
     });
 
-    describe('menu should be have navigation and active item should be visible', () => {
+    describe('menu should have navigation and active item should be visible', () => {
         beforeEach(() => {
             const items: Array<{ id: number; text: string }> = [];
             for (let i = 1; i <= 100; i++) {
@@ -1086,8 +1095,12 @@ describe('NgxSelectComponent', () => {
                 fixture.componentInstance.select2.formControl.setValue([items1[1].value]);
 
                 fixture.detectChanges();
-                setTimeout(() => items1.forEach(item => lazyItems.push(item)), 2000);
+                tick();
+
+                setTimeout(() => lazyItems.push(...items1), 2000);
                 tick(2100);
+                fixture.detectChanges();
+                tick();
                 fixture.detectChanges();
             }));
 
@@ -1119,9 +1132,12 @@ describe('NgxSelectComponent', () => {
                 fixture.componentInstance.select2.formControl.setValue([items1[0].value, items1[1].value]);
 
                 fixture.detectChanges();
+                tick();
+
                 setTimeout(() => items1.forEach(item => lazyItems.push(item)), 2000);
                 tick(2100);
                 fixture.detectChanges();
+                tick();
             }));
 
             it('by a ngModel attribute', () => {
@@ -1144,13 +1160,18 @@ describe('NgxSelectComponent', () => {
             fixture.componentInstance.select2.items = lazyItems;
             fixture.componentInstance.select2.formControl.valueChanges.subscribe(v => valueChanged(v));
             fixture.detectChanges();
+            tick();
+
             fixture.componentInstance.select2.formControl.setValue(3);
             fixture.detectChanges();
+            tick();
         }));
 
         it('for single mode', fakeAsync(() => {
             lazyItems = items1;
             fixture.detectChanges();
+            tick();
+
             expect(valueChanged).toHaveBeenCalledTimes(1);
             expect(valueChanged).toHaveBeenCalledWith(3);
         }));
@@ -1254,27 +1275,34 @@ describe('NgxSelectComponent', () => {
 
             formControl(1).click();
             fixture.detectChanges();
+            tick();
+
             expect(selectItemList(1).length).toBeGreaterThan(0);
+
             selectItemList(1)[1].click();
+            fixture.detectChanges();
+            tick();
         }));
 
         it('for single option', fakeAsync(() => {
             fixture.componentInstance.select1.multiple = false;
             fixture.componentInstance.select1.items = items2;
-
             fixture.detectChanges();
+            tick();
+
             expect(selectedItem(1).innerHTML).toContain('item one');
             expect(fixture.componentInstance.select1.value).toEqual(1);
         }));
 
-        it('for multiple options', () => {
+        it('for multiple options', fakeAsync(() => {
             fixture.componentInstance.select1.multiple = true;
             fixture.componentInstance.select1.items = items2;
-
             fixture.detectChanges();
+            tick();
+
             expect(selectedItems(1)[0].querySelector('span').innerHTML).toContain('item one');
             expect(fixture.componentInstance.select1.value).toEqual(1);
-        });
+        }));
     });
 
     it('For the multiple mode the selection order has to be kept', fakeAsync(() => {
@@ -1282,16 +1310,63 @@ describe('NgxSelectComponent', () => {
         fixture.componentInstance.select1.multiple = true;
         fixture.detectChanges();
         tick();
-        fixture.detectChanges();
 
         formControl(1).click();
         fixture.detectChanges();
         selectItemList(1)[2].click();
+        fixture.detectChanges();
+        tick();
+
         expect(fixture.componentInstance.select1.value).toEqual([2]);
 
         formControl(1).click();
         fixture.detectChanges();
         selectItemList(1)[1].click();
+        fixture.detectChanges();
+        tick();
+
         expect(fixture.componentInstance.select1.value).toEqual([2, 1]);
+    }));
+
+    it('should manage multiple changes of the item list', fakeAsync(() => {
+        const valueKeeper: number[] = [];
+        fixture.componentInstance.select3.formControl.valueChanges.subscribe(value => valueKeeper.push(value));
+
+        fixture.detectChanges();
+        tick(1000);
+        fixture.detectChanges();
+
+        // Set 1
+        fixture.componentInstance.select3.items$.next([{id: 1, text: 'item 1'}, {id: 2, text: 'item 2'}, {id: 3, text: 'item 3'}]);
+        fixture.componentInstance.select3.formControl.setValue(2);
+        fixture.detectChanges();
+        tick(1000);
+        fixture.detectChanges();
+
+        expect(JSON.stringify(valueKeeper)).toBe('[2]');
+        expect(fixture.componentInstance.select3.formControl.value).toBe(2);
+        expect(selectedItem(3).innerHTML).toContain('item 2');
+
+        // Set 2
+        fixture.componentInstance.select3.items$.next([{id: 4, text: 'item 4'}, {id: 5, text: 'item 5'}, {id: 6, text: 'item 6'}]);
+        fixture.componentInstance.select3.formControl.setValue(4);
+        fixture.detectChanges();
+        tick(1000);
+        fixture.detectChanges();
+
+        expect(JSON.stringify(valueKeeper)).toBe('[2,4]');
+        expect(fixture.componentInstance.select3.formControl.value).toBe(4);
+        expect(selectedItem(3).innerHTML).toContain('item 4');
+
+        // Set 3
+        fixture.componentInstance.select3.items$.next([{id: 7, text: 'item 7'}, {id: 8, text: 'item 8'}, {id: 9, text: 'item 9'}]);
+        fixture.componentInstance.select3.formControl.setValue(9);
+        fixture.detectChanges();
+        tick(1000);
+        fixture.detectChanges();
+
+        expect(JSON.stringify(valueKeeper)).toBe('[2,4,9]');
+        expect(fixture.componentInstance.select3.formControl.value).toBe(9);
+        expect(selectedItem(3).innerHTML).toContain('item 9');
     }));
 });

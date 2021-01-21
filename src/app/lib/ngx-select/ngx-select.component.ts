@@ -23,7 +23,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Observable, Subject, BehaviorSubject, EMPTY, of, from, merge, combineLatest } from 'rxjs';
-import { tap, filter, map, share, toArray, distinctUntilChanged, mergeMap } from 'rxjs/operators';
+import { tap, filter, map, share, toArray, distinctUntilChanged, mergeMap, debounceTime } from 'rxjs/operators';
 import isEqual from 'lodash.isequal';
 import * as escapeStringNs from 'escape-string-regexp';
 import { NgxSelectOptGroup, NgxSelectOption, TSelectOption } from './ngx-select.classes';
@@ -209,30 +209,29 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
             ),
             subjActualValue,
         ]).pipe(
-            map(([optionsFlat, actualValue]: [NgxSelectOption[], any[]]) => {
-                const optionsSelected = [];
+            debounceTime(0) // For a case when optionsFlat, actualValue came at the same time
+        ).subscribe(([optionsFlat, actualValue]: [NgxSelectOption[], any[]]) => {
+            const optionsSelected = [];
 
-                actualValue.forEach((value: any) => {
-                    const selectedOption = optionsFlat.find((option: NgxSelectOption) => option.value === value);
-                    if (selectedOption) {
-                        optionsSelected.push(selectedOption);
-                    }
-                });
-
-                if (this.keepSelectedItems) {
-                    const optionValues = optionsSelected.map((option: NgxSelectOption) => option.value);
-                    const keptSelectedOptions = this.subjOptionsSelected.value
-                        .filter((selOption: NgxSelectOption) => optionValues.indexOf(selOption.value) === -1);
-                    optionsSelected.push(...keptSelectedOptions);
+            actualValue.forEach((value: any) => {
+                const selectedOption = optionsFlat.find((option: NgxSelectOption) => option.value === value);
+                if (selectedOption) {
+                    optionsSelected.push(selectedOption);
                 }
+            });
 
-                if (!isEqual(optionsSelected, this.subjOptionsSelected.value)) {
-                    this.subjOptionsSelected.next(optionsSelected);
-                    this.cd.markForCheck();
-                }
+            if (this.keepSelectedItems) {
+                const optionValues = optionsSelected.map((option: NgxSelectOption) => option.value);
+                const keptSelectedOptions = this.subjOptionsSelected.value
+                    .filter((selOption: NgxSelectOption) => optionValues.indexOf(selOption.value) === -1);
+                optionsSelected.push(...keptSelectedOptions);
+            }
 
-            })
-        ).subscribe();
+            if (!isEqual(optionsSelected, this.subjOptionsSelected.value)) {
+                this.subjOptionsSelected.next(optionsSelected);
+                this.cd.markForCheck();
+            }
+        });
 
         // Ensure working filter by a search text
         combineLatest([this.subjOptions, this.subjOptionsSelected, this.subjSearchText]).pipe(
