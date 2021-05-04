@@ -88,6 +88,8 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Input() public keepSelectMenuOpened = false;
     @Input() public autocomplete = 'off';
     @Input() public dropDownMenuOtherClasses = '';
+    @Input() public noSanitize = false;
+
     public keyCodeToRemoveSelected = 'Delete';
     public keyCodeToOptionsOpen = ['Enter', 'NumpadEnter'];
     public keyCodeToOptionsClose = 'Escape';
@@ -473,6 +475,10 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
 
     /** @internal */
     public sanitize(html: string): SafeHtml {
+        if(!this.noSanitize) {
+            return html || null;
+        }
+        
         return html ? this.sanitizer.bypassSecurityTrustHtml(html) : null;
     }
 
