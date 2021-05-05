@@ -475,10 +475,10 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
 
     /** @internal */
     public sanitize(html: string): SafeHtml {
-        if(!this.noSanitize) {
+        if(this.noSanitize) {
             return html || null;
         }
-        
+
         return html ? this.sanitizer.bypassSecurityTrustHtml(html) : null;
     }
 
