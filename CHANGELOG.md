@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.1.0](https://github.com/optimistex/ngx-select-ex/compare/v6.0.2...v6.1.0) (2021-05-11)
+
+
+### Features
+
+* add option to disable safe html ([7edb056](https://github.com/optimistex/ngx-select-ex/commit/7edb05673b42cc7f630ebe5906641e5deb0b27b5))
+
+
+### Bug Fixes
+
+* lint & invert boolean for noSanitize ([43c850e](https://github.com/optimistex/ngx-select-ex/commit/43c850ebc99e1ae45d56b53285657e1b8464b6cd))
+
 ### [6.0.2](https://github.com/optimistex/ngx-select-ex/compare/v6.0.1...v6.0.2) (2021-01-23)
 
 
