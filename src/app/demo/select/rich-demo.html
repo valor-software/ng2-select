@@ -1,0 +1,31 @@
+<h3>Select a color</h3>
+<div class="example-block">
+    <div class="example-block__item">
+        <ngx-select [allowClear]="true"
+                    [items]="items" optionValueField="hex" optionTextField="name"
+                    [disabled]="ngxDisabled"
+                    [(ngModel)]="ngxValue"
+                    placeholder="No city selected">
+
+            <ng-template ngx-select-option ngx-select-option-selected let-option let-text="text">
+                <span class="color-box" [style]="style('background-color:' + option.value)"></span>
+                <span [innerHtml]="text"></span>
+                ({{option.data.hex}})
+            </ng-template>
+
+            <ng-template ngx-select-option-not-found let-input>
+                "{{input}}" not found
+            </ng-template>
+
+        </ngx-select>
+        <p></p>
+        <div class="alert alert-secondary">
+            <pre>{{ngxValue | json}}</pre>
+        </div>
+        <div>
+            <button class="btn btn-primary" (click)="ngxDisabled = !ngxDisabled">
+                {{ngxDisabled ? 'Enable' : 'Disable'}}
+            </button>
+        </div>
+    </div>
+</div>
