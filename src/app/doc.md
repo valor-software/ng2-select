@@ -94,6 +94,7 @@ Any item can be `disabled` for prevent selection. For disable an item add the pr
 | autocomplete | string | `'off'` | Sets an autocomplete value for the input field |
 | dropDownMenuOtherClasses | string | `''` | Add css classes to the element with `dropdown-menu` class. For example `dropdown-menu-right` |
 | showOptionNotFoundForEmptyItems | boolean | false | Shows the "Not Found" menu option in case of out of items at all |
+| noSanitize | boolean | false | Disables auto mark an HTML as safe. Turn it on for safety from XSS if you render untrusted content in the options |
 
 | Output  | Description |
 | ------------- | ------------- |
