@@ -1,8 +1,6 @@
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import * as escapeStringNs from 'escape-string-regexp';
+import escapeStringRegexp from 'escape-string-regexp';
 import { INgxSelectOptGroup, INgxSelectOption, INgxSelectOptionBase, TNgxSelectOptionType } from './ngx-select.interfaces';
-
-const escapeString = escapeStringNs;
 
 export class NgxSelectOption implements INgxSelectOption, INgxSelectOptionBase {
     public readonly type: TNgxSelectOptionType = 'option';
@@ -29,7 +27,7 @@ export class NgxSelectOption implements INgxSelectOption, INgxSelectOptionBase {
             this.cacheHighlightText = highlightText;
             if (this.cacheHighlightText) {
                 this.cacheRenderedText = sanitizer.bypassSecurityTrustHtml((this.text + '').replace(
-                    new RegExp(escapeString(this.cacheHighlightText), 'gi'), '<strong>$&</strong>'
+                    new RegExp(escapeStringRegexp(this.cacheHighlightText), 'gi'), '<strong>$&</strong>'
                 ));
             } else {
                 this.cacheRenderedText = sanitizer.bypassSecurityTrustHtml(this.text);

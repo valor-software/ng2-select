@@ -25,7 +25,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Observable, Subject, BehaviorSubject, EMPTY, of, from, merge, combineLatest } from 'rxjs';
 import { tap, filter, map, share, toArray, distinctUntilChanged, mergeMap, debounceTime } from 'rxjs/operators';
 import isEqual from 'lodash.isequal';
-import * as escapeStringNs from 'escape-string-regexp';
+import escapeStringRegexp from 'escape-string-regexp';
 import { NgxSelectOptGroup, NgxSelectOption, TSelectOption } from './ngx-select.classes';
 import {
     NgxSelectOptionDirective,
@@ -33,8 +33,6 @@ import {
     NgxSelectOptionSelectedDirective
 } from './ngx-templates.directive';
 import { INgxOptionNavigated, INgxSelectOption, INgxSelectOptions } from './ngx-select.interfaces';
-
-const escapeString = escapeStringNs;
 
 export const NGX_SELECT_OPTIONS = new InjectionToken<any>('NGX_SELECT_OPTIONS');
 
@@ -541,7 +539,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     }
 
     private filterOptions(search: string, options: TSelectOption[], selectedOptions: NgxSelectOption[]): TSelectOption[] {
-        const regExp = new RegExp(escapeString(search), 'i');
+        const regExp = new RegExp(escapeStringRegexp(search), 'i');
         const filterOption = (option: NgxSelectOption) => {
             if (this.searchCallback) {
                 return this.searchCallback(search, option);
