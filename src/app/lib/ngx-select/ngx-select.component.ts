@@ -27,11 +27,7 @@ import { tap, filter, map, share, toArray, distinctUntilChanged, mergeMap, debou
 import isEqual from 'lodash.isequal';
 import escapeStringRegexp from 'escape-string-regexp';
 import { NgxSelectOptGroup, NgxSelectOption, TSelectOption } from './ngx-select.classes';
-import {
-    NgxSelectOptionDirective,
-    NgxSelectOptionNotFoundDirective,
-    NgxSelectOptionSelectedDirective
-} from './ngx-templates.directive';
+import { NgxSelectOptionDirective, NgxSelectOptionNotFoundDirective, NgxSelectOptionSelectedDirective } from './ngx-templates.directive';
 import { INgxOptionNavigated, INgxSelectOption, INgxSelectOptions } from './ngx-select.interfaces';
 
 export const NGX_SELECT_OPTIONS = new InjectionToken<any>('NGX_SELECT_OPTIONS');
@@ -77,7 +73,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Input() public autoSelectSingleOption = false;
     @Input() public autoClearSearch = false;
     @Input() public noResultsFound = 'No results found';
-    @Input() public keepSelectedItems: false;
+    @Input() public keepSelectedItems = false;
     @Input() public size: 'small' | 'default' | 'large' = 'default';
     @Input() public searchCallback: (search: string, item: INgxSelectOption) => boolean;
     @Input() public autoActiveOnMouseEnter = true;
@@ -473,7 +469,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
 
     /** @internal */
     public sanitize(html: string): SafeHtml {
-        if(this.noSanitize) {
+        if (this.noSanitize) {
             return html || null;
         }
 
