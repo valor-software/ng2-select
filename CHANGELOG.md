@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.1.1](https://github.com/optimistex/ngx-select-ex/compare/v6.1.0...v6.1.1) (2021-07-29)
+
+
+### Bug Fixes
+
+* declaration of NgxSelectComponent.keepSelectedItems ([b47263a](https://github.com/optimistex/ngx-select-ex/commit/b47263a36d1cc3c959fe119bd2e82eef09a0a56d))
+
 ## [6.1.0](https://github.com/optimistex/ngx-select-ex/compare/v6.0.2...v6.1.0) (2021-05-11)
 
 
