@@ -111,7 +111,7 @@ class TestNgxSelectComponent {
     public select4 = {
         formControl: new FormControl(),
         items: [],
-        appendTo: null
+        appendTo: null,
     };
 }
 
@@ -1384,7 +1384,7 @@ describe('NgxSelectComponent', () => {
             fixture.componentInstance.select4.items = items1;
             fixture.componentInstance.select4.appendTo = null;
             fixture.detectChanges();
-            
+
             formControl(4).click();
             fixture.detectChanges();
 

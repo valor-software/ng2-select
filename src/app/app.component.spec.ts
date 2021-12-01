@@ -36,7 +36,7 @@ describe('AppComponent', () => {
                 NoAutoCompleteDemoComponent,
                 RichDemoComponent,
                 SingleDemoComponent,
-                AppendToDemoComponent
+                AppendToDemoComponent,
             ],
         }).compileComponents();
     }));
