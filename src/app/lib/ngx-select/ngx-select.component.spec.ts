@@ -48,12 +48,15 @@ import createSpy = jasmine.createSpy;
                     (select)="select2.doSelect($event)"
                     (remove)="select2.doRemove($event)"></ngx-select>
         <ngx-select id="sel-3" #component3 [items]="select3.items$ | async" [formControl]="select3.formControl"></ngx-select>
+        <ngx-select id="sel-4" #component4 [items]="select4.items" [formControl]="select4.formControl" [appendTo]="select4.appendTo"></ngx-select>
+        <div id="sel-4-container"></div>
     `,
 })
 class TestNgxSelectComponent {
     @ViewChild('component1', {static: true}) public component1: NgxSelectComponent;
     @ViewChild('component2', {static: true}) public component2: NgxSelectComponent;
     @ViewChild('component3', {static: true}) public component3: NgxSelectComponent;
+    @ViewChild('component4', {static: true}) public component4: NgxSelectComponent;
 
     public select1 = {
         value: null,
@@ -103,6 +106,12 @@ class TestNgxSelectComponent {
     public select3 = {
         formControl: new FormControl(),
         items$: new BehaviorSubject<any[]>([]),
+    };
+
+    public select4 = {
+        formControl: new FormControl(),
+        items: [],
+        appendTo: null
     };
 }
 
@@ -1369,4 +1378,31 @@ describe('NgxSelectComponent', () => {
         expect(fixture.componentInstance.select3.formControl.value).toBe(9);
         expect(selectedItem(3).innerHTML).toContain('item 9');
     }));
+
+    describe('test appendTo', () => {
+        it('should keep choices menu inside select container', () => {
+            fixture.componentInstance.select4.items = items1;
+            fixture.componentInstance.select4.appendTo = null;
+            fixture.detectChanges();
+            
+            formControl(4).click();
+            fixture.detectChanges();
+
+            expect(selectChoicesContainer(4)).toBeTruthy();
+        });
+
+        it('should append choices menu to the body', () => {
+            const appendTo = '#sel-4-container';
+            const appendToEl = querySelector(fixture.debugElement.nativeElement, appendTo);
+            fixture.componentInstance.select4.items = items1;
+            fixture.componentInstance.select4.appendTo = appendTo;
+            fixture.detectChanges();
+
+            formControl(4).click();
+            fixture.detectChanges();
+
+            expect(selectChoicesContainer(4)).toBeFalsy();
+            expect(querySelector(appendToEl, '.ngx-select__choices')).toBeTruthy();
+        });
+    });
 });

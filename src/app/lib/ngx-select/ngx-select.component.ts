@@ -83,6 +83,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @Input() public autocomplete = 'off';
     @Input() public dropDownMenuOtherClasses = '';
     @Input() public noSanitize = false;
+    @Input() public appendTo: string;
 
     public keyCodeToRemoveSelected = 'Delete';
     public keyCodeToOptionsOpen = ['Enter', 'NumpadEnter'];
@@ -278,6 +279,12 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
         if (!this.isFocused) {
             this.isFocused = true;
             this.focus.emit();
+        }
+    }
+
+    public choiceMenuFocus(event: INgxSelectComponentMouseEvent) {
+        if (this.appendTo) {
+            event.clickedSelectComponent = this;
         }
     }
 

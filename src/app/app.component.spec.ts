@@ -13,6 +13,7 @@ import { ChildrenDemoComponent } from './demo/select/children-demo';
 import { NoAutoCompleteDemoComponent } from './demo/select/no-autocomplete-demo';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { AppendToDemoComponent } from './demo/select/append-to-demo';
 
 describe('AppComponent', () => {
     beforeEach(waitForAsync(() => {
@@ -35,6 +36,7 @@ describe('AppComponent', () => {
                 NoAutoCompleteDemoComponent,
                 RichDemoComponent,
                 SingleDemoComponent,
+                AppendToDemoComponent
             ],
         }).compileComponents();
     }));

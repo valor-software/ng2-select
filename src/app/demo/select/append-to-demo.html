@@ -1,0 +1,45 @@
+<h3>Container with fixed height and hidden overflow</h3>
+<div class="example-block">
+    <div class="example-block__item">
+        <p>Default</p>
+        <div class="card" style="overflow: hidden; height: 80px;">
+            <ngx-select
+                [formControl]="ngxControl1"
+                [items]="items"
+                placeholder="No city selected">
+            </ngx-select>
+        </div>
+        <p></p>
+        <div class="alert alert-secondary">
+            <pre>{{ngxControl1.value| json}}</pre>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary"
+                    (click)="ngxControl1.disabled? ngxControl1.enable(): ngxControl1.disable()">
+                {{ngxControl1.disabled ? 'Enable' : 'Disable'}}
+            </button>
+        </div>
+    </div>
+
+    <div class="example-block__item">
+        <p>Appended to body</p>
+        <div class="card" style="overflow: hidden; height: 80px;">
+            <ngx-select
+                [formControl]="ngxControl2"
+                [items]="items"
+                placeholder="No city selected"
+                appendTo="body">
+            </ngx-select>
+        </div>
+        <p></p>
+        <div class="alert alert-secondary">
+            <pre>{{ngxControl2.value| json}}</pre>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary"
+                    (click)="ngxControl2.disabled? ngxControl2.enable(): ngxControl2.disable()">
+                {{ngxControl2.disabled ? 'Enable' : 'Disable'}}
+            </button>
+        </div>
+    </div>
+</div>

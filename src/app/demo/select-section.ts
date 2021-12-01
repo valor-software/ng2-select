@@ -31,6 +31,11 @@ const tabDesc = {
         ts: require('!!raw-loader!./select/no-autocomplete-demo.ts'),
         html: require('!!raw-loader!./select/no-autocomplete-demo.html'),
     },
+    appendTo: {
+        heading: 'appendTo',
+        ts: require('!!raw-loader!./select/append-to-demo.ts'),
+        html: require('!!raw-loader!./select/append-to-demo.html'),
+    },
 };
 
 @Component({
@@ -64,6 +69,11 @@ const tabDesc = {
                 <tab heading="No autocomplete">
                     <sample-section [desc]="tabDesc.noAutoComplete">
                         <no-autocomplete-demo></no-autocomplete-demo>
+                    </sample-section>
+                </tab>
+                <tab heading="Append to element">
+                    <sample-section [desc]="tabDesc.appendTo">
+                        <append-to-demo></append-to-demo>
                     </sample-section>
                 </tab>
             </tabset>

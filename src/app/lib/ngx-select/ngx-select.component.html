@@ -69,36 +69,38 @@
            role="combobox">
 
     <!-- options template -->
-    <ul #choiceMenu role="menu" *ngIf="isFocused" class="ngx-select__choices dropdown-menu"
-        [ngClass]="dropDownMenuOtherClasses"
-        [class.show]="showChoiceMenu()">
-        <li class="ngx-select__item-group" role="menuitem"
-            *ngFor="let opt of optionsFiltered; trackBy: trackByOption; let idxGroup=index">
-            <div class="divider dropdown-divider" *ngIf="opt.type === 'optgroup' && (idxGroup > 0)"></div>
-            <div class="dropdown-header" *ngIf="opt.type === 'optgroup'">{{opt.label}}</div>
+    <ngx-select-choices *ngIf="isFocused"  [appendTo]="appendTo" [show]="showChoiceMenu()" (focusin)="choiceMenuFocus($event)">
+        <ul #choiceMenu role="menu" class="ngx-select__choices dropdown-menu"
+            [ngClass]="dropDownMenuOtherClasses"
+            [class.show]="showChoiceMenu()">
+            <li class="ngx-select__item-group" role="menuitem"
+                *ngFor="let opt of optionsFiltered; trackBy: trackByOption; let idxGroup=index">
+                <div class="divider dropdown-divider" *ngIf="opt.type === 'optgroup' && (idxGroup > 0)"></div>
+                <div class="dropdown-header" *ngIf="opt.type === 'optgroup'">{{opt.label}}</div>
 
-            <a href="#" #choiceItem class="ngx-select__item dropdown-item"
-               *ngFor="let option of (opt.optionsFiltered || [opt]); trackBy: trackByOption; let idxOption = index"
-               [ngClass]="{
-                    'ngx-select__item_active active': option.active,
-                    'ngx-select__item_disabled disabled': option.disabled
-               }"
-               (mouseenter)="onMouseEnter({
-                    activeOption: option,
-                    filteredOptionList: optionsFiltered,
-                    index: optionsFiltered.indexOf(option)
-               })"
-               (click)="optionSelect(option, $event)">
-                <ng-container [ngTemplateOutlet]="templateOption || defaultTemplateOption"
-                              [ngTemplateOutletContext]="{$implicit: option, text: option.highlightedText,
-                              index: idxGroup, subIndex: idxOption}"></ng-container>
-            </a>
-        </li>
-        <li class="ngx-select__item ngx-select__item_no-found dropdown-header" *ngIf="!optionsFiltered.length">
-            <ng-container [ngTemplateOutlet]="templateOptionNotFound || defaultTemplateOptionNotFound"
-                          [ngTemplateOutletContext]="{$implicit: inputText}"></ng-container>
-        </li>
-    </ul>
+                <a href="#" #choiceItem class="ngx-select__item dropdown-item"
+                *ngFor="let option of (opt.optionsFiltered || [opt]); trackBy: trackByOption; let idxOption = index"
+                [ngClass]="{
+                        'ngx-select__item_active active': option.active,
+                        'ngx-select__item_disabled disabled': option.disabled
+                }"
+                (mouseenter)="onMouseEnter({
+                        activeOption: option,
+                        filteredOptionList: optionsFiltered,
+                        index: optionsFiltered.indexOf(option)
+                })"
+                (click)="optionSelect(option, $event)">
+                    <ng-container [ngTemplateOutlet]="templateOption || defaultTemplateOption"
+                                [ngTemplateOutletContext]="{$implicit: option, text: option.highlightedText,
+                                index: idxGroup, subIndex: idxOption}"></ng-container>
+                </a>
+            </li>
+            <li class="ngx-select__item ngx-select__item_no-found dropdown-header" *ngIf="!optionsFiltered.length">
+                <ng-container [ngTemplateOutlet]="templateOptionNotFound || defaultTemplateOptionNotFound"
+                            [ngTemplateOutletContext]="{$implicit: inputText}"></ng-container>
+            </li>
+        </ul>
+    </ngx-select-choices>
 
     <!--Default templates-->
     <ng-template #defaultTemplateOption let-text="text">

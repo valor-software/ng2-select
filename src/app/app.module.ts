@@ -10,6 +10,7 @@ import { MultipleDemoComponent } from './demo/select/multiple-demo';
 import { NoAutoCompleteDemoComponent } from './demo/select/no-autocomplete-demo';
 import { RichDemoComponent } from './demo/select/rich-demo';
 import { SingleDemoComponent } from './demo/select/single-demo';
+import { AppendToDemoComponent } from './demo/select/append-to-demo';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -26,6 +27,7 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
         NoAutoCompleteDemoComponent,
         RichDemoComponent,
         SingleDemoComponent,
+        AppendToDemoComponent,
     ],
     imports: [
         BrowserModule,
