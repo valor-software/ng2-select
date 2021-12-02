@@ -1391,7 +1391,7 @@ describe('NgxSelectComponent', () => {
             expect(selectChoicesContainer(4)).toBeTruthy();
         });
 
-        it('should append choices menu to the body', () => {
+        it('should append choices menu outside select container', () => {
             const appendTo = '#sel-4-container';
             const appendToEl = querySelector(fixture.debugElement.nativeElement, appendTo);
             fixture.componentInstance.select4.items = items1;
