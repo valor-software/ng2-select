@@ -50,4 +50,5 @@ export interface INgxSelectOptions {
     isFocused?: boolean;
     autocomplete?: string;
     dropDownMenuOtherClasses?: string;
+    appendTo?: string;
 }
