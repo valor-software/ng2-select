@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 declare const require: any;
 
 // tslint:disable-next-line:no-var-requires
-const doc = require('html-loader!markdown-loader!../doc.md');
+const doc = require('html-loader!markdown-loader!../doc.md')?.default;
 
 const tabDesc = {
     single: {
