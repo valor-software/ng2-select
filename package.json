@@ -1,6 +1,6 @@
 {
   "name": "ngx-select-ex",
-  "version": "6.1.2",
+  "version": "7.0.0",
   "description": "Angular based replacement for select boxes",
   "license": "MIT",
   "private": false,
@@ -23,6 +23,7 @@
     "lint:fix": "ng lint --fix",
     "ng": "ng",
     "release": "standard-version --commit-all",
+    "release:major": "standard-version --release-as major --commit-all",
     "publish.ng4": "npm publish ./dist --tag ng4",
     "publish": "npm publish ./dist",
     "publish-dev": "npm publish ./dist --tag dev",
