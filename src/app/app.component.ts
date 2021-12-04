@@ -6,7 +6,7 @@ declare const require: any;
 const pac = require('../../package.json');
 
 // tslint:disable-next-line:no-var-requires
-const gettingStarted = require('html-loader!markdown-loader!./getting-started.md');
+const gettingStarted = require('html-loader!markdown-loader!./getting-started.md')?.default;
 
 @Component({
     selector: 'app-demo',
