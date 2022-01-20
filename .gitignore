@@ -1,30 +1,48 @@
-# Dependency directory
-# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
-/node_modules
-npm-debug.log
+# See http://help.github.com/ignore-files/ for more about ignoring files.
 
-# type script artifacts
+# compiled output
+dist.tgz
+/dist
+/dist-server
+/tmp
+/out-tsc
+/build
+.ng_build
+.ng_pkg_build
+
+# dependencies
+/node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.angular/cache
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+testem.log
 /typings
 
-# WebStorm
-.idea
+# e2e
+/e2e/*.js
+/e2e/*.map
 
-# ignore build and dist for now
-/bundles
-/demo-build
-/dist
-/coverage
-/ts
-
-
-/demo/**/*.js
-/demo/**/*.js.map
-/demo/**/*.d.ts
-/components/**/*.js
-/components/**/*.js.map
-/components/**/*.d.ts
-ng2-select.js
-ng2-select.js.map
-ng2-select.d.ts
-
-/logs
+# System Files
+.DS_Store
+Thumbs.db

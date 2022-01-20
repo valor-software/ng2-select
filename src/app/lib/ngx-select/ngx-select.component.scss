@@ -1,0 +1,169 @@
+.ngx-select {
+  &_multiple {
+    height: auto;
+    padding: 3px 3px 0 3px;
+  }
+
+  &_multiple &__search {
+    background-color: transparent !important; /* To prevent double background when disabled */
+    border: none;
+    outline: none;
+    box-shadow: none;
+    height: 1.6666em;
+    padding: 0;
+    margin-bottom: 3px;
+  }
+
+  &__disabled {
+    background-color: #eceeef;
+    border-radius: 4px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    opacity: 0.6;
+    top: 0;
+    left: 0;
+    cursor: not-allowed;
+  }
+
+  &__toggle {
+    outline: 0;
+    position: relative;
+    text-align: left !important; /* Instead of center because of .btn */
+
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+    display: inline-flex;
+    align-items: stretch;
+    justify-content: space-between;
+
+    &:hover {
+      color: #333;
+      background-color: #e6e6e6;
+      border-color: #adadad;
+    }
+  }
+
+  &__toggle-buttons {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  &__toggle-caret {
+    position: absolute;
+    height: 10px;
+    top: 50%;
+    right: 10px;
+    margin-top: -2px;
+  }
+
+  /* Fix caret going into new line in Firefox */
+  &__placeholder {
+    float: left;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    //color: inherit !important;
+  }
+
+  &__clear {
+    margin-right: 10px;
+    padding: 0;
+    border: none;
+  }
+
+  &_multiple &__clear {
+    line-height: initial;
+    margin-left: 5px;
+    margin-right: 0;
+    color: #000;
+    opacity: .5;
+  }
+
+  &__clear-icon {
+    display: inline-block;
+    font-size: inherit;
+    cursor: pointer;
+    position: relative;
+    width: 1em;
+    height: .75em;
+    padding: 0;
+
+    &:before, &:after {
+      content: '';
+      position: absolute;
+      border-top: 3px solid;
+      width: 100%;
+      top: 50%;
+      left: 0;
+      margin-top: -1px;
+    }
+
+    &:before {
+      transform: rotate(45deg);
+    }
+
+    &:after {
+      transform: rotate(-45deg);
+    }
+  }
+
+  &__choices {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+    margin-top: 0;
+    position: absolute;
+  }
+
+  &_multiple &__choices {
+    margin-top: 1px;
+  }
+
+  &__item {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    white-space: nowrap;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  &__item_disabled, &__item_no-found {
+    cursor: default;
+  }
+
+  &__item_active {
+    color: #fff;
+    outline: 0;
+    background-color: #428bca;
+  }
+
+  &__selected-single, &__selected-plural {
+    display: inline-flex;
+    align-items: center;
+    overflow: hidden;
+
+    & span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  &__selected-plural {
+    outline: 0;
+    margin: 0 3px 3px 0;
+  }
+}
+
+/* Fix Bootstrap dropdown position when inside a input-group */
+.input-group > .dropdown {
+  /* Instead of relative */
+  position: static;
+}
