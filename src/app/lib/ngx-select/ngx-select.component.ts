@@ -28,7 +28,7 @@ import isEqual from 'lodash.isequal';
 import escapeStringRegexp from 'escape-string-regexp';
 import { NgxSelectOptGroup, NgxSelectOption, TSelectOption } from './ngx-select.classes';
 import { NgxSelectOptionDirective, NgxSelectOptionNotFoundDirective, NgxSelectOptionSelectedDirective } from './ngx-templates.directive';
-import { INgxOptionNavigated, INgxSelectOption, INgxSelectOptions } from './ngx-select.interfaces';
+import { INgxOptionNavigated, INgxSelectOption, INgxSelectOptions, INgxSelectOptGroup } from './ngx-select.interfaces';
 
 export const NGX_SELECT_OPTIONS = new InjectionToken<any>('NGX_SELECT_OPTIONS');
 
@@ -257,6 +257,9 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
             this.cd.markForCheck();
         });
     }
+
+    public asGroup: (item: INgxSelectOption | INgxSelectOptGroup) => NgxSelectOptGroup = item => item as NgxSelectOptGroup;
+    public asOpt: (item: INgxSelectOption | INgxSelectOptGroup) => NgxSelectOption = item => item as NgxSelectOption;
 
     public setFormControlSize(otherClassNames: object = {}, useFormControl: boolean = true) {
         const formControlExtraClasses = useFormControl ? {

@@ -69,35 +69,36 @@
            role="combobox">
 
     <!-- options template -->
-    <ngx-select-choices *ngIf="isFocused"  [appendTo]="appendTo" [show]="showChoiceMenu()" (focusin)="choiceMenuFocus($event)" [selectionChanges]="selectionChanges">
+    <ngx-select-choices *ngIf="isFocused" [appendTo]="appendTo" [show]="showChoiceMenu()" (focusin)="choiceMenuFocus($event)"
+                        [selectionChanges]="selectionChanges">
         <ul #choiceMenu role="menu" class="ngx-select__choices dropdown-menu"
             [ngClass]="dropDownMenuOtherClasses"
             [class.show]="showChoiceMenu()">
             <li class="ngx-select__item-group" role="menuitem"
                 *ngFor="let opt of optionsFiltered; trackBy: trackByOption; let idxGroup=index">
                 <div class="divider dropdown-divider" *ngIf="opt.type === 'optgroup' && (idxGroup > 0)"></div>
-                <div class="dropdown-header" *ngIf="opt.type === 'optgroup'">{{opt.label}}</div>
+                <div class="dropdown-header" *ngIf="opt.type === 'optgroup'">{{ asGroup(opt).label }}</div>
 
                 <a href="#" #choiceItem class="ngx-select__item dropdown-item"
-                *ngFor="let option of (opt.optionsFiltered || [opt]); trackBy: trackByOption; let idxOption = index"
-                [ngClass]="{
-                        'ngx-select__item_active active': option.active,
-                        'ngx-select__item_disabled disabled': option.disabled
-                }"
-                (mouseenter)="onMouseEnter({
-                        activeOption: option,
+                   *ngFor="let option of (asGroup(opt).optionsFiltered || [opt]); trackBy: trackByOption; let idxOption = index"
+                   [ngClass]="{
+                        'ngx-select__item_active active': asOpt(option).active,
+                        'ngx-select__item_disabled disabled': asOpt(option).disabled
+                    }"
+                   (mouseenter)="onMouseEnter({
+                        activeOption: asOpt(option),
                         filteredOptionList: optionsFiltered,
                         index: optionsFiltered.indexOf(option)
-                })"
-                (click)="optionSelect(option, $event)">
+                    })"
+                   (click)="optionSelect(asOpt(option), $event)">
                     <ng-container [ngTemplateOutlet]="templateOption || defaultTemplateOption"
-                                [ngTemplateOutletContext]="{$implicit: option, text: option.highlightedText,
-                                index: idxGroup, subIndex: idxOption}"></ng-container>
+                                  [ngTemplateOutletContext]="{$implicit: option, text: asOpt(option).highlightedText,
+                                                              index: idxGroup, subIndex: idxOption}"></ng-container>
                 </a>
             </li>
             <li class="ngx-select__item ngx-select__item_no-found dropdown-header" *ngIf="!optionsFiltered.length">
                 <ng-container [ngTemplateOutlet]="templateOptionNotFound || defaultTemplateOptionNotFound"
-                            [ngTemplateOutletContext]="{$implicit: inputText}"></ng-container>
+                              [ngTemplateOutletContext]="{$implicit: inputText}"></ng-container>
             </li>
         </ul>
     </ngx-select-choices>
