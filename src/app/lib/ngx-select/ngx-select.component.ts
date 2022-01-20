@@ -108,13 +108,13 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     @ViewChild('input') public inputElRef: ElementRef;
     @ViewChild('choiceMenu') protected choiceMenuElRef: ElementRef;
 
-    @ContentChild(NgxSelectOptionDirective, {read: TemplateRef, static: true}) public templateOption: NgxSelectOptionDirective;
+    @ContentChild(NgxSelectOptionDirective, {read: TemplateRef, static: true}) public templateOption: TemplateRef<NgxSelectOptionDirective>;
 
     @ContentChild(NgxSelectOptionSelectedDirective, {read: TemplateRef, static: true})
-    public templateSelectedOption: NgxSelectOptionSelectedDirective;
+    public templateSelectedOption: TemplateRef<NgxSelectOptionSelectedDirective>;
 
     @ContentChild(NgxSelectOptionNotFoundDirective, {read: TemplateRef, static: true})
-    public templateOptionNotFound: NgxSelectOptionNotFoundDirective;
+    public templateOptionNotFound: TemplateRef<NgxSelectOptionNotFoundDirective>;
 
     public optionsOpened = false;
     public optionsFiltered: TSelectOption[];
