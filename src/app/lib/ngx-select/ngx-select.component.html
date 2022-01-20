@@ -69,7 +69,7 @@
            role="combobox">
 
     <!-- options template -->
-    <ngx-select-choices *ngIf="isFocused"  [appendTo]="appendTo" [show]="showChoiceMenu()" (focusin)="choiceMenuFocus($event)">
+    <ngx-select-choices *ngIf="isFocused"  [appendTo]="appendTo" [show]="showChoiceMenu()" (focusin)="choiceMenuFocus($event)" [selectionChanges]="selectionChanges">
         <ul #choiceMenu role="menu" class="ngx-select__choices dropdown-menu"
             [ngClass]="dropDownMenuOtherClasses"
             [class.show]="showChoiceMenu()">

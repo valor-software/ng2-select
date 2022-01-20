@@ -32,7 +32,7 @@ import { INgxOptionNavigated, INgxSelectOption, INgxSelectOptions } from './ngx-
 
 export const NGX_SELECT_OPTIONS = new InjectionToken<any>('NGX_SELECT_OPTIONS');
 
-export interface INgxSelectComponentMouseEvent extends MouseEvent {
+export interface INgxSelectComponentMouseEvent extends FocusEvent {
     clickedSelectComponent?: NgxSelectComponent;
 }
 

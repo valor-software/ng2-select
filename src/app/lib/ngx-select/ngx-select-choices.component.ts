@@ -1,7 +1,7 @@
 import { AfterContentInit, Component, ElementRef, HostBinding, Input, NgZone, OnChanges, OnDestroy, OnInit, Renderer2, SimpleChanges } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { NgxSelectComponent } from './ngx-select.component';
+import { INgxSelectOption } from './ngx-select.interfaces';
 
 export interface NgxElementPosition {
     top: number;
@@ -19,30 +19,24 @@ export interface NgxElementPosition {
 export class NgxSelectChoicesComponent implements OnInit, OnDestroy, OnChanges, AfterContentInit {
     @Input() public appendTo: string;
     @Input() public show: boolean;
+    @Input() public selectionChanges: Observable<INgxSelectOption[]>;
 
     private choiceMenuEl: HTMLElement;
     private selectEl: HTMLElement;
     private destroy$ = new Subject<void>();
     private disposeResizeListener: () => void;
 
-    @HostBinding('style.position') public get position(): string {
+    @HostBinding('style.position')
+    public get position(): string {
         return this.appendTo ? 'absolute' : '';
     }
 
-    constructor(
-        private renderer: Renderer2,
-        private ngZone: NgZone,
-        elementRef: ElementRef,
-        ngxSelect: NgxSelectComponent
-    ) {
+    constructor(private renderer: Renderer2, private ngZone: NgZone, elementRef: ElementRef) {
         this.choiceMenuEl = elementRef.nativeElement;
-
-        ngxSelect.selectionChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.delayedPositionUpdate();
-        });
     }
 
     public ngOnInit(): void {
+        this.selectionChanges.pipe(takeUntil(this.destroy$)).subscribe(() => this.delayedPositionUpdate());
         this.selectEl = this.choiceMenuEl.parentElement;
     }
 
