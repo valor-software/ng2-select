@@ -52,6 +52,9 @@
     "multiselect",
     "multi-select"
   ],
+  "peerDependencies": {
+    "lodash.isequal": "^4.5.0"
+  },
   "devDependencies": {
     "@angular-devkit/build-angular": "~13.1.4",
     "@angular-eslint/builder": "13.0.1",
