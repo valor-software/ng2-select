@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [8.0.1](https://github.com/optimistex/ngx-select-ex/compare/v8.0.0...v8.0.1) (2022-01-20)
+
+
+### Bug Fixes
+
+* add `lodash.isequal` to peerDependencies ([fbe2f6b](https://github.com/optimistex/ngx-select-ex/commit/fbe2f6b6e70e850f6ec751628667be42419c46c2))
+
 ## [8.0.0](https://github.com/optimistex/ngx-select-ex/compare/v7.0.1...v8.0.0) (2022-01-20)
 
 
