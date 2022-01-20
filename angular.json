@@ -101,19 +101,6 @@
             "scripts": []
           }
         },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
@@ -125,12 +112,22 @@
               "devServerTarget": "ngx-select-ex:serve:production"
             }
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
   },
   "defaultProject": "ngx-select-ex",
   "cli": {
-    "analytics": "ef766241-a54d-40cd-83bc-db4bb363ecd0"
+    "analytics": "ef766241-a54d-40cd-83bc-db4bb363ecd0",
+    "defaultCollection": "@angular-eslint/schematics"
   }
 }

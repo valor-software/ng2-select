@@ -2,12 +2,6 @@
   "$schema": "./node_modules/ng-packagr/package.schema.json",
   "dest": "./dist",
   "lib": {
-    "entryFile": "./src/app/lib/public_api.ts",
-    "umdModuleIds": {
-      "escape-string-regexp": "escapeString"
-    }
-  },
-  "whitelistedNonPeerDependencies": [
-    "lodash.isequal"
-  ]
+    "entryFile": "./src/app/lib/public_api.ts"
+  }
 }

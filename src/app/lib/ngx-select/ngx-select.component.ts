@@ -130,7 +130,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
     private subjOptionsSelected = new BehaviorSubject<NgxSelectOption[]>([]);
     private subjExternalValue = new BehaviorSubject<any[]>([]);
     private subjDefaultValue = new BehaviorSubject<any[]>([]);
-    private subjRegisterOnChange = new Subject();
+    private subjRegisterOnChange = new Subject<void>();
 
     private cacheOptionsFilteredFlat: NgxSelectOption[];
     private cacheElementOffsetTop: number;
@@ -180,7 +180,7 @@ export class NgxSelectComponent implements INgxSelectOptions, ControlValueAccess
 
         // Export actual value
         combineLatest([subjActualValue, this.subjRegisterOnChange])
-            .pipe(map(([actualValue]: [any[], any[]]) => actualValue))
+            .pipe(map(([actualValue]: [any[], void]) => actualValue))
             .subscribe((actualValue: any[]) => {
                 this.actualValue = actualValue;
                 if (!isEqual(actualValue, cacheExternalValue)) {
