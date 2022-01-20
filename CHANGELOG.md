@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [8.0.0](https://github.com/optimistex/ngx-select-ex/compare/v7.0.1...v8.0.0) (2022-01-20)
+
+
+### Bug Fixes
+
+* autoformat ([e900b6d](https://github.com/optimistex/ngx-select-ex/commit/e900b6dd9cc14e03dabcdf45f79a9a93160ea806))
+* inconsistent template data types ([afd52e5](https://github.com/optimistex/ngx-select-ex/commit/afd52e5692983ae0a2ee20b69df47b8d34910bfe))
+* move `lodash.isequal` to dev dependencies ([4ac6f55](https://github.com/optimistex/ngx-select-ex/commit/4ac6f557396fbcd41c83d595dc08089bd07a369a))
+* One or more import cycles would need to be created to compile this component, which is not supported by the current compiler configuration. ([3e20dd2](https://github.com/optimistex/ngx-select-ex/commit/3e20dd2b45e6fa317a94df40d395402175be2dbb))
+
 ### [7.0.1](https://github.com/optimistex/ngx-select-ex/compare/v7.0.0...v7.0.1) (2021-12-04)
 
 ## [7.0.0](https://github.com/optimistex/ngx-select-ex/compare/v6.1.2...v7.0.0) (2021-12-03)
