@@ -1,0 +1,17 @@
+<ng-content></ng-content>
+<div class="card card-block panel panel-default panel-body">
+  <div class="card-body">
+    <mat-tab-group>
+      <mat-tab label="Markup">
+        <div class="card card-block panel panel-default panel-body">
+          <pre class="prettyprint linenums lang-html">{{desc.html.default}}</pre>
+        </div>
+      </mat-tab>
+      <mat-tab label="TypeScript">
+        <div class="card card-block panel panel-default panel-body">
+          <pre class="prettyprint linenums lang-js">{{desc.ts.default}}</pre>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

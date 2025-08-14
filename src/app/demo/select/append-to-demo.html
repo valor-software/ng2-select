@@ -1,0 +1,53 @@
+<h3>Container with fixed height and hidden overflow</h3>
+<div class="example-block">
+    <div class="example-block__item">
+        <p>Default</p>
+        <div class="card" style="display: block; overflow: scroll; height: 300px;">
+            <div style="width: 800px; height: 800px; padding: 200px;">
+                <div style="padding: 50px; overflow: hidden; border: 1px solid black;">
+                    <ngx-select
+                        [formControl]="ngxControl1"
+                        [items]="items"
+                        placeholder="No city selected">
+                    </ngx-select>
+                </div>
+            </div>
+        </div>
+        <p></p>
+        <div class="alert alert-secondary">
+            <pre>{{ ngxControl1.value| json }}</pre>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary"
+                    (click)="ngxControl1.disabled? ngxControl1.enable(): ngxControl1.disable()">
+                {{ ngxControl1.disabled ? 'Enable' : 'Disable' }}
+            </button>
+        </div>
+    </div>
+
+    <div class="example-block__item">
+        <p>Appended to scrollable</p>
+        <div id="scrollable" class="card" style="display: block; overflow: scroll; height: 300px;">
+            <div style="width: 800px; height: 800px; padding: 200px;">
+                <div style="padding: 50px; overflow: hidden; border: 1px solid black;">
+                    <ngx-select
+                        [formControl]="ngxControl2"
+                        [items]="items"
+                        placeholder="No city selected"
+                        appendTo="#scrollable">
+                    </ngx-select>
+                </div>
+            </div>
+        </div>
+        <p></p>
+        <div class="alert alert-secondary">
+            <pre>{{ ngxControl2.value| json }}</pre>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary"
+                    (click)="ngxControl2.disabled? ngxControl2.enable(): ngxControl2.disable()">
+                {{ ngxControl2.disabled ? 'Enable' : 'Disable' }}
+            </button>
+        </div>
+    </div>
+</div>
